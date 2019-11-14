@@ -30,6 +30,10 @@ local dieInTime = 0 --上一次死亡时间
 local evenKillStatistics = 0
 local evenDeathStatistics = 0
 
+--数据发送
+local data = {}
+local lastUpdate = -1000.0
+
 --发言冷却
 
 function L.init()
@@ -71,13 +75,47 @@ function L.init()
                 ['killhero'] = '',
                 ['herokill'] = '',
             }
+
+            -- HTTP SYSTEM INIT
+            --[[
+            data["heroinfo"] = {
+                player = botid,--玩家id
+                name = GetSelectedHeroName(botid),--英雄名称
+                kill = GetHeroKills(botid),--击杀数
+                death = GetHeroDeaths(botid),--死亡数
+                assist = GetHeroAssists(botid),--助攻数
+                level = GetHeroLevel(botid),--英雄等级
+                health = member:GetHealth()/member:GetMaxHealth(),--当前血量
+                mana = member:GetMana()/member:GetMaxMana(),--当前魔法
+                itemCost = heroItemCost,--装备总值
+                gold = member:GetGold(),--当前金钱
+            }
+            local json = '{"data":{'
+            local count = 1
+            for key, value in pairs(data["heroinfo"]) do
+                if count > 1 then json = json..',' end
+                json = json .. '"' .. key .. '": ' .. value
+                count = count + 1
+            end
+            json = json..'}}'
+            
+            print(tostring(json))
+            
+            local req = CreateHTTPRequest( "" )
+            req:SetHTTPRequestRawPostBody("application/json", json)
+            req:Send( function( result )
+                print( "HTTP SYSTEM INIT." )
+            end )
+            ]]
+            
+            --InstallDamageCallback(botid ,function ( tChat ) print(tChat.player_id..'---damage'..tChat.damage) end);
         end
         
     end
-    for i = 1, #nEnemysTeam
+    for _,eData in pairs(nEnemysTeam)
     do
-        local botid = nEnemysTeam[i]
-        local member = GetTeamMember(i);
+        local botid = eData
+        local member = GetTeamMember(botid);
         
         if member ~= nil then
             local heroItem = {}
@@ -151,13 +189,20 @@ function L.Update()
         --击杀了哪个敌人
         if GetHeroKills(botid) ~= data['kill'] then
             
-            for l = 1, #nEnemysTeam do
-                if GetHeroDeaths(nEnemysTeam[l]) > nEnemysData[nEnemysTeam[l]]['death'] then
-                    nArreysData[i]['killhero'] = nEnemysData[nEnemysTeam[l]]['name']
-                    print(data['name']..'击杀了'..nEnemysData[nEnemysTeam[l]]['name'])
+            for _,eData in pairs(nEnemysData) do
+                if GetHeroDeaths(eData['player']) > eData['death'] then
+                    nArreysData[i]['killhero'] = eData['name']
+                    print(C.GetNormName(data['hero'])..'击杀了'..C.GetNormName(eData['hero']))
                     L.Chatwheel(true, nArreysData[i])
                 end
             end
+            --for l = 1, #nEnemysTeam do
+            --    if GetHeroDeaths(nEnemysTeam[l]) > nEnemysData[nEnemysTeam[l]]['death'] then
+            --        nArreysData[i]['killhero'] = nEnemysData[nEnemysTeam[l]]['name']
+            --        print(C.GetNormName(data['hero'])..'击杀了'..C.GetNormName(nEnemysData[nEnemysTeam[l]]['hero']))
+            --        L.Chatwheel(true, nArreysData[i])
+            --    end
+            --end
 
         end
 
@@ -170,12 +215,14 @@ function L.Update()
                 --data['hero']:ActionImmediate_Chat('小心了，敌人的装备比我们强大！', false)
                 bot:ActionImmediate_Chat('小心了，敌人的装备比我们强大！', false)
             end
-            for _,eData in pairs(nArreysData) do
+            for _,eData in pairs(nEnemysData) do
                 if eData['itemCost'] / (situation['enemyItemCost'] / 5) > 0.5
                     and  eData['itemCost'] > situation['arreyItemCost'] / 5 
                 then
+                    --数据统计
+                    print(C.GetNormName(eData['hero']))
                     --data['hero']:ActionImmediate_Chat('谨慎对待 '..C.GetNormName(eData['hero'])..' ，他的装备远远强于他的队友，并且比我们的装备平均强度要高。', false)
-                    bot:ActionImmediate_Chat('谨慎对待 '..C.GetNormName(eData['hero'])..' ，他的装备远远强于他的队友，并且比我们的装备平均强度要高。', false)
+                    --bot:ActionImmediate_Chat('谨慎对待 '..C.GetNormName(eData['hero'])..' ，他的装备远远强于他的队友，并且比我们的装备平均强度要高。', false)
                 end
             end
 
@@ -318,7 +365,6 @@ function L.Chatwheel(kill, bot)
             evenKillStatistics = 1
         end
         speech(true, mocking['buyace'], bot)
-        print('击杀者'..bot['name'])
         if evenKillStatistics >= 6 
             and evenDeathStatistics < 5 --我方没被团灭
         then --买活团灭

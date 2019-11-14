@@ -128,18 +128,16 @@ X["test_hero"] = {
 }
 
 X["onlyCM_hero"] = {
-    --'npc_dota_hero_abaddon',
     'npc_dota_hero_vengefulspirit',
-    'npc_dota_hero_disruptor',
-    --'npc_dota_hero_shadow_demon',
-    --'npc_dota_hero_grimstroke',
     'npc_dota_hero_tidehunter',
-    'npc_dota_hero_axe',
-    --'npc_dota_hero_dazzle',
-    'npc_dota_hero_leshrac',
-    'npc_dota_hero_batrider',
     'npc_dota_hero_puck',
-    'npc_dota_hero_invoker',
+    'npc_dota_hero_slardar',
+    'npc_dota_hero_omniknight',
+    'npc_dota_hero_rubick',
+    'npc_dota_hero_tiny',
+    'npc_dota_hero_dark_willow',
+    'npc_dota_hero_queenofpain',
+    'npc_dota_hero_faceless_void'
 }
 
 function X.CounterWeightList(hero) --获取推荐阵容列表
@@ -320,17 +318,17 @@ end
 
 function GetNotRepeatHero(nTable)
     --仅限CM选择英雄
-    --if next(X['onlyCM_hero']) ~= nil then
-    --    local testheroList = {};
-    --    for i, v in ipairs(nTable) do
-    --        if X.ScreeningHeroList(X['onlyCM_hero'],v) then
-    --            table.insert(testheroList,v);
-    --        end
-    --    end
-    --    if next(testheroList) ~= nil then
-    --        nTable = testheroList;
-    --    end
-    --end
+    if next(X['onlyCM_hero']) ~= nil then
+        local testheroList = {};
+        for i, v in ipairs(nTable) do
+            if X.ScreeningHeroList(X['onlyCM_hero'],v) then
+                table.insert(testheroList,v);
+            end
+        end
+        if next(testheroList) ~= nil then
+            nTable = testheroList;
+        end
+    end
 	
 	local sHero = nTable[1];
 	local maxCount = #nTable ;
@@ -600,16 +598,18 @@ function X.getApHero()
                 'npc_dota_hero_zuus',
                 'npc_dota_hero_zuus',
             };
+        elseif randomMode == 233 then
+            X.interestingMode = '漩涡';
+            interestingList = {
+                'npc_dota_hero_arc_warden',
+                'npc_dota_hero_arc_warden',
+                'npc_dota_hero_arc_warden',
+                'npc_dota_hero_arc_warden',
+                'npc_dota_hero_arc_warden',
+            };
         elseif randomMode == 155 or randomMode == 174 or randomMode == 14 then
             X.interestingMode = '闪电';
             local lightning = {
-                {
-                    'npc_dota_hero_arc_warden',
-                    'npc_dota_hero_arc_warden',
-                    'npc_dota_hero_arc_warden',
-                    'npc_dota_hero_arc_warden',
-                    'npc_dota_hero_arc_warden',
-                },
                 {
                     'npc_dota_hero_razor',
                     'npc_dota_hero_razor',
@@ -625,7 +625,7 @@ function X.getApHero()
                     'npc_dota_hero_disruptor',
                 }
             }
-            interestingList = lightning[RandomInt(1,4)]
+            interestingList = lightning[RandomInt(1,2)]
         elseif randomMode == 31 then
             X.interestingMode = '石头也疯狂';
             interestingList = {
