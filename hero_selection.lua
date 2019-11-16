@@ -8,11 +8,12 @@
 local targetdata = require(GetScriptDirectory() .. "/AuxiliaryScript/RoleTargetsData")
 local otherGameMod = require(GetScriptDirectory() .. "/AuxiliaryScript/OtherGameMod");
 
+
 local X = {};
 local bDebugMode = false
 local sSelectHero = "npc_dota_hero_zuus";
 local fLastSlectTime,fLastRand,nRand = 0,0,0 ;
-local nDelayTime;
+local nDelayTime = nil
 local nHumanCount = 0;
 local sBanList = {}; 
 local sSelectList = {};
@@ -249,6 +250,7 @@ local sThirdList = {
 	"npc_dota_hero_phantom_assassin",
 	"npc_dota_hero_phantom_lancer",
 	"npc_dota_hero_huskar",
+	
 }
 
 local sFourthList = {
@@ -257,7 +259,7 @@ local sFourthList = {
 	"npc_dota_hero_jakiro",
 	"npc_dota_hero_skywrath_mage",
 	"npc_dota_hero_lina",
-	'npc_dota_hero_pugna',
+	"npc_dota_hero_pugna",
 }
 
 local sFifthList = {
@@ -267,7 +269,7 @@ local sFifthList = {
 	"npc_dota_hero_oracle",
 	"npc_dota_hero_witch_doctor",
 	"npc_dota_hero_lich",
-	'npc_dota_hero_death_prophet',
+	"npc_dota_hero_death_prophet",
 }				
 
 
@@ -346,7 +348,7 @@ end
 
 
 ------------------------------------------------
----Finish Lineup---------------------------------
+--------------=---------------------------------
 --初始阵容和英雄池
 sSelectList = { sSelectList[5], sSelectList[4], sSelectList[3], sSelectList[2], sSelectList[1] };
 tSelectPoolList = { tSelectPoolList[5], tSelectPoolList[4], tSelectPoolList[3], tSelectPoolList[2], tSelectPoolList[1] };
@@ -437,7 +439,7 @@ end
 
 function X.IsHumanNotReady(team)
 		
-	if GameTime() > 20 then return false end
+	if GameTime() > 20 or bLineupReserve then return false end
 
 	local humanCount,readyCount = 0, 0;
 	local IDs = GetTeamPlayers(team);
@@ -654,7 +656,7 @@ local sDiStarsList =
 }
 
 
-function X.GetRandNameList(sStarList)
+function X.GetRandomNameList(sStarList)
 	
 	local sNameList = {sStarList[1]};
 	table.remove(sStarList,1);	
@@ -684,17 +686,11 @@ function Think()
 	elseif GetGameMode() == GAMEMODE_CM or GetGameMode() == GAMEMODE_REVERSE_CM then
 		otherGameMod.CaptainModeLogic();
 		otherGameMod.AddToList();
-		--elseif GetGameMode() == GAMEMODE_AR then
-		--	otherGameMod.AllRandomLogic();
-		--elseif GetGameMode() == GAMEMODE_MO then
-		--	otherGameMod.MidOnlyLogic();
-		--elseif GetGameMode() == GAMEMODE_1V1MID then
-		--	otherGameMod.OneVsOneLogic();
-		else
-			if GetGameState() == GAME_STATE_HERO_SELECTION then
-				InstallChatCallback(function ( tChat ) X.SetChatHeroBan( tChat.string ); end);
-			end
-			AllPickLogic();
+	else
+		if GetGameState() == GAME_STATE_HERO_SELECTION then
+			InstallChatCallback(function ( tChat ) X.SetChatHeroBan( tChat.string ); end);
+		end
+		AllPickLogic();
 	end
 end
 
@@ -776,21 +772,25 @@ end
 
 
 local sBotVersion = Role.GetBotVersion()
+local bPvNLaneAssignDone = false
 if bLaneAssignActive or sBotVersion == 'Mid'
 then
 
 function UpdateLaneAssignments()  
 
-	if  GetGameMode() == GAMEMODE_AP or GetGameMode() == GAMEMODE_CM or GetGameMode() == GAMEMODE_TM or GetGameMode() == GAMEMODE_SD then
-		return tLaneAssignList;
-	elseif GetGameMode() == GAMEMODE_MO then
-		return otherGameMod.MOLaneAssignment()
-	elseif GetGameMode() == GAMEMODE_1V1MID then
-		return otherGameMod.OneVsOneLaneAssignment()
+	if DotaTime() > 0 
+		and nHumanCount == 0
+		and Role.IsPvNMode()
+		and not bLaneAssignActive
+		and not bPvNLaneAssignDone
+	then
+		if RandomInt(1,8) > 4 then tLaneAssignList[1] = LANE_MID else tLaneAssignList[2] = LANE_MID end
+		bPvNLaneAssignDone = true
 	end
+
+	return tLaneAssignList;
 	
 end
 
 end
-
---dota2jmz@163.com QQ:2462331592..
+--dota2jmz@163.com QQ:2462331592.

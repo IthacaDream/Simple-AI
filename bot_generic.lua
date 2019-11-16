@@ -4,7 +4,12 @@
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
-if GetBot():IsInvulnerable() or not GetBot():IsHero() or not string.find(GetBot():GetUnitName(), "hero") or GetBot():IsIllusion() then
+if GetBot():IsInvulnerable() 
+	or not GetBot():IsHero() 
+	or GetBot():IsIllusion()
+	or not string.find(GetBot():GetUnitName(), "hero")
+	or GetBot():GetUnitName() == "npc_dota_hero_techies"
+then
 	return;
 end
 
@@ -17,4 +22,4 @@ function MinionThink(hMinionUnit)
 	BotBuild.MinionThink(hMinionUnit)
 	
 end
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592

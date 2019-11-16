@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -10,202 +10,57 @@ local X = {}
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
-local ConversionMode = dofile( GetScriptDirectory()..'/AuxiliaryScript/BotlibConversion') --引入技能文件
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-local sOutfit = J.Skill.GetOutfitName(bot)
 
-local tTalentTree20 = {10,10}
+
+local tTalentTreeList = {
+						['t25'] = {10, 0},
+						['t20'] = {10,10},
+						['t15'] = {0, 10},
+						['t10'] = {0, 10},
+}
+
 if J.Skill.IsHeroInEnemyTeam("npc_dota_hero_antimage") 
    or J.Skill.IsHeroInEnemyTeam("npc_dota_hero_phantom_lancer")
 then  
-	tTalentTree20[1] = 0; 
+	tTalentTreeList['t20'][1] = 0; 
 else
-	tTalentTree20[2] = 0; 
+	tTalentTreeList['t20'][2] = 0; 
 end
 
---编组技能、天赋、装备
-local tGroupedDataList = {
-	{
-		--组合说明，不影响游戏
-		['info'] = 'By 决明子',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = tTalentTree20,
-			['t15'] = {0, 10},
-			['t10'] = {0, 10},
-		},
-		--技能
-		['Ability'] = {1,3,1,2,1,6,1,3,3,3,6,2,2,2,6},
-		--装备
-		['Buy'] = {
-			sOutfit,
+local tAllAbilityBuildList = {
+						{1,3,1,2,1,6,1,3,3,3,6,2,2,2,6},
+}
+
+local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
+
+local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
+
+
+
+X['sBuyList'] = {
+				'item_tank_outfit',
 				"item_crimson_guard",
 				"item_echo_sabre",
 				"item_heavens_halberd",
 				"item_assault",
 				"item_heart",
-		},
-		--出售
-		['Sell'] = {
-			"item_crimson_guard",
-			"item_quelling_blade",
-			
-			"item_assault",
-			"item_echo_sabre",
-			
-			"item_heavens_halberd",
-			"item_magic_wand",
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By Misunderstand',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {0, 10},
-			['t20'] = {10, 0},
-			['t15'] = {10, 0},
-			['t10'] = {0, 10},
-		},
-		--技能
-		['Ability'] = { 1, 3, 2, 1, 1, 6, 3, 3, 1, 3, 6, 2, 2, 2, 6 },
-		--装备
-		['Buy'] = {
-			"item_tango",
-			"item_gauntlets",
-			"item_double_branches",
-			"item_stout_shield",
-			"item_quelling_blade",
-			"item_magic_stick",
-			"item_magic_wand",
-			"item_bracer",
-			"item_enchanted_mango",
-			"item_phase_boots",
-			"item_ancient_janggo",
-			"item_blade_mail",
-			"item_blink",
-			"item_black_king_bar", 
-			"item_basher",
-			"item_mjollnir",
-			"item_ultimate_scepter_2",
-			"item_assault",
-			"item_travel_boots",
-			"item_abyssal_blade",
-			"item_moon_shard",
-			"item_travel_boots_2"
-		},
-		--出售
-		['Sell'] = {
-			"item_ancient_janggo",     
-			"item_quelling_blade",
-
-			"item_blade_mail",     
-			"item_stout_shield",
-					
-			"item_black_king_bar",  
-			"item_bracer",	  
-
-			"item_basher",
-			"item_ancient_janggo",
-
-			"item_mjollnir",
-			"item_magic_wand",
-
-			"item_assault",
-			"item_blade_mail",
-
-			"item_travel_boots",
-			"item_phase_boots"
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By 铅笔会有猫的w',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {0, 10},
-			['t15'] = {0, 10},
-			['t10'] = {0, 10},
-		},
-		--技能
-		['Ability'] = { 1, 3, 2, 1, 1, 6, 1, 3, 3, 2, 6, 3, 2, 2, 6 },
-		--装备
-		['Buy'] = {
-			"item_stout_shield",
-			"item_quelling_blade",
-			"item_tango",
-			"item_flask",			
-			"item_magic_stick",
-			"item_power_treads",
-			"item_magic_wand",
-			"item_hand_of_midas",
-			"item_basher", 
-			"item_assault", 
-			"item_lotus_orb",
-			"item_abyssal_blade",
-			"item_ultimate_scepter", 
-			"item_desolator", 
-			"item_ultimate_scepter_2",
-			"item_moon_shard",
-			"item_heart",
-			"item_travel_boots",
-			"item_travel_boots_2",
-		},
-		--出售
-		['Sell'] = {
-			"item_travel_boots",     
-			"item_power_treads",
-
-			"item_desolator",     
-			"item_hand_of_midas",
-
-			"item_assault",     
-			"item_quelling_blade", 
-
-			"item_lotus_orb",     
-			"item_magic_wand", 
-		},
-	},
-}
---默认数据
-local tDefaultGroupedData = {
-	--天赋树
-	['Talent'] = {
-		['t25'] = {10, 0},
-		['t20'] = tTalentTree20,
-		['t15'] = {0, 10},
-		['t10'] = {0, 10},
-	},
-	--技能
-	['Ability'] = {1,3,1,2,1,6,1,3,3,3,6,2,2,2,6},
-	--装备
-	['Buy'] = {
-		sOutfit,
-			"item_crimson_guard",
-			"item_echo_sabre",
-			"item_heavens_halberd",
-			"item_assault",
-			"item_heart",
-	},
-	--出售
-	['Sell'] = {
-		"item_crimson_guard",
-		"item_quelling_blade",
-		
-		"item_assault",
-		"item_echo_sabre",
-		
-		"item_heavens_halberd",
-		"item_magic_wand",
-	},
 }
 
---根据组数据生成技能、天赋、装备
-local nAbilityBuildList, nTalentBuildList;
+X['sSellList'] = {
+	"item_crimson_guard",
+	"item_quelling_blade",
+	
+	"item_assault",
+	"item_echo_sabre",
+	
+	"item_heavens_halberd",
+	"item_magic_wand",
+}
 
-nAbilityBuildList, nTalentBuildList, X['sBuyList'], X['sSellList'] = ConversionMode.Combination(tGroupedDataList, tDefaultGroupedData)
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_tank' }, {"item_solar_crest",'item_quelling_blade'} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -224,6 +79,38 @@ function X.MinionThink(hMinionUnit)
 	end
 
 end
+
+--[[
+
+npc_dota_hero_skeleton_king
+
+"Ability1"		"skeleton_king_hellfire_blast"
+"Ability2"		"skeleton_king_vampiric_aura"
+"Ability3"		"skeleton_king_mortal_strike"
+"Ability4"		"generic_hidden"
+"Ability5"		"generic_hidden"
+"Ability6"		"skeleton_king_reincarnation"
+"Ability10"		"special_bonus_unique_wraith_king_7"
+"Ability11"		"special_bonus_attack_speed_20"
+"Ability12"		"special_bonus_strength_15"
+"Ability13"		"special_bonus_unique_wraith_king_6"
+"Ability14"		"special_bonus_unique_wraith_king_1"
+"Ability15"		"special_bonus_unique_wraith_king_8"
+"Ability16"		"special_bonus_unique_wraith_king_2"
+"Ability17"		"special_bonus_unique_wraith_king_4"
+
+modifier_skeleton_king_hellfire_blast
+modifier_skeleton_king_vampiric_aura
+modifier_skeleton_king_vampiric_aura_buff
+modifier_skeleton_king_mortal_strike_summon_thinker
+modifier_skeleton_king_mortal_strike
+modifier_skeleton_king_mortal_strike_summon
+modifier_skeleton_king_reincarnation
+modifier_skeleton_king_reincarnate_slow
+modifier_skeleton_king_reincarnation_scepter
+modifier_skeleton_king_reincarnation_scepter_active
+
+--]]
 
 local abilityQ = bot:GetAbilityByName( sAbilityList[1] )
 local abilityW = bot:GetAbilityByName( sAbilityList[2] )

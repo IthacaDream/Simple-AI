@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -10,182 +10,49 @@ local X = {}
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
-local ConversionMode = dofile( GetScriptDirectory()..'/AuxiliaryScript/BotlibConversion') --引入技能文件
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-local sOutfit = J.Skill.GetOutfitName(bot)
 
---编组技能、天赋、装备
-local tGroupedDataList = {
-	{
-		--组合说明，不影响游戏
-		['info'] = 'By 决明子',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {10, 0},
-			['t15'] = {10, 0},
-			['t10'] = {0, 10},
-		},
-		--技能
-		['Ability'] = {4,1,1,4,1,4,1,4,5,6,6,5,5,5,6},
-		--装备
-		['Buy'] = {
-			sOutfit,
-			"item_yasha",
-			"item_black_king_bar",
-			"item_manta",
-			"item_skadi",
-			"item_sphere",
-			"item_sheepstick",
-		},
-		--出售
-		['Sell'] = {
-			"item_skadi",
-			"item_urn_of_shadows",
-			
-			"item_sphere",
-			"item_magic_wand",
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By Misunderstand',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {0, 10},
-			['t20'] = {0, 10},
-			['t15'] = {0, 10},
-			['t10'] = {0, 10},
-		},
-		--技能
-		['Ability'] = { 1, 4, 1, 4, 1, 6, 4, 1, 4, 5, 6, 5, 5, 5, 6 },
-		--装备
-		['Buy'] = {
-			"item_faerie_fire",
-			"item_double_slippers",
-			"item_circlet",
-			"item_double_enchanted_mango",
-			"item_wraith_band",
-			"item_bottle",
-			"item_power_treads",
-			"item_enchanted_mango",
-			"item_cyclone", 
-			"item_invis_sword",
-			"item_black_king_bar",
-			"item_ethereal_blade", 
-			"item_travel_boots",
-			"item_ultimate_scepter_2",
-			"item_sheepstick",
-			"item_silver_edge",
-			"item_satanic",
-			"item_travel_boots_2"
-		},
-		--出售
-		['Sell'] = {
-			"item_cyclone",
-			"item_slippers",
 
-			"item_invis_sword",
-			"item_faerie_fire",
-					
-			"item_black_king_bar",
-			"item_wraith_band",
-
-			"item_ethereal_blade",
-			"item_bottle",
-					
-			"item_travel_boots",
-			"item_power_treads",
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By 铅笔会有猫的w',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {0, 10},
-			['t20'] = {0, 10},
-			['t15'] = {0, 10},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = { 4, 1, 1, 4, 1, 4, 1, 4, 5, 6, 6, 5, 5, 5, 6 },
-		--装备
-		['Buy'] = {
-			"item_flask",
-			"item_double_circlet"	,
-			"item_double_branches",
-			"item_double_tango",
-			"item_magic_wand",
-			"item_bottle",
-			"item_boots",
-			"item_wraith_band",
-			"item_power_treads",
-			"item_dragon_lance",
-			"item_invis_sword",
-			"item_black_king_bar",
-			"item_manta",
-			"item_butterfly",
-			"item_silver_edge",
-			"item_satanic",
-			"item_ultimate_scepter",
-			"item_ultimate_scepter_2",
-			"item_moon_shard",
-			"item_travel_boots",
-			"item_travel_boots",
-
-		},
-		--出售
-		['Sell'] = {
-			"item_travel_boots",
-			"item_power_treads",
-
-			"item_manta",
-			"item_magic_wand",
-					
-			"item_butterfly",
-			"item_bottle",
-					
-			"item_dragon_lance",
-			"item_wraith_band",
-		},
-	},
-}
---默认数据
-local tDefaultGroupedData = {
-	--天赋树
-	['Talent'] = {
-		['t25'] = {10, 0},
-		['t20'] = {10, 0},
-		['t15'] = {10, 0},
-		['t10'] = {0, 10},
-	},
-	--技能
-	['Ability'] = {4,1,1,4,1,4,1,4,5,6,6,5,5,5,6},
-	--装备
-	['Buy'] = {
-		sOutfit,
-		"item_yasha",
-		"item_black_king_bar",
-		"item_manta",
-		"item_skadi",
-		"item_sphere",
-		"item_sheepstick",
-	},
-	--出售
-	['Sell'] = {
-		"item_skadi",
-		"item_urn_of_shadows",
-		
-		"item_sphere",
-		"item_magic_wand",
-	},
+local tTalentTreeList = {
+						['t25'] = {10, 0},
+						['t20'] = {10, 0},
+						['t15'] = {10, 0},
+						['t10'] = {0, 10},
 }
 
---根据组数据生成技能、天赋、装备
-local nAbilityBuildList, nTalentBuildList;
+local tAllAbilityBuildList = {
+						{4,1,1,4,1,4,1,4,5,6,6,5,5,5,6},
+						{4,1,4,1,4,1,4,1,5,6,6,5,5,5,6},
+}
 
-nAbilityBuildList, nTalentBuildList, X['sBuyList'], X['sSellList'] = ConversionMode.Combination(tGroupedDataList, tDefaultGroupedData)
+local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
+
+local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
+
+
+
+X['sBuyList'] = {
+				"item_mid_outfit",
+				'item_infused_raindrop',
+				"item_yasha",
+				"item_black_king_bar",
+				"item_manta",
+				"item_skadi",
+				"item_sphere",
+				"item_sheepstick",	
+}
+
+X['sSellList'] = {
+	"item_skadi",
+	"item_urn_of_shadows",
+	
+	"item_sphere",
+	"item_magic_wand",
+}
+
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_mid' }, {} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -202,6 +69,37 @@ function X.MinionThink(hMinionUnit)
 	end
 
 end
+
+--[[
+
+npc_dota_hero_nevermore
+
+"Ability1"		"nevermore_shadowraze1"
+"Ability2"		"nevermore_shadowraze2"
+"Ability3"		"nevermore_shadowraze3"
+"Ability4"		"nevermore_necromastery"
+"Ability5"		"nevermore_dark_lord"
+"Ability6"		"nevermore_requiem"
+"Ability10"		"special_bonus_spell_amplify_8"
+"Ability11"		"special_bonus_attack_speed_20"
+"Ability12"		"special_bonus_unique_nevermore_3"
+"Ability13"		"special_bonus_movement_speed_30"
+"Ability14"		"special_bonus_unique_nevermore_1"
+"Ability15"		"special_bonus_unique_nevermore_2"
+"Ability16"		"special_bonus_unique_nevermore_5"
+"Ability17"		"special_bonus_cooldown_reduction_40"
+
+modifier_nevermore_shadowraze_debuff
+modifier_nevermore_shadowraze_counter
+modifier_nevermore_presence_aura
+modifier_nevermore_presence
+modifier_nevermore_requiem_invis_break
+modifier_nevermore_requiem_thinker
+modifier_nevermore_requiem_aura
+modifier_nevermore_requiem
+modifier_nevermore_necromastery
+
+--]]
 
 local abilityZ = bot:GetAbilityByName( sAbilityList[1] )
 local abilityX = bot:GetAbilityByName( sAbilityList[2] )

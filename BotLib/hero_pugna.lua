@@ -2,56 +2,54 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
 local X = {}
-local bDebugMode = false;
+local bDebugMode = false
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
-local ConversionMode = dofile( GetScriptDirectory()..'/AuxiliaryScript/BotlibConversion') --引入技能文件
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-local sOutfit = J.Skill.GetOutfitName(bot)
 
---编组技能、天赋、装备
-local tGroupedDataList = {
-}
---默认数据
-local tDefaultGroupedData = {
-	--天赋树
-	['Talent'] = {
-		['t25'] = {0, 10},
-		['t20'] = {10, 0},
-		['t15'] = {0, 10},
-		['t10'] = {10, 0},
-	},
-	--技能
-	['Ability'] = {1,2,1,3,1,6,1,2,2,2,6,3,3,3,6},
-	--装备
-	['Buy'] = {
-		sOutfit,
-		"item_pipe",
-		"item_glimmer_cape",
-		"item_veil_of_discord",
-		"item_cyclone",
-		--"item_ultimate_scepter",
-		"item_sheepstick",
-	},
-	--出售
-	['Sell'] = {
-		"item_cyclone",
-		"item_magic_wand",
-	},
+
+local tTalentTreeList = {
+						['t25'] = {0, 10},
+						['t20'] = {10, 0},
+						['t15'] = {0, 10},
+						['t10'] = {10, 0},
 }
 
---根据组数据生成技能、天赋、装备
-local nAbilityBuildList, nTalentBuildList;
+local tAllAbilityBuildList = {
+						{1,2,1,3,1,6,1,2,2,2,6,3,3,3,6},
+}
 
-nAbilityBuildList, nTalentBuildList, X['sBuyList'], X['sSellList'] = ConversionMode.Combination(tGroupedDataList, tDefaultGroupedData)
+local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
+
+local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
+
+X['sBuyList'] = {
+				'item_jakiro_outfit',
+				"item_pipe",
+				"item_glimmer_cape",
+				"item_veil_of_discord",
+				"item_cyclone",
+				--"item_ultimate_scepter",
+				"item_sheepstick",
+
+}
+
+X['sSellList'] = {
+
+	"item_cyclone",
+	"item_magic_wand",
+
+}
+
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_mage' }, {} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -372,7 +370,7 @@ function X.ConsiderQ()
 	
 	--推塔
 	if J.IsAllowedToSpam(bot,120) 
-	   and abilityQ:GetLevel() == 4
+	   and nSkillLV >= 4
 	   and ( nLV >= 8 or DotaTime() > 8 * 60 )
 	   and bot:GetMana() > abilityR:GetManaCost() + 200
 	then
@@ -391,10 +389,11 @@ function X.ConsiderQ()
 			if J.IsValidBuilding(nBuilding)
 				and J.IsInRange(bot,nBuilding,nCastRange + nRadius - 50)
 				and not nBuilding:HasModifier('modifier_fountain_glyph')
+				and not nBuilding:HasModifier('modifier_invulnerable')
 				and not nBuilding:HasModifier('modifier_backdoor_protection')
 			then
 				local nTargetLocation = nBuilding:GetLocation();
-				if not J.IsInRange(bot,nBuilding,nCastRange) 
+				if not J.IsInLocRange(bot,nTargetLocation,nCastRange) 
 				then 
 					nTargetLocation = J.GetUnitTowardDistanceLocation(bot,nBuilding,nCastRange);
 				end
@@ -634,7 +633,7 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592
 
 
 

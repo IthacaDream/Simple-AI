@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -10,214 +10,75 @@ local X = {}
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
-local ConversionMode = dofile( GetScriptDirectory()..'/AuxiliaryScript/BotlibConversion') --引入技能文件
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-local sOutfit = J.Skill.GetOutfitName(bot)
 
---编组技能、天赋、装备
-local tGroupedDataList = {
-	{
-		--组合说明，不影响游戏
-		['info'] = 'By 决明子',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {0, 10},
-			['t20'] = {10, 0},
-			['t15'] = {10, 0},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = {1,2,1,3,1,6,1,2,2,2,6,3,3,3,6},
-		--装备
-		['Buy'] = {
-			sOutfit,
-			"item_dragon_lance",
-			'item_mask_of_madness',
-			"item_maelstrom",
-			"item_hurricane_pike",
-			"item_skadi",
-			"item_broken_satanic",	
-			"item_monkey_king_bar",
-			"item_mjollnir",
-		},
-		--出售
-		['Sell'] = {
-			"item_ultimate_scepter",
-			"item_magic_wand",
-			
-			"item_sheepstick",
-			"item_arcane_boots",
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By 决明子2',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {0, 10},
-			['t20'] = {10, 0},
-			['t15'] = {10, 0},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = {1,2,1,3,1,6,1,2,2,2,6,3,3,3,6},
-		--装备
-		['Buy'] = {
-			sOutfit,
-			"item_dragon_lance",
-			'item_hand_of_midas',
-			"item_maelstrom",
-			"item_hurricane_pike",
-			"item_skadi",
-			"item_black_king_bar",	
-			"item_monkey_king_bar",
-			"item_mjollnir",
-		},
-		--出售
-		['Sell'] = {
-			"item_ultimate_scepter",
-			"item_magic_wand",
-			
-			"item_sheepstick",
-			"item_arcane_boots",
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By Misunderstand',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {10, 0},
-			['t15'] = {10, 0},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = { 1, 2, 2, 1, 3, 6, 1, 1, 3, 3, 6, 2, 3, 2, 6 },
-		--装备
-		['Buy'] = {
-			"item_double_mantle",
-			"item_double_circlet",
-			"item_magic_stick",
-			"item_double_tango",
-			"item_double_null_talisman",
-			"item_double_enchanted_mango",
-			"item_bottle",
-			"item_double_clarity",
-			"item_boots",
-			"item_kaya",
-			"item_arcane_boots",
-			"item_rod_of_atos",
-			"item_blink",
-			"item_veil_of_discord",
-			"item_ultimate_scepter",
-			"item_aether_lens",
-			"item_ultimate_scepter_2",
-			"item_sheepstick",
-			"item_cyclone",
-			"item_travel_boots",
-			"item_kaya_and_sange",
-			"item_travel_boots_2",
-		},
-		--出售
-		['Sell'] = {
-			"item_rod_of_atos",
-			"item_magic_stick",
 
-			"item_blink",
-			"item_bottle",
-					
-			"item_ultimate_scepter",
-			"item_null_talisman",
-
-			"item_cyclone",
-			"item_blink",
-
-			"item_travel_boots",
-			"item_arcane_boots"
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By 铅笔会有猫的w',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {10, 0},
-			['t15'] = {0, 10},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = { 1, 2, 3, 1, 1, 6, 1, 2, 2, 2, 6, 3, 3, 3, 6 },
-		--装备
-		['Buy'] = {
-			"item_double_tango",
-			"item_double_flask",
-			"item_clarity",
-			"item_enchanted_mango",
-			"item_magic_wand",
-			"item_boots",
-			"item_double_null_talisman",
-			"item_arcane_boots",
-			"item_rod_of_atos",
-			"item_glimmer_cape",
-			"item_ultimate_scepter",			
-			"item_kaya",
-			"item_sheepstick", 
-			"item_kaya_and_sange",
-			"item_guardian_greaves",
-			"item_ultimate_scepter_2",
-			"item_lotus_orb",
-			"item_shivas_guard", 
-		},
-		--出售
-		['Sell'] = {
-			"item_shivas_guard",     
-			"item_rod_of_atos",
-
-			"item_sheepstick",     
-			"item_magic_wand",
-					
-			"item_ultimate_scepter",  
-			"item_null_talisman",	 
-		},
-	},
-}
---默认数据
-local tDefaultGroupedData = {
-	--天赋树
-	['Talent'] = {
-		['t25'] = {0, 10},
-		['t20'] = {10, 0},
-		['t15'] = {10, 0},
-		['t10'] = {10, 0},
-	},
-	--技能
-	['Ability'] = {1,2,1,3,1,6,1,2,2,2,6,3,3,3,6},
-	--装备
-	['Buy'] = {
-		sOutfit,
-		--"item_soul_ring",
-		"item_rod_of_atos",
-		"item_pipe",
-		"item_glimmer_cape",
-		"item_cyclone",
-		"item_ultimate_scepter",
-		"item_sheepstick",
-	},
-	--出售
-	['Sell'] = {
-		"item_ultimate_scepter",
-		"item_magic_wand",
-		
-		"item_sheepstick",
-		"item_arcane_boots",
-	},
+local tTalentTreeList = {
+						['t25'] = {10,10},
+						['t20'] = {10, 0},
+						['t15'] = {0, 10},
+						['t10'] = {0, 10},
 }
 
---根据组数据生成技能、天赋、装备
-local nAbilityBuildList, nTalentBuildList;
+if RandomInt(1,9) < 4
+then
+	tTalentTreeList['t25'][1] = 0
+else
+	tTalentTreeList['t25'][2] = 0
+end
 
-nAbilityBuildList, nTalentBuildList, X['sBuyList'], X['sSellList'] = ConversionMode.Combination(tGroupedDataList, tDefaultGroupedData)
+local tAllAbilityBuildList = {
+						{2,3,3,1,3,6,3,1,1,1,6,2,2,2,6},
+}
+
+local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
+
+local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
+
+
+
+X['sBuyList'] = {
+				'item_mid_outfit',
+				"item_dragon_lance",
+				'item_mask_of_madness',
+				"item_maelstrom",
+				"item_hurricane_pike",
+				"item_skadi",
+				"item_broken_satanic",	
+				"item_monkey_king_bar",
+				"item_mjollnir",
+}
+
+if RandomInt(1,9) > 6
+then
+	X['sBuyList'] = {
+					sOutfit,
+					"item_dragon_lance",
+					'item_hand_of_midas',
+					"item_maelstrom",
+					"item_hurricane_pike",
+					"item_skadi",
+					"item_black_king_bar",	
+					"item_monkey_king_bar",
+					"item_mjollnir",
+	}
+end
+
+
+X['sSellList'] = {
+	"item_hurricane_pike",
+	"item_urn_of_shadows",
+	
+	'item_skadi',
+	'item_magic_wand',
+	
+	"item_black_king_bar",	
+	'item_hand_of_midas',
+}
+
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_mid' }, {} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -234,6 +95,37 @@ function X.MinionThink(hMinionUnit)
 	end
 
 end
+
+--[[
+
+npc_dota_hero_sniper
+
+"Ability1"		"sniper_shrapnel"
+"Ability2"		"sniper_headshot"
+"Ability3"		"sniper_take_aim"
+"Ability4"		"generic_hidden"
+"Ability5"		"generic_hidden"
+"Ability6"		"sniper_assassinate"
+"Ability10"		"special_bonus_cooldown_reduction_25"
+"Ability11"		"special_bonus_attack_damage_20"
+"Ability12"		"special_bonus_attack_speed_40"
+"Ability13"		"special_bonus_unique_sniper_5"
+"Ability14"		"special_bonus_unique_sniper_3"
+"Ability15"		"special_bonus_unique_sniper_4"
+"Ability16"		"special_bonus_attack_range_125"
+"Ability17"		"special_bonus_unique_sniper_2"
+
+modifier_sniper_shrapnel_charge_counter
+modifier_sniper_shrapnel_thinker
+modifier_sniper_shrapnel_slow
+modifier_sniper_headshot
+modifier_sniper_headshot_slow
+modifier_sniper_take_aim
+modifier_sniper_take_aim_bonus
+modifier_sniper_assassinate_caster
+modifier_sniper_assassinate
+
+--]]
 
 local abilityQ = bot:GetAbilityByName( sAbilityList[1] );
 local abilityE = bot:GetAbilityByName( sAbilityList[3] );

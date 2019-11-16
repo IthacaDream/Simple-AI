@@ -2,11 +2,11 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
-if GetBot():IsInvulnerable() or not GetBot():IsHero() or not string.find(GetBot():GetUnitName(), "hero") or  GetBot():IsIllusion() then
+if GetBot():IsInvulnerable() or not GetBot():IsHero() or not string.find(GetBot():GetUnitName(), "hero") or GetBot():IsIllusion() then
 	return;
 end
 
@@ -22,7 +22,7 @@ local botName = bot:GetUnitName();
 local minute = 0;
 local sec = 0;
 local preferedCamp = nil;
-local AvailableCamp = {};
+local availableCamp = {};
 local hLaneCreepList = {};
 local numCamp = 18;
 local farmState = 0;
@@ -60,6 +60,12 @@ local sBotVersion,sVersionDate, sABAVersionDate = J.Role.GetBotVersion();
 local bPushNoticeDone = false;
 local bAllNotice = true;
 local nPushNoticeTime = nil;
+
+if J.Role.IsPvNMode()
+then
+	sVersionDate = "(PvN Mode)"..sVersionDate;
+end
+
 if J.Role.IsUserMode()
 then 
 	local nUserType = J.Role.GetUserType()
@@ -162,9 +168,7 @@ function GetDesire()
 	minute = math.floor(DotaTime() / 60);
 	sec = DotaTime() % 60;
 	
-	--X['campCount']           --numCamp
-	--X['availableCampTable']  --AvailableCamp
-	
+		
 	if not J.Role.IsCampRefreshDone()
 	   and J.Role.GetAvailableCampCount() < J.Role.GetCampCount()
 	   and ( DotaTime() > 30 and  sec > 0 and sec < 2 )  
@@ -178,7 +182,7 @@ function GetDesire()
 		J.Role['hasRefreshDone'] = false;
 	end
 	
-	AvailableCamp = J.Role['availableCampTable'];
+	availableCamp = J.Role['availableCampTable'];
 	
 	local hEnemyHeroList = bot:GetNearbyHeroes(1600, true, BOT_MODE_NONE);
 	local hAllyHeroList  = bot:GetNearbyHeroes(1600, false,BOT_MODE_ATTACK);
@@ -195,9 +199,9 @@ function GetDesire()
 		return BOT_MODE_DESIRE_NONE;
 	end	
 	
-	local nRetreatAllys = bot:GetNearbyHeroes(1600,false,BOT_MODE_RETREAT);
-	if J.IsValid(nRetreatAllys[1]) and (not beVeryHighFarmer or bot:GetLevel() >= 22)
-	   and nRetreatAllys[1]:GetActiveModeDesire() > BOT_MODE_DESIRE_HIGH
+	local nRetreatAllyList = bot:GetNearbyHeroes(1600,false,BOT_MODE_RETREAT);
+	if J.IsValid(nRetreatAllyList[1]) and (not beVeryHighFarmer or bot:GetLevel() >= 22)
+	   and nRetreatAllyList[1]:GetActiveModeDesire() > BOT_MODE_DESIRE_HIGH
 	then
 		return BOT_MODE_DESIRE_NONE;
 	end
@@ -216,14 +220,14 @@ function GetDesire()
 	if bot:IsAlive() and bot:HasModifier('modifier_arc_warden_tempest_double') 
 	   and GetRoshanDesire() > 0.85
 	then
-		if preferedCamp == nil then preferedCamp = J.Site.GetClosestNeutralSpwan(bot, AvailableCamp) end;
+		if preferedCamp == nil then preferedCamp = J.Site.GetClosestNeutralSpwan(bot, availableCamp) end;
 		return 0.99;
 	end
 	
 	if not bot:IsAlive() 
 	   or ( bot:WasRecentlyDamagedByAnyHero(2.5) and bot:GetAttackTarget() == nil )
 	   or ( bot:GetActiveMode() == BOT_MODE_RETREAT and bot:GetActiveModeDesire() >= BOT_MODE_DESIRE_HIGH )
-	   or bot.SecretShop
+	   or bot.SecretShop 
 	then
 		return BOT_MODE_DESIRE_NONE;
 	end
@@ -266,7 +270,7 @@ function GetDesire()
 			end
 		end
 	end
-
+	
 	if DotaTime() > countTime + countCD
 	then
 		countTime  = DotaTime();
@@ -340,11 +344,11 @@ function GetDesire()
 	if madas ~= nil and madas:IsFullyCastable() and J.IsInAllyArea(bot)
 	then
 		hLaneCreepList = bot:GetNearbyLaneCreeps(1600, true);
-		if preferedCamp == nil then preferedCamp = J.Site.GetClosestNeutralSpwan(bot, AvailableCamp) end;
+		if preferedCamp == nil then preferedCamp = J.Site.GetClosestNeutralSpwan(bot, availableCamp) end;
 		return BOT_MODE_DESIRE_HIGH;
 	end
 	
-	if GetGameMode() ~= GAMEMODE_MO 
+	if GetGameMode() ~= GAMEMODE_MO and not J.Role.IsPvNMode()
 	   and ( J.Site.IsTimeToFarm(bot) or pushTime > DotaTime() - 8.0 )
 	   and ( not X.IsHumanPlayerInTeam() or enemyKills > allyKills + 16 ) 
 	   and ( bot:GetNextItemPurchaseValue() > 0 or not bot:HasModifier("modifier_item_moon_shard_consumed") )
@@ -365,7 +369,7 @@ function GetDesire()
 		then
 			return BOT_MODE_DESIRE_HIGH;
 		else
-			if preferedCamp == nil then preferedCamp = J.Site.GetClosestNeutralSpwan(bot, AvailableCamp);end
+			if preferedCamp == nil then preferedCamp = J.Site.GetClosestNeutralSpwan(bot, availableCamp);end
 			
 			if preferedCamp ~= nil then
 				if not J.Site.IsModeSuitableToFarm(bot) 
@@ -386,7 +390,7 @@ function GetDesire()
 					then
 						if pushTime > DotaTime() - 8.0
 						then
-							if preferedCamp == nil then preferedCamp = J.Site.GetClosestNeutralSpwan(bot, AvailableCamp);end
+							if preferedCamp == nil then preferedCamp = J.Site.GetClosestNeutralSpwan(bot, availableCamp);end
 							return BOT_MODE_DESIRE_MODERATE;
 						end
 						
@@ -591,7 +595,7 @@ function Think()
 	end
 	
 	
-	if preferedCamp == nil then preferedCamp = J.Site.GetClosestNeutralSpwan(bot, AvailableCamp);end
+	if preferedCamp == nil then preferedCamp = J.Site.GetClosestNeutralSpwan(bot, availableCamp);end
 	if preferedCamp ~= nil then
 		local targetFarmLoc = preferedCamp.cattr.location;
 		local cDist = GetUnitToLocationDistance(bot, targetFarmLoc);
@@ -709,8 +713,8 @@ function Think()
 					farmState = 0;
 					J.SetPingLocation(bot,targetFarmLoc);
 					J.Role['availableCampTable'], preferedCamp = J.Site.UpdateAvailableCamp(bot, preferedCamp, J.Role['availableCampTable']);
-					AvailableCamp = J.Role['availableCampTable'];	
-					preferedCamp  = J.Site.GetClosestNeutralSpwan(bot, AvailableCamp);
+					availableCamp = J.Role['availableCampTable'];	
+					preferedCamp  = J.Site.GetClosestNeutralSpwan(bot, availableCamp);
 
 
 					local farmTarget = J.Site.FindFarmNeutralTarget(neutralCreeps)
@@ -1268,6 +1272,7 @@ function X.IsNormalFarmer(bot)
 		 or botName == "npc_dota_hero_vengefulspirit"
 		 or botName == "npc_dota_hero_omniknight"
 		 or botName == "npc_dota_hero_abaddon"
+
 end
 
 
@@ -1308,4 +1313,4 @@ function X.IsVeryHighFarmer(bot)
 		
 end
 
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592

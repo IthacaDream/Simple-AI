@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -10,178 +10,46 @@ local X = {}
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
-local ConversionMode = dofile( GetScriptDirectory()..'/AuxiliaryScript/BotlibConversion') --引入技能文件
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-local sOutfit = J.Skill.GetOutfitName(bot)
 
---编组技能、天赋、装备
-local tGroupedDataList = {
-	{
-		--组合说明，不影响游戏
-		['info'] = 'By 决明子',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {0, 10},
-			['t15'] = {10, 0},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = {1,3,2,3,1,6,1,1,3,3,6,2,2,2,6},
-		--装备
-		['Buy'] = {
-			sOutfit,
-			"item_mekansm",
-			"item_urn_of_shadows",
-			"item_glimmer_cape",
-			"item_rod_of_atos",
-			"item_guardian_greaves",
-			"item_spirit_vessel",
-			"item_ultimate_scepter",
-			"item_shivas_guard",
-		},
-		--出售
-		['Sell'] = {
-			"item_ultimate_scepter",
-			"item_magic_wand",
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By Misunderstand',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {0, 10},
-			['t20'] = {10, 0},
-			['t15'] = {10, 0},
-			['t10'] = {0, 10},
-		},
-		--技能
-		['Ability'] = { 1, 3, 3, 1, 1, 6, 1, 2, 3, 3, 6, 2, 2, 2, 6 },
-		--装备
-		['Buy'] = {
-			"item_mantle",
-			"item_circlet",
-			"item_tango",
-			"item_enchanted_mango",
-			"item_double_branches",
-			"item_null_talisman",
-			"item_magic_wand",
-			"item_power_treads",
-			"item_mekansm", 
-			"item_holy_locket",
-			"item_ultimate_scepter",
-			"item_shivas_guard",
-			"item_black_king_bar",
-			"item_ultimate_scepter_2",
-			"item_lotus_orb", 
-			"item_pipe", 
-			"item_dagon_3",
-			"item_heart", 
-			"item_travel_boots",
-			"item_dagon_5",
-			"item_moon_shard",
-			"item_travel_boots_2"
-		},
-		--出售
-		['Sell'] = {
-			"item_ultimate_scepter",
-			"item_null_talisman",
-					
-			"item_shivas_guard", 
-			"item_magic_wand",
 
-			"item_lotus_orb",
-			"item_mekansm",
-
-			"item_pipe",
-			"item_holy_locket",
-
-			"item_heart", 
-			"item_black_king_bar",
-
-			"item_travel_boots",
-			"item_power_treads"
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By 铅笔会有猫的w',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {0, 10},
-			['t15'] = {10, 0},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = { 1, 3, 1, 2, 1, 6, 1, 3, 3, 3, 6, 2, 2, 2, 6 },
-		--装备
-		['Buy'] = {
-			"item_double_tango",
-			"item_double_branches",
-			"item_magic_stick",
-			"item_null_talisman",
-			"item_magic_wand",
-			"item_arcane_boots",
-			"item_mekansm",
-			"item_ultimate_scepter",
-			"item_shivas_guard",
-			"item_octarine_core",
-			"item_guardian_greaves",
-			"item_radiance",
-			"item_sheepstick",
-			"item_ultimate_scepter_2",
-			"item_heart",
-			"item_moon_shard",
-		},
-		--出售
-		['Sell'] = {
-			"item_ethereal_blade",
-			"item_pipe",
-					
-			"item_sheepstick",
-			"item_magic_wand",
-
-			"item_octarine_core",
-			"item_null_talisman",
-		},
-	},
-}
---默认数据
-local tDefaultGroupedData = {
-	--天赋树
-	['Talent'] = {
-		['t25'] = {10, 0},
-		['t20'] = {0, 10},
-		['t15'] = {10, 0},
-		['t10'] = {10, 0},
-	},
-	--技能
-	['Ability'] = {1,3,2,3,1,6,1,1,3,3,6,2,2,2,6},
-	--装备
-	['Buy'] = {
-		sOutfit,
-		"item_mekansm",
-		"item_urn_of_shadows",
-		"item_glimmer_cape",
-		"item_rod_of_atos",
-		"item_guardian_greaves",
-		"item_spirit_vessel",
-		"item_ultimate_scepter",
-		"item_shivas_guard",
-	},
-	--出售
-	['Sell'] = {
-		"item_ultimate_scepter",
-		"item_magic_wand",
-	},
+local tTalentTreeList = {
+						['t25'] = {10, 0},
+						['t20'] = {0, 10},
+						['t15'] = {10, 0},
+						['t10'] = {10, 0},
 }
 
---根据组数据生成技能、天赋、装备
-local nAbilityBuildList, nTalentBuildList;
+local tAllAbilityBuildList = {
+						{1,3,2,3,1,6,1,1,3,3,6,2,2,2,6},
+}
 
-nAbilityBuildList, nTalentBuildList, X['sBuyList'], X['sSellList'] = ConversionMode.Combination(tGroupedDataList, tDefaultGroupedData)
+local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
+
+local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
+
+
+
+X['sBuyList'] = {
+				'item_priest_outfit',
+				"item_mekansm",
+				"item_urn_of_shadows",
+				"item_glimmer_cape",
+				"item_rod_of_atos",
+				"item_guardian_greaves",
+				"item_spirit_vessel",
+				"item_ultimate_scepter",
+				"item_shivas_guard",
+}
+
+X['sSellList'] = {
+	"item_ultimate_scepter",
+	"item_magic_wand",
+}
+
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_priest' }, {} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -199,6 +67,36 @@ function X.MinionThink(hMinionUnit)
 	end
 
 end
+
+--[[
+
+npc_dota_hero_necrolyte
+
+"Ability1"		"necrolyte_death_pulse"
+"Ability2"		"necrolyte_sadist"
+"Ability3"		"necrolyte_heartstopper_aura"
+"Ability4"		"generic_hidden"
+"Ability5"		"generic_hidden"
+"Ability6"		"necrolyte_reapers_scythe"
+"Ability10"		"special_bonus_attack_damage_30"
+"Ability11"		"special_bonus_strength_10"
+"Ability12"		"special_bonus_unique_necrophos_3"
+"Ability13"		"special_bonus_unique_necrophos_4"
+"Ability14"		"special_bonus_magic_resistance_20"
+"Ability15"		"special_bonus_attack_speed_70"
+"Ability16"		"special_bonus_unique_necrophos_2"
+"Ability17"		"special_bonus_unique_necrophos"
+
+modifier_necrolyte_sadist_active
+modifier_necrolyte_sadist_aura_effect
+modifier_necrolyte_heartstopper_aura
+modifier_necrolyte_heartstopper_aura_counter
+modifier_necrolyte_heartstopper_aura_effect
+modifier_necrolyte_reapers_scythe
+modifier_necrolyte_reapers_scythe_respawn_time
+
+
+--]]
 
 local abilityQ = bot:GetAbilityByName( sAbilityList[1] );
 local abilityW = bot:GetAbilityByName( sAbilityList[2] );

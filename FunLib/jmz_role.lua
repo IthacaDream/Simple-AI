@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -11,8 +11,8 @@ local X = {}
 
 local sBotVersion = "New";
 --local sBotVersion = "Mid";
-local sVersionDate = " 1.1.7"
-local sABAVersionDate = sBotVersion.." 7.22,2019/09/30."
+local sVersionDate = " 1.1.8"
+local sABAVersionDate = sBotVersion.." 7.22,2019/11/14."
 
 function X.GetBotVersion()
 	return sBotVersion,sVersionDate,sABAVersionDate;
@@ -1743,8 +1743,7 @@ end
 
 function X.GetCurrentSuitableRole(bot, hero)
 
-	if X.IsUserMode() 
-	  
+	if X.IsUserMode() 	  
 	   and X.IsUserSetSup(bot)
 	then
 		return "support";
@@ -1922,47 +1921,48 @@ function X.IsUserMode()
 	return X["nUserMode"] > 0
 end
 
-local sZhongHeroList = {
-	'npc_dota_hero_medusa',
-	'npc_dota_hero_arc_warden',
-	'npc_dota_hero_jakiro',
-	'npc_dota_hero_warlock',
-	'npc_dota_hero_zuus',
+
+local tBasicHeroList = {	
+	["npc_dota_hero_nevermore"] = true,
+	["npc_dota_hero_templar_assassin"] = true,
+	["npc_dota_hero_chaos_knight"] = true,
+	["npc_dota_hero_dragon_knight"] = true,
+	["npc_dota_hero_kunkka"] = true,
+	["npc_dota_hero_skeleton_king"] = true,	
+	["npc_dota_hero_luna"] = true,
+	["npc_dota_hero_arc_warden"] = true,
+	["npc_dota_hero_drow_ranger"] = true,
+	["npc_dota_hero_bloodseeker"] = true,
+	["npc_dota_hero_phantom_assassin"] = true,
+	["npc_dota_hero_crystal_maiden"] = true,
+	["npc_dota_hero_skywrath_mage"] = true,
+	["npc_dota_hero_silencer"] = true,
+	["npc_dota_hero_necrolyte"] = true,
+	["npc_dota_hero_oracle"] = true,
 }
 
-local sGaoHeroList = {
-	'npc_dota_hero_antimage',
-	'npc_dota_hero_sven',
-	'npc_dota_hero_sniper',
-	'npc_dota_hero_bristleback',
-	'npc_dota_hero_viper',
-	'npc_dota_hero_ogre_magi',
-	'npc_dota_hero_phantom_lancer',
-	'npc_dota_hero_razor',
-	'npc_dota_hero_lina',
-	'npc_dota_hero_lich',
-	'npc_dota_hero_witch_doctor',
+local tSeniorHeroList = {
+	['npc_dota_hero_medusa'] = true,
+	['npc_dota_hero_arc_warden'] = true,
+	['npc_dota_hero_jakiro'] = true,
+	['npc_dota_hero_warlock'] = true,
+	['npc_dota_hero_zuus'] = true,
 }
 
 function X.IsUserHero()
 
 	local sBotName = GetBot():GetUnitName();
 	
-	if X["nUserMode"] <= 2 
-	then
-		for _,s in pairs(sGaoHeroList)
-		do	
-			if s == sBotName then return false end
-		end
-	end
-	
 	if X["nUserMode"] <= 1 
 	then
-		for _,s in pairs(sZhongHeroList)
-		do	
-			if s == sBotName then return false end
-		end
+		return tBasicHeroList[sBotName] == true 
 	end
+	
+	if X["nUserMode"] == 2 
+	then
+		return tBasicHeroList[sBotName] == true 
+				or tSeniorHeroList[sBotName] == true
+	end	
 	
 	return true
 
@@ -2024,6 +2024,22 @@ function X.IsUserSetSup(bot)
 	return false;
 end
 
+X["bPvNMode"] = false
+function X.IsPvNMode()
+	
+	if DotaTime() > 0 then return X["bPvNMode"] end
+	
+	local oppositePlayerCount = #GetTeamPlayers(GetOpposingTeam())
+	
+	if oppositePlayerCount <= 3 
+	then
+		X["bPvNMode"] = true
+		return true 
+	end
+	
+	return false
+	
+end
 
 function X.GetHighestValueRoles(bot)
 	local maxVal = -1;
@@ -2041,4 +2057,4 @@ end
 
 
 return X
--- aaxxxxop@163.com QQ:2462331592..
+-- aaxxxxop@163.com QQ:2462331592.

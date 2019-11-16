@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -10,175 +10,46 @@ local X = {}
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
-local ConversionMode = dofile( GetScriptDirectory()..'/AuxiliaryScript/BotlibConversion') --引入技能文件
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-local sOutfit = J.Skill.GetOutfitName(bot)
 
---编组技能、天赋、装备
-local tGroupedDataList = {
-	{
-		--组合说明，不影响游戏
-		['info'] = 'By 决明子',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {0, 10},
-			['t15'] = {10, 0},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = {2,1,2,3,2,6,2,1,1,1,6,3,3,3,6},
-		--装备
-		['Buy'] = {
-			sOutfit,
-			"item_soul_ring",
-			"item_pipe",
-			"item_glimmer_cape",
-			"item_veil_of_discord",
-			"item_cyclone",
-			"item_ultimate_scepter",
-			"item_sheepstick",
-		},
-		--出售
-		['Sell'] = {
-			"item_ultimate_scepter",
-			"item_arcane_boots",
-			
-			'item_ultimate_scepter',
-			'item_magic_wand',
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By Misunderstand',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {10, 0},
-			['t15'] = {0, 10},
-			['t10'] = {0, 10},
-		},
-		--技能
-		['Ability'] = { 1, 2, 2, 1, 2, 6, 2, 3, 3, 1, 6, 1, 3, 3, 6 },
-		--装备
-		['Buy'] = {
-			"item_double_mantle",
-			"item_double_circlet",
-			"item_double_tango",
-			"item_clarity",
-			"item_double_null_talisman",
-			"item_double_enchanted_mango",
-			"item_magic_wand",
-			"item_double_clarity",
-			"item_arcane_boots",
-			"item_clarity",
-			"item_aether_lens",
-			"item_ultimate_scepter",
-			"item_blink",
-			"item_kaya",
-			"item_veil_of_discord",
-			"item_travel_boots",
-			"item_vitality_booster",
-			"item_ultimate_scepter_2",
-			"item_aeon_disk",
-			"item_octarine_core",
-			"item_kaya_and_sange",
-			"item_travel_boots_2",
-		},
-		--出售
-		['Sell'] = {
-			"item_blink",     
-			"item_magic_wand",
 
-			"item_kaya",     
-			"item_null_talisman",
-					
-			"item_travel_boots",  
-			"item_arcane_boots"
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By 铅笔会有猫的w',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {0, 10},
-			['t15'] = {10, 0},
-			['t10'] = {0, 10},
-		},
-		--技能
-		['Ability'] = { 2, 1, 1, 3, 1, 6, 1, 2, 2, 2, 6, 3, 3, 3, 6 },
-		--装备
-		['Buy'] = {
-			"item_double_tango",
-			"item_flask",
-			"item_clarity",
-			"item_magic_stick",
-			"item_arcane_boots",
-			"item_magic_wand",
-			"item_soul_ring", 
-			"item_veil_of_discord", 
-			"item_ultimate_scepter", 
-			"item_kaya",
-			"item_octarine_core",
-			"item_refresher",
-			"item_kaya_and_sange",
-			"item_ultimate_scepter_2", 
-			"item_sheepstick",
-			"item_travel_boots",
-			"item_moon_shard",
-			"item_travel_boots_2",
-		},
-		--出售
-		['Sell'] = {
-			"item_travel_boots_2",     
-			"item_arcane_boots",
-
-			"item_octarine_core", 
-			"item_soul_ring",
-
-			"item_refresher",  
-			"item_magic_wand",
-		},
-	},
-}
---默认数据
-local tDefaultGroupedData = {
-	--天赋树
-	['Talent'] = {
-		['t25'] = {10, 0},
-		['t20'] = {0, 10},
-		['t15'] = {10, 0},
-		['t10'] = {10, 0},
-	},
-	--技能
-	['Ability'] = {2,1,2,3,2,6,2,1,1,1,6,3,3,3,6},
-	--装备
-	['Buy'] = {
-		sOutfit,
-		"item_soul_ring",
-		"item_pipe",
-		"item_glimmer_cape",
-		"item_veil_of_discord",
-		"item_cyclone",
-		"item_ultimate_scepter",
-		"item_sheepstick",
-	},
-	--出售
-	['Sell'] = {
-		"item_ultimate_scepter",
-		"item_arcane_boots",
-		
-		'item_ultimate_scepter',
-		'item_magic_wand',
-	},
+local tTalentTreeList = {
+						['t25'] = {10, 0},
+						['t20'] = {0, 10},
+						['t15'] = {10, 0},
+						['t10'] = {10, 0},
 }
 
---根据组数据生成技能、天赋、装备
-local nAbilityBuildList, nTalentBuildList;
+local tAllAbilityBuildList = {
+						{2,1,2,3,2,6,2,1,1,1,6,3,3,3,6},
+}
 
-nAbilityBuildList, nTalentBuildList, X['sBuyList'], X['sSellList'] = ConversionMode.Combination(tGroupedDataList, tDefaultGroupedData)
+local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
+
+local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
+
+X['sBuyList'] = {
+				'item_mage_outfit',
+				"item_soul_ring",
+				"item_pipe",
+				"item_glimmer_cape",
+				"item_veil_of_discord",
+				"item_cyclone",
+				"item_ultimate_scepter",
+				"item_sheepstick",
+}
+
+X['sSellList'] = {
+	"item_ultimate_scepter",
+	"item_arcane_boots",
+	
+	'item_ultimate_scepter',
+	'item_magic_wand',
+}
+
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_mage' }, {} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -195,6 +66,33 @@ function X.MinionThink(hMinionUnit)
 	end
 
 end
+
+--[[
+
+npc_dota_hero_zuus
+
+"Ability1"		"razor_plasma_field"
+"Ability2"		"razor_static_link"
+"Ability3"		"razor_unstable_current"
+"Ability4"		"generic_hidden"
+"Ability5"		"generic_hidden"
+"Ability6"		"razor_eye_of_the_storm"
+"Ability10"		"special_bonus_hp_225"
+"Ability11"		"special_bonus_agility_15"
+"Ability12"		"special_bonus_unique_razor"
+"Ability13"		"special_bonus_unique_razor_3"
+"Ability14"		"special_bonus_armor_10"
+"Ability15"		"special_bonus_unique_razor_2"
+"Ability16"		"special_bonus_attack_speed_100"
+"Ability17"		"special_bonus_unique_razor_4"
+
+modifier_zuus_arc_lightning
+modifier_zuus_lightningbolt_vision_thinker
+modifier_zuus_static_field
+modifier_zuus_thundergodswrath_vision_thinker
+modifier_zuus_cloud
+
+--]]
 
 local abilityQ = bot:GetAbilityByName( sAbilityList[1] )
 local abilityW = bot:GetAbilityByName( sAbilityList[2] )

@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -11,12 +11,15 @@ local Role = require( GetScriptDirectory()..'/FunLib/jmz_role')
 
 local bot = GetBot();
 
-if bot:IsInvulnerable() or bot:IsHero() == false or bot:IsIllusion()
+if bot:IsInvulnerable() 
+	or not bot:IsHero() 
+	or bot:IsIllusion()
+	or bot:GetUnitName() == "npc_dota_hero_techies"
 then
 	return;
 end
 
-local BotBuild = require(GetScriptDirectory() .. "/BotLib/" .. string.gsub(GetBot():GetUnitName(), "npc_dota_", ""));
+local BotBuild = require(GetScriptDirectory() .. "/BotLib/" .. string.gsub(bot:GetUnitName(), "npc_dota_", ""));
 
 if BotBuild == nil then return; end
 
@@ -317,11 +320,18 @@ function ItemPurchaseThink()
 		if nowTime < 0 and GetItemStockCount( "item_courier" ) > 0
 		then
 			bot:ActionImmediate_PurchaseItem( 'item_courier' );      
-		elseif nowTime < 0 and botGold >= GetItemCost( "item_clarity" ) and Item.HasItem(bot, "item_clarity") == false 
+		elseif nowTime < 0 
+			and botGold >= GetItemCost( "item_clarity" ) 
+			and Item.HasItem(bot, "item_clarity") == false 
+			and not Role.IsPvNMode()
 		then
 			bot:ActionImmediate_PurchaseItem("item_clarity");	
-		elseif botLevel >= 5 and Role['invisEnemyExist'] == true and buyBootsStatus == true and botGold >= GetItemCost( "item_dust" ) 
-			and Item.GetEmptyInventoryAmount(bot) >= 2 and Item.GetItemCharges(bot, "item_dust") < 1 and bot:GetCourierValue() == 0   
+		elseif botLevel >= 5 
+			and Role['invisEnemyExist'] == true 
+			and buyBootsStatus == true 
+			and botGold >= GetItemCost( "item_dust" ) 
+			and Item.GetEmptyInventoryAmount(bot) >= 2 
+			and Item.GetItemCharges(bot, "item_dust") < 1 and bot:GetCourierValue() == 0   
 		then
 			bot:ActionImmediate_PurchaseItem("item_dust"); 
 		elseif GetItemStockCount( "item_ward_observer" ) >= 1 
@@ -331,6 +341,7 @@ function ItemPurchaseThink()
 			  and Item.GetItemCharges(bot, "item_ward_observer") < 1  
 			  and bot:GetCourierValue() == 0
 			  and buyWardTime < nowTime - 3 *60
+			  and not Role.IsPvNMode()
 		then 
 			buyWardTime = nowTime;
 			bot:ActionImmediate_PurchaseItem("item_ward_observer"); 
@@ -675,7 +686,9 @@ function ItemPurchaseThink()
 	end
 	
 	--Add travelboots,moonshare,bkb to buy when in very late
-	if #bot.itemToBuy == 0 and not Role.IsUserMode() --there be bug
+	if #bot.itemToBuy == 0 
+		and not Role.IsUserMode() --there be bug
+		and not Role.IsPvNMode()
 	then
 
 		if addTravelBoots == false
@@ -800,4 +813,4 @@ function ItemPurchaseThink()
 	end
 
 end
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592

@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -10,184 +10,46 @@ local X = {}
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
-local ConversionMode = dofile( GetScriptDirectory()..'/AuxiliaryScript/BotlibConversion') --引入技能文件
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-local sOutfit = J.Skill.GetOutfitName(bot)
 
---编组技能、天赋、装备
-local tGroupedDataList = {
-	{
-		--组合说明，不影响游戏
-		['info'] = 'By 决明子',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {0, 10},
-			['t15'] = {10, 0},
-			['t10'] = {0, 10},
-		},
-		--技能
-		['Ability'] = {1,3,2,3,3,6,3,1,1,1,6,2,2,2,6},
-		--装备
-		['Buy'] = {
-			sOutfit,
-			'item_headdress',
-			'item_pipe',
-			'item_shadow_amulet',
-			'item_veil_of_discord',
-			'item_invis_sword',		
-			'item_cyclone', 
-			'item_sheepstick',
-			'item_silver_edge',
-		},
-		--出售
-		['Sell'] = {
-			'item_cyclone',
-			'item_magic_wand',
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By Misunderstand',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {0, 10},
-			['t20'] = {10, 0},
-			['t15'] = {0, 10},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = { 1, 3, 2, 3, 2, 6, 3, 3, 1, 1, 6, 1, 2, 2, 6 },
-		--装备
-		['Buy'] = {
-			"item_tango",
-			"item_flask",
-			"item_enchanted_mango",
-			"item_circlet",
-			"item_branches",
-			"item_magic_stick",
-			"item_tranquil_boots", 
-			"item_enchanted_mango",
-			"item_double_clarity",
-			"item_urn_of_shadows", 
-			"item_magic_wand",
-			"item_blink",
-			"item_glimmer_cape",
-			"item_force_staff", 
-			"item_spirit_vessel", 
-			"item_black_king_bar",
-			"item_ultimate_scepter",
-			"item_ultimate_scepter_2",
-			"item_hurricane_pike",
-			"item_travel_boots",
-			"item_silver_edge",
-			"item_aeon_disk",
-			"item_moon_shard",
-			"item_travel_boots_2"
-		},
-		--出售
-		['Sell'] = {
-			"item_black_king_bar",     
-			"item_magic_wand",
-					
-			"item_travel_boots",  
-			"item_tranquil_boots",
 
-			"item_silver_edge",
-			"item_blink",
 
-			"item_aeon_disk",
-			"item_glimmer_cape"
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By 铅笔会有猫的w',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {0, 10},
-			['t20'] = {0, 10},
-			['t15'] = {10, 0},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = { 1, 3, 2, 3, 2, 6, 3, 3, 1, 1, 6, 1, 3, 3, 6 },
-		--装备
-		['Buy'] = {
-			"item_tango",
-			"item_flask",
-			"item_enchanted_mango",
-			"item_circlet",
-			"item_branches",
-			"item_magic_stick",
-			"item_tranquil_boots", 
-			"item_enchanted_mango",
-			"item_double_clarity",
-			"item_bracer", 
-			"item_magic_wand",
-			"item_glimmer_cape",
-			"item_force_staff",
-			"item_silver_edge",
-			"item_black_king_bar",
-			"item_ultimate_scepter",
-			"item_sheepstick",
-			"item_travel_boots",
-			"item_hurricane_pike",
-			"item_ultimate_scepter_2",
-			"item_bloodthorn",
-			"item_moon_shard",
-			"item_travel_boots_2",
-		},
-		--出售
-		['Sell'] = {
-			"item_ultimate_scepter",     
-			"item_magic_wand",
-					
-			"item_travel_boots",  
-			"item_tranquil_boots",
-					
-			"item_sheepstick",  
-			"item_glimmer_cape",
-
-			"item_silver_edge",
-			"item_bracer"
-		},
-	},
-}
---默认数据
-local tDefaultGroupedData = {
-	--天赋树
-	['Talent'] = {
-		['t25'] = {10, 0},
-		['t20'] = {0, 10},
-		['t15'] = {10, 0},
-		['t10'] = {0, 10},
-	},
-	--技能
-	['Ability'] = {1,3,2,3,3,6,3,1,1,1,6,2,2,2,6},
-	--装备
-	['Buy'] = {
-		sOutfit,
-		'item_headdress',
-		'item_pipe',
-		'item_shadow_amulet',
-		'item_veil_of_discord',
-		'item_invis_sword',		
-		'item_cyclone', 
-		'item_sheepstick',
-		'item_silver_edge',
-	},
-	--出售
-	['Sell'] = {
-		'item_cyclone',
-		'item_magic_wand',
-	},
+local tTalentTreeList = {
+						['t25'] = {10, 0},
+						['t20'] = {0, 10},
+						['t15'] = {10, 0},
+						['t10'] = {0, 10},
 }
 
---根据组数据生成技能、天赋、装备
-local nAbilityBuildList, nTalentBuildList;
+local tAllAbilityBuildList = {
+							 {1,3,2,3,3,6,3,1,1,1,6,2,2,2,6},
+}
 
-nAbilityBuildList, nTalentBuildList, X['sBuyList'], X['sSellList'] = ConversionMode.Combination(tGroupedDataList, tDefaultGroupedData)
+local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
+
+local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
+
+
+X['sBuyList'] = {
+				'item_crystal_maiden_outfit',
+				'item_headdress',
+				'item_pipe',
+				'item_shadow_amulet',
+				'item_veil_of_discord',
+				'item_invis_sword',		
+				'item_cyclone', 
+				'item_sheepstick',
+				'item_silver_edge',
+}
+
+X['sSellList'] = {
+	'item_cyclone',
+	'item_magic_wand',
+}
+
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_mage' }, {} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -204,6 +66,35 @@ function X.MinionThink(hMinionUnit)
 	end
 
 end
+
+--[[
+
+npc_dota_hero_crystal_maiden
+
+"Ability1"		"crystal_maiden_crystal_nova"
+"Ability2"		"crystal_maiden_frostbite"
+"Ability3"		"crystal_maiden_brilliance_aura"
+"Ability4"		"generic_hidden"
+"Ability5"		"generic_hidden"
+"Ability6"		"crystal_maiden_freezing_field"
+"Ability10"		"special_bonus_hp_250"
+"Ability11"		"special_bonus_cast_range_100"
+"Ability12"		"special_bonus_unique_crystal_maiden_4"
+"Ability13"		"special_bonus_gold_income_25"
+"Ability14"		"special_bonus_attack_speed_250"
+"Ability15"		"special_bonus_unique_crystal_maiden_3"
+"Ability16"		"special_bonus_unique_crystal_maiden_1"
+"Ability17"		"special_bonus_unique_crystal_maiden_2"
+
+modifier_crystal_maiden_crystal_nova
+modifier_crystal_maiden_frostbite
+modifier_crystal_maiden_brilliance_aura
+modifier_crystal_maiden_brilliance_aura_effect
+modifier_crystal_maiden_freezing_field
+modifier_crystal_maiden_freezing_field_slow
+modifier_crystal_maiden_freezing_field_tracker
+
+--]]
 
 local amuletTime = 0
 local aetherRange = 0

@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -10,182 +10,48 @@ local X = {}
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
-local ConversionMode = dofile( GetScriptDirectory()..'/AuxiliaryScript/BotlibConversion') --引入技能文件
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-local sOutfit = J.Skill.GetOutfitName(bot)
 
---编组技能、天赋、装备
-local tGroupedDataList = {
-	{
-		--组合说明，不影响游戏
-		['info'] = 'By 决明子',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {10, 0},
-			['t15'] = {0, 10},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = {1,3,1,3,1,6,1,2,2,2,6,2,3,3,6},
-		--装备
-		['Buy'] = {
-			sOutfit,
-			"item_dragon_lance",
-			"item_desolator",
-			"item_black_king_bar",
-			"item_hurricane_pike",
-			"item_satanic",
-			"item_lesser_crit",
-			"item_bloodthorn",
-		},
-		--出售
-		['Sell'] = {
-			"item_black_king_bar",
-			"item_urn_of_shadows",
-			
-			'item_satanic',
-			'item_magic_wand',
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By Misunderstand',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {0, 10},
-			['t20'] = {0, 10},
-			['t15'] = {10, 0},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = { 3, 1, 1, 3, 2, 6, 1, 1, 2, 2, 6, 3, 2, 3, 6 },
-		--装备
-		['Buy'] = {
-			"item_faerie_fire",
-			"item_double_slippers",
-			"item_double_circlet",
-			"item_tango",
-			"item_bottle",
-			"item_double_wraith_band",
-			"item_power_treads",
-			"item_desolator",
-			"item_blink",
-			"item_black_king_bar", 
-			"item_nullifier",
-			"item_monkey_king_bar",
-			"item_ultimate_scepter",
-			"item_greater_crit",
-			"item_ultimate_scepter_2",
-			"item_moon_shard",
-			"item_travel_boots",
-			"item_travel_boots_2"
-		},
-		--出售
-		['Sell'] = {
-			"item_black_king_bar",
-			"item_wraith_band",
-					
-			"item_nullifier",
-			"item_bottle",
 
-			"item_ultimate_scepter",
-			"item_blink",
-
-			"item_travel_boots",
-			"item_power_treads"
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By 铅笔会有猫的w',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {0, 10},
-			['t20'] = {0, 10},
-			['t15'] = {10, 0},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = { 1, 3, 1, 3, 1, 2, 1, 6, 3, 2, 6, 2, 2, 3, 6 },
-		--装备
-		['Buy'] = {
-			"item_circlet",
-			"item_slippers",
-			"item_double_branches",
-			"item_double_tango",
-			"item_double_flask",
-			"item_wraith_band",
-			"item_power_treads",
-			"item_magic_wand",
-			"item_bottle", 
-			"item_desolator",
-			"item_dragon_lance",
-			"item_black_king_bar",
-			"item_butterfly",
-			"item_monkey_king_bar",
-			"item_bloodthorn", 
-			"item_travel_boots",
-			"item_moon_shard",
-			"item_ultimate_scepter",
-			"item_ultimate_scepter_2",
-			"item_travel_boots_2",
-		},
-		--出售
-		['Sell'] = {
-			"item_travel_boots",
-			"item_power_treads",
-
-			"item_monkey_king_bar",
-			"item_dragon_lance",
-
-			"item_butterfly",
-			"item_bottle",
-
-			"item_lesser_crit",
-			"item_magic_wand",
-					
-			"item_black_king_bar",
-			"item_wraith_band",
-		},
-	},
-}
---默认数据
-local tDefaultGroupedData = {
-	--天赋树
-	['Talent'] = {
-		['t25'] = {10, 0},
-		['t20'] = {10, 0},
-		['t15'] = {0, 10},
-		['t10'] = {10, 0},
-	},
-	--技能
-	['Ability'] = {1,3,1,3,1,6,1,2,2,2,6,2,3,3,6},
-	--装备
-	['Buy'] = {
-		sOutfit,
-		"item_dragon_lance",
-		"item_desolator",
-		"item_black_king_bar",
-		"item_hurricane_pike",
-		"item_satanic",
-		"item_lesser_crit",
-		"item_bloodthorn",
-	},
-	--出售
-	['Sell'] = {
-		"item_black_king_bar",
-		"item_urn_of_shadows",
-		
-		'item_satanic',
-		'item_magic_wand',
-	},
+local tTalentTreeList = {
+						['t25'] = {10, 0},
+						['t20'] = {10, 0},
+						['t15'] = {0, 10},
+						['t10'] = {10, 0},
 }
 
---根据组数据生成技能、天赋、装备
-local nAbilityBuildList, nTalentBuildList;
+local tAllAbilityBuildList = {
+						{1,3,1,3,1,6,1,2,2,2,6,2,3,3,6},
+}
 
-nAbilityBuildList, nTalentBuildList, X['sBuyList'], X['sSellList'] = ConversionMode.Combination(tGroupedDataList, tDefaultGroupedData)
+local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
+
+local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
+
+
+
+X['sBuyList'] = {
+				'item_templar_assassin_outfit',
+				"item_dragon_lance",
+				"item_desolator",
+				"item_black_king_bar",
+				"item_hurricane_pike",
+				"item_satanic",
+				"item_lesser_crit",
+				"item_bloodthorn",
+}
+
+X['sSellList'] = {
+	"item_black_king_bar",
+	"item_urn_of_shadows",
+	
+	'item_satanic',
+	'item_magic_wand',
+}
+
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_mid' }, {} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -281,6 +147,39 @@ function X.IsEnemyRegenning(nEnemies)
 	return false;
 
 end
+
+--[[
+
+npc_dota_hero_templar_assassin
+
+"Ability1"		"templar_assassin_refraction"
+"Ability2"		"templar_assassin_meld"
+"Ability3"		"templar_assassin_psi_blades"
+"Ability4"		"templar_assassin_trap"
+"Ability5"		"templar_assassin_trap_teleport"
+"Ability6"		"templar_assassin_psionic_trap"
+"Ability10"		"special_bonus_attack_speed_25"
+"Ability11"		"special_bonus_evasion_15"
+"Ability12"		"special_bonus_movement_speed_25"
+"Ability13"		"special_bonus_unique_templar_assassin_3"
+"Ability14"		"special_bonus_unique_templar_assassin_4"
+"Ability15"		"special_bonus_unique_templar_assassin_2"
+"Ability16"		"special_bonus_unique_templar_assassin_7"
+"Ability17"		"special_bonus_unique_templar_assassin"
+
+modifier_templar_assassin_refraction_damage
+modifier_templar_assassin_refraction_absorb
+modifier_templar_assassin_meld_animation
+modifier_templar_assassin_meld
+modifier_templar_assassin_meld_armor
+modifier_templar_assassin_psi_blades
+modifier_templar_assassin_psi_blades_slow
+modifier_templar_assassin_psionic_trap_counter
+modifier_templar_assassin_trap
+modifier_templar_assassin_trap_slow
+modifier_templar_assassin_refraction_holdout
+
+--]]
 
 local abilityQ = bot:GetAbilityByName( sAbilityList[1] )
 local abilityW = bot:GetAbilityByName( sAbilityList[2] )

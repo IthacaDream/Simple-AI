@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -10,176 +10,44 @@ local X = {}
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
-local ConversionMode = dofile( GetScriptDirectory()..'/AuxiliaryScript/BotlibConversion') --引入技能文件
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-local sOutfit = J.Skill.GetOutfitName(bot)
 
---编组技能、天赋、装备
-local tGroupedDataList = {
-	{
-		--组合说明，不影响游戏
-		['info'] = 'By 决明子',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {0, 10},
-			['t20'] = {10, 0},
-			['t15'] = {0, 10},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = {3,1,1,2,1,6,1,2,2,2,6,3,3,3,6},
-		--装备
-		['Buy'] = {
-			sOutfit,
-			'item_pers', 
-			'item_dragon_lance', 
-			'item_yasha',
-			'item_manta',
-			'item_sphere',
-			'item_hurricane_pike',
-			'item_black_king_bar',
-			'item_lesser_crit',
-			'item_bloodthorn',
-		},
-		--出售
-		['Sell'] = {
-			"item_hurricane_pike",
-			"item_magic_wand",
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By Misunderstand',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {0, 10},
-			['t15'] = {10, 0},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = { 3, 1, 1, 1, 3, 6, 2, 2, 2, 1, 6, 2, 3, 3, 6 },
-		--装备
-		['Buy'] = {
-			"item_tango",
-			"item_ring_of_basilius",
-			"item_magic_stick",
-			"item_boots",
-			"item_double_enchanted_mango",
-			"item_crown",
-			"item_power_treads",
-			"item_veil_of_discord",
-			"item_black_king_bar",
-			"item_kaya",
-			"item_ultimate_scepter",
-			"item_yasha_and_kaya", 
-			"item_refresher",
-			"item_manta",
-			"item_travel_boots",
-			"item_ultimate_scepter_2",
-			"item_satanic",
-			"item_moon_shard",
-			"item_travel_boots_2"
-		},
-		--出售
-		['Sell'] = {
-			"item_kaya",     
-			"item_ring_of_basilius",
 
-			"item_ultimate_scepter",     
-			"item_magic_stick",
-					
-			"item_travel_boots",  
-			"item_power_treads",
-
-			"item_satanic",
-			"item_veil_of_discord"
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By 铅笔会有猫的w',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {10, 0},
-			['t15'] = {0, 10},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = { 1, 3, 1, 3, 1, 6, 1, 2, 2, 2, 6, 3, 3, 2, 6 },
-		--装备
-		['Buy'] = {
-			"item_double_tango",
-			"item_double_flask",
-			"item_double_clarity",
-			"item_double_branches",
-			"item_magic_wand",
-			"item_power_treads",
-			"item_double_wraith_band",
-			"item_dragon_lance",	
-			"item_manta", 			
-			"item_black_king_bar",
-			"item_sphere", 
-			"item_satanic",
-			"item_butterfly",
-			"item_moon_shard",
-			"item_ultimate_scepter",
-			"item_ultimate_scepter_2",
-			"item_travel_boots",
-			"item_travel_boots_2",
-		},
-		--出售
-		['Sell'] = {
-			"item_black_king_bar",
-			"item_wraith_band",
-
-			"item_travel_boots", 
-			"item_power_treads",
-
-			"item_satanic",
-			"item_magic_wand",
-
-			"item_butterfly",
-			"item_dragon_lance",
-		},
-	},
-}
---默认数据
-local tDefaultGroupedData = {
-	--天赋树
-	['Talent'] = {
-		['t25'] = {0, 10},
-		['t20'] = {10, 0},
-		['t15'] = {0, 10},
-		['t10'] = {10, 0},
-	},
-	--技能
-	['Ability'] = {3,1,1,2,1,6,1,2,2,2,6,3,3,3,6},
-	--装备
-	['Buy'] = {
-		sOutfit,
-		'item_pers', 
-		'item_dragon_lance', 
-		'item_yasha',
-		'item_manta',
-		'item_sphere',
-		'item_hurricane_pike',
-		'item_black_king_bar',
-		'item_lesser_crit',
-		'item_bloodthorn',
-	},
-	--出售
-	['Sell'] = {
-		"item_hurricane_pike",
-		"item_magic_wand",
-	},
+local tTalentTreeList = {
+						['t25'] = {0, 10},
+						['t20'] = {10, 0},
+						['t15'] = {0, 10},
+						['t10'] = {10, 0},
 }
 
---根据组数据生成技能、天赋、装备
-local nAbilityBuildList, nTalentBuildList;
+local tAllAbilityBuildList = {
+						{3,1,1,2,1,6,1,2,2,2,6,3,3,3,6},
+}
 
-nAbilityBuildList, nTalentBuildList, X['sBuyList'], X['sSellList'] = ConversionMode.Combination(tGroupedDataList, tDefaultGroupedData)
+local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
+
+local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
+
+X['sBuyList'] = {
+				'item_ranged_carry_outfit',
+				'item_pers', 
+				'item_dragon_lance', 
+				'item_manta',
+				'item_sphere',
+				'item_hurricane_pike',
+				'item_black_king_bar',
+				'item_lesser_crit',
+				'item_bloodthorn',
+}
+
+X['sSellList'] = {
+	"item_hurricane_pike",
+	"item_magic_wand",
+}
+
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_ranged_carry' }, {} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -198,6 +66,32 @@ function X.MinionThink(hMinionUnit)
 	end
 
 end
+
+--[[
+
+npc_dota_hero_luna
+
+"Ability1"		"luna_lucent_beam"
+"Ability2"		"luna_moon_glaive"
+"Ability3"		"luna_lunar_blessing"
+"Ability4"		"generic_hidden"
+"Ability5"		"generic_hidden"
+"Ability6"		"luna_eclipse"
+"Ability10"		"special_bonus_attack_speed_15"
+"Ability11"		"special_bonus_cast_range_300"
+"Ability12"		"special_bonus_unique_luna_2"
+"Ability13"		"special_bonus_movement_speed_30"
+"Ability14"		"special_bonus_all_stats_8"
+"Ability15"		"special_bonus_unique_luna_1"
+"Ability16"		"special_bonus_lifesteal_25"
+"Ability17"		"special_bonus_unique_luna_5"
+
+modifier_luna_moon_glaive
+modifier_luna_lunar_blessing
+modifier_luna_lunar_blessing_aura
+modifier_luna_eclipse
+
+--]]
 
 local abilityQ = bot:GetAbilityByName( sAbilityList[1] );
 local abilityR = bot:GetAbilityByName( sAbilityList[6] );

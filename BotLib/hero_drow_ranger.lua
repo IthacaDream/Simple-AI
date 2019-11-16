@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -10,177 +10,45 @@ local X = {}
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
-local ConversionMode = dofile( GetScriptDirectory()..'/AuxiliaryScript/BotlibConversion') --引入技能文件
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-local sOutfit = J.Skill.GetOutfitName(bot)
 
---编组技能、天赋、装备
-local tGroupedDataList = {
-	{
-		--组合说明，不影响游戏
-		['info'] = 'By 决明子',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {10, 0},
-			['t15'] = {0, 10},
-			['t10'] = {0, 10},
-		},
-		--技能
-		['Ability'] = {1,3,2,1,1,6,1,2,2,2,6,3,3,3,6},
-		--装备
-		['Buy'] = {
-			sOutfit,
-			'item_dragon_lance', 
-			'item_yasha', 
-			'item_mask_of_madness',
-			"item_ultimate_scepter",
-			"item_manta",
-			"item_hurricane_pike",	
-			"item_broken_satanic",
-			"item_butterfly",
-		},
-		--出售
-		['Sell'] = {
-			"item_hurricane_pike",
-			"item_magic_wand",
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By Misunderstand',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {0, 10},
-			['t20'] = {10, 0},
-			['t15'] = {10, 10},
-			['t10'] = {10, 10},
-		},
-		--技能
-		['Ability'] = { 3, 1, 3, 2, 3, 6, 3, 1, 1, 1, 6, 2, 2, 2, 6 },
-		--装备
-		['Buy'] = {
-			"item_faerie_fire",
-			"item_double_slippers",
-			"item_circlet",
-			"item_tango",
-			"item_flask",
-			"item_magic_stick",
-			"item_double_wraith_band",
-			"item_power_treads",
-			"item_dragon_lance",
-			"item_invis_sword",
-			"item_lifesteal",
-			"item_ultimate_scepter",
-			"item_maelstrom",
-			"item_black_king_bar",
-			"item_mjollnir",
-			"item_silver_edge",
-			"item_hurricane_pike",
-			"item_ultimate_scepter_2",
-			"item_satanic",
-			"item_butterfly",
-			"item_moon_shard"
-		},
-		--出售
-		['Sell'] = {
-			"item_lifesteal",     
-			"item_magic_stick",
 
-			"item_black_king_bar",     
-			"item_wraith_band",
-						
-			"item_butterfly",
-			"item_black_king_bar"
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By 铅笔会有猫的w',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {0, 10},
-			['t20'] = {0, 10},
-			['t15'] = {10, 0},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = { 1, 2, 1, 3, 1, 6, 1, 3, 2, 2, 6, 2, 3, 3, 6 },
-		--装备
-		['Buy'] = {
-			"item_circlet",
-			"item_double_branches",
-			"item_double_tango",
-			"item_flask",
-			"item_magic_wand",
-			"item_boots",
-			"item_double_wraith_band",
-			"item_power_treads",
-			"item_dragon_lance",
-			"item_invis_sword",
-			"item_mask_of_madness",
-			"item_manta",
-			"item_butterfly",
-			"item_satanic",
-			"item_black_king_bar",
-			"item_bloodthorn", 
-			"item_ultimate_scepter",
-			"item_ultimate_scepter_2",
-			"item_moon_shard",
-		},
-		--出售
-		['Sell'] = {
-			"item_black_king_bar",    
-			"item_power_treads",
-
-			"item_bloodthorn",   
-			"item_dragon_lance",
-
-			"item_butterfly",   
-			"item_magic_wand",
-					
-			"item_mask_of_madness",  
-			"item_wraith_band",
-					
-			"item_manta",  
-			"item_wraith_band",
-		},
-	},
-}
---默认数据
-local tDefaultGroupedData = {
-	--天赋树
-	['Talent'] = {
-		['t25'] = {10, 0},
-		['t20'] = {10, 0},
-		['t15'] = {0, 10},
-		['t10'] = {0, 10},
-	},
-	--技能
-	['Ability'] = {1,3,2,1,1,6,1,2,2,2,6,3,3,3,6},
-	--装备
-	['Buy'] = {
-		sOutfit,
-		'item_dragon_lance', 
-		'item_yasha', 
-		'item_mask_of_madness',
-		"item_ultimate_scepter",
-		"item_manta",
-		"item_hurricane_pike",	
-		"item_broken_satanic",
-		"item_butterfly",
-	},
-	--出售
-	['Sell'] = {
-		"item_hurricane_pike",
-		"item_magic_wand",
-	},
+local tTalentTreeList = {
+						['t25'] = {10, 0},
+						['t20'] = {10, 0},
+						['t15'] = {10, 0},
+						['t10'] = {10, 0},
 }
 
---根据组数据生成技能、天赋、装备
-local nAbilityBuildList, nTalentBuildList;
+local tAllAbilityBuildList = {
+						{1,3,2,1,1,6,1,2,2,2,6,3,3,3,6},
+}
 
-nAbilityBuildList, nTalentBuildList, X['sBuyList'], X['sSellList'] = ConversionMode.Combination(tGroupedDataList, tDefaultGroupedData)
+local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
+
+local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
+
+
+X['sBuyList'] = {
+				'item_ranged_carry_outfit',
+				'item_dragon_lance', 
+				'item_yasha', 
+				'item_mask_of_madness',
+				"item_ultimate_scepter",
+				"item_manta",
+				"item_hurricane_pike",	
+				"item_broken_satanic",
+				"item_butterfly",
+}
+
+X['sSellList'] = {
+	"item_hurricane_pike",
+	"item_magic_wand",
+}
+
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_ranged_carry' }, {} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -198,11 +66,40 @@ function X.MinionThink(hMinionUnit)
 
 end
 
+--[[
+
+npc_dota_hero_drow_ranger
+
+"Ability1"		"drow_ranger_frost_arrows"
+"Ability2"		"drow_ranger_wave_of_silence"
+"Ability3"		"drow_ranger_trueshot"
+"Ability4"		"generic_hidden"
+"Ability5"		"generic_hidden"
+"Ability6"		"drow_ranger_marksmanship"
+"Ability10"		"special_bonus_movement_speed_20"
+"Ability11"		"special_bonus_all_stats_5"
+"Ability12"		"special_bonus_agility_10"
+"Ability13"		"special_bonus_unique_drow_ranger_2"
+"Ability14"		"special_bonus_evasion_25"
+"Ability15"		"special_bonus_unique_drow_ranger_4"
+"Ability16"		"special_bonus_unique_drow_ranger_1"
+"Ability17"		"special_bonus_cooldown_reduction_50"
+
+modifier_drow_ranger_frost_arrows
+modifier_drow_ranger_frost_arrows_slow
+modifier_drowranger_wave_of_silence_knockback
+modifier_drow_ranger_trueshot
+modifier_drow_ranger_trueshot_global
+modifier_drow_ranger_trueshot_aura
+modifier_drow_ranger_marksmanship
+modifier_drow_ranger_marksmanship_reduction
+
+--]]
+
 local abilityQ = bot:GetAbilityByName( sAbilityList[1] )
 local abilityW = bot:GetAbilityByName( sAbilityList[2] )
 local abilityE = bot:GetAbilityByName( sAbilityList[3] )
 local abilityM = nil
-
 
 local castQDesire, castQTarget
 local castWDesire, castWLocation
@@ -210,22 +107,14 @@ local castEDesire
 local castMDesire
 local castWMDesire,castWMLocation
 
-
 local nKeepMana,nMP,nHP,nLV,hEnemyHeroList;
 
-
-
 function X.SkillsComplement()
-
 	
 	J.ConsiderForMkbDisassembleMask(bot);
 	
-	
-	
 	if J.CanNotUseAbility(bot) or bot:IsInvisible() then return end
-	
-	
-	
+		
 	nKeepMana = 90
 	aetherRange = 0
 	talentDamage = 0
@@ -234,9 +123,6 @@ function X.SkillsComplement()
 	nLV = bot:GetLevel();
 	hEnemyHeroList = bot:GetNearbyHeroes(1600,true,BOT_MODE_NONE);
 	abilityM = J.IsItemAvailable("item_mask_of_madness");		
-
-	
-	
 	
 	castEDesire = X.ConsiderE();
 	if castEDesire > 0
@@ -246,7 +132,6 @@ function X.SkillsComplement()
 	    bot:ActionQueue_UseAbility( abilityE );
 		return ;
 	end	
-	
 	
 	castWMDesire,castWMLocation = X.ConsiderWM();
 	if castWMDesire > 0
@@ -259,7 +144,7 @@ function X.SkillsComplement()
 		return;
 		
 	end
-	
+
 	castWDesire, castWLocation = X.ConsiderW();
 	if castWDesire > 0
 	then
@@ -294,7 +179,7 @@ end
 
 function X.ConsiderE()
 	if abilityE:IsFullyCastable() 
-		and nLV >= 9
+		and nLV >= 7
 	then
 		return BOT_ACTION_DESIRE_HIGH
 	end
@@ -483,7 +368,7 @@ function X.ConsiderM()
 		end
 	end
 	
-	--撤退时更快的跑路
+	--撤退时更快的跑路--待补充
 	
 	if J.IsRunning(bot) or #hEnemyHeroList > 0 then return BOT_ACTION_DESIRE_NONE; end
 	

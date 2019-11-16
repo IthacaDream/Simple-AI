@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -617,8 +617,7 @@ function Site.FindFarmNeutralTarget(Creeps)
 		end	
 	end
 	
-	if botName == 'npc_dota_hero_axe'
-	   or botName == "npc_dota_hero_viper"
+	if botName == "npc_dota_hero_viper"
 	   or botName == "npc_dota_hero_razor"
 	   or botName == "npc_dota_hero_ogre_magi"
 	   or botName == "npc_dota_hero_huskar"
@@ -808,7 +807,8 @@ function Site.IsTimeToFarm(bot)
 		return false;
 	end
 	
-	local botName =  bot:GetUnitName();
+	local botName = bot:GetUnitName()
+	local botNetWorth = bot:GetNetWorth()
 	
 	if bot:GetActiveMode() == BOT_MODE_PUSH_TOWER_BOT
 		or bot:GetActiveMode() == BOT_MODE_PUSH_TOWER_MID
@@ -822,7 +822,7 @@ function Site.IsTimeToFarm(bot)
 			and bot:GetActiveModeDesire() < BOT_MODE_DESIRE_HIGH
 			and #allies < 2
 		then
-			return  true;
+			return true;
 		end
 		
 		if Site.IsShouldFarmHero(bot)
@@ -847,11 +847,13 @@ function Site.IsTimeToFarm(bot)
 		end
 		
 		if not Site.IsHaveItem(bot,"item_black_king_bar")
+			and botNetWorth < 16000
 		then
 			return true;
 		end
 		
 		if not Site.IsHaveItem(bot,"item_abyssal_blade")
+			and botNetWorth < 26000
 		then
 			local allies = bot:GetNearbyHeroes(1600,false,BOT_MODE_NONE);
 			if #allies < 2
@@ -864,6 +866,7 @@ function Site.IsTimeToFarm(bot)
 	if botName == "npc_dota_hero_viper"
 		and bot:GetLevel() >= 10
 		and not Site.IsHaveItem(bot,"item_mjollnir")
+		and botNetWorth < 20000
 	then
 		local botKills = GetHeroKills(bot:GetPlayerID());
 		local botDeaths = GetHeroDeaths(bot:GetPlayerID());
@@ -886,6 +889,7 @@ function Site.IsTimeToFarm(bot)
 	if botName == "npc_dota_hero_sniper"
 		and bot:GetLevel() >= 10
 		and not Site.IsHaveItem(bot,"item_monkey_king_bar")
+		and botNetWorth < 22000
 	then
 		local botKills = GetHeroKills(bot:GetPlayerID());
 		local botDeaths = GetHeroDeaths(bot:GetPlayerID());
@@ -901,6 +905,7 @@ function Site.IsTimeToFarm(bot)
 	
 	if botName == "npc_dota_hero_dragon_knight"
 	   and not Site.IsHaveItem(bot,"item_assault")
+	   and botNetWorth < 22000
 	then	
 		local allies = bot:GetNearbyHeroes(1600,false,BOT_MODE_NONE);
 		if bot:GetAttackRange() > 300
@@ -934,14 +939,14 @@ function Site.IsTimeToFarm(bot)
 	
 		if bot:GetLevel() > 12
 			and #allies < 3
-			and bot:GetNetWorth() < 12222
+			and botNetWorth < 12222
 		then 
 			return true;
 		end
 		
 		if bot:GetLevel() > 20
 		   and #allies < 2
-		   and bot:GetNetWorth() < 18888
+		   and botNetWorth < 18888
 		then 
 			return true;
 		end
@@ -956,11 +961,13 @@ function Site.IsTimeToFarm(bot)
 		end
 		
 		if not Site.IsHaveItem(bot,"item_black_king_bar")
+			and botNetWorth < 16000
 		then
 			return true;
 		end
 		
 		if not Site.IsHaveItem(bot,"item_satanic")
+			and botNetWorth < 28000
 		then
 			local allies = bot:GetNearbyHeroes(1600,false,BOT_MODE_NONE);
 			if #allies < 2
@@ -981,11 +988,13 @@ function Site.IsTimeToFarm(bot)
 		end
 		
 		if not Site.IsHaveItem(bot,"item_hurricane_pike")
+			and botNetWorth < 18000
 		then
 			return true;
 		end
 		
 		if not Site.IsHaveItem(bot,"item_black_king_bar")
+			and botNetWorth < 26000
 		then
 			local allies = bot:GetNearbyHeroes(1600,false,BOT_MODE_NONE);
 			if #allies < 2
@@ -995,7 +1004,7 @@ function Site.IsTimeToFarm(bot)
 		end		
 		
 		if bot:GetLevel() > 20
-		   and bot:GetNetWorth() < 23333
+		   and botNetWorth < 23333
 		then 
 			local allies = bot:GetNearbyHeroes(1600,false,BOT_MODE_NONE);
 			if #allies < 2
@@ -1015,11 +1024,13 @@ function Site.IsTimeToFarm(bot)
 		end
 		
 		if not Site.IsHaveItem(bot,"item_black_king_bar")
+			and botNetWorth < 16000
 		then
 			return true;
 		end
 		
 		if not Site.IsHaveItem(bot,"item_hurricane_pike")
+			and botNetWorth < 20000
 		then
 			local allies = bot:GetNearbyHeroes(1600,false,BOT_MODE_NONE);
 			if #allies < 3
@@ -1029,6 +1040,7 @@ function Site.IsTimeToFarm(bot)
 		end
 		
 		if not Site.IsHaveItem(bot,"item_satanic") 
+			and botNetWorth < 26000
 		then
 			local allies = bot:GetNearbyHeroes(1600,false,BOT_MODE_NONE);
 			if #allies < 2
@@ -1053,6 +1065,7 @@ function Site.IsTimeToFarm(bot)
 		end
 				
 		if not Site.IsHaveItem(bot,"item_satanic")
+			and botNetWorth < 22000
 		then
 			local allies = bot:GetNearbyHeroes(1600,false,BOT_MODE_NONE);
 			if #allies < 3
@@ -1062,6 +1075,7 @@ function Site.IsTimeToFarm(bot)
 		end
 		
 		if not Site.IsHaveItem(bot,"item_bloodthorn") 
+			and botNetWorth < 26000
 		then
 			local allies = bot:GetNearbyHeroes(1600,false,BOT_MODE_NONE);
 			if #allies < 2
@@ -1080,11 +1094,13 @@ function Site.IsTimeToFarm(bot)
 		end
 		
 		if not Site.IsHaveItem(bot,"item_skadi")
+			and botNetWorth < 20000
 		then
 			return true;
 		end
 				
 		if not Site.IsHaveItem(bot,"item_sphere")
+			and botNetWorth < 24000
 		then
 			local allies = bot:GetNearbyHeroes(1600,false,BOT_MODE_NONE);
 			if #allies < 3
@@ -1094,6 +1110,7 @@ function Site.IsTimeToFarm(bot)
 		end
 		
 		if not Site.IsHaveItem(bot,"item_heart") 
+			and botNetWorth < 28000
 		then
 			local allies = bot:GetNearbyHeroes(1600,false,BOT_MODE_NONE);
 			if #allies < 2
@@ -1111,12 +1128,14 @@ function Site.IsTimeToFarm(bot)
 			return true;
 		end
 		
-		if not Site.IsHaveItem(bot,"item_solar_crest")
+		if not Site.IsHaveItem(bot,"item_desolator")
+			and botNetWorth < 16000
 		then
 			return true;
 		end
 		
 		if not Site.IsHaveItem(bot,"item_black_king_bar")
+			and botNetWorth < 24000
 		then
 			local allies = bot:GetNearbyHeroes(1600,false,BOT_MODE_NONE);
 			if #allies < 3
@@ -1126,6 +1145,7 @@ function Site.IsTimeToFarm(bot)
 		end
 		
 		if not Site.IsHaveItem(bot,"item_satanic") 
+			and botNetWorth < 26000
 		then
 			local allies = bot:GetNearbyHeroes(1600,false,BOT_MODE_NONE);
 			if #allies < 2
@@ -1144,11 +1164,13 @@ function Site.IsTimeToFarm(bot)
 		end
 		
 		if not Site.IsHaveItem(bot,"item_black_king_bar")
+			and botNetWorth < 16000
 		then
 			return true;
 		end
 		
 		if not Site.IsHaveItem(bot,"item_satanic")
+			and botNetWorth < 28000
 		then
 			local allies = bot:GetNearbyHeroes(1600,false,BOT_MODE_NONE);
 			if #allies < 2
@@ -1167,11 +1189,13 @@ function Site.IsTimeToFarm(bot)
 		end
 		
 		if not Site.IsHaveItem(bot,"item_black_king_bar")
+			and botNetWorth < 15000
 		then
 			return true;
 		end
 		
 		if not Site.IsHaveItem(bot,"item_satanic")
+			and botNetWorth < 25000
 		then
 			local allies = bot:GetNearbyHeroes(1600,false,BOT_MODE_NONE);
 			if #allies < 2
@@ -1190,12 +1214,14 @@ function Site.IsTimeToFarm(bot)
 		end
 	
 		if not Site.IsHaveItem(bot,"item_skadi")
+			and botNetWorth < 16000
 		then
 			return true;
 		end
 		
 		
 		if not Site.IsHaveItem(bot,"item_sphere")
+			and botNetWorth < 26000
 		then
 			local allies = bot:GetNearbyHeroes(1600,false,BOT_MODE_NONE);
 			if #allies < 2
@@ -1215,7 +1241,7 @@ function Site.IsTimeToFarm(bot)
 		end
 		
 		if Site.IsHaveItem(bot,"item_mask_of_madness")
-			and bot:GetNetWorth() < 9999
+			and botNetWorth < 9999
 		then
 			return true;
 		end
@@ -1241,7 +1267,7 @@ function Site.IsTimeToFarm(bot)
 		end
 		
 		if Site.IsHaveItem(bot,"item_ultimate_scepter")
-		   and bot:GetNetWorth() < 21111
+		   and botNetWorth < 21111
 		then
 			local allies = bot:GetNearbyHeroes(1600,false,BOT_MODE_NONE);
 			if #allies < 2
@@ -1328,4 +1354,4 @@ function Site.IsHaveItem(bot,item_name)
 end
 
 return Site;
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592

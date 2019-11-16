@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -20,7 +20,7 @@ local closestRune  = -1;
 local runeStatus = -1;
 local ProxDist = 1600;
 local teamPlayers = nil;
-local PingTimeGap = 10;
+local pingTimeGap = 10;
 local bottle = nil;
 
 local runeLocation = nil;
@@ -48,8 +48,6 @@ local vWaitRuneLocList = {
 	[3] = Vector(4074,-876,0); --夜魇下
 	[4] = Vector(2314,-3870,0); --天辉下
 	
-
-
 }
 
 
@@ -414,7 +412,7 @@ function X.IsPingedByHumanPlayer(runeLoc)
 	end
 	for _,p in pairs(listPings)
 	do
-		if p ~= nil and not p.normal_ping and X.GetDistance(p.location, runeLoc) < 1200 and dist2 < 1200 and GameTime() - p.time < PingTimeGap then
+		if p ~= nil and not p.normal_ping and X.GetDistance(p.location, runeLoc) < 1200 and dist2 < 1200 and GameTime() - p.time < pingTimeGap then
 			return true;
 		end
 	end
@@ -620,4 +618,4 @@ function X.GetWaitRuneLocation(nRune)
 	return vNearestLoc;
 
 end
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592

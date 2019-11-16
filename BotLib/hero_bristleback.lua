@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -10,177 +10,45 @@ local X = {}
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
-local ConversionMode = dofile( GetScriptDirectory()..'/AuxiliaryScript/BotlibConversion') --引入技能文件
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-local sOutfit = J.Skill.GetOutfitName(bot)
 
---编组技能、天赋、装备
-local tGroupedDataList = {
-	{
-		--组合说明，不影响游戏
-		['info'] = 'By 决明子',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {0, 10},
-			['t20'] = {10, 0},
-			['t15'] = {0, 10},
-			['t10'] = {0, 10},
-		},
-		--技能
-		['Ability'] = {2,3,1,2,2,6,2,3,3,3,6,1,1,1,6},
-		--装备
-		['Buy'] = {
-			sOutfit,
-			"item_crimson_guard",
-			"item_heavens_halberd",
-			"item_lotus_orb",
-			"item_assault", 
-		},
-		--出售
-		['Sell'] = {
-			"item_crimson_guard",
-			"item_quelling_blade",
-			
-			"item_lotus_orb",
-			"item_magic_wand",
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By Misunderstand',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {0, 10},
-			['t15'] = {10, 0},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = { 2, 3, 2, 3, 2, 6, 1, 2, 3, 3, 6, 1, 1, 1, 6},
-		--装备
-		['Buy'] = {
-			"item_tango",
-			"item_flask",
-			"item_stout_shield",
-			"item_enchanted_mango",
-			"item_double_branches",
-			"item_magic_stick",
-			"item_double_enchanted_mango",
-			"item_bracer",
-			"item_phase_boots",
-			"item_magic_wand",
-			"item_vanguard",
-			"item_hood_of_defiance",
-			"item_blade_mail",
-			"item_lotus_orb",  
-			"item_pipe",
-			"item_crimson_guard",
-			"item_heavens_halberd",
-			"item_ultimate_scepter_2",
-			"item_travel_boots_2",
-			"item_octarine_core"
-		},
-		--出售
-		['Sell'] = {
-			"item_blade_mail",
-			"item_bracer",
 
-			"item_lotus_orb",
-			"item_magic_wand",
-
-			"item_heavens_halberd",
-			"item_blade_mail",
-					
-			"item_travel_boots_2",
-			"item_phase_boots",
-
-			"item_octarine_core",
-			"item_heavens_halberd",
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By 铅笔会有猫的w',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {0, 10},
-			['t15'] = {10, 0},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = { 1, 2, 3, 2, 2, 6, 2, 3, 3, 3, 6, 1, 1, 1, 6 },
-		--装备
-		['Buy'] = {
-			"item_tango",
-			"item_flask",
-			"item_double_enchanted_mango",
-			"item_stout_shield",
-			"item_magic_stick",
-			"item_phase_boots",
-			"item_magic_wand",
-			"item_bracer",
-			"item_vanguard",
-			"item_blade_mail", 
-			"item_lotus_orb", 
-			"item_crimson_guard", 	
-			"item_black_king_bar", 
-			"item_heart", 		
-			"item_ultimate_scepter",			
-			"item_ultimate_scepter_2",		
-			"item_travel_boots",	
-			"item_moon_shard", 		
-			"item_travel_boots_2",	
-		},
-		--出售
-		['Sell'] = {
-			"item_travel_boots",     
-			"item_magic_wand",
-
-			"item_travel_boots",
-			"item_phase_boots", 
-
-			"item_black_king_bar",
-			"item_bracer", 
-
-			"item_heart",
-			"item_magic_wand", 
-		},
-	},
-}
---默认数据
-local tDefaultGroupedData = {
-	--天赋树
-	['Talent'] = {
-		['t25'] = {0, 10},
-		['t20'] = {10, 0},
-		['t15'] = {0, 10},
-		['t10'] = {0, 10},
-	},
-	--技能
-	['Ability'] = {2,3,1,2,2,6,2,3,3,3,6,1,1,1,6},
-	--装备
-	['Buy'] = {
-		sOutfit,
-		"item_crimson_guard",
-		"item_heavens_halberd",
-		"item_lotus_orb",
-		"item_assault", 
-	},
-	--出售
-	['Sell'] = {
-		"item_crimson_guard",
-		"item_quelling_blade",
-		
-		"item_lotus_orb",
-		"item_magic_wand",
-	},
+local tTalentTreeList = {
+						['t25'] = {0, 10},
+						['t20'] = {10, 0},
+						['t15'] = {0, 10},
+						['t10'] = {0, 10},
 }
 
---根据组数据生成技能、天赋、装备
-local nAbilityBuildList, nTalentBuildList;
+local tAllAbilityBuildList = {
+						{2,3,1,2,2,6,2,3,3,3,6,1,1,1,6},
+}
 
-nAbilityBuildList, nTalentBuildList, X['sBuyList'], X['sSellList'] = ConversionMode.Combination(tGroupedDataList, tDefaultGroupedData)
+local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
+
+local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
+
+
+X['sBuyList'] = {
+				'item_tank_outfit',
+				"item_crimson_guard",
+				"item_heavens_halberd",
+				"item_lotus_orb",
+				"item_assault", 
+--				"item_heart",
+}
+
+X['sSellList'] = {
+	"item_crimson_guard",
+	"item_quelling_blade",
+	
+	"item_lotus_orb",
+	"item_magic_wand",
+}
+
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_tank' }, {"item_solar_crest",'item_quelling_blade'} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -197,6 +65,35 @@ function X.MinionThink(hMinionUnit)
 	end
 
 end
+
+--[[
+
+npc_dota_hero_bristleback
+
+"Ability1"		"bristleback_viscous_nasal_goo"
+"Ability2"		"bristleback_quill_spray"
+"Ability3"		"bristleback_bristleback"
+"Ability4"		"generic_hidden"
+"Ability5"		"generic_hidden"
+"Ability6"		"bristleback_warpath"
+"Ability10"		"special_bonus_movement_speed_20"
+"Ability11"		"special_bonus_mp_regen_3"
+"Ability12"		"special_bonus_hp_250"
+"Ability13"		"special_bonus_unique_bristleback"
+"Ability14"		"special_bonus_hp_regen_25"
+"Ability15"		"special_bonus_unique_bristleback_2"
+"Ability16"		"special_bonus_spell_lifesteal_15"
+"Ability17"		"special_bonus_unique_bristleback_3"
+
+modifier_bristleback_viscous_nasal_goo
+modifier_bristleback_quillspray_thinker
+modifier_bristleback_quill_spray
+modifier_bristleback_quill_spray_stack
+modifier_bristleback_bristleback
+modifier_bristleback_warpath
+modifier_bristleback_warpath_stack
+
+--]]
 
 local abilityQ = bot:GetAbilityByName( sAbilityList[1] )
 local abilityW = bot:GetAbilityByName( sAbilityList[2] )

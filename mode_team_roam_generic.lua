@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -35,6 +35,7 @@ local towerCreepTime = 0;
 local beInitDone = false;
 local beSpecialSupport = false;
 local beSpecialCarry = false;
+local beTechies = false;
 
 local droppedCheck = -90;
 local cheeseCheck = -90;
@@ -49,8 +50,9 @@ function GetDesire()
 	if not beInitDone 
 	then
 		beInitDone = true
-		beSpecialCarry = X.IsSpecialCarry(bot);
-		beSpecialSupport = X.IsSpecialSupport(bot);		
+		beTechies = string.find(botName, "techies")
+		beSpecialCarry = X.IsSpecialCarry(bot)
+		beSpecialSupport = X.IsSpecialSupport(bot)	
 	end
 	
 	if not bot:IsAlive() or bot:GetCurrentActionType() == BOT_ACTION_TYPE_DELAY then
@@ -181,6 +183,8 @@ function GetDesire()
 		return BOT_MODE_DESIRE_ABSOLUTE;
 	end
 	
+	if beTechies then return 2.0 end
+		
 	local manaP = bot:GetMana() / bot:GetMaxMana();
 	local healthP = bot:GetHealth() / bot:GetMaxHealth();
 	
@@ -280,8 +284,10 @@ end
 
 function Think()
 
-	if GetGameMode() == GAMEMODE_1V1MID and bot:GetAssignedLane() ~= LANE_MID then
-		bot:Action_ClearActions(true);
+	if ( GetGameMode() == GAMEMODE_1V1MID and bot:GetAssignedLane() ~= LANE_MID )
+		or beTechies
+	then
+		bot:Action_ClearActions(false);
 		return; 
 	end
 	
@@ -428,8 +434,8 @@ function X.SupportFindTarget( bot )
 	local botHP   = bot:GetHealth()/bot:GetMaxHealth();
 	local botMode = bot:GetActiveMode();
 	local botLV   = bot:GetLevel();
-	local botAD   = bot:GetAttackDamage() -1;
-	local botBAD  = X.GetAttackDamageToCreep(bot) -2; 
+	local botAD   = bot:GetAttackDamage() - 0.5;
+	local botBAD  = X.GetAttackDamageToCreep(bot) - 1; 
 	
 	
 	if X.CanBeAttacked(nTarget) and nTarget == targetUnit
@@ -727,8 +733,8 @@ function X.CarryFindTarget( bot )
 	local botHP   = bot:GetHealth()/bot:GetMaxHealth();
 	local botMode = bot:GetActiveMode();
 	local botLV   = bot:GetLevel();
-	local botAD   = bot:GetAttackDamage() -1;
-	local botBAD  = X.GetAttackDamageToCreep(bot) -2; 
+	local botAD   = bot:GetAttackDamage() - 0.8;
+	local botBAD  = X.GetAttackDamageToCreep(bot) - 1.2; 
 	
 	
 	if  X.CanBeAttacked(nTarget) and nTarget == targetUnit
@@ -1232,7 +1238,8 @@ function X.GetEnemyCourier(bot,nRadius)
 	then
 		lastFindTime = DotaTime();
 		local units = GetUnitList(UNIT_LIST_ENEMIES)
-		for _,u in pairs(units) do
+		for _,u in pairs(units) 
+		do
 		   if u ~= nil 
 			  and u:IsCourier()
 		   then
@@ -1265,7 +1272,8 @@ function X.WeakestUnitCanBeAttacked(bHero, bEnemy, nRadius, bot)
 		units = bot:GetNearbyLaneCreeps(nRadius, bEnemy);
 	end
 	
-	for _,u in pairs(units) do
+	for _,u in pairs(units) 
+	do
 		if X.CanBeAttacked(u)
 		then
 
@@ -1491,7 +1499,7 @@ function X.GetLastHitHealth(bot,nCreep)
 	if nCreep ~= nil and nCreep:IsAlive()
 	then
 	   
-       local nDamage = X.GetAttackDamageToCreep(bot) * bot:GetAttackCombatProficiency(nCreep) ;
+       local nDamage = X.GetAttackDamageToCreep(bot) * bot:GetAttackCombatProficiency(nCreep)
 		
 	   return nCreep:GetActualIncomingDamage(nDamage, DAMAGE_TYPE_PHYSICAL);
 	end
@@ -1503,11 +1511,13 @@ end
 
 function X.IsAllysTarget(unit)
 	local bot = GetBot();
-	local allys = bot:GetNearbyHeroes(1000,false,BOT_MODE_NONE);
-	if #allys < 2 then return false end;
+	local allies = bot:GetNearbyHeroes(1000,false,BOT_MODE_NONE);
+	if #allies < 2 then return false end;
 	
-	for _,ally in pairs(allys) do
+	for _,ally in pairs(allies) 
+	do
 		if  ally ~= bot
+			and not ally:IsIllusion()
 			and J.GetProperTarget(ally) == unit 
 		then
 			return true;
@@ -1520,7 +1530,8 @@ end
 function X.IsEnemysTarget(unit)
 	local bot = GetBot();
 	local enemys = bot:GetNearbyHeroes(1600,true,BOT_MODE_NONE);
-	for _,enemy in pairs(enemys) do
+	for _,enemy in pairs(enemys) 
+	do
 		if  X.IsValid(enemy) and J.GetProperTarget(enemy) == unit 
 		then
 			return true;
@@ -1532,13 +1543,13 @@ end
 
 function X.CanAttackTogether(bot)
    
-   local alles = bot:GetNearbyHeroes(1200,false,BOT_MODE_NONE);
+   local allies = bot:GetNearbyHeroes(1200,false,BOT_MODE_NONE);
    local nNearbyEnemyHeroes = bot:GetNearbyHeroes(600,true,BOT_MODE_NONE);
    
    return bot ~= nil and bot:IsAlive()
 		  and not bot:IsIllusion()
 		  and J.GetProperTarget(bot) == nil
-	      and #alles >= 2
+	      and #allies >= 2
 		  and (nNearbyEnemyHeroes[1] == nil or nNearbyEnemyHeroes[1]:GetLevel() < 12)
    
 end
@@ -1592,7 +1603,7 @@ function X.IsModeSuitToHitCreep(bot)
 	
 	if bot:HasModifier("modifier_axe_battle_hunger")
 	then
-		local nEnemyLaneCreepList = bot:GetNearbyCreeps( bot:GetAttackRange() + 180, true )
+		local nEnemyLaneCreepList = bot:GetNearbyLaneCreeps( bot:GetAttackRange() + 180, true )
 		if #nEnemyLaneCreepList > 0 
 		then return true end
 	end
@@ -1640,24 +1651,9 @@ function X.IsOthersTarget(nUnit)
 		return true;
 	end
 	
-	local nCreeps = bot:GetNearbyCreeps(1600,true);
-	for _,creep in pairs(nCreeps)
-	do
-		if creep ~= nil and creep:IsAlive()
-		   and creep:GetAttackTarget() == nUnit
-		then
-			return true;
-		end
-	end
-	
-	local nCreeps = bot:GetNearbyCreeps(1600,false);
-	for _,creep in pairs(nCreeps)
-	do
-		if creep ~= nil and creep:IsAlive()
-		   and creep:GetAttackTarget() == nUnit
-		then
-			return true;
-		end
+	if X.IsCreepTarget(nUnit)
+	then
+		return true
 	end
 	
 	local nTowers = bot:GetNearbyTowers(1600,true);
@@ -1687,7 +1683,7 @@ end
 
 function X.IsCreepTarget(nUnit)
 	local bot = GetBot();
-	local nCreeps = bot:GetNearbyCreeps(1600,true);
+	local nCreeps = bot:GetNearbyCreeps(1200,true);
 	for _,creep in pairs(nCreeps)
 	do
 		if creep ~= nil and creep:IsAlive()
@@ -1697,7 +1693,7 @@ function X.IsCreepTarget(nUnit)
 		end
 	end
 	
-	local nCreeps = bot:GetNearbyCreeps(1600,false);
+	local nCreeps = bot:GetNearbyCreeps(1200,false);
 	for _,creep in pairs(nCreeps)
 	do
 		if creep ~= nil and creep:IsAlive()
@@ -1738,7 +1734,7 @@ function X.CanBeInVisible(bot)
 	end
 	
 	local silveredge = J.IsItemAvailable("item_silver_edge");
-	if silveredge~=nil and silveredge:IsFullyCastable() 
+	if silveredge ~= nil and silveredge:IsFullyCastable() 
 	then
 		return true;			
 	end
@@ -1980,5 +1976,4 @@ function X.ShouldNotRetreat(bot)
 	
 	return false;
 end
-
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592

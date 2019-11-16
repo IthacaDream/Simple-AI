@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -139,7 +139,7 @@ function GetDesire()
 	else	
 		bot.steal = false;
 	end
-
+	
 	if DotaTime() < 60 + nStartTime
 	then
 		return BOT_MODE_DESIRE_NONE;
@@ -291,6 +291,7 @@ function Think()
 
 end
 
+
 function CountStealingUnit()
 	local count = 0;
 	for i,id in pairs(GetTeamPlayers(GetTeam())) do
@@ -373,4 +374,4 @@ function X.IsIBecameTheTarget(units)
 	return false;
 end
 
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592

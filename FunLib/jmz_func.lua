@@ -2,62 +2,28 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
 
---[[计划一:
-编码规范化推进计划正在进行中...
-1, 自定义变量命名用匈牙利法, 即首单词小写, 其他单词首字母大写(除个别特殊情况, 如npc类, 循环头, 部分临时变量)
-  自定义变量如果是表的话, 以List结尾, 如 enemyList; (当前的矛盾是一些老代码处混用的大小驼峰法, 用大驼峰法处应尽快修正)
-  同功能含义和类型的变量后缀可用1, 2, 3....(name1, name2), 最好尽量用有区分度的英文后缀(nameLong, nameShort)
-  自定义函数或模块命名用大驼峰法, 即将各单词首字母大写连接构成, 尽量只使用已有的函数开头词, 如:Is, Has, Can, Should, Will, Get, Print, Set, Consider  
-2, 各类运算符添加空格风格要统一(循环头特殊), 
-  比如说' = '及其他赋值或关系或逻辑运算符的两边, ', '后面有内容时的右边, 
-  ' - '及其他算术运算符两边, 能不用双引号尽量不用双引号, 能不用分号尽量不用分号, 
-  '( () )'多重括号嵌套的外层括号内侧.
-3, 需要使用循环逻辑时尽量不用除 for 语句外的关键字, 
-   需要进行多个条件逻辑运算时, 每个条件块单独一行.
-4, 函数参数中包含了 bot(句柄) 的话, 尽量将其放在第一位
-如有遗漏或矛盾的情况以文件内同类代码的主流规范为准.
-附: 常用词汇  放最后: 表示布尔值 bDone bError bSuccess bFound  bReady  如: bUpdateDone
-    表修饰时(放最后) Total、 Sum、 Average、 Max、 Min、 Record、 String、 Pointer、 First、 Last、 Lim  如: creepCountMax
-	句柄handle = h, 坐标矢量vector = v, 布尔值bool = b, 字符串string = s, 
-	一般的变量normal = n, 特殊的小数float = f, 全局命名空间变量goble = g, 未确定类型的单位unknow = u, 
-	表名以表内容类型....List命名, 即 'sBotList' 表示内容为英雄名的线性表, 非线性表或表中表table = t, 
---]]
-
---[[计划二:
-冗余代码分类整合计划正在进行中...
-将同类型的函数分类
-将功能类似的函数整合
---]]
-
 
 local J = {}
 
+--[[------------------------------------
 ----------------------------------------
---[[全局变量----------------------------
 ----------------------------------------
---------------------全局变量放这里初始化
-----------------------------------------
-------------------------------直接使用的
--------------G开头表示禁止修改的全局变量
--------------g开头表示可以修改的全局变量
---]]
+--]]------------------------------------
 GBotTeam = GetTeam()
 GOppTeam = GetOpposingTeam() 
 if gTime == nil then gTime = 0 end
 
+--[[------------------------------------
 ----------------------------------------
---[[文件局部变量------------------------
------------------------------------------
------------------文件局部变量放这里初始化
----------------------------通过文件使用的
---]]
-local sDota2Version= '7.22d'
-local sDebugVersion= '20190930ver1.4b'
+----------------------------------------
+--]]------------------------------------
+local sDota2Version= '7.22h'
+local sDebugVersion= '20191114ver1.5a'
 local nDebugTime   = 99999
 local bDebugMode   = false
 local bDebugTeam   = (GBotTeam == TEAM_RADIANT)
@@ -79,27 +45,21 @@ local DB = Vector(7023.000000, 6450.000000, 0.000000)
 local fSpamThreshold = 0.35;
 
 
+--[[------------------------------------
 ----------------------------------------
---[[句柄全局变量------------------------
------------------------------------------
-----------------句柄全局变量放这里初始化
------------------------------------------
----------------------------通过句柄使用的
---]]
---每个友方英雄的个人全局变量
+----------------------------------------
+--]]------------------------------------
 for i,id in pairs(tAllyIDList)
 do
-	--获取成员信息
+	
 	local bHuman = not IsPlayerBot(id)
 	local hHero = GetTeamMember(i)
 	
-	--初始化文件全局变量
 	if hHero ~= nil
 	then
 		if bHuman then table.insert(tAllyHumanList, hHero) end
 		table.insert(tAllyHeroList, hHero)
 	
-		--逐个初始化个人全局变量
 		hHero.continueKillCount = 0
 		hHero.continueDeathCount = 0
 		
@@ -109,38 +69,31 @@ do
 	end
 end 
 
---每个敌方英雄的标记全局变量
+
 for i,id in pairs(tEnemyIDList)
 do
-	--获取成员信息
+
 	local bHuman = not IsPlayerBot(id)
 	local hHero = GetTeamMember(i)
 	
 	
 	if hHero ~= nil
 	then
-		--初始化文件全局变量
+		
 		if bHuman then table.insert(tEnemyHumanList, hHero) end
 		table.insert(tEnemyHeroList, hHero)
 	
-	
-		--逐个初始化个人全局变量
 		hHero.continueKillCount = 0
 		hHero.continueDeathCount = 0
-	
-	
+
 	
 	end
 end 
 
+--[[------------------------------------
 ----------------------------------------
---[[模块全局变量------------------------
------------------------------------------
-----------------模块全局变量放这里初始化
------------------------------------------
----------------------------通过模块使用的
---]]
-
+----------------------------------------
+--]]------------------------------------
 J.Site  = require(GetScriptDirectory()..'/FunLib/jmz_site')
 J.Item  = require(GetScriptDirectory()..'/FunLib/jmz_item')
 J.Buff  = require(GetScriptDirectory()..'/FunLib/jmz_buff')
@@ -148,12 +101,15 @@ J.Role  = require(GetScriptDirectory()..'/FunLib/jmz_role')
 J.Skill = require(GetScriptDirectory()..'/FunLib/jmz_skill')
 J.Chat  = require(GetScriptDirectory()..'/FunLib/jmz_chat')
 
----[[--------------------------------
--------------------------------------
+--[[------------------------------------
+----------------------------------------
+----------------------------------------
+--]]------------------------------------
 if bDebugTeam
 then
 	print(GBotTeam..': Simple AI: Function Init Successful!')
 end
+
 ------------------------------------
 -------变量部分完成, 下面开始函数部分
 -----------------------------------]]
@@ -199,7 +155,7 @@ function J.PrintInitMessage(sFlag, sMessage)
 
 	local bot = GetBot()
 
-	if not J.IsDebugHero(bot, sDebugHero) or tInitList[sFlag] ~= nil then return end
+	if not J.IsDebugHero(bot) or tInitList[sFlag] ~= nil then return end
 	
 	tInitList[sFlag] = true;
 	
@@ -210,10 +166,10 @@ function J.PrintInitMessage(sFlag, sMessage)
 end
 
 
-function J.IsDebugHero(bot, sName)
+function J.IsDebugHero(bot)
 
     return  bDebugMode and bDebugTeam
-			and bot:GetUnitName() == sName
+			and bot:GetUnitName() == sDebugHero
 
 end
 
@@ -787,7 +743,7 @@ end
 
 function J.WillKillTarget(npcTarget, dmg, dmgType, nDelay)
 	
-	local targetHealth = npcTarget:GetHealth() + npcTarget:GetHealthRegen() * nDelay + 1;
+	local targetHealth = npcTarget:GetHealth() + npcTarget:GetHealthRegen() * nDelay + 0.8;
 	
 	local nRealBonus = J.GetTotalAttackWillRealDamage(npcTarget, nDelay);
 	
@@ -1058,7 +1014,7 @@ function J.HasItem(bot, item_name)
 	
 	local Slot = bot:FindItemSlot(item_name);
 	
-	if Slot >= 0 and Slot <= 5 then	return true; end
+	if Slot >= 0 and Slot <= 5 then	return true end
 	
 	return false;
 end
@@ -1424,7 +1380,7 @@ function J.GetCreepAttackActivityWillRealDamage(nUnit, nTime)
 			
 			if  attackPoint > animCycle 
 				and creep:GetLastAttackTime() < gameTime - 0.1
-				and (attackPoint - animCycle) * attackPerTime  < nTime * ( 0.9 - botLV/100 )
+				and (attackPoint - animCycle) * attackPerTime  < nTime * ( 0.96 - botLV/150 )
 			then
 				nDamage = nDamage + creep:GetAttackDamage() * creep:GetAttackCombatProficiency(nUnit);
 			end		
@@ -1448,8 +1404,8 @@ function J.GetCreepAttackProjectileWillRealDamage(nUnit, nTime)
 		   and p.caster ~= nil
 		then
 			local nProjectSpeed = p.caster:GetAttackProjectileSpeed();
-			if p.caster:IsTower() then nProjectSpeed = nProjectSpeed * 0.9 end;
-			local nProjectDist  = nProjectSpeed * nTime * 0.96;
+			if p.caster:IsTower() then nProjectSpeed = nProjectSpeed * 0.92 end;
+			local nProjectDist  = nProjectSpeed * nTime * 0.94;
 			local nDistance     = GetUnitToLocationDistance(nUnit, p.location);
 			if nProjectDist > nDistance 
 			then
@@ -1746,20 +1702,6 @@ function J.PrintMessage(nMessage, nNumber, n, nIntevel)
 end
 
 
-local PrTime = nDebugTime;
-function J.Print(nMessage, nNumber)
-	if PrTime < DotaTime() - 3.0
-	then
-		PrTime = DotaTime();	
-		local preStr = string.gsub(GetBot():GetUnitName(), "npc_dota_", "")..':';
-		local suffix = string.gsub(tostring(nNumber), "npc_dota_", "");
-		print("++++++++++++++++++++++++++++++++++++＄＄＄＄＄＄＄＄＄START");
-		print(preStr..nMessage..suffix);
-		print("------------------------------------＄＄＄＄＄＄＄＄＄＄＄END");
-	end
-end
-
-
 local PARTime = nDebugTime;
 function J.PrintAndReport(nMessage, nNumber)
 	if PARTime < DotaTime() - 5.0
@@ -1770,17 +1712,6 @@ function J.PrintAndReport(nMessage, nNumber)
 		print(GetBot():GetUnitName()..pMessage);
 		print("------------------------------------＄＄＄＄＄＄＄＄＄＄＄END");
 		GetBot():ActionImmediate_Chat(pMessage, true);
-	end
-end
-
-
-local ReportTime = {};
-function J.SetReportMessage(nMessage, nNumber, n)
-	if ReportTime[n] == nil then ReportTime[n] = nDebugTime end;
-	if ReportTime[n] < DotaTime() - 5.0
-	then
-		ReportTime[n] = DotaTime();	
-		GetBot():ActionImmediate_Chat(nMessage..string.gsub(tostring(nNumber), "npc_dota_", ""), true);
 	end
 end
 
@@ -1898,7 +1829,7 @@ end
 function J.SetQueueSwitchPtToINT(bot)
 	
 	local pt = J.IsItemAvailable("item_power_treads");
-	if pt~=nil and pt:IsFullyCastable()   
+	if pt ~= nil and pt:IsFullyCastable()   
 	then
 		if pt:GetPowerTreadsStat() == ATTRIBUTE_INTELLECT
 		then
@@ -1943,7 +1874,7 @@ function J.SetQueuePtToINT(bot, bSoulRingUsed)
 
 end
 
-
+--debug
 function J.IsPTReady(bot, status)
 	if  not bot:IsAlive()
 		or bot:IsMuted()
@@ -2057,7 +1988,7 @@ end
 
 
 function J.IsRoshan(nTarget)
-	return nTarget ~= nil and not nTarget:IsNull() and nTarget:IsAlive() and string.find(nTarget:GetUnitName(), "roshan");
+	return nTarget ~= nil and not nTarget:IsNull() and nTarget:IsAlive() and string.find(nTarget:GetUnitName(), "roshan") ~= nil
 end
 
 
@@ -2329,63 +2260,6 @@ function J.GetNearestLaneFrontLocation(nUnitLoc, bEnemy, fDeltaFromFront)
 
 end
 
-
-function J.IsSpecialCarry(bot)
-    
-	local botName = bot:GetUnitName();
-	
-	return  botName == "npc_dota_hero_antimage"
-			or botName == "npc_dota_hero_arc_warden"
-			or botName == "npc_dota_hero_bloodseeker"
-			or botName == "npc_dota_hero_bristleback" 
-			or botName == "npc_dota_hero_chaos_knight" 
-			or botName == "npc_dota_hero_dragon_knight"
-			or botName == "npc_dota_hero_drow_ranger"
-			or botName == "npc_dota_hero_kunkka"
-			or botName == "npc_dota_hero_luna"
-			or botName == "npc_dota_hero_medusa"
-			or botName == "npc_dota_hero_nevermore"
-			or botName == "npc_dota_hero_ogre_magi"
-			or botName == "npc_dota_hero_phantom_assassin"
-			or botName == "npc_dota_hero_phantom_lancer"
-			or botName == "npc_dota_hero_razor"
-			or botName == "npc_dota_hero_skeleton_king"
-			or botName == "npc_dota_hero_sven"
-			or botName == "npc_dota_hero_sniper"
-			or botName == "npc_dota_hero_templar_assassin"
-			or botName == "npc_dota_hero_viper" 
-			or botName == "npc_dota_hero_axe"
-			or botName == "npc_dota_hero_abaddon"
-			or botName == "npc_dota_hero_omniknight"
-			or botName == "npc_dota_hero_invoker"
-			or botName == "npc_dota_hero_slardar"
-			or botName == "npc_dota_hero_queenofpain"
-			or botName == "npc_dota_hero_undying"
-		 
-end
-
-
-function J.IsSpecialSupport(bot)
-    
-	local botName = bot:GetUnitName();
-	
-	return  botName == "npc_dota_hero_crystal_maiden"	
-			or botName == "npc_dota_hero_jakiro"
-			or botName == "npc_dota_hero_lina"
-			or botName == "npc_dota_hero_necrolyte"
-			or botName == "npc_dota_hero_silencer"
-			or botName == "npc_dota_hero_skywrath_mage"
-			or botName == "npc_dota_hero_warlock"		  
-			or botName == "npc_dota_hero_zuus" 
-			or botName == "npc_dota_hero_dazzle"
-			or botName == "npc_dota_hero_batrider"
-			or botName == "npc_dota_hero_puck"
-			or botName == "npc_dota_hero_shadow_demon"
-			or botName == "npc_dota_hero_disruptor"
-			or botName == "npc_dota_hero_rubick"
-			or botName == "npc_dota_hero_dark_willow"
-end 
-
 	
 function J.GetAttackableWeakestUnit(bHero, bEnemy, nRadius, bot)
 	local units = {};
@@ -2438,36 +2312,35 @@ end
 
 function J.GetAllyList(bot, nRange)
 	if nRange > 1600 then nRange = 1600 end
-	local nRealAllies = {};
+	local nRealAllyList = {};
 	local nCandidate = bot:GetNearbyHeroes(nRange, false, BOT_MODE_NONE);
-	if nCandidate[1] == nil then return nCandidate end
+	if #nCandidate <= 1 then return nCandidate end
 	
 	for _,ally in pairs(nCandidate)
 	do
 		if ally ~= nil and ally:IsAlive()
-			and not ally:IsIllusion()
-			and not J.IsExistInTable(ally, nRealAllies)
+		   and not ally:IsIllusion()
 		then
-			table.insert(nRealAllies, ally);
+			table.insert(nRealAllyList, ally);
 		end
 	end
 	
-	return nRealAllies;
+	return nRealAllyList;
 end
 
 
 function J.GetAllyCount(bot, nRange)
 		
-	local nRealAllies = J.GetAllyList(bot, nRange);
+	local nRealAllyList = J.GetAllyList(bot, nRange);
 	
-	return #nRealAllies;
+	return #nRealAllyList;
 	
 end
 
 
 function J.GetEnemyList(bot, nRange)
 	if nRange > 1600 then nRange = 1600 end
-	local nRealEnemys = {};
+	local nRealEnemyList = {};
 	local nCandidate = bot:GetNearbyHeroes(nRange, true, BOT_MODE_NONE);
 	if nCandidate[1] == nil then return nCandidate end
 	
@@ -2475,21 +2348,21 @@ function J.GetEnemyList(bot, nRange)
 	do
 		if enemy ~= nil and enemy:IsAlive()
 			and not J.IsSuspiciousIllusion(enemy)
-			and not J.IsExistInTable(enemy, nRealEnemys) --是否多余
+			--and not J.IsExistInTable(enemy, nRealEnemyList) --是否多余
 		then
-			table.insert(nRealEnemys, enemy);
+			table.insert(nRealEnemyList, enemy);
 		end
 	end
 	
-	return nRealEnemys;
+	return nRealEnemyList;
 end
 
 
 function J.GetEnemyCount(bot, nRange)
 		
-	local nRealEnemys = J.GetEnemyList(bot, nRange);
+	local nRealEnemyList = J.GetEnemyList(bot, nRange);
 	
-	return #nRealEnemys;
+	return #nRealEnemyList;
 	
 end
 
@@ -2497,6 +2370,7 @@ end
 function J.ConsiderTarget()
 
 	local bot = GetBot();
+	
 	if not J.IsRunning(bot) 
 	   or bot:HasModifier("modifier_item_hurricane_pike_range")
 	then return  end
@@ -3622,7 +3496,7 @@ ACTIVITY_TAUNT - 1536
 J.SetUserHeroInit(nAbilityBuildList, nTalentBuildList, sBuyList, sSellList)
 J.ConsiderUpdateEnvironment(bot)
 J.PrintInitMessage(sFlag, sMessage)
-J.IsDebugHero(bot, sName)
+J.IsDebugHero(bot)
 J.CanNotUseAbility(bot)
 J.GetVulnerableWeakestUnit(bHero, bEnemy, nRadius, bot)
 J.GetUnitAllyCountAroundEnemyTarget(target, nRadius)
@@ -3710,9 +3584,7 @@ J.GetUnitTowardDistanceLocation(bot, towardTarget, nDistance)
 J.GetLocationTowardDistanceLocation(bot, towardLocation, nDistance)
 J.GetFaceTowardDistanceLocation(bot, nDistance)
 J.PrintMessage(nMessage, nNumber, n, nIntevel)
-J.Print(nMessage, nNumber)
 J.PrintAndReport(nMessage, nNumber)
-J.SetReportMessage(nMessage, nNumber, n)
 J.SetReport(nMessage, nNumber)
 J.SetPingLocation(bot, vLoc)
 J.SetReportAndPingLocation(vLoc, nMessage, nNumber)
@@ -3749,8 +3621,6 @@ J.GetMostFarmLaneDesire()
 J.GetMostDefendLaneDesire()
 J.GetMostPushLaneDesire()
 J.GetNearestLaneFrontLocation(nUnitLoc, bEnemy, fDeltaFromFront)
-J.IsSpecialCarry(bot)
-J.IsSpecialSupport(bot)
 J.GetAttackableWeakestUnit(bHero, bEnemy, nRadius, bot)
 J.CanBeAttacked(npcTarget)
 J.GetHPR(bot)
@@ -3783,4 +3653,4 @@ J.GetMagicToPhysicalDamage(bot, nUnit, nMagicDamage)
 
 
 --]]
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592

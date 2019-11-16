@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -10,182 +10,48 @@ local X = {}
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
-local ConversionMode = dofile( GetScriptDirectory()..'/AuxiliaryScript/BotlibConversion') --引入技能文件
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-local sOutfit = J.Skill.GetOutfitName(bot)
 
---编组技能、天赋、装备
-local tGroupedDataList = {
-	{
-		--组合说明，不影响游戏
-		['info'] = 'By 决明子',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {0, 10},
-			['t20'] = {10, 0},
-			['t15'] = {10, 0},
-			['t10'] = {0, 10},
-		},
-		--技能
-		['Ability'] = {2,1,2,3,2,6,2,3,3,3,6,1,1,1,6},
-		--装备
-		['Buy'] = {
-			sOutfit,
-			"item_crimson_guard",
-			"item_echo_sabre",
-			"item_heavens_halberd",
-			"item_assault",
-			"item_heart",
-		},
-		--出售
-		['Sell'] = {
-			"item_crimson_guard",
-			"item_quelling_blade",
-			
-			"item_assault",
-			"item_echo_sabre",
-			
-			"item_heavens_halberd",
-			"item_magic_wand",
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By Misunderstand',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {0, 10},
-			['t20'] = {10, 0},
-			['t15'] = {0, 10},
-			['t10'] = {0, 10},
-		},
-		--技能
-		['Ability'] = { 2, 1, 2, 3, 2, 6, 2, 3, 3, 1, 6, 3, 1, 1, 6 },
-		--装备
-		['Buy'] = {
-			"item_tango",
-			"item_gauntlets", 
-			"item_stout_shield",
-			"item_quelling_blade",
-			"item_flask",
-			"item_enchanted_mango",
-			"item_bracer",
-			"item_bottle",
-			"item_phase_boots",
-			"item_invis_sword", 
-			"item_armlet", 
-			"item_radiance",
-			"item_heavens_halberd", 
-			"item_greater_crit", 
-			"item_silver_edge",
-			"item_assault",
-			"item_ultimate_scepter_2",
-			"item_moon_shard",
-			"item_travel_boots_2"
-		},
-		--出售
-		['Sell'] = {
-			"item_armlet", 
-			"item_quelling_blade",
 
-			"item_radiance",     
-			"item_stout_shield",
-					
-			"item_heavens_halberd",  
-			"item_bracer",	     
-
-			"item_assault",
-			"item_armlet",
-
-			"item_travel_boots",
-			"item_phase_boots"
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By 铅笔会有猫的w',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {0, 10},
-			['t20'] = {10, 0},
-			['t15'] = {0, 10},
-			['t10'] = {0, 10},
-		},
-		--技能
-		['Ability'] = { 2, 1, 3, 3, 3, 6, 3, 2, 2, 2, 6, 1, 1, 1, 6 },
-		--装备
-		['Buy'] = {
-			"item_stout_shield",
-			"item_tango",
-			"item_flask",			
-			"item_power_treads",
-			"item_bracer",			
-			"item_magic_wand",
-			"item_invis_sword", 
-			"item_lesser_crit", 
-			"item_heavens_halberd", 
-			"item_black_king_bar", 
-			"item_greater_crit", 
-			"item_silver_edge", 
-			"item_assault", 
-			"item_ultimate_scepter_2",
-			"item_travel_boots",
-			"item_moon_shard",
-			"item_travel_boots_2",
-		},
-		--出售
-		['Sell'] = {
-			"item_travel_boots",     
-			"item_power_treads",
-
-			"item_heavens_halberd",     
-			"item_stout_shield",
-
-			"item_assault",     
-			"item_magic_wand",
-					
-			"item_black_king_bar",  
-			"item_bracer",
-		},
-	},
-}
---默认数据
-local tDefaultGroupedData = {
-	--天赋树
-	['Talent'] = {
-		['t25'] = {0, 10},
-		['t20'] = {10, 0},
-		['t15'] = {10, 0},
-		['t10'] = {0, 10},
-	},
-	--技能
-	['Ability'] = {2,1,2,3,2,6,2,3,3,3,6,1,1,1,6},
-	--装备
-	['Buy'] = {
-		sOutfit,
-		"item_crimson_guard",
-		"item_echo_sabre",
-		"item_heavens_halberd",
-		"item_assault",
-		"item_heart",
-	},
-	--出售
-	['Sell'] = {
-		"item_crimson_guard",
-		"item_quelling_blade",
-		
-		"item_assault",
-		"item_echo_sabre",
-		
-		"item_heavens_halberd",
-		"item_magic_wand",
-	},
+local tTalentTreeList = {
+						['t25'] = {0, 10},
+						['t20'] = {10, 0},
+						['t15'] = {10, 0},
+						['t10'] = {0, 10},
 }
 
---根据组数据生成技能、天赋、装备
-local nAbilityBuildList, nTalentBuildList;
+local tAllAbilityBuildList = {
+						{2,1,2,3,2,6,2,3,3,3,6,1,1,1,6},
+}
 
-nAbilityBuildList, nTalentBuildList, X['sBuyList'], X['sSellList'] = ConversionMode.Combination(tGroupedDataList, tDefaultGroupedData)
+local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
+
+local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
+
+
+X['sBuyList'] = {
+				'item_tank_outfit',
+				"item_crimson_guard",
+				"item_echo_sabre",
+				"item_heavens_halberd",
+				"item_assault",
+				"item_heart",
+}
+
+X['sSellList'] = {
+	"item_crimson_guard",
+	"item_quelling_blade",
+	
+	"item_assault",
+	"item_echo_sabre",
+	
+	"item_heavens_halberd",
+	"item_magic_wand",
+}
+
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_tank' }, {"item_solar_crest",'item_quelling_blade'} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -205,6 +71,8 @@ end
 
 --[[
 
+npc_dota_hero_kunkka
+
 "Ability1"		"kunkka_torrent"
 "Ability2"		"kunkka_tidebringer"
 "Ability3"		"kunkka_x_marks_the_spot"
@@ -220,6 +88,19 @@ end
 "Ability15"		"special_bonus_strength_25"
 "Ability16"		"special_bonus_unique_kunkka_3"
 "Ability17"		"special_bonus_unique_kunkka_4"
+
+modifier_kunkka_torrent_thinker
+modifier_kunkka_torrent
+modifier_kunkka_torrent_slow
+modifier_kunkka_tidebringer
+modifier_kunkka_x_marks_the_spot
+modifier_kunkka_x_marks_the_spot_marker
+modifier_kunkka_x_marks_the_spot_thinker
+modifier_kunkka_ghost_ship_fleet
+modifier_kunkka_ghost_ship_knockback
+modifier_kunkka_ghost_ship_loaded
+modifier_kunkka_ghost_ship_damage_absorb
+modifier_kunkka_ghost_ship_damage_delay
 
 --]]
 

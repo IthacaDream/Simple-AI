@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -10,196 +10,51 @@ local X = {}
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
-local ConversionMode = dofile( GetScriptDirectory()..'/AuxiliaryScript/BotlibConversion') --引入技能文件
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-local sOutfit = J.Skill.GetOutfitName(bot)
 
---编组技能、天赋、装备
-local tGroupedDataList = {
-	{
-		--组合说明，不影响游戏
-		['info'] = 'By 决明子',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {0, 10},
-			['t15'] = {0, 10},
-			['t10'] = {0, 10},
-		},
-		--技能
-		['Ability'] = {3,1,3,1,3,6,3,2,1,1,6,2,2,2,6},
-		--装备
-		['Buy'] = {
-			sOutfit,
-			"item_hand_of_midas",
-			"item_maelstrom",
-			"item_diffusal_blade",
-			"item_manta",
-			"item_sheepstick",
-			"item_mjollnir",
-			"item_orchid",
-			"item_bloodthorn",
-			"item_black_king_bar",
-		},
-		--出售
-		['Sell'] = {
-			"item_bloodthorn",
-			"item_diffusal_blade",
-			
-			"item_mjollnir",
-			"item_hand_of_midas",
-			
-			'item_sheepstick',
-			'item_magic_wand',
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By Misunderstand',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {0, 10},
-			['t15'] = {10, 0},
-			['t10'] = {0, 10},
-		},
-		--技能
-		['Ability'] = { 3, 1, 3, 1, 2, 6, 1, 1, 3, 3, 6, 2, 2, 2, 6 },
-		--装备
-		['Buy'] = {
-			"item_double_slippers",
-			"item_enchanted_mango",
-			"item_circlet",
-			"item_double_branches",
-			"item_double_enchanted_mango",
-			"item_magic_wand",
-			"item_wraith_band",
-			"item_hand_of_midas", 
-			"item_travel_boots",
-			"item_maelstrom",
-			"item_orchid",
-			"item_manta",
-			"item_sheepstick",
-			"item_mjollnir",
-			"item_bloodthorn",
-			"item_black_king_bar",
-			"item_ethereal_blade",
-			"item_travel_boots_2",
-			"item_necronomicon_3",
-			"item_moon_shard"
-		},
-		--出售
-		['Sell'] = {
-			"item_travel_boots",     
-			"item_slippers",
 
-			"item_orchid",     
-			"item_magic_wand",
-					
-			"item_manta",  
-			"item_wraith_band",	     
-
-			"item_ethereal_blade",
-			"item_manta",
-
-			"item_travel_boots_2",
-			"item_black_king_bar",
-
-			"item_dagon_5",
-			"item_hand_of_midas"
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By 铅笔会有猫的w',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {0, 10},
-			['t15'] = {0, 10},
-			['t10'] = {0, 10},
-		},
-		--技能
-		['Ability'] = { 3, 1, 3, 2, 3, 6, 3, 1, 1, 1, 6, 2, 2, 2, 6 },
-		--装备
-		['Buy'] = {
-			"item_circlet",
-			"item_enchanted_mango",
-			"item_clarity",
-			"item_double_branches",
-			"item_double_enchanted_mango",
-			"item_boots", 
-			"item_flask",
-			"item_magic_wand",	
-			"item_double_wraith_band",	
-			"item_hand_of_midas", 
-			"item_travel_boots",
-			"item_dragon_lance", 									
-			"item_mjollnir",
-			"item_sheepstick", 
-			"item_black_king_bar",
-			"item_bloodthorn", 
-			"item_ultimate_scepter",
-			"item_ultimate_scepter_2",
-			"item_moon_shard",
-		},
-		--出售
-		['Sell'] = {
-			"item_black_king_bar",     
-			"item_dragon_lance",
-
-			"item_mjollnir",     
-			"item_magic_wand",
-					
-			"item_sheepstick",  
-			"item_wraith_band",	     
-
-			"item_bloodthorn", 
-			"item_hand_of_midas",
-		},
-	},
-}
---默认数据
-local tDefaultGroupedData = {
-	--天赋树
-	['Talent'] = {
-		['t25'] = {10, 0},
-		['t20'] = {0, 10},
-		['t15'] = {0, 10},
-		['t10'] = {0, 10},
-	},
-	--技能
-	['Ability'] = {3,1,3,1,3,6,3,2,1,1,6,2,2,2,6},
-	--装备
-	['Buy'] = {
-		sOutfit,
-		"item_hand_of_midas",
-		"item_maelstrom",
-		"item_diffusal_blade",
-		"item_manta",
-		"item_sheepstick",
-		"item_mjollnir",
-		"item_orchid",
-		"item_bloodthorn",
-		"item_black_king_bar",
-	},
-	--出售
-	['Sell'] = {
-		"item_bloodthorn",
-		"item_diffusal_blade",
-		
-		"item_mjollnir",
-		"item_hand_of_midas",
-		
-		'item_sheepstick',
-		'item_magic_wand',
-	},
+local tTalentTreeList = {
+						['t25'] = {10, 0},
+						['t20'] = {0, 10},
+						['t15'] = {0, 10},
+						['t10'] = {0, 10},
 }
 
---根据组数据生成技能、天赋、装备
-local nAbilityBuildList, nTalentBuildList;
+local tAllAbilityBuildList = {
+						{3,1,3,1,3,6,3,2,1,1,6,2,2,2,6},
+}
 
-nAbilityBuildList, nTalentBuildList, X['sBuyList'], X['sSellList'] = ConversionMode.Combination(tGroupedDataList, tDefaultGroupedData)
+local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
+
+local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
+
+
+X['sBuyList'] = {
+				'item_ranged_carry_outfit',
+				"item_hand_of_midas",
+				"item_maelstrom",
+				"item_diffusal_blade",
+				"item_manta",
+				"item_sheepstick",
+				"item_mjollnir",
+				"item_orchid",
+				"item_bloodthorn",
+				"item_black_king_bar",	
+}
+
+X['sSellList'] = {
+	"item_bloodthorn",
+	"item_diffusal_blade",
+	"item_mjollnir",
+	"item_hand_of_midas",
+	
+	'item_sheepstick',
+	'item_magic_wand',
+}
+
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_ranged_carry' }, {} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -217,6 +72,36 @@ function X.MinionThink(hMinionUnit)
 	end
 
 end
+
+--[[
+
+npc_dota_hero_arc_warden
+
+"Ability1"		"arc_warden_flux"
+"Ability2"		"arc_warden_magnetic_field"
+"Ability3"		"arc_warden_spark_wraith"
+"Ability4"		"arc_warden_scepter"
+"Ability5"		"generic_hidden"
+"Ability6"		"arc_warden_tempest_double"
+"Ability10"		"special_bonus_cooldown_reduction_8"
+"Ability11"		"special_bonus_attack_speed_35"
+"Ability12"		"special_bonus_hp_300"
+"Ability13"		"special_bonus_unique_arc_warden_5"
+"Ability14"		"special_bonus_unique_arc_warden_3"
+"Ability15"		"special_bonus_attack_range_125"
+"Ability16"		"special_bonus_lifesteal_30"
+"Ability17"		"special_bonus_unique_arc_warden"
+
+modifier_arc_warden_flux
+modifier_arc_warden_magnetic_field_thinker_evasion
+modifier_arc_warden_magnetic_field_thinker_attack_speed
+modifier_arc_warden_magnetic_field_evasion
+modifier_arc_warden_magnetic_field_attack_speed
+modifier_arc_warden_spark_wraith_purge
+modifier_arc_warden_spark_wraith_thinker
+modifier_arc_warden_tempest_double
+
+--]]
 
 local abilityQ = bot:GetAbilityByName( sAbilityList[1] );
 local abilityW = bot:GetAbilityByName( sAbilityList[2] );
@@ -289,11 +174,6 @@ function X.SkillsComplement()
 		return;
 	
 	end
-
-	--技能检查顺序
-	local order = {'D'}
-	--委托技能处理函数接管
-	if ConversionMode.Skills(order) then return; end
 
 end
 

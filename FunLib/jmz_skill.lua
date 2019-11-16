@@ -2,14 +2,13 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
 
 
 local X = {}
-
 
 function X.GetTalentList(bot)
 	local sTalentList = {};
@@ -183,11 +182,11 @@ function X.IsHeroInEnemyTeam(sHero)
 end
 
 function X.GetOutfitName(bot)
-
-	return 'item_'..string.gsub(bot:GetUnitName(),"npc_dota_hero_","")..'_outfit'
+	
+	return 'item_'..string.gsub(bot:GetUnitName(),'npc_dota_hero_','')..'_outfit'
 
 end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592

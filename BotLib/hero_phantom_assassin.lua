@@ -2,192 +2,56 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
 local X = {}
+local bDebugMode = false
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
-local ConversionMode = dofile( GetScriptDirectory()..'/AuxiliaryScript/BotlibConversion') --引入技能文件
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-local sOutfit = J.Skill.GetOutfitName(bot)
 
---编组技能、天赋、装备
-local tGroupedDataList = {
-	{
-		--组合说明，不影响游戏
-		['info'] = 'By 决明子',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {0, 10},
-			['t15'] = {10, 0},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = {1,2,1,3,1,6,2,2,2,3,6,3,3,1,6},
-		--装备
-		['Buy'] = {
-			sOutfit,
-			"item_bfury",
-			"item_solar_crest",
-			"item_black_king_bar",
-			"item_satanic",
-			"item_monkey_king_bar",
-		},
-		--出售
-		['Sell'] = {
-			"item_power_treads",
-			"item_stout_shield",
-			
-			'item_satanic',
-			'item_magic_wand',
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By Misunderstand',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {0, 10},
-			['t20'] = {0, 10},
-			['t15'] = {0, 10},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = { 1, 2, 1, 3, 1, 6, 1, 2, 2, 2, 6, 3, 3, 3, 6 },
-		--装备
-		['Buy'] = {
-			"item_faerie_fire",
-			"item_slippers",
-			"item_stout_shield",
-			"item_tango",
-			"item_quelling_blade",
-			"item_magic_stick",
-			"item_wraith_band",
-			"item_boots",
-			"item_bfury",
-			"item_power_treads",
-			"item_desolator",
-			"item_lifesteal",
-			"item_black_king_bar", 
-			"item_basher",
-			"item_abyssal_blade",
-			"item_satanic",
-			"item_ultimate_scepter_2",
-			"item_moon_shard",
-			"item_travel_boots",
-			"item_nullifier",
-			"item_travel_boots_2"
-		},
-		--出售
-		['Sell'] = {
-			"item_bfury",
-			"item_faerie_fire",
 
-			"item_vladmir",
-			"item_stout_shield",
-
-			"item_black_king_bar",     
-			"item_wraith_band",
-
-			"item_basher",
-			"item_magic_stick",
-
-			"item_travel_boots",
-			"item_power_treads",
-
-			"item_nullifier",
-			"item_desolator"
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By 铅笔会有猫的w',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {10, 0},
-			['t15'] = {10, 0},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = { 1, 2, 3, 1, 2, 6, 1, 1, 2, 2, 6, 3, 3, 3, 6 },
-		--装备
-		['Buy'] = {
-			"item_tango",
-			"item_flask",
-			"item_stout_shield",
-			"item_quelling_blade",
-			"item_magic_stick",
-			"item_wraith_band",
-			"item_ring_of_health", 
-			"item_boots",
-			"item_magic_wand",
-			"item_blight_stone",
-			"item_phase_boots",		
-			"item_bfury",	
-			"item_basher",
-			"item_lifesteal",
-			"item_desolator",
-			"item_black_king_bar",
-			"item_abyssal_blade",
-			"item_satanic",
-			"item_moon_shard",
-			"item_travel_boots",
-			"item_travel_boots_2",
-			"item_ultimate_scepter",
-			"item_ultimate_scepter_2",
-		},
-		--出售
-		['Sell'] = {
-			"item_basher",
-			"item_wraith_band",
-
-			"item_black_king_bar",     
-			"item_magic_wand",
-
-			"item_travel_boots", 
-			"item_phase_boots",
-		},
-	},
-}
---默认数据
-local tDefaultGroupedData = {
-	--天赋树
-	['Talent'] = {
-		['t25'] = {10, 0},
-		['t20'] = {0, 10},
-		['t15'] = {10, 0},
-		['t10'] = {10, 0},
-	},
-	--技能
-	['Ability'] = {1,2,1,3,1,6,2,2,2,3,6,3,3,1,6},
-	--装备
-	['Buy'] = {
-		sOutfit,
-		"item_bfury",
-		"item_solar_crest",
-		"item_black_king_bar",
-		"item_satanic",
-		"item_monkey_king_bar",
-	},
-	--出售
-	['Sell'] = {
-		"item_power_treads",
-		"item_stout_shield",
-		
-		'item_satanic',
-		'item_magic_wand',
-	},
+local tTalentTreeList = {
+						['t25'] = {10, 0},
+						['t20'] = {0, 10},
+						['t15'] = {10, 0},
+						['t10'] = {10, 0},
 }
 
---根据组数据生成技能、天赋、装备
-local nAbilityBuildList, nTalentBuildList;
+local tAllAbilityBuildList = {
+						{1,2,1,3,1,6,2,2,2,3,6,3,3,1,6},
+}
 
-nAbilityBuildList, nTalentBuildList, X['sBuyList'], X['sSellList'] = ConversionMode.Combination(tGroupedDataList, tDefaultGroupedData)
+local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
+
+local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
+
+
+
+X['sBuyList'] = {
+				'item_phantom_assassin_outfit',
+				"item_new_bfury",
+				"item_desolator",
+				"item_black_king_bar",
+				"item_satanic",
+				"item_monkey_king_bar",
+}
+
+
+X['sSellList'] = {
+	"item_power_treads",
+	"item_stout_shield",
+	
+	'item_satanic',
+	'item_magic_wand',
+}
+
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_melee_carry' }, {"item_abyssal_blade",'item_quelling_blade'} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -206,7 +70,30 @@ function X.MinionThink(hMinionUnit)
 end
 
 --[[
+
 npc_dota_hero_phantom_assassin
+
+"Ability1"		"phantom_assassin_stifling_dagger"
+"Ability2"		"phantom_assassin_phantom_strike"
+"Ability3"		"phantom_assassin_blur"
+"Ability4"		"generic_hidden"
+"Ability5"		"generic_hidden"
+"Ability6"		"phantom_assassin_coup_de_grace"
+"Ability10"		"special_bonus_hp_150"
+"Ability11"		"special_bonus_attack_damage_15"
+"Ability12"		"special_bonus_lifesteal_15"
+"Ability13"		"special_bonus_cleave_25"
+"Ability14"		"special_bonus_corruption_4"
+"Ability15"		"special_bonus_unique_phantom_assassin_3"
+"Ability16"		"special_bonus_unique_phantom_assassin_2"
+"Ability17"		"special_bonus_unique_phantom_assassin"
+
+modifier_phantom_assassin_stiflingdagger_caster
+modifier_phantom_assassin_stiflingdagger
+modifier_phantom_assassin_phantom_strike
+modifier_phantom_assassin_blur
+modifier_phantom_assassin_blur_active
+modifier_phantom_assassin_coupdegrace
 
 --]]
 
@@ -229,11 +116,8 @@ local lastSkillCreep
 
 function X.SkillsComplement()
 
-
-	
 	if J.CanNotUseAbility(bot) then return end
-	
-	
+
 	nKeepMana = 400
 	aetherRange = 0
 	talentDamage = 0
@@ -242,8 +126,6 @@ function X.SkillsComplement()
 	nHP = bot:GetHealth()/bot:GetMaxHealth();
 	hEnemyHeroList = bot:GetNearbyHeroes(1600, true, BOT_MODE_NONE);
 	
-	
-
 	castEDesire  = X.ConsiderE();	
 	if castEDesire > 0
 	then
@@ -258,15 +140,8 @@ function X.SkillsComplement()
 	castQDesire,castQTarget = X.ConsiderQ();	
 	if castQDesire > 0
 	then
-		local nLaneCreeps = bot:GetNearbyLaneCreeps(1200,true);
-		
-		if #hEnemyHeroList == 0 and #nLaneCreeps == 0  
-		then
-			J.SetQueuePtToINT(bot, false)
-		else
-			bot:Action_ClearActions(false)
-		end
-				
+		J.SetQueuePtToINT(bot, false)
+			
 		bot:ActionQueue_UseAbilityOnEntity( abilityQ , castQTarget);
 		return;
 	end
@@ -287,8 +162,8 @@ end
 
 function X.ConsiderQ()
 
-	if  not abilityQ:IsFullyCastable() then 
-		return BOT_ACTION_DESIRE_NONE, 0;
+	if not abilityQ:IsFullyCastable() then 
+		return BOT_ACTION_DESIRE_NONE;
 	end
 
 	-- Get some of its values
@@ -318,7 +193,7 @@ function X.ConsiderQ()
 		   and J.CanCastOnMagicImmune(npcEnemy)
 		   and J.CanCastOnTargetAdvanced(npcEnemy)
 		   and GetUnitToUnitDistance(bot,npcEnemy) <= nCastRange + 80
-		   and ( J.CanKillTarget(npcEnemy,nDamage * 1.38,nDamageType) 
+		   and ( J.CanKillTarget(npcEnemy,nDamage * 1.6,nDamageType) 
 		         or ( npcEnemy:IsChanneling() and J.CanKillTarget(npcEnemy,nDamage * 4.5,nDamageType)))
 		then
 			return BOT_ACTION_DESIRE_HIGH, npcEnemy;
@@ -628,6 +503,13 @@ function X.ConsiderW()
 		local npcWeakestEnemy = nil;
 		local npcWeakestEnemyHealth = 10000;		
 		
+		if J.IsValid(npcTarget)
+			and J.IsInRange(bot,npcTarget,nCastRange)
+			and J.CanCastOnMagicImmune(npcTarget)
+		then
+			return BOT_ACTION_DESIRE_HIGH, npcTarget;
+		end
+		
 		for _,npcEnemy in pairs( nEnemysHerosInRange )
 		do
 			if  J.IsValid(npcEnemy)
@@ -645,13 +527,6 @@ function X.ConsiderW()
 			end
 		end
 		
-		if J.IsValid(npcTarget)
-			and J.IsInRange(bot,npcTarget,nCastRange)
-			and J.CanCastOnMagicImmune(npcTarget)
-		then
-			return BOT_ACTION_DESIRE_HIGH, npcTarget;
-		end
-		
 		if ( npcWeakestEnemy ~= nil )
 		then
 			bot:SetTarget(npcWeakestEnemy);
@@ -662,7 +537,7 @@ function X.ConsiderW()
 	
 	--打架时先手	
 	if J.IsGoingOnSomeone(bot) and nLV >= 3 
-	   and ( #nAllies >= 2 or #nEnemysHerosInView <= 1 )
+	   and ( #nAllies >= 2 or #nEnemysHerosInView <= 1 or nLV >= 20 )
 	then
 	    
 		if J.IsValidHero(npcTarget) 

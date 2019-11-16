@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -10,14 +10,11 @@ local X = {}
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
-local ConversionMode = dofile( GetScriptDirectory()..'/AuxiliaryScript/BotlibConversion') --引入技能文件
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-local sOutfit = J.Skill.GetOutfitName(bot)
 
---旧装备构建格式
---[[
+
 local tTalentTreeList = {
 						['t25'] = {0, 10},
 						['t20'] = {10, 0},
@@ -35,7 +32,7 @@ local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
 
 X['sBuyList'] = {
-				sOutfit,
+				'item_jakiro_outfit',
 				"item_pipe",
 				"item_glimmer_cape",
 				"item_veil_of_discord",
@@ -51,139 +48,8 @@ X['sSellList'] = {
 	"item_sheepstick",
 	"item_arcane_boots",
 }
-]]
---编组技能、天赋、装备
-local tGroupedDataList = {
-	{
-		['info'] = 'By 决明子',
-		['Talent'] = {
-			['t25'] = {0, 10},
-			['t20'] = {10, 0},
-			['t15'] = {10, 0},
-			['t10'] = {0, 10},
-		},
-		['Ability'] = {3,1,2,1,1,6,1,2,2,2,6,3,3,3,6},
-		['Buy'] = {
-			sOutfit,
-			"item_pipe",
-			"item_glimmer_cape",
-			"item_veil_of_discord",
-			"item_cyclone",
-			"item_sheepstick",
-			"item_ultimate_scepter",
-		},
-		['Sell'] = {
-			"item_cyclone",
-			"item_magic_wand",
-			
-			"item_sheepstick",
-			"item_arcane_boots",
-		}
-	},
-	{
-		['info'] = 'By 铅笔会有猫的w',
-		['Talent'] = {
-			['t25'] = {0, 10},
-			['t20'] = {10, 0},
-			['t15'] = {0, 10},
-			['t10'] = {10, 0},
-		},
-		['Ability'] = { 1, 3, 2, 1, 1, 6, 1, 2, 2, 2, 6, 3, 3, 3, 6 },
-		['Buy'] = {
-			"item_double_tango",
-			"item_flask",
-			"item_clarity",
-			"item_enchanted_mango",
-			"item_magic_stick",
-			"item_arcane_boots",
-			"item_bracer",
-			"item_magic_wand",
-			"item_mekansm",
-			"item_glimmer_cape",
-			"item_veil_of_discord",
-			"item_guardian_greaves",
-			"item_cyclone",
-			"item_ultimate_scepter",
-			"item_sheepstick",
-			"item_ultimate_scepter_2",
-			"item_lotus_orb",
-			"item_moon_shard",
-		},
-		['Sell'] = {
-			"item_lotus_orb",
-			"item_magic_wand",
-			
-			"item_sheepstick",
-			"item_bracer",
-		}
-	},
-	{
-		['info'] = 'By Misunderstand',
-		['Talent'] = {
-			['t25'] = {0, 10},
-			['t20'] = {10, 0},
-			['t15'] = {10, 0},
-			['t10'] = {10, 0},
-		},
-		['Ability'] = { 1, 3, 1, 2, 1, 6, 2, 2, 1, 2, 6, 3, 3, 3, 6 },
-		['Buy'] = {
-			"item_circlet",
-			"item_tango",
-			"item_clarity",
-			"item_enchanted_mango",
-			"item_flask",
-			"item_magic_stick",
-			"item_tango",
-			"item_clarity",
-			"item_enchanted_mango",
-			"item_urn_of_shadows",
-			"item_arcane_boots",
-			"item_rod_of_atos",
-			"item_glimmer_cape",
-			"item_ultimate_scepter",
-			"item_guardian_greaves",
-			"item_cyclone",
-			"item_spirit_vessel",
-			"item_ghost",
-			"item_ethereal_blade",
-		},
-		['Sell'] = {
-			"item_cyclone",
-			"item_magic_stick",
-		}
-	}
-}
---默认数据
-local tDefaultGroupedData = {
-	['Talent'] = {
-		['t25'] = {0, 10},
-		['t20'] = {10, 0},
-		['t15'] = {10, 0},
-		['t10'] = {0, 10},
-	},
-	['Ability'] = {3,1,2,1,1,6,1,2,2,2,6,3,3,3,6},
-	['Buy'] = {
-		sOutfit,
-		"item_pipe",
-		"item_glimmer_cape",
-		"item_veil_of_discord",
-		"item_cyclone",
-		"item_sheepstick",
-		"item_ultimate_scepter",
-	},
-	['Sell'] = {
-		"item_cyclone",
-		"item_magic_wand",
-		
-		"item_sheepstick",
-		"item_arcane_boots",
-	}
-}
 
---根据组数据生成技能、天赋、装备
-local nAbilityBuildList, nTalentBuildList;
-
-nAbilityBuildList, nTalentBuildList, X['sBuyList'], X['sSellList'] = ConversionMode.Combination(tGroupedDataList, tDefaultGroupedData)
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_mage' }, {} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -200,6 +66,38 @@ function X.MinionThink(hMinionUnit)
 	end
 
 end
+
+--[[
+
+npc_dota_hero_jakiro
+
+"Ability1"		"jakiro_dual_breath"
+"Ability2"		"jakiro_ice_path"
+"Ability3"		"jakiro_liquid_fire"
+"Ability4"		"generic_hidden"
+"Ability5"		"generic_hidden"
+"Ability6"		"jakiro_macropyre"
+"Ability10"		"special_bonus_attack_range_300"
+"Ability11"		"special_bonus_spell_amplify_8"
+"Ability12"		"special_bonus_exp_boost_40"
+"Ability13"		"special_bonus_unique_jakiro_2"
+"Ability14"		"special_bonus_unique_jakiro_4"
+"Ability15"		"special_bonus_gold_income_25"
+"Ability16"		"special_bonus_unique_jakiro_3"
+"Ability17"		"special_bonus_unique_jakiro"
+
+modifier_jakiro_dual_breath
+modifier_jakiro_dual_breath_slow
+modifier_jakiro_dual_breath_burn
+modifier_jakiro_ice_path_stun
+modifier_jakiro_ice_path
+modifier_jakiro_liquidfire
+modifier_jakiro_liquid_fire_burn
+modifier_jakiro_macropyre
+modifier_jakiro_macropyre_burn
+
+--]]
+
 
 local abilityQ = bot:GetAbilityByName( sAbilityList[1] );
 local abilityW = bot:GetAbilityByName( sAbilityList[2] );
@@ -220,15 +118,9 @@ local aetherRange = 0
 
 function X.SkillsComplement()
 	
+	
 	if J.CanNotUseAbility(bot) or bot:IsInvisible() then return end
-	--新技能构建方式
-	----如果当前英雄无法使用技能或英雄处于隐形状态，则不做操作。
-	--if J.CanNotUseAbility(bot) or bot:IsInvisible() then return end
-	----技能检查顺序
-	--local order = {'W','R','Q','E'}
-	----委托技能处理函数接管
-	--if ConversionMode.Skills(order) then return; end
-
+	
 	
 	nKeepMana = 400; 
 	aetherRange = 0

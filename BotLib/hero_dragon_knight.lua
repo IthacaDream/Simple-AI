@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -10,189 +10,44 @@ local X = {}
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
-local ConversionMode = dofile( GetScriptDirectory()..'/AuxiliaryScript/BotlibConversion') --引入技能文件
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-local sOutfit = J.Skill.GetOutfitName(bot)
 
---编组技能、天赋、装备
-local tGroupedDataList = {
-	{
-		--组合说明，不影响游戏
-		['info'] = 'By 决明子',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {0, 10},
-			['t15'] = {10, 0},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = {2,3,1,1,1,6,1,3,3,3,6,2,2,2,6},
-		--装备
-		['Buy'] = {
-			sOutfit,
-			"item_crimson_guard",
-			"item_heavens_halberd",
-			"item_assault",
-			"item_heart",
-		},
-		--出售
-		['Sell'] = {
-			"item_crimson_guard",
-			"item_quelling_blade",
-			
-			"item_assault",
-			"item_magic_wand",
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By Misunderstand',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {0, 10},
-			['t20'] = {10, 0},
-			['t15'] = {0, 10},
-			['t10'] = {0, 10},
-		},
-		--技能
-		['Ability'] = { 1, 3, 3, 1, 2, 6, 1, 1, 3, 2, 6, 3, 2, 2, 6 },
-		--装备
-		['Buy'] = {
-			"item_tango",
-			"item_flask",
-			"item_stout_shield",
-			"item_quelling_blade",
-			"item_double_enchanted_mango",
-			"item_soul_ring",
-			"item_hand_of_midas", 
-			"item_power_treads",
-			"item_invis_sword",
-			"item_hood_of_defiance",			
-			"item_black_king_bar",
-			"item_ultimate_scepter",
-			"item_mjollnir",
-			"item_greater_crit",
-			"item_ultimate_scepter_2",
-			"item_silver_edge",
-			"item_heavens_halberd",
-			"item_travel_boots",
-			"item_moon_shard",
-			"item_travel_boots_2"
-		},
-		--出售
-		['Sell'] = {
-			"item_power_treads",     
-			"item_quelling_blade",
 
-			"item_invis_sword",     
-			"item_stout_shield",
-					
-			"item_ultimate_scepter",  
-			"item_soul_ring",	 
-
-			"item_greater_crit",
-			"item_hood_of_defiance",   
-
-			"item_silver_edge",
-			"item_hand_of_midas",
-
-			"item_travel_boots",
-			"item_power_treads"
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By 铅笔会有猫的w',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {10, 0},
-			['t15'] = {0, 10},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = { 1, 3, 2, 3, 3, 6, 3, 1, 1, 1, 6, 2, 2, 2, 6 },
-		--装备
-		['Buy'] = {
-			"item_tango",
-			"item_flask",
-			"item_stout_shield",
-			"item_quelling_blade",
-			"item_boots",
-			"item_magic_stick",
-			"item_hand_of_midas", 
-			"item_magic_wand",
-			"item_bracer",
-			"item_power_treads",
-			"item_maelstrom",
-			"item_lesser_crit",
-			"item_black_king_bar",
-			"item_mjollnir",					
-			"item_satanic",
-			"item_bloodthorn", 			
-			"item_travel_boots",	
-			"item_assault",
-			"item_moon_shard",
-			"item_ultimate_scepter",
-			"item_ultimate_scepter_2",		
-			"item_travel_boots_2",	
-		},
-		--出售
-		['Sell'] = {
-			"item_travel_boots",
-			"item_power_treads",
-
-			"item_maelstrom",     
-			"item_stout_shield",
-
-			"item_assault",     
-			"item_hand_of_midas",
-
-			"item_satanic",     
-			"item_magic_wand",
-
-			"item_lesser_crit",     
-			"item_quelling_blade",
-					
-			"item_black_king_bar",  
-			"item_bracer",	     
-		},
-	},
-}
---默认数据
-local tDefaultGroupedData = {
-	--天赋树
-	['Talent'] = {
-		['t25'] = {10, 0},
-		['t20'] = {0, 10},
-		['t15'] = {10, 0},
-		['t10'] = {10, 0},
-	},
-	--技能
-	['Ability'] = {2,3,1,1,1,6,1,3,3,3,6,2,2,2,6},
-	--装备
-	['Buy'] = {
-		sOutfit,
-		"item_crimson_guard",
-		"item_heavens_halberd",
-		"item_assault",
-		"item_heart",
-	},
-	--出售
-	['Sell'] = {
-		"item_crimson_guard",
-		"item_quelling_blade",
-		
-		"item_assault",
-		"item_magic_wand",
-	},
+local tTalentTreeList = {
+						['t25'] = {10, 0},
+						['t20'] = {0, 10},
+						['t15'] = {10, 0},
+						['t10'] = {10, 0},
 }
 
---根据组数据生成技能、天赋、装备
-local nAbilityBuildList, nTalentBuildList;
+local tAllAbilityBuildList = {
+						{2,3,1,1,1,6,1,3,3,3,6,2,2,2,6},
+}
 
-nAbilityBuildList, nTalentBuildList, X['sBuyList'], X['sSellList'] = ConversionMode.Combination(tGroupedDataList, tDefaultGroupedData)
+local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
+
+local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
+
+
+X['sBuyList'] = {
+				'item_dragon_knight_outfit',
+				"item_crimson_guard",
+				"item_heavens_halberd",
+				"item_assault",
+				"item_heart",
+}
+
+X['sSellList'] = {
+	"item_crimson_guard",
+	"item_quelling_blade",
+	
+	"item_assault",
+	"item_magic_wand",
+}
+
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_tank' }, {"item_solar_crest",'item_quelling_blade'} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -211,6 +66,38 @@ function X.MinionThink(hMinionUnit)
 
 end
 
+--[[
+
+npc_dota_hero_dragon_knight
+
+"Ability1"		"dragon_knight_breathe_fire"
+"Ability2"		"dragon_knight_dragon_tail"
+"Ability3"		"dragon_knight_dragon_blood"
+"Ability4"		"generic_hidden"
+"Ability5"		"generic_hidden"
+"Ability6"		"dragon_knight_elder_dragon_form"
+"Ability10"		"special_bonus_mp_regen_3"
+"Ability11"		"special_bonus_unique_dragon_knight_3"
+"Ability12"		"special_bonus_attack_damage_30"
+"Ability13"		"special_bonus_hp_350"
+"Ability14"		"special_bonus_gold_income_30"
+"Ability15"		"special_bonus_strength_25"
+"Ability16"		"special_bonus_unique_dragon_knight"
+"Ability17"		"special_bonus_unique_dragon_knight_2"
+
+modifier_dragonknight_breathefire_reduction
+modifier_dragon_knight_dragon_blood_aura
+modifier_dragon_knight_dragon_blood
+modifier_dragon_knight_dragon_form
+modifier_dragon_knight_corrosive_breath
+modifier_dragon_knight_corrosive_breath_dot
+modifier_dragon_knight_splash_attack
+modifier_dragon_knight_frost_breath
+modifier_dragon_knight_frost_breath_slow
+
+--]]
+
+
 local abilityQ = bot:GetAbilityByName( sAbilityList[1] )
 local abilityW = bot:GetAbilityByName( sAbilityList[2] )
 local abilityR = bot:GetAbilityByName( sAbilityList[6] )
@@ -228,7 +115,6 @@ function X.SkillsComplement()
 	
 	if J.CanNotUseAbility(bot) or bot:IsInvisible() then return end
 	
-	--J.Skill.AbilityReadinessReminder(abilityR, 5);
 	
 	nKeepMana = 400
 	nMP = bot:GetMana()/bot:GetMaxMana();

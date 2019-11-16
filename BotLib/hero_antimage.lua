@@ -729,7 +729,6 @@ function X.ConsiderWR()
 		
 			if (nCastTarget ~= nil  )
 			then
-				J.Print("释放跳大目标是:",nCastTarget:GetUnitName());
 				return BOT_ACTION_DESIRE_HIGH,nCastTarget:GetLocation(),nCastTarget;
 			end
 		end

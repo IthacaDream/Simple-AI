@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -10,15 +10,83 @@
 
 local ItemModule = {}
 
-
-ItemModule['tRemoveItems'] = {
-	'item_iron_talon',
-	'item_diffusal_blade_2',
-	'item_poor_mans_shield',
-	'item_ring_of_aquila',
+local tDebugItemList = 	
+{
+	["item_abyssal_blade"] = true,
+	["item_ancient_janggo"] = true,
+	["item_arcane_boots"] = true,
+	["item_bfury"] = true,
+	["item_black_king_bar"] = true,
+	["item_blade_mail"] = true,
+	["item_blink"] = true,
+	["item_bloodstone"] = true,
+	["item_bloodthorn"] = true,
+	["item_buckler"] = true,
+	["item_clarity"] = true,
+	["item_crimson_guard"] = true,
+	["item_cyclone"] = true,
+	["item_dagon"] = true,
+	["item_dagon_2"] = true,
+	["item_dagon_3"] = true,
+	["item_dagon_4"] = true,
+	["item_dagon_5"] = true,
+	["item_diffusal_blade"] = true,
+	["item_enchanted_mango"] = true,
+	["item_ethereal_blade"] = true,
+	["item_faerie_fire"] = true,
+	["item_flask"] = true,
+	["item_force_staff"] = true,
+	["item_ghost"] = true,
+	["item_glimmer_cape"] = true,
+	["item_guardian_greaves"] = true,
+	["item_hand_of_midas"] = true,
+	["item_heavens_halberd"] = true,
+	["item_helm_of_the_dominator"] = true,
+	["item_hood_of_defiance"] = true,
+	["item_hurricane_pike"] = true,
+	["item_invis_sword"] = true,
+	["item_lotus_orb"] = true,
+	["item_magic_stick"] = false,
+	["item_magic_wand"] = false,
+	["item_manta"] = true,
+	["item_mask_of_madness"] = true,
+	["item_medallion_of_courage"] = true,
+	["item_mekansm"] = true,
+	["item_meteor_hammer"] = true,
+	["item_mjollnir"] = true,
+	["item_moon_shard"] = true,
+	["item_necronomicon"] = true,
+	["item_necronomicon_2"] = true,
+	["item_necronomicon_3"] = true,
+	["item_nullifier"] = true,
+	["item_orchid"] = true,
+	["item_phase_boots"] = false,
+	["item_pipe"] = true,
+	["item_power_treads"] = false,
+	["item_quelling_blade"] = true,
+	["item_refresher"] = true,
+	["item_refresher_shard"] = true,
+	["item_ring_of_basilius"] = false,
+	["item_rod_of_atos"] = true,
+	["item_satanic"] = true,
+	["item_shadow_amulet"] = false,
+	["item_sheepstick"] = true,
+	["item_shivas_guard"] = true,
+	["item_silver_edge"] = true,
+	["item_solar_crest"] = true,
+	["item_sphere"] = true,
+	["item_spirit_vessel"] = true,
+	["item_tango"] = false,
+	["item_tango_single"] = true,
+	["item_tome_of_knowledge"] = true,
+	["item_tpscroll"] = true,
+	["item_travel_boots"] = true,
+	["item_travel_boots_2"] = true,
+	["item_urn_of_shadows"] = true,
+	["item_veil_of_discord"] = true,
 }
 
-ItemModule['tBasicItems'] = {
+ItemModule['sBasicItems'] = {
 	'item_aegis',
 	'item_boots_of_elves',
 	'item_belt_of_strength',
@@ -44,13 +112,11 @@ ItemModule['tBasicItems'] = {
 	'item_enchanted_mango',
 	'item_energy_booster',
 	'item_faerie_fire',
-	'item_flying_courier',
 	'item_flask',
 	'item_gauntlets',
 	'item_gem',
 	'item_ghost',
 	'item_gloves',
-	'item_helm_of_iron_will',
 	'item_hyperstone',
 	'item_infused_raindrop',
 	'item_javelin',
@@ -92,7 +158,7 @@ ItemModule['tBasicItems'] = {
 	'item_ward_sentry',	
 }
 
-ItemModule['tSeniorItems'] = {
+ItemModule['sSeniorItems'] = {
 	
 	'item_arcane_boots',
 	'item_buckler',
@@ -123,7 +189,7 @@ ItemModule['tSeniorItems'] = {
 	
 }
 
-ItemModule['tTopItems'] = {
+ItemModule['sTopItems'] = {
 	'item_abyssal_blade',
 	'item_aether_lens',
 	'item_armlet',
@@ -133,8 +199,10 @@ ItemModule['tTopItems'] = {
 	'item_bfury',
 	'item_black_king_bar',
 	'item_blade_mail',
+	'item_blink',
 	'item_bloodstone',
 	'item_bloodthorn',
+	'item_bottle',
 	'item_bracer',
 	'item_butterfly',
 	'item_crimson_guard',
@@ -144,6 +212,7 @@ ItemModule['tTopItems'] = {
 	'item_diffusal_blade',
 	'item_echo_sabre',
 	'item_ethereal_blade',
+	'item_gem',
 	'item_glimmer_cape',
 	'item_guardian_greaves',
 	'item_greater_crit',
@@ -165,8 +234,7 @@ ItemModule['tTopItems'] = {
 	'item_necronomicon_3',
 	'item_null_talisman',
 	'item_nullifier',
-	'item_orchid',
-	'item_pers',
+	'item_orb_of_venom',
 	'item_phase_boots',
 	'item_pipe',
 	'item_power_treads',
@@ -184,14 +252,20 @@ ItemModule['tTopItems'] = {
 	'item_soul_ring',
 	'item_skadi',
 	'item_spirit_vessel',
+	'item_tpscroll',
 	'item_tranquil_boots',
 	'item_travel_boots_2',
-	'item_ultimate_scepter',
 	'item_veil_of_discord',
 	'item_vladmir',
 	'item_wraith_band',
 	'item_yasha_and_kaya',
 }
+
+local tTopItemList = {}
+for _,sItem in pairs(ItemModule['sTopItems'])
+do
+	tTopItemList[sItem] = true
+end
 
 ItemModule['tEarlyItem'] = {
 	 'item_clarity',
@@ -210,16 +284,6 @@ ItemModule['tEarlyItem'] = {
 	 'item_ancient_janggo',
 	 'item_refresher_shard',
 	 'item_cheese',
---	 'item_branches',
---   'item_quelling_blade',
---	 'item_stout_shield',
---	 'item_dust',
---	 'item_ward_observer',
---	 'item_ring_of_basilius',
---	 'item_urn_of_shadows',
---	 'item_armlet',
---	 'item_power_treads',
---	 'item_hand_of_midas' 
 }
 
 ItemModule['tEarlyBoots'] = {  
@@ -236,7 +300,7 @@ ItemModule['tCanNotSwitchItems'] = {
 		'item_gem',
 }
 
-ItemModule['tPowerBoots'] = {  
+ItemModule['tPowerBootList'] = {  
 	 
 	'item_power_treads_agi',
 	'item_power_treads_int',
@@ -245,49 +309,29 @@ ItemModule['tPowerBoots'] = {
 }
 
 ItemModule['tMidOutfit'] = {  
-	'item_viper_outfit', 
-	'item_medusa_outfit',
-	'item_razor_outfit',
+	'item_mid_outfit',
 	'item_templar_assassin_outfit',
-	'item_nevermore_outfit',
-	'item_sniper_outfit',
 }
 
 ItemModule['tCarryOutfit'] = {  
-	'item_drow_ranger_outfit',
+	'item_ranged_carry_outfit',
+	'item_melee_carry_outfit',
 	'item_sven_outfit',
-	'item_arc_warden_outfit',
 	'item_phantom_assassin_outfit',
-	'item_phantom_lancer_outfit',
-	'item_antimage_outfit',
-	'item_luna_outfit',
-	'item_bloodseeker_outfit',
 	'item_huskar_outfit',
 }
 
-ItemModule['tCoreOutfit'] = {  
-	'item_chaos_knight_outfit',
-	'item_kunkka_outfit',
+ItemModule['tTankOutfit'] = {  
+	'item_tank_outfit',
 	'item_dragon_knight_outfit',
-	'item_skeleton_king_outfit',
-	'item_bristleback_outfit',
 	'item_ogre_magi_outfit',
 }
 
 ItemModule['tSupportOutfit'] = {  
+	'item_mage_outfit',
+	'item_priest_outfit',
 	'item_crystal_maiden_outfit',
 	'item_jakiro_outfit',
-	'item_zuus_outfit',
-	'item_necrolyte_outfit',
-	'item_silencer_outfit',
-	'item_warlock_outfit',
-	'item_skywrath_mage_outfit',
-	'item_lina_outfit',
-	'item_oracle_outfit',
-	'item_lich_outfit',
-	'item_witch_doctor_outfit',
-	'item_death_prophet_outfit',
-	'item_pugna_outfit',
 }
 
 ItemModule['tConsumableList'] = {
@@ -295,6 +339,8 @@ ItemModule['tConsumableList'] = {
 	'item_tango',
 	'item_flask',
 	'item_faerie_fire',
+	'item_enchanted_mango',
+	'item_infused_raindrop',
 }
 
 
@@ -314,7 +360,7 @@ ItemModule['item_ancient_janggo']		 = { 'item_crown', 'item_wind_lace', 'item_so
 
 ItemModule['item_aeon_disk']			 = { 'item_vitality_booster', 'item_energy_booster', 'item_recipe_aeon_disk' }
 
-ItemModule['item_bfury']				 = { 'item_quelling_blade',  'item_ring_of_health', 'item_demon_edge', 'item_void_stone', 'item_recipe_bfury' }
+ItemModule['item_bfury']				 = { 'item_quelling_blade',  'item_pers', 'item_demon_edge', 'item_recipe_bfury' }
 
 ItemModule['item_black_king_bar']		 = { 'item_mithril_hammer', 'item_ogre_axe', 'item_recipe_black_king_bar' }
 
@@ -364,7 +410,7 @@ ItemModule['item_glimmer_cape']			 = { 'item_shadow_amulet', 'item_cloak' }
 
 ItemModule['item_guardian_greaves']		 = { 'item_arcane_boots', 'item_mekansm', 'item_recipe_guardian_greaves' }
 
-ItemModule['item_greater_crit']			 = { 'item_lesser_crit', 'item_recipe_greater_crit', 'item_demon_edge' }
+ItemModule['item_greater_crit']			 = { 'item_lesser_crit', 'item_demon_edge', 'item_recipe_greater_crit' }
 
 ItemModule['item_hand_of_midas']		 = { 'item_gloves', 'item_recipe_hand_of_midas' }
 
@@ -406,7 +452,7 @@ ItemModule['item_medallion_of_courage']	 = { 'item_blight_stone', 'item_sobi_mas
 
 ItemModule['item_mekansm']				 = { 'item_buckler', 'item_headdress', 'item_recipe_mekansm' }
 
-ItemModule['item_mjollnir']				 = { 'item_maelstrom', 'item_recipe_mjollnir', 'item_hyperstone' }
+ItemModule['item_mjollnir']				 = { 'item_maelstrom', 'item_hyperstone', 'item_recipe_mjollnir' }
 
 ItemModule['item_monkey_king_bar']		 = { 'item_quarterstaff', 'item_javelin', 'item_demon_edge' }
 
@@ -470,7 +516,7 @@ ItemModule['item_sphere']				 = { 'item_pers', 'item_ultimate_orb', 'item_recipe
 
 ItemModule['item_shivas_guard']			 = { 'item_mystic_staff', 'item_platemail', 'item_recipe_shivas_guard' }
 
-ItemModule['item_silver_edge']			 = { 'item_invis_sword', 'item_recipe_silver_edge', 'item_ultimate_orb' }
+ItemModule['item_silver_edge']			 = { 'item_invis_sword', 'item_ultimate_orb', 'item_recipe_silver_edge' }
 
 ItemModule['item_solar_crest']			 = { 'item_medallion_of_courage', 'item_wind_lace', 'item_ultimate_orb', 'item_recipe_solar_crest' }
 
@@ -510,12 +556,12 @@ end
 
 
 ------------------------------------------------------------------------------------------------------
---Self-Defining ItemModule
+--Self_Define ItemModule
 ------------------------------------------------------------------------------------------------------
 
 if true then
 
-ItemModule['item_double_branches']      	= { 'item_branches', 'item_branches' }
+ItemModule['item_double_branches']      	= { 'item_branches', 'item_branches',}
 
 ItemModule['item_double_tango'] 			= { 'item_tango', 'item_tango',}
 	
@@ -553,85 +599,89 @@ ItemModule['item_broken_satanic']       	= { 'item_reaver', 'item_claymore' }
 
 ItemModule['item_broken_mkb']           	= { 'item_javelin', 'item_demon_edge' }
 
-ItemModule['item_six_refresher']        	= { 'item_refresher', 'item_refresher', 'item_refresher', 'item_refresher', 'item_refresher', 'item_refresher' }
+ItemModule['item_new_bfury']				= { 'item_quelling_blade',  'item_ring_of_health', 'item_demon_edge', 'item_void_stone', 'item_recipe_bfury' }
+
+ItemModule['item_six_refresher']			= { 'item_refresher', 'item_refresher', 'item_refresher', 'item_refresher', 'item_refresher', 'item_refresher' }
 
 ------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------
 
-ItemModule['item_viper_outfit']            = { 'item_tango', 'item_faerie_fire', 'item_double_branches', 'item_wraith_band', 'item_circlet', 'item_flask', 'item_magic_stick', 'item_recipe_magic_wand', 'item_power_treads_agi', 'item_broken_urn', }
+ItemModule['item_mid_outfit']				= { 'item_tango', 'item_faerie_fire', 'item_double_branches', 'item_wraith_band', 'item_circlet', 'item_flask', 'item_magic_stick', 'item_recipe_magic_wand', 'item_power_treads_agi', 'item_broken_urn', }
 
-ItemModule['item_sniper_outfit']           = { 'item_tango', 'item_faerie_fire', 'item_double_branches', 'item_wraith_band', 'item_circlet', 'item_flask', 'item_magic_stick', 'item_recipe_magic_wand', 'item_power_treads_agi', 'item_broken_urn', }
+ItemModule['item_templar_assassin_outfit']	= { 'item_tango', 'item_faerie_fire', 'item_double_branches', 'item_wraith_band', 'item_circlet', 'item_flask', 'item_magic_stick', 'item_recipe_magic_wand', 'item_power_treads_agi', 'item_broken_urn', 'item_blight_stone', }
 
-ItemModule['item_razor_outfit']            = { 'item_tango', 'item_faerie_fire', 'item_double_branches', 'item_wraith_band', 'item_circlet', 'item_flask', 'item_magic_stick', 'item_recipe_magic_wand', 'item_power_treads_agi', 'item_broken_urn', }
 
-ItemModule['item_medusa_outfit']           = { 'item_tango', 'item_faerie_fire', 'item_double_branches', 'item_wraith_band', 'item_circlet', 'item_flask', 'item_magic_stick', 'item_recipe_magic_wand', 'item_power_treads_agi', 'item_broken_urn', 'item_infused_raindrop', }
 
-ItemModule['item_nevermore_outfit']        = { 'item_tango', 'item_faerie_fire', 'item_double_branches', 'item_wraith_band', 'item_circlet', 'item_flask', 'item_magic_stick', 'item_recipe_magic_wand', 'item_power_treads_agi', 'item_broken_urn',  'item_infused_raindrop',}
+----------------------------------------------------------------------
 
-ItemModule['item_templar_assassin_outfit'] = { 'item_tango', 'item_faerie_fire', 'item_double_branches', 'item_wraith_band', 'item_circlet', 'item_flask', 'item_magic_stick', 'item_recipe_magic_wand', 'item_power_treads_agi', 'item_broken_urn',  'item_blight_stone',}
 
-ItemModule['item_luna_outfit']             = { 'item_tango', 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_wraith_band', 'item_recipe_magic_wand', 'item_power_treads_agi', 'item_infused_raindrop' } 
+ItemModule['item_ranged_carry_outfit']		= { 'item_tango', 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_wraith_band', 'item_recipe_magic_wand', 'item_power_treads_agi', 'item_infused_raindrop' } 
 
-ItemModule['item_antimage_outfit']         = { 'item_tango', 'item_flask', 'item_stout_shield', 'item_quelling_blade', 'item_magic_stick', 'item_double_branches', 'item_wraith_band', 'item_recipe_magic_wand', 'item_power_treads_agi' }
+ItemModule['item_melee_carry_outfit']		= { 'item_tango', 'item_flask', 'item_stout_shield', 'item_quelling_blade', 'item_magic_stick', 'item_double_branches', 'item_wraith_band', 'item_recipe_magic_wand', 'item_power_treads_agi' }
 
-ItemModule['item_drow_ranger_outfit']      = { 'item_tango', 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_wraith_band', 'item_recipe_magic_wand', 'item_power_treads_agi', 'item_infused_raindrop',}
+ItemModule['item_phantom_assassin_outfit']	= { 'item_tango', 'item_flask', 'item_stout_shield', 'item_quelling_blade', 'item_magic_stick', 'item_double_branches', 'item_wraith_band', 'item_recipe_magic_wand', 'item_power_treads_agi', 'item_blight_stone' } 
 
-ItemModule['item_phantom_assassin_outfit'] = { 'item_tango', 'item_flask', 'item_stout_shield', 'item_quelling_blade', 'item_magic_stick', 'item_double_branches', 'item_wraith_band', 'item_blight_stone', 'item_recipe_magic_wand', 'item_power_treads_agi' } 
+ItemModule['item_huskar_outfit']			= { 'item_tango', 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_bracer', 'item_boots', 'item_bracer', 'item_recipe_magic_wand', 'item_blades_of_attack', 'item_chainmail' }
 
-ItemModule['item_phantom_lancer_outfit']   = { 'item_tango', 'item_flask', 'item_stout_shield', 'item_quelling_blade', 'item_magic_stick', 'item_double_branches', 'item_wraith_band', 'item_recipe_magic_wand', 'item_power_treads_agi' }
+ItemModule['item_sven_outfit']				= { 'item_tango', 'item_flask', 'item_stout_shield', 'item_quelling_blade', 'item_magic_stick', 'item_double_branches', 'item_bracer', 'item_recipe_magic_wand', 'item_phase_boots' }
 
-ItemModule['item_huskar_outfit']           = { 'item_tango', 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_bracer', 'item_boots', 'item_bracer', 'item_recipe_magic_wand', 'item_blades_of_attack', 'item_chainmail' }
 
-ItemModule['item_bloodseeker_outfit']  	   = { 'item_tango', 'item_flask', 'item_stout_shield', 'item_quelling_blade', 'item_magic_stick', 'item_double_branches', 'item_wraith_band', 'item_recipe_magic_wand', 'item_power_treads_agi' }
+----------------------------------------------------------------------
 
-ItemModule['item_arc_warden_outfit']       = { 'item_tango', 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_wraith_band', 'item_recipe_magic_wand', 'item_power_treads_agi', 'item_infused_raindrop' }
-
-ItemModule['item_sven_outfit']             = { 'item_tango', 'item_flask', 'item_stout_shield', 'item_quelling_blade', 'item_magic_stick', 'item_double_branches', 'item_bracer', 'item_recipe_magic_wand', 'item_phase_boots' }
-
-ItemModule['item_chaos_knight_outfit']     = { 'item_tango', 'item_flask', 'item_stout_shield', 'item_quelling_blade', 'item_double_branches', 'item_magic_stick', 'item_bracer', 'item_recipe_magic_wand', 'item_ring_of_basilius', 'item_power_treads_str', 'item_broken_vladmir', 'item_broken_crimson_guard' }
+ItemModule['item_tank_outfit']			   = { 'item_tango', 'item_flask', 'item_stout_shield', 'item_quelling_blade', 'item_double_branches', 'item_magic_stick', 'item_bracer', 'item_recipe_magic_wand', 'item_ring_of_basilius', 'item_power_treads_str', 'item_broken_vladmir', 'item_broken_crimson_guard' }
 
 ItemModule['item_dragon_knight_outfit']    = { 'item_tango', 'item_flask', 'item_stout_shield', 'item_quelling_blade', 'item_double_branches', 'item_magic_stick', 'item_recipe_magic_wand', 'item_ring_of_basilius', 'item_power_treads_str', 'item_soul_ring', 'item_broken_vladmir', 'item_broken_crimson_guard' }
 
 ItemModule['item_ogre_magi_outfit']		   = { 'item_tango', 'item_flask', 'item_stout_shield', 'item_quelling_blade', 'item_double_branches', 'item_magic_stick', 'item_recipe_magic_wand', 'item_ring_of_basilius', 'item_power_treads_int', 'item_hand_of_midas', 'item_broken_vladmir', 'item_broken_crimson_guard' }
 
-ItemModule['item_bristleback_outfit']      = { 'item_tango', 'item_flask', 'item_stout_shield', 'item_quelling_blade', 'item_double_branches', 'item_magic_stick', 'item_bracer', 'item_recipe_magic_wand', 'item_ring_of_basilius', 'item_power_treads_str', 'item_broken_vladmir', 'item_broken_crimson_guard' }
 
-ItemModule['item_kunkka_outfit']           = { 'item_tango', 'item_flask', 'item_stout_shield', 'item_quelling_blade', 'item_double_branches', 'item_magic_stick', 'item_bracer', 'item_recipe_magic_wand', 'item_ring_of_basilius', 'item_power_treads_str', 'item_broken_vladmir', 'item_broken_crimson_guard' }
+--------------------------------------------------------------------------
 
-ItemModule['item_skeleton_king_outfit']    = { 'item_tango', 'item_flask', 'item_stout_shield', 'item_quelling_blade', 'item_double_branches', 'item_magic_stick', 'item_bracer', 'item_recipe_magic_wand', 'item_ring_of_basilius', 'item_power_treads_str', 'item_broken_vladmir', 'item_broken_crimson_guard' }
-
-ItemModule['item_silencer_outfit']         = { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_circlet', 'item_arcane_boots', 'item_recipe_magic_wand' }
+ItemModule['item_priest_outfit']		   = { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_circlet', 'item_arcane_boots', 'item_recipe_magic_wand' }
 
 ItemModule['item_necrolyte_outfit']        = { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_circlet', 'item_arcane_boots', 'item_recipe_magic_wand' }
 
-ItemModule['item_oracle_outfit']		   = { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_circlet', 'item_arcane_boots', 'item_recipe_magic_wand' }
 
-ItemModule['item_lich_outfit'] 		       = { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_circlet', 'item_arcane_boots', 'item_recipe_magic_wand' }
+-----------------------------------------------------------------------------
 
-ItemModule['item_witch_doctor_outfit']     = { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_circlet', 'item_arcane_boots', 'item_recipe_magic_wand' }
 
-ItemModule['item_death_prophet_outfit']     = { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_circlet', 'item_arcane_boots', 'item_recipe_magic_wand' }
-
-ItemModule['item_warlock_outfit']          = { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_circlet', 'item_arcane_boots', 'item_recipe_magic_wand' }
+ItemModule['item_mage_outfit']			   = { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_null_talisman', 'item_arcane_boots', 'item_recipe_magic_wand' }
 
 ItemModule['item_jakiro_outfit']           = { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_branches', 'item_crown', 'item_arcane_boots', 'item_recipe_magic_wand' }
 
 ItemModule['item_crystal_maiden_outfit']   = { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_branches', 'item_crown', 'item_power_treads_int', 'item_recipe_magic_wand' }
 
-ItemModule['item_zuus_outfit']             = { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_null_talisman', 'item_arcane_boots', 'item_recipe_magic_wand' }
 
-ItemModule['item_skywrath_mage_outfit']    = { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_null_talisman', 'item_arcane_boots', 'item_recipe_magic_wand' }
+-----------------------------------------------------------------------------
+ItemModule['PvN_priest']		= { 'item_tango', 'item_flask', 'item_null_talisman', 'item_power_treads_int', "item_glimmer_cape", "item_cyclone", "item_rod_of_atos", "item_sheepstick", "item_ultimate_scepter", "item_travel_boots", "item_moon_shard", "item_recipe_travel_boots" }
 
-ItemModule['item_lina_outfit']             = { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_null_talisman', 'item_arcane_boots', 'item_recipe_magic_wand' }
+ItemModule['PvN_mage']			= { 'item_tango', 'item_flask', 'item_null_talisman', 'item_power_treads_int', "item_glimmer_cape", "item_lotus_orb", "item_cyclone", "item_sphere", "item_sheepstick",  "item_travel_boots", "item_moon_shard", "item_recipe_travel_boots" }
 
-ItemModule['item_pugna_outfit']            = { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_branches', 'item_crown', 'item_arcane_boots', 'item_recipe_magic_wand' }
+ItemModule['PvN_antimage']		= { 'item_tango', 'item_tango', 'item_flask', 'item_quelling_blade', 'item_wraith_band', 'item_power_treads_agi', "item_echo_sabre", "item_manta", "item_abyssal_blade", "item_heart", "item_monkey_king_bar", "item_travel_boots", "item_moon_shard", "item_recipe_travel_boots" }
 
-ItemModule['item_brewmaster_outfit']       = { 'item_tango', 'item_tango', 'item_quelling_blade', 'item_gauntlets', 'item_stick_bracer', 'item_ring_of_basilius', 'item_phase_boots', 'item_broken_vladmir', 'item_mjollnir' , 'item_abyssal_blade' , 'item_black_king_bar' , 'item_lotus_orb' }
+ItemModule['PvN_melee_carry']	= { 'item_tango', 'item_tango', 'item_flask', 'item_quelling_blade', 'item_power_treads_agi', "item_echo_sabre", "item_invis_sword", "item_diffusal_blade", "item_abyssal_blade", "item_ultimate_orb", "item_recipe_silver_edge", "item_heart", "item_travel_boots", "item_moon_shard", "item_recipe_travel_boots" }
 
-ItemModule['item_invoker_outfit']          = { 'item_tango', 'item_flask', 'item_enchanted_mango', 'item_clarity', 'item_magic_wand' , 'item_phase_boots' , 'item_urn_of_shadows', 'item_ultimate_scepter', 'item_cyclone', 'item_force_staff', 'item_sheepstick', 'item_hurricane_pike', 'item_octarine_core', 'item_shivas_guard'}
+ItemModule['PvN_ranged_carry']	= { 'item_tango', 'item_tango', 'item_flask', 'item_power_treads_agi', "item_dragon_lance", "item_invis_sword", "item_desolator", "item_force_staff", "item_recipe_hurricane_pike", "item_satanic", "item_ultimate_orb", "item_recipe_silver_edge", "item_monkey_king_bar", "item_travel_boots", "item_moon_shard", "item_recipe_travel_boots" }
+
+ItemModule['PvN_tank']			= { 'item_tango', 'item_flask', 'item_stout_shield', 'item_quelling_blade', 'item_power_treads_str', "item_echo_sabre", "item_invis_sword", "item_heavens_halberd",  "item_solar_crest", "item_assault", "item_ultimate_orb", "item_recipe_silver_edge", "item_travel_boots", "item_moon_shard", "item_recipe_travel_boots" }
+
+ItemModule['PvN_mid']			= { 'item_tango', 'item_flask', 'item_wraith_band', 'item_power_treads_agi', "item_dragon_lance", "item_invis_sword", "item_skadi", "item_force_staff", "item_recipe_hurricane_pike", "item_satanic", "item_ultimate_orb", "item_recipe_silver_edge", "item_bloodthorn", "item_travel_boots", "item_moon_shard", "item_recipe_travel_boots" }
 
 end
 ------------------------------------------------------------------------------------------------------
+
+function ItemModule.IsDebugItem(sItemName)
+	
+	return tDebugItemList[sItemName] == true
+
+end
+
+function ItemModule.IsTopItem(sItemName)
+	
+	return tTopItemList[sItemName] == true
+
+end
+
 
 function ItemModule.IsExistInTable(u, tUnits)
 	
@@ -654,7 +704,7 @@ function ItemModule.IsItemInHero(sItemName)
 	
 	local bot = GetBot()
 	
-	if ItemModule.IsExistInTable(sItemName, ItemModule['tPowerBoots']) 
+	if ItemModule.IsExistInTable(sItemName, ItemModule['tPowerBootList']) 
 	then return ItemModule.IsItemInHero('item_power_treads') end
 	
 	if ItemModule.IsExistInTable(sItemName, ItemModule['tConsumableList']) 
@@ -682,24 +732,23 @@ function ItemModule.IsItemInHero(sItemName)
 			       or ItemModule.IsItemInHero('item_phase_boots') 
 		end
 	
-		if ItemModule.IsExistInTable(sItemName, ItemModule['tCoreOutfit']) 
+		if ItemModule.IsExistInTable(sItemName, ItemModule['tTankOutfit']) 
 		then return ItemModule.IsItemInHero('item_crimson_guard') end
-		
-		--if ItemModule.IsExistInTable(sItemName, ItemModule['tSupportOutfit']) 
-		--then return ItemModule.IsItemInHero('item_magic_wand') end
 		
 		return ItemModule.IsItemInHero('item_magic_wand') 
 	end	
 	
+	if string.find(sItemName, 'PvN_') ~= nil then return ItemModule.IsItemInHero('item_travel_boots_2') end
+	
 	if sItemName == 'item_broken_satanic' then return ItemModule.IsItemInHero('item_satanic') end
+	
+	if sItemName == 'item_new_bfury' then return ItemModule.IsItemInHero('item_bfury') end
 	
 	if sItemName == 'item_ultimate_scepter_2' then return bot:HasModifier('modifier_item_ultimate_scepter_consumed') end
 	
-	if sItemName == 'item_tpscroll' then return bot:FindItemSlot(sItemName) >= 0 end
-	
 	local nItemSolt = bot:FindItemSlot(sItemName)
 	
-	return nItemSolt >= 0 and nItemSolt <= 8
+	return nItemSolt >= 0 and ( nItemSolt <= 8 or ItemModule.IsTopItem(sItemName) )
 
 end
 
@@ -808,7 +857,8 @@ function ItemModule.GetItemCountInSolt(unit, item_name, nSlotMin, nSlotMax)
 	for i = nSlotMin, nSlotMax 
 	do
 		local item = unit:GetItemInSlot(i)
-		if item ~= nil and item:GetName() == item_name then
+		if item ~= nil and item:GetName() == item_name 
+		then
 			count = count + 1;
 		end
 	end
@@ -820,8 +870,8 @@ function ItemModule.HasBasicItem(bot)
 	
 	local basicItemSlot = -1 ;
 	
-	for i=1,#ItemModule['tBasicItems'] do
-		basicItemSlot = bot:FindItemSlot(ItemModule['tBasicItems'][i]);
+	for i=1,#ItemModule['sBasicItems'] do
+		basicItemSlot = bot:FindItemSlot(ItemModule['sBasicItems'][i]);
 		if basicItemSlot >= 0 and basicItemSlot <= 5 then
 			return true;
 		end
@@ -888,4 +938,4 @@ end
 
 
 return ItemModule;
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592

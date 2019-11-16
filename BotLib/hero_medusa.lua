@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -10,191 +10,52 @@ local X = {}
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
-local ConversionMode = dofile( GetScriptDirectory()..'/AuxiliaryScript/BotlibConversion') --引入技能文件
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-local sOutfit = J.Skill.GetOutfitName(bot)
 
---编组技能、天赋、装备
-local tGroupedDataList = {
-	{
-		--组合说明，不影响游戏
-		['info'] = 'By 决明子',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {0, 10},
-			['t15'] = {10, 0},
-			['t10'] = {0, 10},
-		},
-		--技能
-		['Ability'] = {3,2,2,3,2,6,2,1,1,1,1,6,3,3,6},
-		--装备
-		['Buy'] = {
-			sOutfit,
-			"item_dragon_lance",
-			"item_yasha",
-			"item_manta",
-			"item_maelstrom",
-			"item_skadi",
-			"item_black_king_bar",
-			"item_satanic",
-			"item_mjollnir",
-		},
-		--出售
-		['Sell'] = {
-			"item_manta",
-			"item_urn_of_shadows",
-			
-			"item_black_king_bar",
-			"item_dragon_lance",
-			
-			"item_black_king_bar",
-			"item_magic_wand",
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By Misunderstand',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {10, 0},
-			['t15'] = {10, 0},
-			['t10'] = {0, 10},
-		},
-		--技能
-		['Ability'] = { 2, 3, 2, 1, 2, 6, 1, 3, 2, 1, 6, 1, 3, 3, 6 },
-		--装备
-		['Buy'] = {
-			"item_faerie_fire",
-			"item_double_slippers",
-			"item_circlet",
-			"item_tango",
-			"item_flask",
-			"item_enchanted_mango",
-			"item_magic_stick",
-			"item_double_wraith_band",
-			"item_power_treads",
-			"item_mask_of_madness",
-			"item_dragon_lance",
-			"item_manta",
-			"item_skadi", 
-			"item_black_king_bar",
-			"item_hurricane_pike",
-			"item_satanic",
-			"item_travel_boots",
-			"item_mjollnir",
-			"item_moon_shard",
-			"item_ultimate_scepter_2",
-			"item_travel_boots_2"
-		},
-		--出售
-		['Sell'] = {
-			"item_manta",     
-			"item_wraith_band",
 
-			"item_skadi",     
-			"item_magic_stick",
-					
-			"item_satanic",  
-			"item_mask_of_madness",	     
-
-			"item_travel_boots",
-			"item_power_treads",
-
-			"item_mjollnir",
-			"item_hurricane_pike"
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By 铅笔会有猫的w',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {0, 10},
-			['t20'] = {0, 10},
-			['t15'] = {10, 0},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = { 2, 3, 2, 3, 2, 6, 2, 3, 3, 1, 6, 1, 1, 1, 6 },
-		--装备
-		['Buy'] = {
-			"item_double_tango",
-			"item_double_flask",
-			"item_double_branches",
-			"item_double_wraith_band",
-			"item_power_treads",
-			"item_magic_wand",
-			"item_pers",
-			"item_yasha",
-			"item_sphere",
-			"item_manta",
-			"item_ultimate_scepter",
-			"item_skadi", 
-			"item_satanic",
-			"item_ultimate_scepter_2",
-			"item_butterfly",
-			"item_moon_shard",
-			"item_travel_boots",
-			"item_travel_boots_2",	
-		},
-		--出售
-		['Sell'] = {
-			"item_ultimate_scepter",
-			"item_wraith_band",
-
-			"item_travel_boots",
-			"item_power_treads",
-
-			"item_satanic",
-			"item_magic_wand",
-					
-			"item_skadi",
-			"item_wraith_band",
-		},
-	},
-}
---默认数据
-local tDefaultGroupedData = {
-	--天赋树
-	['Talent'] = {
-		['t25'] = {10, 0},
-		['t20'] = {0, 10},
-		['t15'] = {10, 0},
-		['t10'] = {0, 10},
-	},
-	--技能
-	['Ability'] = {3,2,2,3,2,6,2,1,1,1,1,6,3,3,6},
-	--装备
-	['Buy'] = {
-		sOutfit,
-		"item_dragon_lance",
-		"item_yasha",
-		"item_manta",
-		"item_maelstrom",
-		"item_skadi",
-		"item_black_king_bar",
-		"item_satanic",
-		"item_mjollnir",
-	},
-	--出售
-	['Sell'] = {
-		"item_manta",
-		"item_urn_of_shadows",
-		
-		"item_black_king_bar",
-		"item_dragon_lance",
-		
-		"item_black_king_bar",
-		"item_magic_wand",
-	},
+local tTalentTreeList = {
+						['t25'] = {10, 0},
+						['t20'] = {0, 10},
+						['t15'] = {10, 0},
+						['t10'] = {0, 10},
 }
 
---根据组数据生成技能、天赋、装备
-local nAbilityBuildList, nTalentBuildList;
+local tAllAbilityBuildList = {
+						{3,2,2,3,2,6,2,1,1,1,1,6,3,3,6},
+}
 
-nAbilityBuildList, nTalentBuildList, X['sBuyList'], X['sSellList'] = ConversionMode.Combination(tGroupedDataList, tDefaultGroupedData)
+local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
+
+local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
+
+
+X['sBuyList'] = {
+				'item_mid_outfit',
+				'item_infused_raindrop',
+				"item_dragon_lance",
+				"item_yasha",
+				"item_manta",
+				"item_maelstrom",
+				"item_skadi",
+				"item_satanic",
+				"item_black_king_bar",				
+				"item_mjollnir",
+}
+
+X['sSellList'] = {
+	"item_manta",
+	"item_urn_of_shadows",
+	
+	"item_satanic",
+	"item_dragon_lance",
+	
+	"item_satanic",
+	"item_magic_wand",
+}
+
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_mid' }, {} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -214,6 +75,35 @@ function X.MinionThink(hMinionUnit)
 
 end
 
+--[[
+
+npc_dota_hero_medusa
+
+"Ability1"		"medusa_split_shot"
+"Ability2"		"medusa_mystic_snake"
+"Ability3"		"medusa_mana_shield"
+"Ability4"		"generic_hidden"
+"Ability5"		"generic_hidden"
+"Ability6"		"medusa_stone_gaze"
+"Ability10"		"special_bonus_attack_damage_15"
+"Ability11"		"special_bonus_evasion_15"
+"Ability12"		"special_bonus_attack_speed_30"
+"Ability13"		"special_bonus_unique_medusa_3"
+"Ability14"		"special_bonus_unique_medusa_5"
+"Ability15"		"special_bonus_unique_medusa"
+"Ability16"		"special_bonus_mp_1000"
+"Ability17"		"special_bonus_unique_medusa_4"
+
+modifier_medusa_split_shot
+modifier_medusa_mana_shield
+modifier_medusa_stone_gaze_tracker
+modifier_medusa_stone_gaze
+modifier_medusa_stone_gaze_slow
+modifier_medusa_stone_gaze_facing
+modifier_medusa_stone_gaze_stone
+
+
+--]]
 
 local abilityW = bot:GetAbilityByName( sAbilityList[2] )
 local abilityE = bot:GetAbilityByName( sAbilityList[3] )
@@ -240,7 +130,6 @@ function X.SkillsComplement()
 	if J.CanNotUseAbility(bot) or bot:IsInvisible() then return end
 	
 	
-	--J.Skill.AbilityReadinessReminder(abilityR, 5);
 	
 	nKeepMana = 400; 
 	aetherRange = 0
@@ -329,9 +218,10 @@ function X.ConsiderW()
 		local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( nCastRange, true, BOT_MODE_NONE );
 		for _,npcEnemy in pairs( tableNearbyEnemyHeroes )
 		do
-			if ( bot:WasRecentlyDamagedByHero( npcEnemy, 2.0 ) 
+			if	J.IsValidHero(npcEnemy)
+				and bot:WasRecentlyDamagedByHero(npcEnemy, 3.0) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-			    and J.CanCastOnNonMagicImmune(npcEnemy) ) 
+			    and J.CanCastOnNonMagicImmune(npcEnemy)
 			then
 				return BOT_ACTION_DESIRE_MODERATE, npcEnemy;
 			end
@@ -386,7 +276,7 @@ function X.ConsiderW()
 		local nCreeps = bot:GetNearbyCreeps(nCastRange +80,true)
 		local nLaneCreeps = bot:GetNearbyLaneCreeps(1600,true);
 		
-		if nSkillLv >= 3 then nShouldAoeCount = 4; end
+		if nSkillLv == 4 then nShouldAoeCount = 4; end
 		if bot:GetLevel() >= 20 or J.GetMPR(bot) > 0.88 then nShouldAoeCount = 3; end
 		
 		if nAoe.count >= nShouldAoeCount

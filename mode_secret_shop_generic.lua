@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -10,7 +10,7 @@ if GetBot():IsInvulnerable() or not GetBot():IsHero() or not string.find(GetBot(
 	return;
 end
 
-local npcBot = GetBot();
+local bot = GetBot();
 local X = {}
 local preferedSS = nil;
 local RAD_SECRET_SHOP = GetShopLocation(GetTeam(), SHOP_SECRET )
@@ -27,18 +27,18 @@ function GetDesire()
 	local invFull = true;
 	
 	for i=0,8 do 
-		if npcBot:GetItemInSlot(i) == nil then
+		if bot:GetItemInSlot(i) == nil then
 			invFull = false;
 		end	
 	end
 	
 	if invFull then
-		if npcBot:GetLevel() > 11 and npcBot:FindItemSlot("item_aegis") < 0 then
+		if bot:GetLevel() > 11 and bot:FindItemSlot("item_aegis") < 0 then
 			have, itemSlot = X.HaveItemToSell();
 			if have then
 				preferedSS = X.GetPreferedSecretShop();
 				if  preferedSS ~= nil then
-					return RemapValClamped(  GetUnitToLocationDistance(npcBot, preferedSS), 6000, 0, 0.75, 0.95 );
+					return RemapValClamped(  GetUnitToLocationDistance(bot, preferedSS), 6000, 0, 0.75, 0.95 );
 				end	
 			end
 		end
@@ -48,13 +48,13 @@ function GetDesire()
 	local npcCourier = GetCourier(0);	
 	local cState = GetCourierState( npcCourier );
 	
-	if npcBot.SecretShop and cState ~= COURIER_STATE_MOVING  then
+	if bot.SecretShop and cState ~= COURIER_STATE_MOVING  then
 		preferedSS = X.GetPreferedSecretShop();
 		if  preferedSS ~= nil and cState == COURIER_STATE_DEAD then
-			return RemapValClamped(  GetUnitToLocationDistance(npcBot, preferedSS), 6000, 0, 0.7, 0.85 );
+			return RemapValClamped(  GetUnitToLocationDistance(bot, preferedSS), 6000, 0, 0.7, 0.85 );
 		else
-			if preferedSS ~= nil and GetUnitToLocationDistance(npcBot, preferedSS) <= 3200 then
-				return RemapValClamped(  GetUnitToLocationDistance(npcBot, preferedSS), 3200, 0, 0.7, 0.85 );
+			if preferedSS ~= nil and GetUnitToLocationDistance(bot, preferedSS) <= 3200 then
+				return RemapValClamped(  GetUnitToLocationDistance(bot, preferedSS), 3200, 0, 0.7, 0.85 );
 			end
 		end
 	end
@@ -73,26 +73,26 @@ end
 
 function Think()
 
-	if  npcBot:IsChanneling() 
-		or npcBot:NumQueuedActions() > 0
-		or npcBot:IsCastingAbility()
-		or npcBot:IsUsingAbility()
+	if  bot:IsChanneling() 
+		or bot:NumQueuedActions() > 0
+		or bot:IsCastingAbility()
+		or bot:IsUsingAbility()
 	then 
-		if not npcBot:IsInvisible()
+		if not bot:IsInvisible()
 		then
 			return;
 		end
 	end
 	
-	if npcBot:DistanceFromSecretShop() == 0
+	if bot:DistanceFromSecretShop() == 0
 	then
-		npcBot:Action_MoveToLocation(preferedSS + RandomVector(200))
+		bot:Action_MoveToLocation(preferedSS + RandomVector(200))
 		return;
 	end
 
-	if npcBot:DistanceFromSecretShop() > 0
+	if bot:DistanceFromSecretShop() > 0
 	then
-		npcBot:Action_MoveToLocation(preferedSS);
+		bot:Action_MoveToLocation(preferedSS);
 		return;
 	end
 	
@@ -100,7 +100,7 @@ end
 
 --这些是AI会主动走到商店出售的物品
 function X.HaveItemToSell()
-	 local earlyGameItem = {
+	local earlyGameItem = {
 		 "item_clarity",
 		 "item_faerie_fire",
 		 "item_tango",  
@@ -112,23 +112,10 @@ function X.HaveItemToSell()
 		 "item_infused_raindrop",
 		 "item_bottle",  
 		 "item_ancient_janggo",
---		 "item_stout_shield",
---		 "item_quelling_blade",
---		 "item_magic_wand",
---		 "item_magic_stick",
---		 "item_soul_ring",  
---		 "item_branches",
---		 "item_dust",
---		 "item_ward_observer",
---		 "item_ring_of_basilius",
---		 "item_urn_of_shadows",
---		 "item_armlet",
---		 "item_power_treads",
---		 "item_hand_of_midas" 
 	}
 	for _,item in pairs(earlyGameItem) 
 	do
-		local slot = npcBot:FindItemSlot(item)
+		local slot = bot:FindItemSlot(item)
 		if slot >= 0 and slot <= 8 then
 			return true, slot;
 		end
@@ -138,13 +125,13 @@ end
 
 function X.GetPreferedSecretShop()
 	if GetTeam() == TEAM_RADIANT then
-		if GetUnitToLocationDistance(npcBot, DIRE_SECRET_SHOP) <= 3800 then
+		if GetUnitToLocationDistance(bot, DIRE_SECRET_SHOP) <= 3800 then
 			return DIRE_SECRET_SHOP;
 		else
 			return RAD_SECRET_SHOP;
 		end
 	elseif GetTeam() == TEAM_DIRE then
-		if GetUnitToLocationDistance(npcBot, RAD_SECRET_SHOP) <= 3800 then
+		if GetUnitToLocationDistance(bot, RAD_SECRET_SHOP) <= 3800 then
 			return RAD_SECRET_SHOP;
 		else
 			return DIRE_SECRET_SHOP;
@@ -154,18 +141,18 @@ function X.GetPreferedSecretShop()
 end
 
 function X.IsSuitableToBuy()
-	local mode = npcBot:GetActiveMode();
-	local Enemies = npcBot:GetNearbyHeroes(1600, true, BOT_MODE_NONE);
-	if ( ( mode == BOT_MODE_RETREAT and npcBot:GetActiveModeDesire() >= BOT_MODE_DESIRE_HIGH )
+	local mode = bot:GetActiveMode();
+	local Enemies = bot:GetNearbyHeroes(1600, true, BOT_MODE_NONE);
+	if ( ( mode == BOT_MODE_RETREAT and bot:GetActiveModeDesire() >= BOT_MODE_DESIRE_HIGH )
 		or mode == BOT_MODE_ATTACK
 		or mode == BOT_MODE_DEFEND_ALLY
 		or mode == BOT_MODE_DEFEND_TOWER_TOP
 		or mode == BOT_MODE_DEFEND_TOWER_MID
 		or mode == BOT_MODE_DEFEND_TOWER_BOT
 		or Enemies ~= nil and #Enemies >= 2
-		or ( Enemies[1] ~= nil and X.IsStronger(npcBot, Enemies[1]) )
-		or GetUnitToUnitDistance(npcBot, GetAncient(GetTeam())) < 2300 
-		or GetUnitToUnitDistance(npcBot, GetAncient(GetOpposingTeam())) < 3500 
+		or ( Enemies[1] ~= nil and X.IsStronger(bot, Enemies[1]) )
+		or GetUnitToUnitDistance(bot, GetAncient(GetTeam())) < 2300 
+		or GetUnitToUnitDistance(bot, GetAncient(GetOpposingTeam())) < 3500 
 		) 
 	then
 		return false;
@@ -178,5 +165,4 @@ function X.IsStronger(bot, enemy)
 	local EPower = enemy:GetEstimatedDamageToTarget(true, bot, 4.0, DAMAGE_TYPE_ALL);
 	return EPower > BPower;
 end
-
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592
