@@ -7,7 +7,7 @@
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
 local X = {}
-local bDebugMode = false;
+local bDebugMode = ( 1 == 10 )
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
@@ -55,7 +55,7 @@ X['sSellList'] = {
 
 }
 
-if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_ranged_carry' }, {} end
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_huskar' }, {} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -452,7 +452,7 @@ function X.ConsiderW()
 				if J.IsValid(creep)
 					and not creep:HasModifier("modifier_fountain_glyph")
 					and creep:GetHealth() < nAttackDamage *2.8
-					and not J.IsOtherAllysTarget(creep)
+					and not J.IsAllysTarget(creep)
 				then
 					local nAttackProDelayTime = J.GetAttackProDelayTime(bot,nCreep) *1.1
 					local nAD = nAttackDamage * bot:GetAttackCombatProficiency(creep);
@@ -643,7 +643,7 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。
 
 
 

@@ -7,7 +7,7 @@
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
 local X = {}
-local bDebugMode = false; 
+local bDebugMode = ( 1 == 10 ) 
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
@@ -31,7 +31,7 @@ local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
-local sRandomItem = RandomInt(1,9) > 4 and "item_sheepstick" or "item_dagon_5";
+local sRandomItem = RandomInt(1,9) > 4 and "item_sheepstick" or "item_octarine_core";
 
 X['sBuyList'] = {
 				'item_ogre_magi_outfit',
@@ -53,7 +53,7 @@ X['sSellList'] = {
 	"item_hand_of_midas",
 }
 
-if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_tank' }, {"item_solar_crest",'item_quelling_blade'} end
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_OM' }, {"item_invis_sword",'item_quelling_blade'} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -205,7 +205,7 @@ function X.ConsiderQ()
 	local nDamage     = abilityQ:GetSpecialValueInt("fireblast_damage") + talent8Damage
 	local nDamageType = DAMAGE_TYPE_MAGICAL
 	
-	local nInRangeEnemyList = bot:GetNearbyHeroes(nCastRange +50, true, BOT_MODE_NONE);
+	local nInRangeEnemyList = bot:GetNearbyHeroes(nCastRange + 50, true, BOT_MODE_NONE);
 	local nInBonusEnemyList = bot:GetNearbyHeroes(nCastRange + 200,true,BOT_MODE_NONE);
 	
 	--打断和击杀
@@ -243,10 +243,10 @@ function X.ConsiderQ()
 				and J.CanCastOnTargetAdvanced(npcEnemy)
 				and not J.IsDisabled(true, npcEnemy)
 			then
-				local npcEnemyHealth = npcEnemy:GetEstimatedDamageToTarget( false, bot, 3.0, DAMAGE_TYPE_PHYSICAL );
-				if ( npcEnemyHealth > npcStrongestEnemyPower )
+				local npcEnemyPower = npcEnemy:GetEstimatedDamageToTarget( false, bot, 3.0, DAMAGE_TYPE_PHYSICAL );
+				if ( npcEnemyPower > npcStrongestEnemyPower )
 				then
-					npcStrongestEnemyPower = npcEnemyHealth;
+					npcStrongestEnemyPower = npcEnemyPower;
 					npcStrongestEnemy = npcEnemy;
 				end
 			end
@@ -271,9 +271,9 @@ function X.ConsiderQ()
 				and J.CanCastOnTargetAdvanced(npcEnemy)
 				and not J.IsDisabled(true, npcEnemy)
                 and not npcEnemy:IsDisarmed()				
-				and bot:IsFacingLocation(npcEnemy:GetLocation(),45)
+				and bot:IsFacingLocation(npcEnemy:GetLocation(),60)
 			then
-				return BOT_ACTION_DESIRE_HIGH, npcEnemy,'Q保护'..J.Chat.GetNormName(npcEnemy)
+				return BOT_ACTION_DESIRE_HIGH, npcEnemy,'Q自保'..J.Chat.GetNormName(npcEnemy)
 			end
 		end
 	end
@@ -363,7 +363,7 @@ function X.ConsiderQ()
 		if J.IsValid(targetCreep)
 			and not J.IsRoshan(targetCreep)
 			and ( #nCreeps >= 2 or GetUnitToUnitDistance(targetCreep,bot) <= 400 )
-			and bot:IsFacingLocation(targetCreep:GetLocation(),40)
+			and bot:IsFacingLocation(targetCreep:GetLocation(),60)
 			and (targetCreep:GetMagicResist() < 0.3 or nMP > 0.9)
 			and not J.CanKillTarget(targetCreep,bot:GetAttackDamage() *2.28,DAMAGE_TYPE_PHYSICAL)
 			and not J.CanKillTarget(targetCreep,nDamage - 10,nDamageType)
@@ -983,6 +983,6 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。
 
 

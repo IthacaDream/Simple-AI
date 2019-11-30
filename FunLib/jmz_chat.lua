@@ -2370,9 +2370,9 @@ Chat['tItemNameList'] = {
 	},
 	
 	[160] = {
-		['sRawName'] = 'item_recipe_bfury',
+		['sRawName'] = 'item_new_bfury',
 		['sShortName'] = 'itemNull',
-		['sCnName'] = '狂战斧卷轴',
+		['sCnName'] = '新狂战斧',
 		['sEnName'] = 0,
 		['sFrName'] = 0,
 		['sDeName'] = 0,
@@ -2382,7 +2382,7 @@ Chat['tItemNameList'] = {
 	},
 	
 	[161] = {
-		['sRawName'] = 'item_broken_santic',
+		['sRawName'] = 'item_broken_satanic',
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '拆疯脸转撒旦',
 		['sEnName'] = 0,
@@ -4589,4 +4589,4 @@ Eul的神圣法杖  item_cyclone  item_recipe_cyclone
 风灵之纹 item_wind_lace
 
 --]]
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。

@@ -129,15 +129,28 @@ X["test_hero"] = {
 
 X["onlyCM_hero"] = {
     'npc_dota_hero_vengefulspirit',
+    --'npc_dota_hero_shadow_demon',
     'npc_dota_hero_tidehunter',
+    --'npc_dota_hero_disruptor',
+    --'npc_dota_hero_axe',
+    'npc_dota_hero_leshrac',
+    'npc_dota_hero_batrider',
+    --'npc_dota_hero_dazzle',
+    --'npc_dota_hero_abaddon',
+    --'npc_dota_hero_grimstroke',
     'npc_dota_hero_puck',
+    --'npc_dota_hero_invoker',
+    'npc_dota_hero_centaur',
+    'npc_dota_hero_faceless_void',
+    --'npc_dota_hero_obsidian_destroyer',
+    'npc_dota_hero_queenofpain',
     'npc_dota_hero_slardar',
     'npc_dota_hero_omniknight',
     'npc_dota_hero_rubick',
     'npc_dota_hero_tiny',
+    'npc_dota_hero_earthshaker',
     'npc_dota_hero_dark_willow',
-    'npc_dota_hero_queenofpain',
-    'npc_dota_hero_faceless_void'
+    --'npc_dota_hero_undying',
 }
 
 function X.CounterWeightList(hero) --获取推荐阵容列表

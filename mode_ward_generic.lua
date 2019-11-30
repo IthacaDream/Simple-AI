@@ -84,7 +84,7 @@ local vNonStuck = Vector(-2610.000000, 538.000000, 0.000000);
 local walkMode = false;
 local walkLocation = Vector(0,0);
 
-local nStartTime = RandomInt(1,30);
+local nStartTime = RandomInt(1,10);
 
 function GetDesire()
 	
@@ -140,7 +140,7 @@ function GetDesire()
 		bot.steal = false;
 	end
 	
-	if DotaTime() < 60 + nStartTime
+	if DotaTime() < 5 + nStartTime
 	then
 		return BOT_MODE_DESIRE_NONE;
 	end	
@@ -231,7 +231,7 @@ function Think()
 			end
 		end
 	end
-	
+
 	if bot.steal == true then
 		local stealCount = CountStealingUnit();
 		smoke = HasItem('item_smoke_of_deceit');
@@ -374,4 +374,4 @@ function X.IsIBecameTheTarget(units)
 	return false;
 end
 
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。

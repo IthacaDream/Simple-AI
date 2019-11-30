@@ -10,9 +10,8 @@
 local X = {}
 
 local sBotVersion = "New";
---local sBotVersion = "Mid";
-local sVersionDate = " 1.1.8"
-local sABAVersionDate = sBotVersion.." 7.22,2019/11/14."
+local sVersionDate = " 1.2.0"
+local sABAVersionDate = sBotVersion.." 7.23,2019/11/27."
 
 function X.GetBotVersion()
 	return sBotVersion,sVersionDate,sABAVersionDate;
@@ -2057,4 +2056,4 @@ end
 
 
 return X
--- aaxxxxop@163.com QQ:2462331592.
+-- aaxxxxop@163.com QQ:2462331592。

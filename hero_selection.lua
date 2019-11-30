@@ -4,13 +4,15 @@
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ---------------------------------------------------------------------------
-------------------------------
+--	When the bot is thinking, the creator is laughing.
+--	机器人一思考,造物者就发笑.
+------------------------------------------------------2019.11
 local targetdata = require(GetScriptDirectory() .. "/AuxiliaryScript/RoleTargetsData")
 local otherGameMod = require(GetScriptDirectory() .. "/AuxiliaryScript/OtherGameMod");
 
 
 local X = {};
-local bDebugMode = false
+local bDebugMode = ( 1 == 10 )
 local sSelectHero = "npc_dota_hero_zuus";
 local fLastSlectTime,fLastRand,nRand = 0,0,0 ;
 local nDelayTime = nil
@@ -51,7 +53,7 @@ local tAllLineUpList = {
 				[4]={	"npc_dota_hero_viper",
 						"npc_dota_hero_skeleton_king",
 						"npc_dota_hero_sven",
-						"npc_dota_hero_crystal_maiden",
+						"npc_dota_hero_skywrath_mage",
 						"npc_dota_hero_silencer" },
 				[5]={	"npc_dota_hero_viper",
 						"npc_dota_hero_skeleton_king",
@@ -67,17 +69,17 @@ local tAllLineUpList = {
 						"npc_dota_hero_ogre_magi",
 						"npc_dota_hero_antimage",
 						"npc_dota_hero_jakiro",
-						"npc_dota_hero_necrolyte" },
+						"npc_dota_hero_witch_doctor" },
 				[8]={	"npc_dota_hero_viper",
 						"npc_dota_hero_bristleback",
 						"npc_dota_hero_phantom_assassin",
-						"npc_dota_hero_jakiro",
+						"npc_dota_hero_lina",
 						"npc_dota_hero_necrolyte" },
 				[9]={	"npc_dota_hero_viper",
 						"npc_dota_hero_chaos_knight",
 						"npc_dota_hero_phantom_lancer",
-						"npc_dota_hero_jakiro",
-						"npc_dota_hero_necrolyte" },
+						"npc_dota_hero_pugna",
+						"npc_dota_hero_death_prophet" },
 						
 						
 				[10]={	"npc_dota_hero_sniper",
@@ -98,7 +100,7 @@ local tAllLineUpList = {
 				[13]={	"npc_dota_hero_sniper",
 						"npc_dota_hero_bristleback",
 						"npc_dota_hero_sven",
-						"npc_dota_hero_zuus",
+						"npc_dota_hero_pugna",
 						"npc_dota_hero_warlock" },
 				[14]={	"npc_dota_hero_sniper",
 						"npc_dota_hero_skeleton_king",
@@ -108,7 +110,7 @@ local tAllLineUpList = {
 				[15]={	"npc_dota_hero_sniper",
 						"npc_dota_hero_kunkka",
 						"npc_dota_hero_arc_warden",
-						"npc_dota_hero_jakiro",
+						"npc_dota_hero_skywrath_mage",
 						"npc_dota_hero_necrolyte" },
 				[16]={	"npc_dota_hero_sniper",
 						"npc_dota_hero_kunkka",
@@ -160,12 +162,12 @@ local tAllLineUpList = {
 				[25]={	"npc_dota_hero_medusa",
 						"npc_dota_hero_skeleton_king",
 						"npc_dota_hero_sven",
-						"npc_dota_hero_jakiro",
-						"npc_dota_hero_necrolyte" },
+						"npc_dota_hero_skywrath_mage",
+						"npc_dota_hero_death_prophet" },
 				[26]={	"npc_dota_hero_medusa",
 						"npc_dota_hero_skeleton_king",
 						"npc_dota_hero_phantom_assassin",
-						"npc_dota_hero_jakiro",
+						"npc_dota_hero_lina",
 						"npc_dota_hero_necrolyte" },
 				[27]={	"npc_dota_hero_medusa",
 						"npc_dota_hero_chaos_knight",
@@ -176,7 +178,7 @@ local tAllLineUpList = {
 						"npc_dota_hero_chaos_knight",
 						"npc_dota_hero_phantom_assassin",
 						"npc_dota_hero_jakiro",
-						"npc_dota_hero_necrolyte" },
+						"npc_dota_hero_oracle" },
 				[29]={	"npc_dota_hero_medusa",
 						"npc_dota_hero_bristleback",
 						"npc_dota_hero_drow_ranger",
@@ -207,8 +209,8 @@ local tAllLineUpList = {
 				[34]={	"npc_dota_hero_templar_assassin",
 						"npc_dota_hero_chaos_knight",
 						"npc_dota_hero_antimage",
-						"npc_dota_hero_jakiro",
-						"npc_dota_hero_necrolyte" },
+						"npc_dota_hero_lina",
+						"npc_dota_hero_oracle" },
 				
 				[35]={	"npc_dota_hero_razor",
 						"npc_dota_hero_bristleback",
@@ -328,6 +330,7 @@ then
 	end
 end
 
+
 --For Random LineUp-------------
 nRand = RandomInt(1,(#tAllLineUpList) *2.3 ); 
 if nRand <= #tAllLineUpList and not bDebugMode
@@ -342,8 +345,7 @@ then
 			sSelectList[i] = sTempList[i];	
 			print(tostring(GetTeam())..':'..sTempList[i]);
 		end
-	end
-	
+	end	
 end
 
 
@@ -393,7 +395,7 @@ else
 						[3] = LANE_BOT,
 						[4] = LANE_TOP,
 						[5] = LANE_MID,
-					 }
+					 };
 
 	tLaneAssignList = X.GetRandomChangeLane(nDireLane);
 end
@@ -468,7 +470,7 @@ end
 function X.GetNotRepeatHero(nTable)
 	
 	local sHero = nTable[1];
-	local maxCount = #nTable ;
+	local maxCount = #nTable;
 	local nRand = 0;
 	local bRepeated = false;
 	
@@ -648,7 +650,6 @@ local sDiStarsList =
 --"地狗星",
 --"地威星",
 --"地劣星",
---"地劣星",
 --"地损星",
 --"地奴星",
 --"地囚星",
@@ -793,4 +794,4 @@ function UpdateLaneAssignments()
 end
 
 end
---dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592。

@@ -30,7 +30,6 @@ local tGroupedDataList = {
 		['Ability'] = {2,3,1,3,1,6,3,1,1,3,6,2,2,2,6},
 		--装备
 		['Buy'] = {
-			"item_stout_shield",
 			'item_tango',
 			'item_flask',
 			'item_quelling_blade',
@@ -64,7 +63,6 @@ local tGroupedDataList = {
 		['Buy'] = {
 			"item_tango",
 			"item_gauntlets", 
-			"item_stout_shield",
 			"item_enchanted_mango",
 			"item_quelling_blade",
 			"item_magic_stick",
@@ -87,9 +85,6 @@ local tGroupedDataList = {
 		['Sell'] = {
 			"item_ancient_janggo", 
 			"item_quelling_blade",
-
-			"item_echo_sabre",     
-			"item_stout_shield",
 					
 			"item_black_king_bar", 
 			"item_magic_stick",	     
@@ -121,7 +116,6 @@ local tDefaultGroupedData = {
 	['Ability'] = {2,3,1,3,1,6,3,1,1,3,6,2,2,2,6},
 	--装备
 	['Buy'] = {
-		"item_stout_shield",
 		'item_tango',
 		'item_flask',
 		'item_quelling_blade',

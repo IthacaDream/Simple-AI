@@ -7,13 +7,13 @@
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
 local X = {}
+local bDebugMode = ( 1 == 10 )
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-
 
 
 local tTalentTreeList = {
@@ -768,7 +768,7 @@ function X.ConsiderR()
 
 
 	-- Get some of its values
-	local nRadius 	 = abilityR:GetAOERadius();                          
+	local nRadius 	 = abilityR:GetAOERadius() * 0.88                          
 	
 	local nAllies =  bot:GetNearbyHeroes(1200,false,BOT_MODE_NONE);
 	
@@ -888,4 +888,4 @@ function X.cm_GetStrongestUnit( nEnemyUnits )
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。

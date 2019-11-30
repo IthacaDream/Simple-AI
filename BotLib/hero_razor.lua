@@ -7,7 +7,7 @@
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
 local X = {}
-local bDebugMode = false
+local bDebugMode = ( 1 == 10 )
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
@@ -24,7 +24,8 @@ local tTalentTreeList = {
 }
 
 local tAllAbilityBuildList = {
-						{2,1,1,3,3,6,3,3,1,2,6,1,2,2,6},
+						{2,1,1,3,1,6,1,2,2,2,6,3,3,3,6},
+						{2,1,1,3,2,6,2,2,1,1,6,3,3,3,6},
 }
 
 local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
@@ -383,7 +384,7 @@ function X.ConsiderW()
 	then
 		nCastTarget = nInRangeEnemyList[1];
 		if J.IsValidHero(nCastTarget)
-		   and J.CanCastOnNonMagicImmune(nCastTarget)
+		   and J.CanCastOnMagicImmune(nCastTarget)
 		   and J.CanCastOnTargetAdvanced(nCastTarget)
 		   and J.IsInRange(bot,nCastTarget,nCastRange *0.93)
 		then
@@ -395,7 +396,7 @@ function X.ConsiderW()
 	
 	if J.IsGoingOnSomeone(bot)
 	   and J.IsValidHero(botTarget)
-	   and J.CanCastOnNonMagicImmune(botTarget)
+	   and J.CanCastOnMagicImmune(botTarget)
 	   and J.CanCastOnTargetAdvanced(botTarget)
 	   and J.IsInRange(bot,botTarget,nCastRange)
 	   and J.GetAllyCount(bot,1200) - J.GetEnemyCount(bot,1600) < 3
@@ -428,7 +429,7 @@ function X.ConsiderW()
 		do
 			if  J.IsValid(npcEnemy)
 				and J.IsInRange(bot,npcEnemy,nCastRange - 100)
-			    and J.CanCastOnNonMagicImmune(npcEnemy) 
+			    and J.CanCastOnMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)				
 			then
 				return BOT_ACTION_DESIRE_HIGH,npcEnemy,'W通用'..J.Chat.GetNormName(npcEnemy)
@@ -476,15 +477,16 @@ function X.ConsiderR()
 	
 	
 	if J.IsGoingOnSomeone(bot)
-	   and J.IsValidHero(botTarget)
-	   and J.IsInRange(bot,botTarget,nCastRange)
-	   and J.CanCastOnMagicImmune(botTarget)
-	   and ( J.GetProperTarget(botTarget) ~= nil or J.IsInRange(bot,botTarget,nCastRange *0.6) )
-	   and J.GetAllyCount(bot,1600) - J.GetEnemyCount(bot,1600) < 2
 	then
-		return BOT_ACTION_DESIRE_HIGH,"R进攻"..J.Chat.GetNormName(botTarget)
+	   if J.IsValidHero(botTarget)
+		   and J.IsInRange(bot,botTarget,nCastRange +200)
+		   and J.CanCastOnMagicImmune(botTarget)
+		   and ( J.GetProperTarget(botTarget) ~= nil or J.IsInRange(bot,botTarget,nCastRange ) )
+		   and J.GetAllyCount(bot,1200) - J.GetEnemyCount(bot,1600) <= 2
+		then
+			return BOT_ACTION_DESIRE_HIGH,"R进攻"..J.Chat.GetNormName(botTarget)
+		end
 	end
-	
 	
 	if J.IsRetreating(bot)
 	then
@@ -507,5 +509,5 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。
 

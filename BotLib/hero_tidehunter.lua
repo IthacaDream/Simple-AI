@@ -129,7 +129,6 @@ local tDefaultGroupedData = {
 		"item_flask",
 		"item_enchanted_mango",
 		"item_enchanted_mango",
-		"item_stout_shield",
 		"item_phase_boots",
 		"item_vladmir",
 		"item_blink",

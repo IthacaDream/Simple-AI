@@ -7,7 +7,7 @@
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
 local X = {}
-local bDebugMode = false;
+local bDebugMode = ( 1 == 10 )
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
@@ -40,14 +40,14 @@ X['sBuyList'] = {
 				"item_rod_of_atos",
 				"item_guardian_greaves",
 				"item_spirit_vessel",
-				"item_ultimate_scepter",
+				--"item_ultimate_scepter",
 				"item_shivas_guard",
 }
 
 X['sSellList'] = {
 
-	"item_ultimate_scepter",
-	"item_magic_wand",
+	-- "item_ultimate_scepter",
+	-- "item_magic_wand",
 
 }
 
@@ -190,7 +190,12 @@ function X.SkillsComplement()
 	
 		J.SetQueuePtToINT(bot, true)
 	
-		bot:ActionQueue_UseAbilityOnEntity( abilityE, castETarget )
+		if bot:HasScepter() 
+		then
+			bot:ActionQueue_UseAbilityOnLocation( abilityE, castETarget:GetLocation() )
+		else
+			bot:ActionQueue_UseAbilityOnEntity( abilityE, castETarget )
+		end
 		return;
 	end
 	
@@ -908,6 +913,6 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。
 
 

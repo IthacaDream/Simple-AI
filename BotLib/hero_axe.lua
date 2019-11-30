@@ -23,7 +23,6 @@ local tGroupedDataList = {
 		['Ability'] = { 3, 1, 3, 2, 3, 6, 3, 2, 2, 2, 6, 1, 1, 1, 6 },
 		--装备
 		['Buy'] = {
-			"item_stout_shield",
 			"item_tango",
 			"item_gauntlets",
 			"item_double_branches",

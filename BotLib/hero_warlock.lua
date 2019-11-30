@@ -7,6 +7,7 @@
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
 local X = {}
+local bDebugMode = ( 1 == 10 )
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
@@ -431,8 +432,8 @@ function X.ConsiderW()
 			
 			local npcWeakestEnemy = nil;
 			local npcWeakestEnemyHealth = 10000;		
-			local nEnemysHerosInRange = bot:GetNearbyHeroes(nCastRange,true,BOT_MODE_NONE);
-			for _,npcEnemy in pairs( nEnemysHerosInRange )
+			local nEnemysHeroesInRange = bot:GetNearbyHeroes(nCastRange,true,BOT_MODE_NONE);
+			for _,npcEnemy in pairs( nEnemysHeroesInRange )
 			do
 				if  J.IsValid(npcEnemy)
 					and J.CanCastOnNonMagicImmune(npcEnemy) 
@@ -528,4 +529,4 @@ function X.ConsiderQ()
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。

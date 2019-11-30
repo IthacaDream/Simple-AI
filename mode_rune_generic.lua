@@ -71,13 +71,6 @@ function GetDesire()
 	then
 		return BOT_MODE_DESIRE_NONE;
 	end
-	
-	if bot:GetItemInSlot(6) ~= nil
-	   and bot:GetItemInSlot(7) ~= nil
-	   and bot:GetItemInSlot(8) ~= nil
-	then
-		return BOT_MODE_DESIRE_NONE;
-	end
 
 	minute = math.floor(DotaTime() / 60)
 	sec = DotaTime() % 60
@@ -86,7 +79,6 @@ function GetDesire()
 		and not Role.IsPowerRuneKnown()
 		and (    GetRuneStatus( RUNE_POWERUP_1 ) == RUNE_STATUS_AVAILABLE 
 		      or GetRuneStatus( RUNE_POWERUP_1 ) == RUNE_STATUS_AVAILABLE )
---		      or enemyHasPowerRuneBuff
 	then
 		Role["lasPowerRuneTime"] = DotaTime();
 	end
@@ -96,7 +88,7 @@ function GetDesire()
 	end	
 	
 	if DotaTime() < 0 and not bot:WasRecentlyDamagedByAnyHero(12.0) then 
-		return BOT_MODE_DESIRE_MODERATE;
+		return BOT_MODE_DESIRE_MODERATE
 	end	
 	
 	if DotaTime() > 26 * 30 
@@ -181,32 +173,7 @@ function Think()
 
 	
 	if DotaTime() < 0 then 
-	
-		local hItemWard = nil;
-		local nWardSolt = bot:FindItemSlot('item_ward_observer');
-		if nWardSolt >= 0 and nWardSolt <= 8
-		then
-			hItemWard = bot:GetItemInSlot(nWardSolt);
-		end		
-	
-		if hItemWard ~= nil 
-		   and DotaTime() < 0
-		   and not IsPlayerBot(GetTeamPlayers(GetTeam())[1])
-		   and bot:DistanceFromFountain() < 1400
-		then  
-			if not hasPingAndSay and bot:GetAssignedLane()== LANE_TOP
-			then
-				local nMessage = "我不能直接分享物品，眼就丢这里了ヾ(•ω•`)o"
-				if RandomInt(1,9) > 8 then bot:ActionImmediate_Chat(nMessage,false) end
-				bot:ActionImmediate_Ping( bot:GetLocation().x, bot:GetLocation().y, false );				
-				hasPingAndSay = true;
-			end
-			
-			bot:Action_DropItem(hItemWard, bot:GetLocation() + Vector(-30,-30));
-			return;
-		end
-	
-	
+		
 		if GetTeam() == TEAM_RADIANT then
 			if bot:GetAssignedLane() == LANE_BOT then 
 				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_3) + RandomVector(121));
@@ -601,7 +568,7 @@ function X.GetWaitRuneLocation(nRune)
 
 	local vLocation = GetRuneSpawnLocation(nRune);
 
-	if DotaTime() > -nStopWaitTime then return vLocation end
+	if DotaTime() > -nStopWaitTime or true then return vLocation end
 	
 	local vNearestLoc = nil;
 	local nDist = 99999;
@@ -618,4 +585,4 @@ function X.GetWaitRuneLocation(nRune)
 	return vNearestLoc;
 
 end
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。

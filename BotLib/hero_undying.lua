@@ -23,7 +23,6 @@ local tDefaultGroupedData = {
 	['Buy'] = {
 		"item_tango",
 		"item_double_enchanted_mango",
-		"item_stout_shield",
 		"item_orb_of_venom",
 		"item_boots",
 		"item_soul_ring",

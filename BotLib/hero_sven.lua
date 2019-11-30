@@ -7,6 +7,7 @@
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
 local X = {}
+local bDebugMode = ( 1 == 10 )
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
@@ -45,8 +46,6 @@ X['sBuyList'] = {
 }
 
 X['sSellList'] = {
-	"item_phase_boots",
-	"item_stout_shield",
 	
 	"item_echo_sabre",
 	"item_quelling_blade",
@@ -572,4 +571,4 @@ function X.SvenConsiderTarget()
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。

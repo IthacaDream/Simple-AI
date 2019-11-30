@@ -7,7 +7,7 @@
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
 local X = {}
-local bDebugMode = false
+local bDebugMode = ( 1 == 10 )
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
@@ -18,13 +18,14 @@ local sAbilityList = J.Skill.GetAbilityList(bot)
 
 local tTalentTreeList = {
 						['t25'] = {10, 0},
-						['t20'] = {0, 10},
+						['t20'] = {10, 0},
 						['t15'] = {10, 0},
-						['t10'] = {10, 0},
+						['t10'] = {0, 10},
 }
 
 local tAllAbilityBuildList = {
-						{1,2,1,3,1,6,2,2,2,3,6,3,3,1,6},
+						{1,2,1,3,1,6,2,2,2,1,6,3,3,3,6},
+						{1,2,1,3,1,6,1,2,2,2,6,3,3,3,6},
 }
 
 local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
@@ -44,14 +45,13 @@ X['sBuyList'] = {
 
 
 X['sSellList'] = {
-	"item_power_treads",
-	"item_stout_shield",
-	
+
 	'item_satanic',
 	'item_magic_wand',
+	
 }
 
-if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_melee_carry' }, {"item_abyssal_blade",'item_quelling_blade'} end
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_PA' }, {"item_abyssal_blade",'item_quelling_blade'} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -109,7 +109,7 @@ local castEDesire;
 local castQWDesire,castQWTarget;
 
 
-local nKeepMana,nMP,nHP,nLV,hEnemyHeroList;
+local nKeepMana,nMP,nHP,nLV,hEnemyList,hAllyList,botTarget,sMotive;
 
 
 local lastSkillCreep
@@ -124,7 +124,10 @@ function X.SkillsComplement()
 	nLV = bot:GetLevel();
 	nMP = bot:GetMana()/bot:GetMaxMana();
 	nHP = bot:GetHealth()/bot:GetMaxHealth();
-	hEnemyHeroList = bot:GetNearbyHeroes(1600, true, BOT_MODE_NONE);
+	botTarget = J.GetProperTarget(bot);
+	hEnemyList = bot:GetNearbyHeroes(1600, true, BOT_MODE_NONE);
+	hAllyList = J.GetAlliesNearLoc(bot:GetLocation(), 1600);	
+	
 	
 	castEDesire  = X.ConsiderE();	
 	if castEDesire > 0
@@ -269,7 +272,8 @@ function X.ConsiderQ()
 	
 	
 	--对线期间对线上小兵和敌人使用
-	if bot:GetActiveMode() == BOT_MODE_LANING or ( nLV <= 14 and ( bot:GetAttackTarget() == nil or nLV <= 7 ))
+	if ( bot:GetActiveMode() == BOT_MODE_LANING or ( nLV <= 14 and not J.IsGoingOnSomeone(bot)) )
+		and not J.IsValid(botTarget)
 	then
 		local nLaneCreeps = bot:GetNearbyLaneCreeps(nCastRange +168,true);
 		local keyWord = "ranged";
@@ -278,7 +282,7 @@ function X.ConsiderQ()
 			if J.IsValid(creep)
 				and not creep:HasModifier("modifier_fountain_glyph")
 				and J.IsKeyWordUnit(keyWord,creep)
-				and ( GetUnitToUnitDistance(creep,bot) > 350 or nDamage + nBonusDamage - 10 > nAttackDamage + 24)
+				and ( GetUnitToUnitDistance(creep,bot) > 300 or nDamage + nBonusDamage - 10 > nAttackDamage + 24)
 			then
 				local nTime = nCastPoint + GetUnitToUnitDistance(bot,creep)/1250;
 				if J.WillKillTarget(creep,nDamage + nBonusDamage,nDamageType,nTime *0.94)
@@ -289,8 +293,8 @@ function X.ConsiderQ()
 			end
 		end
 		
-		if bot:GetMana() > 100 + nLV * 10
-			and (nLV <= 5 or #nEnemysHerosInBonus == 0)
+		if bot:GetMana() > 80 + nLV * 10
+			and (nLV <= 9 or #nEnemysHerosInBonus == 0)
 		then
 			local keyWord = "melee";
 			for _,creep in pairs(nLaneCreeps)
@@ -298,7 +302,7 @@ function X.ConsiderQ()
 				if J.IsValid(creep)
 					and not creep:HasModifier("modifier_fountain_glyph")
 					and J.IsKeyWordUnit(keyWord,creep)
-					and GetUnitToUnitDistance(creep,bot) > 320 + nLV * 20
+					and GetUnitToUnitDistance(creep,bot) > 240 + nLV * 20
 				then
 					local nTime = nCastPoint + GetUnitToUnitDistance(bot,creep)/1250;
 					if J.WillKillTarget(creep,nDamage + nBonusDamage,nDamageType,nTime *0.9)
@@ -536,7 +540,7 @@ function X.ConsiderW()
 	
 	
 	--打架时先手	
-	if J.IsGoingOnSomeone(bot) and nLV >= 3 
+	if J.IsGoingOnSomeone(bot) and ( nLV >= 2 or #nEnemysHerosInView <= 1 )
 	   and ( #nAllies >= 2 or #nEnemysHerosInView <= 1 or nLV >= 20 )
 	then
 	    
@@ -660,23 +664,16 @@ function X.ConsiderW()
 		and #nEnemysHerosInView == 0
 		and #nAllies <= 2
 	then
-		local nLaneCreeps = bot:GetNearbyLaneCreeps(nCastRange +160,true);
-		if  ( #nLaneCreeps >= 3 and J.IsAllowedToSpam(bot, nManaCost))
-			or ( J.IsValid(nLaneCreeps[1]) 
-				 and GetUnitToUnitDistance(nLaneCreeps[1],bot) >= 650
-				 and bot:GetMana() >= 100 )
+		local nLaneCreeps = bot:GetNearbyLaneCreeps(nCastRange +300,true);
+		local targetCreep = nLaneCreeps[1];
+		if  J.IsValid(targetCreep) 
+			and not targetCreep:HasModifier("modifier_fountain_glyph")
+			and ( ( not J.IsInRange(bot,targetCreep,630) and bot:GetMana() >= 100 )
+			    or ( #nLaneCreeps >= 3 and J.IsAllowedToSpam(bot, nManaCost) ))
 		then
-			if J.IsValid(nLaneCreeps[1])
-				and not J.IsEnemyHeroAroundLocation(nLaneCreeps[1]:GetLocation(), 800)
+			if not J.IsEnemyHeroAroundLocation(targetCreep:GetLocation(), 660)
 			then
-				for _,creep in pairs(nLaneCreeps)
-				do
-					if J.IsValid(creep)
-						and not creep:HasModifier("modifier_fountain_glyph")
-					then
-						return BOT_ACTION_DESIRE_HIGH, creep;
-					end
-				end
+				return BOT_ACTION_DESIRE_HIGH, targetCreep;
 			end
 		end
 	end
@@ -750,4 +747,4 @@ function X.ConsiderE()
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。

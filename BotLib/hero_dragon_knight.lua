@@ -7,7 +7,9 @@
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
 local X = {}
+local bDebugMode = ( 1 == 10 )
 local bot = GetBot()
+
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
@@ -17,7 +19,7 @@ local sAbilityList = J.Skill.GetAbilityList(bot)
 
 local tTalentTreeList = {
 						['t25'] = {10, 0},
-						['t20'] = {0, 10},
+						['t20'] = {10, 0},
 						['t15'] = {10, 0},
 						['t10'] = {10, 0},
 }
@@ -47,7 +49,7 @@ X['sSellList'] = {
 	"item_magic_wand",
 }
 
-if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_tank' }, {"item_solar_crest",'item_quelling_blade'} end
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_tank' }, {"item_invis_sword",'item_quelling_blade'} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -466,4 +468,4 @@ function X.ConsiderR()
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。

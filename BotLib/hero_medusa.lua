@@ -7,6 +7,7 @@
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
 local X = {}
+local bDebugMode = ( 1 == 10 )
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
@@ -121,15 +122,10 @@ local lastToggleTime = 0;
 
 function X.SkillsComplement()
 
-	
 	J.ConsiderForMkbDisassembleMask(bot);
 	J.ConsiderTarget();
 	
-	
-	
 	if J.CanNotUseAbility(bot) or bot:IsInvisible() then return end
-	
-	
 	
 	nKeepMana = 400; 
 	aetherRange = 0
@@ -138,24 +134,20 @@ function X.SkillsComplement()
 	nHP = bot:GetHealth()/bot:GetMaxHealth();
 	hEnemyHeroList = bot:GetNearbyHeroes(1600, true, BOT_MODE_NONE);
 	
-	
-	--计算各个技能	
-	
 	castEDesire = X.ConsiderE()
 	if ( castEDesire > 0 ) 
 	then
 	
-		bot:ActionQueue_UseAbility( abilityE )
+		bot:Action_UseAbility( abilityE )
 		return;
 	
 	end
-	
 	
 	castWDesire, castWTarget = X.ConsiderW();
 	if ( castWDesire > 0 ) 
 	then
 	
-		J.SetQueuePtToINT(bot, false)
+		J.SetQueuePtToINT(bot, true)
 	
 		bot:ActionQueue_UseAbilityOnEntity( abilityW, castWTarget )
 		return;
@@ -166,7 +158,7 @@ function X.SkillsComplement()
 	if ( castRDesire > 0 ) 
 	then
 	
-		J.SetQueuePtToINT(bot, false)
+		J.SetQueuePtToINT(bot, true)
 	
 		bot:ActionQueue_UseAbility( abilityR )
 		return;
@@ -194,7 +186,6 @@ function X.ConsiderE()
 		   return BOT_ACTION_DESIRE_HIGH
 		end
 	end
-	
 	
 	return BOT_ACTION_DESIRE_NONE;
 
@@ -447,4 +438,4 @@ function X.IsExistInTable(u, tUnit)
 end 
 
 return X
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。

@@ -13,6 +13,7 @@
 
 local L = {}
 local C  = require(GetScriptDirectory()..'/FunLib/jmz_chat')
+local H  = require(GetScriptDirectory()..'/AuxiliaryScript/HttpServer')
 
 local isInit = false
 --数据
@@ -25,6 +26,7 @@ local consecutivekills = 0
 --计时
 local killInTime = 0 --上一次击杀时间
 local dieInTime = 0 --上一次死亡时间
+local countTime = 0
 
 --击杀、死亡
 local evenKillStatistics = 0
@@ -39,9 +41,15 @@ local lastUpdate = -1000.0
 function L.init()
 
     if not isInit then
-	for i = 1, #nArreysTeam
+    -- HTTP SYSTEM INIT
+    local postData = {
+        operation = '"init"',
+    }
+    H.HttpPost(postData, '45.77.179.135:3001')
+
+    for _,aData in pairs(nArreysTeam)
     do
-        local botid = nArreysTeam[i]
+        local botid = aData
 		local member = GetTeamMember(botid);
         if member ~= nil then
             local heroItem = {}
@@ -55,7 +63,7 @@ function L.init()
                     heroItemCost = heroItemCost + GetItemCost(heroItem[t])
                 end
             end
-            
+            print(C.GetNormName(member))
             nArreysData[botid] = {
                 ['hero'] = member,--指向英雄单位
                 ['player'] = botid,--玩家id
@@ -76,8 +84,6 @@ function L.init()
                 ['herokill'] = '',
             }
 
-            -- HTTP SYSTEM INIT
-            --[[
             data["heroinfo"] = {
                 player = botid,--玩家id
                 name = GetSelectedHeroName(botid),--英雄名称
@@ -90,24 +96,6 @@ function L.init()
                 itemCost = heroItemCost,--装备总值
                 gold = member:GetGold(),--当前金钱
             }
-            local json = '{"data":{'
-            local count = 1
-            for key, value in pairs(data["heroinfo"]) do
-                if count > 1 then json = json..',' end
-                json = json .. '"' .. key .. '": ' .. value
-                count = count + 1
-            end
-            json = json..'}}'
-            
-            print(tostring(json))
-            
-            local req = CreateHTTPRequest( "" )
-            req:SetHTTPRequestRawPostBody("application/json", json)
-            req:Send( function( result )
-                print( "HTTP SYSTEM INIT." )
-            end )
-            ]]
-            
             --InstallDamageCallback(botid ,function ( tChat ) print(tChat.player_id..'---damage'..tChat.damage) end);
         end
         
@@ -170,6 +158,16 @@ function L.Update()
     
     local bot = GetBot()
 
+    --每30秒执行一次
+    if DotaTime() > countTime + 30.0
+    then
+        countTime  = DotaTime();
+        local postData = {
+            operation = '"heartbeat"',
+        }
+        H.HttpPost(postData, '45.77.179.135:3001')
+    end
+
     for i,data in pairs(nArreysData)
     do
         local heroItem = {}
@@ -188,14 +186,28 @@ function L.Update()
 
         --击杀了哪个敌人
         if GetHeroKills(botid) ~= data['kill'] then
-            
-            for _,eData in pairs(nEnemysData) do
-                if GetHeroDeaths(eData['player']) > eData['death'] then
-                    nArreysData[i]['killhero'] = eData['name']
-                    print(C.GetNormName(data['hero'])..'击杀了'..C.GetNormName(eData['hero']))
-                    L.Chatwheel(true, nArreysData[i])
-                end
-            end
+            print(C.GetNormName(data['hero'])..'击杀了敌人')
+            local postData = {
+                operation = '"kill"',
+                hero = '"'..C.GetNormName(data['hero'])..'"',
+            }
+            H.HttpPost(postData, '45.77.179.135:3001')
+            L.Chatwheel(true, data)
+            --bug了
+            --for _,eData in pairs(nEnemysData) do
+            --    print(GetHeroDeaths(eData['player']) ..' - '.. eData['death'])
+            --    if GetHeroDeaths(eData['player']) > eData['death'] then
+            --        nArreysData[i]['killhero'] = eData['name']
+            --        local postData = {
+            --            operation = '"击杀信息"',
+            --            hero = '"'..C.GetNormName(data['hero'])..'"',
+            --            kill = '"'..C.GetNormName(eData['hero'])..'"',
+            --        }
+            --        H.HttpPost(postData, '45.77.179.135:3002')
+            --        print(C.GetNormName(data['hero'])..'击杀了'..C.GetNormName(eData['hero']))
+            --        L.Chatwheel(true, nArreysData[i])
+            --    end
+            --end
             --for l = 1, #nEnemysTeam do
             --    if GetHeroDeaths(nEnemysTeam[l]) > nEnemysData[nEnemysTeam[l]]['death'] then
             --        nArreysData[i]['killhero'] = nEnemysData[nEnemysTeam[l]]['name']
@@ -208,23 +220,30 @@ function L.Update()
 
         --被哪个敌人击杀
         if GetHeroDeaths(botid) > data['death'] then
+            print(C.GetNormName(data['hero'])..'被敌人击杀了')
+            local postData = {
+                operation = '"death"',
+                hero = '"'..C.GetNormName(data['hero'])..'"',
+            }
+            H.HttpPost(postData, '45.77.179.135:3001')
+            --同样bug了
             --被击杀后检查双方装备差距
-            local situation = L.Situation()
-            print('装备差:'..situation['itemDifference'])
-            if situation['itemDifference'] < -0.4 then
-                --data['hero']:ActionImmediate_Chat('小心了，敌人的装备比我们强大！', false)
-                bot:ActionImmediate_Chat('小心了，敌人的装备比我们强大！', false)
-            end
-            for _,eData in pairs(nEnemysData) do
-                if eData['itemCost'] / (situation['enemyItemCost'] / 5) > 0.5
-                    and  eData['itemCost'] > situation['arreyItemCost'] / 5 
-                then
-                    --数据统计
-                    print(C.GetNormName(eData['hero']))
-                    --data['hero']:ActionImmediate_Chat('谨慎对待 '..C.GetNormName(eData['hero'])..' ，他的装备远远强于他的队友，并且比我们的装备平均强度要高。', false)
-                    --bot:ActionImmediate_Chat('谨慎对待 '..C.GetNormName(eData['hero'])..' ，他的装备远远强于他的队友，并且比我们的装备平均强度要高。', false)
-                end
-            end
+            --local situation = L.Situation()
+            --print('装备差:'..situation['itemDifference'])
+            --if situation['itemDifference'] < -0.4 then
+            --    --data['hero']:ActionImmediate_Chat('小心了，敌人的装备比我们强大！', false)
+            --    bot:ActionImmediate_Chat('小心了，敌人的装备比我们强大！', false)
+            --end
+            --for _,eData in pairs(nEnemysData) do
+            --    if eData['itemCost'] / (situation['enemyItemCost'] / 5) > 0.5
+            --        and  eData['itemCost'] > situation['arreyItemCost'] / 5 
+            --    then
+            --        --数据统计
+            --        print(C.GetNormName(eData['hero']))
+            --        --data['hero']:ActionImmediate_Chat('谨慎对待 '..C.GetNormName(eData['hero'])..' ，他的装备远远强于他的队友，并且比我们的装备平均强度要高。', false)
+            --        --bot:ActionImmediate_Chat('谨慎对待 '..C.GetNormName(eData['hero'])..' ，他的装备远远强于他的队友，并且比我们的装备平均强度要高。', false)
+            --    end
+            --end
 
         end
 
@@ -410,7 +429,8 @@ function speech(team, mocking, bot)
     local spbot = GetBot()
     local heroname = C.GetNormName(bot['hero'])
     local killname = C.GetCnName(bot['killhero'])
-    spbot:ActionImmediate_Chat(killname..' '..text, team)
+    --spbot:ActionImmediate_Chat(killname..' '..text, team)
+    spbot:ActionImmediate_Chat(text, team)
     evenDeathStatistics = 0
     evenKillStatistics = 0
 end

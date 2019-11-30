@@ -63,7 +63,7 @@ local nPushNoticeTime = nil;
 
 if J.Role.IsPvNMode()
 then
-	sVersionDate = "(PvN Mode)"..sVersionDate;
+	sVersionDate = " (PvN) "..sVersionDate;
 end
 
 if J.Role.IsUserMode()
@@ -100,22 +100,21 @@ function GetDesire()
 		local fMessage = "Simple AI: "..sVersionDate;
 		local sMessage = "This script is adapted from A Beginner AI: "..sABAVersionDate;
 		C.init()
+		if J.Role.IsShuBuQi() then secondMessage = "为了老哥的鼠标键盘和屏幕着想,不建议您亲自指导我们的相关策略." end;
+	
 		bot:ActionImmediate_Chat( fMessage, true);
-		if U.interestingMode then
-			bot:ActionImmediate_Chat( '娱乐模式：'..U.interestingMode, true);
-		end
 		if bAllNotice
 		then
 			bot:ActionImmediate_Chat( sMessage, false);
-			bot:ActionImmediate_Chat( "QQ交流群:632117330",true);
+			bot:ActionImmediate_Chat("QQ交流群:632117330, Copyright©2019 weibo@Dota2_决明子",true);
 		elseif not J.Role.IsUserMode() and RandomInt(1,9) > 2
+		then
+			if RandomInt(1,9) > 5
 			then
-				if RandomInt(1,9) > 5
-				then				
-					bot:ActionImmediate_Chat("支持设置AI策略的功能,加群了解一下.",true);
-				else
-					bot:ActionImmediate_Chat("和车队一起玩超疯狂AI,加群体验一下.",true);
-				end
+				bot:ActionImmediate_Chat("支持设置AI策略的功能,加群了解一下.",true);
+			else
+				bot:ActionImmediate_Chat("跟车队一起玩超疯狂AI,加群体验一下.",true);
+			end
 		end
 		bPushNoticeDone = true
 	end
@@ -348,7 +347,7 @@ function GetDesire()
 		return BOT_MODE_DESIRE_HIGH;
 	end
 	
-	if GetGameMode() ~= GAMEMODE_MO and not J.Role.IsPvNMode()
+	if GetGameMode() ~= GAMEMODE_MO 
 	   and ( J.Site.IsTimeToFarm(bot) or pushTime > DotaTime() - 8.0 )
 	   and ( not X.IsHumanPlayerInTeam() or enemyKills > allyKills + 16 ) 
 	   and ( bot:GetNextItemPurchaseValue() > 0 or not bot:HasModifier("modifier_item_moon_shard_consumed") )
@@ -399,10 +398,10 @@ function GetDesire()
 							or bot:GetActiveMode() == BOT_MODE_PUSH_TOWER_TOP
 						then
 							local enemyAncient = GetAncient(GetOpposingTeam());
-							local allies       = bot:GetNearbyHeroes(800,false,BOT_MODE_NONE);
+							local allies       = bot:GetNearbyHeroes(1400,false,BOT_MODE_NONE);
 							local enemyAncientDistance = GetUnitToUnitDistance(bot,enemyAncient);
 							if enemyAncientDistance < 2800
-								and enemyAncientDistance > 1000
+								and enemyAncientDistance > 1600
 								and bot:GetActiveModeDesire() < BOT_MODE_DESIRE_HIGH
 								and #allies < 2
 							then
@@ -413,7 +412,7 @@ function GetDesire()
 							if beHighFarmer or bot:GetAttackRange() < 310
 							then
 								if  bot:GetActiveModeDesire() <= BOT_MODE_DESIRE_MODERATE 
-									and enemyAncientDistance > 1000
+									and enemyAncientDistance > 1600
 									and enemyAncientDistance < 5800
 									and #allies < 2
 								then
@@ -534,7 +533,7 @@ function Think()
 	end	
 	
 	if hLaneCreepList ~= nil and #hLaneCreepList > 0 then
-		local farmTarget = J.Site.GetFarmLaneTarget(hLaneCreepList,true);
+		local farmTarget = J.Site.GetFarmLaneTarget(hLaneCreepList);
 		local nNeutrals = bot:GetNearbyNeutralCreeps(bot:GetAttackRange() + 180);
 		if farmTarget ~= nil and #nNeutrals == 0 then
 						
@@ -934,6 +933,7 @@ function X.ShouldRun(bot)
 	if not X.IsThereT3Detroyed() 
 	   and aliveEnemyCount > 2 
 	   and #hAllyHeroList < aliveEnemyCount + 2
+	   and not J.Role.IsPvNMode()
 	then
 		--不冲高地
 		local allyLevel = J.GetAverageLevel(false);
@@ -1010,11 +1010,11 @@ function X.ShouldRun(bot)
 	if  botLevel <= 10
 		and (#hEnemyHeroList > 0 or bot:GetHealth() < 500)
 	then
-		local nLongEnemyTowers = bot:GetNearbyTowers(928, true);
+		local nLongEnemyTowers = bot:GetNearbyTowers(968, true);
 		if bot:GetAssignedLane() == LANE_MID 
 		then 
-			 nLongEnemyTowers = bot:GetNearbyTowers(898, true); 
-			 nEnemyTowers     = bot:GetNearbyTowers(868, true); 
+			 nLongEnemyTowers = bot:GetNearbyTowers(948, true); 
+			 nEnemyTowers     = bot:GetNearbyTowers(928, true); 
 		end
 		if botLevel <= 2
 			and nLongEnemyTowers[1] ~= nil
@@ -1312,5 +1312,4 @@ function X.IsVeryHighFarmer(bot)
 		or botName == "npc_dota_hero_razor"
 		
 end
-
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。

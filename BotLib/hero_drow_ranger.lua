@@ -7,6 +7,7 @@
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
 local X = {}
+local bDebugMode = ( 1 == 10 )
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
@@ -23,23 +24,22 @@ local tTalentTreeList = {
 }
 
 local tAllAbilityBuildList = {
-						{1,3,2,1,1,6,1,2,2,2,6,3,3,3,6},
+						{1,3,1,2,1,6,1,3,3,3,6,2,2,2,6},
+						{1,3,1,2,1,6,1,2,2,2,6,3,3,3,6},
 }
 
 local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
-
 X['sBuyList'] = {
 				'item_ranged_carry_outfit',
 				'item_dragon_lance', 
 				'item_yasha', 
-				'item_mask_of_madness',
 				"item_ultimate_scepter",
 				"item_manta",
 				"item_hurricane_pike",	
-				"item_broken_satanic",
+				"item_satanic",
 				"item_butterfly",
 }
 
@@ -103,7 +103,7 @@ local abilityM = nil
 
 local castQDesire, castQTarget
 local castWDesire, castWLocation
-local castEDesire
+local castEDesire, castELocation
 local castMDesire
 local castWMDesire,castWMLocation
 
@@ -124,13 +124,13 @@ function X.SkillsComplement()
 	hEnemyHeroList = bot:GetNearbyHeroes(1600,true,BOT_MODE_NONE);
 	abilityM = J.IsItemAvailable("item_mask_of_madness");		
 	
-	castEDesire = X.ConsiderE();
+	castEDesire, castELocation = X.ConsiderE();
 	if castEDesire > 0
 	then
-		bot:Action_ClearActions(false);
+		J.SetQueuePtToINT(bot, true)
 	
-	    bot:ActionQueue_UseAbility( abilityE );
-		return ;
+		bot:ActionQueue_UseAbilityOnLocation( abilityE , castELocation);
+		return;
 	end	
 	
 	castWMDesire,castWMLocation = X.ConsiderWM();
@@ -178,11 +178,43 @@ function X.SkillsComplement()
 end
 
 function X.ConsiderE()
-	if abilityE:IsFullyCastable() 
-		and nLV >= 7
+
+	if not abilityE:IsFullyCastable() 
 	then
-		return BOT_ACTION_DESIRE_HIGH
+		return BOT_ACTION_DESIRE_NONE
 	end
+
+	local nCastRange = bot:GetAttackRange() * 1.8
+	local nRadius 	 = 200
+	local nDamage 	 = 0
+	local nCastPoint = abilityE:GetCastPoint();
+	local nTargetLocation = nil;
+	
+	local nEnemyHeroes = bot:GetNearbyHeroes(nCastRange +100,true,BOT_MODE_NONE)
+
+	
+	if J.IsGoingOnSomeone(bot)
+	then
+		local npcTarget = J.GetProperTarget(bot);
+		if J.IsValidHero(npcTarget) 
+			and J.CanCastOnNonMagicImmune(npcTarget) 
+			and J.IsInRange(npcTarget, bot, nCastRange)
+			and ( npcTarget:IsFacingLocation(bot:GetLocation(),120) 
+				  or npcTarget:GetAttackTarget() ~= nil )
+		then		
+			nTargetLocation = npcTarget:GetExtrapolatedLocation( nCastPoint )
+			return BOT_ACTION_DESIRE_HIGH, nTargetLocation;
+		end
+		
+		local locationAoE = bot:FindAoELocation( true, true, bot:GetLocation(), nCastRange, nRadius, nCastPoint, 0 );
+		if ( locationAoE.count >= 2 ) 
+		then
+			nTargetLocation = locationAoE.targetloc;
+			return BOT_ACTION_DESIRE_HIGH, nTargetLocation;
+		end
+		
+	end
+
 	
 	return BOT_ACTION_DESIRE_NONE
 end
@@ -249,7 +281,6 @@ end
 function X.ConsiderW()
 
 	if not abilityW:IsFullyCastable() 
-	   or bot:IsInvisible()
 	then
 		return BOT_ACTION_DESIRE_NONE
 	end
@@ -612,4 +643,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。

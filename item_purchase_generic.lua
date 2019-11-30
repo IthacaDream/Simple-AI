@@ -21,7 +21,7 @@ end
 
 local BotBuild = require(GetScriptDirectory() .. "/BotLib/" .. string.gsub(bot:GetUnitName(), "npc_dota_", ""));
 
-if BotBuild == nil then return; end
+if BotBuild == nil then return end
 
 --clone item build to bot.itemTobBuy in reverse order 
 bot.itemToBuy = {};   
@@ -29,7 +29,7 @@ bot.currentItemToBuy = nil;
 bot.currentComponentToBuy = nil;   
 bot.currListItemToBuy = {};         
 bot.SecretShop = false;             
-bot.SideShop = false;                
+            
 
 local sPurchaseList = BotBuild['sBuyList'];
 local sItemSellList = BotBuild['sSellList'];
@@ -41,14 +41,13 @@ do
 end
 
 
-local courier = nil;
+
 local sell_time = -90;
 local check_time = -90;
 
 
 local lastItemToBuy = nil;
 local CanPurchaseFromSecret = false;
-local CanPurchaseFromSide = false;
 local itemCost = 0;
 local courier = nil;
 local t3AlreadyDamaged = false;
@@ -62,16 +61,10 @@ local function GeneralPurchase()
 		lastItemToBuy = bot.currentComponentToBuy;
 		bot:SetNextItemPurchaseValue( GetItemCost( bot.currentComponentToBuy ) );
 		CanPurchaseFromSecret = IsItemPurchasedFromSecretShop(bot.currentComponentToBuy);
-		CanPurchaseFromSide   = IsItemPurchasedFromSideShop(bot.currentComponentToBuy);
 		itemCost = GetItemCost( bot.currentComponentToBuy );
-		if bot.currentComponentToBuy == "item_ring_of_health" 
-		   or  bot.currentComponentToBuy == "item_void_stone" 
-		then CanPurchaseFromSecret = false end
-
 	end
 	
 	if  bot.currentComponentToBuy == "item_infused_raindrop" 
-		or bot.currentComponentToBuy == "item_courier"
 		or bot.currentComponentToBuy == "item_tome_of_knowledge"
 		or bot.currentComponentToBuy == "item_ward_observer"
 		or bot.currentComponentToBuy == "item_ward_sentry"
@@ -88,7 +81,7 @@ local function GeneralPurchase()
 	if bot:GetLevel() >= 18 and t3AlreadyDamaged == false and DotaTime() > t3Check + 1.0 then
 		for i=2, 8, 3 do
 			local tower = GetTower(GetTeam(), i);
-			if tower == nil or tower:GetHealth()/tower:GetMaxHealth() < 0.05 then
+			if tower == nil or tower:GetHealth()/tower:GetMaxHealth() < 0.1 then
 				t3AlreadyDamaged = true;
 				break;
 			end
@@ -115,11 +108,11 @@ local function GeneralPurchase()
 		t3Check = DotaTime();
 		
 	elseif t3AlreadyDamaged == true and bot:GetBuybackCooldown() <= 10 then
-		cost = itemCost + bot:GetBuybackCost() + ( 0 + bot:GetNetWorth()/40 ) -300;
+		cost = itemCost + bot:GetBuybackCost() + ( 50 + bot:GetNetWorth()/40 ) - 300;
 	end
 	
 	--If only one Component
-	if t3AlreadyDamaged == true and #bot.currListItemToBuy == 1
+	if #bot.currListItemToBuy == 1 or Role.IsPvNMode()
 	then
 		cost = itemCost;
 	end
@@ -128,80 +121,42 @@ local function GeneralPurchase()
 	if ( bot:GetGold() >= cost and bot:GetItemInSlot(13) == nil ) 
 	then
 		
-		if courier == nil then
-			courier = GetCourier(0);
-		end
+		-- if courier == nil then
+			-- courier = GetCourier(0);
+		-- end
 		
-		--BotBuild done by courier for secret shop item
-		if bot.SecretShop 
-		   and courier ~= nil 
-		   and GetCourierState(courier) == COURIER_STATE_IDLE 
-		   and courier:DistanceFromSecretShop() == 0 
+		--buy done by courier for secret shop item
+		-- if bot.SecretShop 
+		   -- and courier ~= nil 
+		   -- and GetCourierState(courier) == COURIER_STATE_IDLE 
+		   -- and courier:DistanceFromSecretShop() == 0 
+		-- then
+			-- if courier:ActionImmediate_PurchaseItem( bot.currentComponentToBuy ) == PURCHASE_ITEM_SUCCESS then
+				-- bot.currentComponentToBuy = nil;
+				-- bot.currListItemToBuy[#bot.currListItemToBuy] = nil; 
+				-- courier.latestUser = bot;
+				-- bot.SecretShop = false;
+				-- return
+			-- end
+		-- end
+				
+		--Logic to decide in which shop bot have to buy the item
+		if CanPurchaseFromSecret   
+			and bot:DistanceFromSecretShop() > 0 
 		then
-			if courier:ActionImmediate_PurchaseItem( bot.currentComponentToBuy ) == PURCHASE_ITEM_SUCCESS then
-				bot.currentComponentToBuy = nil;
-				bot.currListItemToBuy[#bot.currListItemToBuy] = nil; 
-				courier.latestUser = bot;
-				bot.SecretShop = false;
-			    bot.SideShop = false;
-				return
-			end
-		end
-		
-		--Get bot distance from side shop and secret shop
-		local dSecretShop = bot:DistanceFromSecretShop();
-		local dSideShop   = bot:DistanceFromSideShop();
-		
-		--Logic to decide in which shop bot have to BotBuild the item
-		if CanPurchaseFromSecret             
-		   and CanPurchaseFromSide == false  
-		   and bot:DistanceFromSecretShop() > 0   
-		then
-			bot.SecretShop = true;              
-			
-		elseif CanPurchaseFromSecret            		
-			   and CanPurchaseFromSide           
-			   and dSideShop < dSecretShop         
-			   and dSideShop > 0                   
-			   and dSideShop <= 2800 
-	    then
-			bot.SideShop = true;                       
-			
-		elseif CanPurchaseFromSecret                   
-		       and CanPurchaseFromSide                 
-			   and dSideShop > dSecretShop              
-			   and dSecretShop > 0                      
-	    then
-			bot.SecretShop = true;                      
-			
-		elseif CanPurchaseFromSecret 
-			   and CanPurchaseFromSide                  
-			   and dSideShop > 2800                     
-			   and dSecretShop > 0                      
-	    then
-			bot.SecretShop = true;                       
-			
-		elseif CanPurchaseFromSide 
-		       and CanPurchaseFromSecret == false            
-			   and bot:DistanceFromSideShop() > 0             
-			   and bot:DistanceFromSideShop() <= 2800 
-	    then
-			bot.SideShop = true;                             
-			
+			bot.SecretShop = true     			
 		else                                                 
 			if bot:ActionImmediate_PurchaseItem( bot.currentComponentToBuy ) == PURCHASE_ITEM_SUCCESS then
 				bot.currentComponentToBuy = nil;                  
 				bot.currListItemToBuy[#bot.currListItemToBuy] = nil;  
-				bot.SecretShop = false;                               
-				bot.SideShop = false;	                              
+				bot.SecretShop = false;                                                            
 				return
 			else
-				print("[item_purchase_generic] "..bot:GetUnitName().." failed to BotBuild "..bot.currentComponentToBuy.." : "..tostring(bot:ActionImmediate_PurchaseItem( bot.currentComponentToBuy )))	
+				print("[item_purchase_generic] "..bot:GetUnitName().." failed to buy "..bot.currentComponentToBuy.." : "..tostring(bot:ActionImmediate_PurchaseItem( bot.currentComponentToBuy )))	
 			end
 		end	
 	else
 		bot.SecretShop = false;              
-		bot.SideShop = false;
 	end
 end
 
@@ -217,7 +172,6 @@ local function TurboModeGeneralPurchase()
 	end
 	
 	if  bot.currentComponentToBuy == "item_infused_raindrop" 
-		or bot.currentComponentToBuy == "item_courier"
 		or bot.currentComponentToBuy == "item_tome_of_knowledge"
 		or bot.currentComponentToBuy == "item_ward_observer"
 		or bot.currentComponentToBuy == "item_ward_sentry"
@@ -235,8 +189,6 @@ local function TurboModeGeneralPurchase()
 		if bot:ActionImmediate_PurchaseItem( bot.currentComponentToBuy ) == PURCHASE_ITEM_SUCCESS then
 			bot.currentComponentToBuy = nil;
 			bot.currListItemToBuy[#bot.currListItemToBuy] = nil; 
-			bot.SecretShop = false;
-			bot.SideShop = false;	
 			return
 		else
 			print("[item_purchase_generic] "..bot:GetUnitName().." failed to BotBuild "..bot.currentComponentToBuy.." : "..tostring(bot:ActionImmediate_PurchaseItem( bot.currentComponentToBuy )))	
@@ -317,10 +269,7 @@ function ItemPurchaseThink()
 	
 	--buy flying courier and support item
 	if bot.theRole == 'support' then
-		if nowTime < 0 and GetItemStockCount( "item_courier" ) > 0
-		then
-			bot:ActionImmediate_PurchaseItem( 'item_courier' );      
-		elseif nowTime < 0 
+		if nowTime < 0 
 			and botGold >= GetItemCost( "item_clarity" ) 
 			and Item.HasItem(bot, "item_clarity") == false 
 			and not Role.IsPvNMode()
@@ -335,7 +284,7 @@ function ItemPurchaseThink()
 		then
 			bot:ActionImmediate_PurchaseItem("item_dust"); 
 		elseif GetItemStockCount( "item_ward_observer" ) >= 1 
-			  and ( nowTime < 0 or ( nowTime > 0 and buyBootsStatus == true ) ) 
+			  and buyBootsStatus == true
 			  and botGold >= GetItemCost( "item_ward_observer" ) 
 			  and Item.GetEmptyInventoryAmount(bot) >= 2 
 			  and Item.GetItemCharges(bot, "item_ward_observer") < 1  
@@ -348,23 +297,14 @@ function ItemPurchaseThink()
 		end
 	end
 	
-	--buy courier when no support in team
-	if nowTime > -65 and nowTime < 600 and botGold >= 50 
-	   and GetItemStockCount( "item_courier" ) > 0 
-	   and bot:DistanceFromFountain() < 200
-	   and ( Role['supportExist'] == false or Role['supportExist'] == nil )
-	then 
-		bot:ActionImmediate_PurchaseItem( 'item_courier' );
-		return;
-	end
 	
 	--buy raindrop
 	if buyRD == false
-	   and nowTime > 3 *60
-	   and nowTime < 20 *60
+	   and nowTime >= 3 *60
+	   and nowTime <= 20 *60
 	   and buyBootsStatus == true
-	   and GetItemStockCount( "item_infused_raindrop" ) > 0 
-	   and Item.GetItemCharges(bot, 'item_infused_raindrop') < 1
+	   and GetItemStockCount( "item_infused_raindrop" ) >= 1 
+	   and Item.GetItemCharges(bot, 'item_infused_raindrop') <= 0
 	   and botGold >= GetItemCost( "item_infused_raindrop" ) 
 	   and Item.HasItem(bot, 'item_boots')
 	then
@@ -380,23 +320,6 @@ function ItemPurchaseThink()
 		buyRD = true
 	end
 	
-	
-	--buy raindrop when it broken
-	if nowTime > 5 *60 and lastRDCheck < nowTime - 5.0 and buyAnotherRD == false
-	then
-		lastRDCheck = nowTime;
-		local recipe_urn_of_shadows = bot:FindItemSlot("item_recipe_urn_of_shadows");
-		local raindrop = bot:FindItemSlot("item_infused_raindrop");
-		if  recipe_urn_of_shadows >= 0 and recipe_urn_of_shadows <= 8 
-		    and raindrop == -1 and bot:GetCourierValue() == 0
-			and botGold >= GetItemCost( "item_infused_raindrop" ) 
-			and GetItemStockCount( "item_infused_raindrop" ) > 0 
-		then
-			bot:ActionImmediate_PurchaseItem("item_infused_raindrop"); 
-			buyAnotherRD = true;
-			return;
-		end
-	end
 	
 	--buy tp when die
 	if botGold >= 50 
@@ -414,26 +337,13 @@ function ItemPurchaseThink()
 		return;
 	end	 
 
-	--buy ward when die
-	if botGold >= 50 
-	   and bot:IsAlive()
-	   and bot.theRole == 'support'
-	   and botGold < ( 50 + botWorth/40 )
-	   and botHP < 0.06	   
-	   and GetGameMode() ~= 23
-	   and bot:GetHealth() >= 1
-	   and bot:WasRecentlyDamagedByAnyHero(3.1)
-	   and GetItemStockCount( "item_ward_observer" ) >= 2
-	then
-		bot:ActionImmediate_PurchaseItem("item_ward_observer"); 
-		return;
-	end
 	
 	--buy dust when die
-	if botGold >= 180 
+	if botGold >= 90 
 	   and bot:IsAlive()
+	   and botLevel > 6
 	   and bot.theRole == 'support'
-	   and botGold < ( 100 + botWorth/40 )
+	   and botGold < ( 90 + botWorth/40 )
 	   and botHP < 0.06	   
 	   and GetGameMode() ~= 23
 	   and bot:GetHealth() >= 1
@@ -460,48 +370,7 @@ function ItemPurchaseThink()
 		return;
 	end
 	
-	--swap item_stout_shield when item_quelling_blade in backpack
-	if nowTime > 30 and nowTime < 3000
-		and switchTime < nowTime - 7
-		and bot:GetAttackRange() < 310
-	then
-		local blade  = bot:FindItemSlot("item_quelling_blade");
-		local shield = bot:FindItemSlot("item_stout_shield");
-		local stick  = bot:FindItemSlot("item_magic_stick");
-				
-		local nEnemyHeroes = bot:GetNearbyHeroes(1400,true,BOT_MODE_NONE)
 		
-		--No enemy nearby then swap shield , blade or stick
-		if (nEnemyHeroes[1] == nil)
-		   and (blade >= 6 and blade <= 8)
-		then
-			if (shield >=0 and shield <= 5)
-			then
-				switchTime = nowTime;
-				bot:ActionImmediate_SwapItems( blade, shield );
-				return;
-			end
-			if (stick >=0 and stick <= 5)
-			then
-				switchTime = nowTime;
-				bot:ActionImmediate_SwapItems( blade, stick );
-				return;
-			end
-		end
-		 
-		--there be enemy then swap shield and blade
-		if (nEnemyHeroes[1] ~= nil)
-		   and (blade >= 0 and blade <= 5)
-		then
-			if (shield >= 6 and shield <= 8)
-			then
-				switchTime = nowTime;
-				bot:ActionImmediate_SwapItems( blade, shield );
-				return;
-			end
-		end
-	end
-	
 	--swap raindrop when it will be broken
 	if nowTime > 180 and nowTime < 1800
 	   and switchTime < nowTime - 5.6
@@ -513,7 +382,7 @@ function ItemPurchaseThink()
 		   and ( nEnemyHeroes[1] ~= nil 
 				 or botMode == BOT_MODE_ROSHAN
 		         or bot:WasRecentlyDamagedByAnyHero(3.1))
-		   and ( raindropCharge == 1 or raindropCharge >= 6 )
+		   and ( raindropCharge == 1 or raindropCharge >= 7 )
 		then
 		    switchTime = nowTime;
 			bot:ActionImmediate_SwapItems( raindrop, 6 );
@@ -680,7 +549,7 @@ function ItemPurchaseThink()
 	end
 	
 	--Change the flag to buy tp scroll to false when it already has it in inventory so the bot can insert tp scroll to list item to buy whenever they don't have any tp scroll
-	if buyTP == true and buyTPtime < nowTime - 70
+	if buyTP == true and buyTPtime < nowTime - 60
 	then
 		buyTP = false;
 	end
@@ -688,7 +557,6 @@ function ItemPurchaseThink()
 	--Add travelboots,moonshare,bkb to buy when in very late
 	if #bot.itemToBuy == 0 
 		and not Role.IsUserMode() --there be bug
-		and not Role.IsPvNMode()
 	then
 
 		if addTravelBoots == false
@@ -774,7 +642,7 @@ function ItemPurchaseThink()
 		end
 	end
 		
-	--No need to BotBuild item when no item to BotBuild in the list
+	--No need to buy item when no item to buy in the list
 	if #bot.itemToBuy == 0 then bot:SetNextItemPurchaseValue( 0 ); return; end
 	
 	--Get the next item to buy and break it to item components then add it to currListItemToBuy. 
@@ -813,4 +681,4 @@ function ItemPurchaseThink()
 	end
 
 end
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。

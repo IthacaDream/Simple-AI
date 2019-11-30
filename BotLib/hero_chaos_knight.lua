@@ -7,6 +7,7 @@
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
 local X = {}
+local bDebugMode = ( 1 == 10 )
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
@@ -24,6 +25,7 @@ local tTalentTreeList = {
 
 local tAllAbilityBuildList = {
 						{1,3,2,2,2,6,2,1,1,1,6,3,3,3,6},
+						{1,3,2,2,2,6,2,3,3,3,6,1,1,1,6},
 }
 
 local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
@@ -52,7 +54,7 @@ X['sSellList'] = {
 	"item_magic_wand",
 }
 
-if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_tank' }, {"item_solar_crest",'item_quelling_blade'} end
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_tank' }, {"item_invis_sword",'item_quelling_blade'} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -102,6 +104,7 @@ modifier_chaos_knight_phantasm_illusion
 local abilityQ = bot:GetAbilityByName( sAbilityList[1] );
 local abilityW = bot:GetAbilityByName( sAbilityList[2] );
 local abilityR = bot:GetAbilityByName( sAbilityList[6] );
+local talent6  = bot:GetAbilityByName( sTalentList[6] );
 
 local castQDesire,castQTarget = 0;
 local castWDesire,castWTarget = 0;
@@ -123,16 +126,8 @@ function X.SkillsComplement()
 	castRDesire = X.ConsiderR();
 	if ( castRDesire > 0 ) 
 	then
-	
-		if bot:HasScepter() 
-		then
-			bot:ActionQueue_UseAbilityOnEntity( abilityR, bot )
-			return;
-		else
-			bot:ActionQueue_UseAbility( abilityR )
-			return;
-		end
-	
+		bot:ActionQueue_UseAbility( abilityR )
+		return;	
 	end
 	
 	castWDesire, castWTarget = X.ConsiderW();
@@ -306,16 +301,19 @@ function X.ConsiderQ()
 end
 
 function X.ConsiderW()
+	
 	if not abilityW:IsFullyCastable() or bot:IsRooted() then return BOT_ACTION_DESIRE_NONE end
 	
 	local nCastRange = abilityW:GetCastRange() + 40;
 	local nCastPoint = abilityW:GetCastPoint();
 	local nSkillLV   = abilityW:GetLevel();
 	local nDamage    = 0;
+	local bIgnoreMagicImmune = talent6:IsTrained();
 	
-	local nEnemysHeroesInCastRange = bot:GetNearbyHeroes(nCastRange, true, BOT_MODE_NONE);	
+	local nEnemysHeroesInCastRange = bot:GetNearbyHeroes(nCastRange, true, BOT_MODE_NONE);		
 	
-	
+	--[[
+
 	if J.IsInTeamFight(bot, 1200)
 	   and DotaTime() > 6*60
 	then
@@ -325,7 +323,7 @@ function X.ConsiderW()
 		for _,npcEnemy in pairs( nEnemysHeroesInCastRange )
 		do
 			if  J.IsValid(npcEnemy)
-				and J.CanCastOnNonMagicImmune(npcEnemy) 
+				and J.CanCastAbilityOnTarget(npcEnemy,bIgnoreMagicImmune)
 				and J.CanCastOnTargetAdvanced(npcEnemy)
 				and not J.IsDisabled(true, npcEnemy)
 				and not npcEnemy:IsAttackImmune()
@@ -349,7 +347,7 @@ function X.ConsiderW()
 		for _,npcEnemy in pairs( nEnemysHeroesInCastRange )
 		do
 			if  J.IsValid(npcEnemy)
-			    and J.CanCastOnNonMagicImmune(npcEnemy) 
+			    and J.CanCastAbilityOnTarget(npcEnemy,bIgnoreMagicImmune)
 				and J.CanCastOnTargetAdvanced(npcEnemy)
 				and not J.IsDisabled(true, npcEnemy)
 				and not npcEnemy:IsAttackImmune()
@@ -373,7 +371,7 @@ function X.ConsiderW()
 		for _,npcEnemy in pairs( nEnemysHeroesInCastRange )
 		do
 			if  J.IsValid(npcEnemy)
-			    and J.CanCastOnNonMagicImmune(npcEnemy) 
+			    and J.CanCastAbilityOnTarget(npcEnemy,bIgnoreMagicImmune)
 				and J.CanCastOnTargetAdvanced(npcEnemy)
 				and not npcEnemy:IsAttackImmune()
 				and not J.IsDisabled(true, npcEnemy)
@@ -392,14 +390,17 @@ function X.ConsiderW()
 			return BOT_ACTION_DESIRE_HIGH, npcTarget;
 		end			
 	end
+
+
+--]]
 	
-	
+		
 	if J.IsGoingOnSomeone(bot)
 		and DotaTime() > 6*30 
 	then
 		local target = J.GetProperTarget(bot)
 		if  J.IsValidHero(target) 
-			and J.CanCastOnNonMagicImmune(target) 
+			and J.CanCastAbilityOnTarget(target,bIgnoreMagicImmune)
 			and J.CanCastOnTargetAdvanced(target)
 			and J.IsInRange(target, bot, nCastRange) 
 		    and not J.IsDisabled(true, target)
@@ -415,7 +416,7 @@ function X.ConsiderW()
 		local creeps  = bot:GetNearbyLaneCreeps(nCastRange, true);
 		if J.IsValid(enemies[1])
 		   and bot:IsFacingLocation(enemies[1]:GetLocation(),45)
-		   and J.CanCastOnNonMagicImmune(enemies[1])
+		   and J.CanCastAbilityOnTarget(enemies[1],bIgnoreMagicImmune)
 		   and J.CanCastOnTargetAdvanced(enemies[1])
 		   and J.IsInRange(enemies[1], bot, 150)
 		   and not J.IsDisabled(true, enemies[1])
@@ -527,4 +528,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。

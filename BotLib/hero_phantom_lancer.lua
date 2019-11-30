@@ -7,7 +7,7 @@
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
 local X = {}
-local bDebugMode = false
+local bDebugMode = ( 1 == 10 )
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
@@ -25,6 +25,7 @@ local tTalentTreeList = {
 
 local tAllAbilityBuildList = {
 						{1,3,2,3,3,6,3,1,1,1,6,2,2,2,6},
+						{1,2,1,3,3,6,3,3,1,1,6,2,2,2,6},
 }
 
 local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
@@ -36,14 +37,11 @@ X['sBuyList'] = {
 				"item_diffusal_blade",
 				"item_manta",
 				"item_skadi",
-				'item_sphere',
+				"item_abyssal_blade",
 				"item_heart",
 }
 
 X['sSellList'] = {
-	
-	"item_magic_wand",
-	"item_stout_shield",
 	
 	"item_manta",
 	"item_quelling_blade",
@@ -53,7 +51,7 @@ X['sSellList'] = {
 
 }
 
-if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_melee_carry' }, {"item_abyssal_blade",'item_quelling_blade'} end
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_PL' }, {"item_abyssal_blade",'item_quelling_blade'} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -218,10 +216,10 @@ function X.ConsiderQ()
 				and not creep:HasModifier("modifier_fountain_glyph")
 		        and J.IsKeyWordUnit( "ranged", creep )
 				and not J.IsAllysTarget(creep)
-				and not J.IsInRange(bot,creep,350)
+				and not J.IsInRange(bot,creep,300)
 			then
 				local nDelay = nCastPoint + GetUnitToUnitDistance(bot,creep)/1000;
-				if J.WillKillTarget(creep, nDamage, nDamageType, nDelay *0.9)
+				if J.WillKillTarget(creep, nDamage, nDamageType, nDelay *0.95)
 				then
 					return BOT_ACTION_DESIRE_HIGH, creep, 'Q对线'
 				end
@@ -376,6 +374,7 @@ function X.ConsiderW()
 	then
 		if J.IsValidHero(botTarget)
 		   and J.CanCastOnMagicImmune(botTarget)
+		   and not J.IsDisabled(true, botTarget)
 		   and ( nSkillLV >= 3 or nMP > 0.6 or nHP < 0.4 or J.GetHPR(botTarget) < 0.4 or DotaTime() > 9 *60 )
 		then
 			
@@ -436,7 +435,7 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。
 
 
 

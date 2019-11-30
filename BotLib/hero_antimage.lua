@@ -2,183 +2,53 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Update by: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
 local X = {}
+local bDebugMode = ( 1 == 10 )
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
-local ConversionMode = dofile( GetScriptDirectory()..'/AuxiliaryScript/BotlibConversion') --引入技能文件
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-local sOutfit = J.Skill.GetOutfitName(bot)
 
---编组技能、天赋、装备
-local tGroupedDataList = {
-	{
-		--组合说明，不影响游戏
-		['info'] = 'By 决明子',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {10, 0},
-			['t15'] = {10, 0},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = {3,1,2,2,2,6,2,3,3,3,6,1,1,1,6},
-		--装备
-		['Buy'] = {
-			sOutfit,
-			"item_bfury",
-			"item_manta",
-			"item_skadi",
-			"item_black_king_bar",
-			"item_satanic",
-		},
-		--出售
-		['Sell'] = {
-			"item_manta",
-			"item_stout_shield",
-			
-			'item_black_king_bar',
-			'item_magic_wand',
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By Misunderstand',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {0, 10},
-			['t15'] = {10, 0},
-			['t10'] = {10, 0},
-		},
-		--技能
-		['Ability'] = { 1, 2, 3, 1, 2, 6, 2, 1, 2, 1, 6, 3, 3, 3, 6 },
-		--装备
-		['Buy'] = {
-			"item_faerie_fire",
-			"item_slippers",
-			"item_stout_shield",
-			"item_tango",
-			"item_quelling_blade",
-			"item_magic_stick",
-			"item_wraith_band",
-			"item_boots",
-			"item_bfury",
-			"item_power_treads",
-			"item_vladmir",
-			"item_manta",
-			"item_black_king_bar", 
-			"item_basher",
-			"item_abyssal_blade",
-			"item_moon_shard",
-			"item_satanic",
-			"item_ultimate_scepter_2",
-			"item_travel_boots_2"
-		},
-		--出售
-		['Sell'] = {
-			"item_bfury",
-			"item_faerie_fire",
-			
-			'item_vladmir',
-			'item_stout_shield',
 
-			"item_manta",     
-			"item_wraith_band",
-
-			"item_black_king_bar",     
-			"item_magic_stick",
-
-			"item_satanic",
-			"item_vladmir" 
-		},
-	},{
-		--组合说明，不影响游戏
-		['info'] = 'By 铅笔会有猫的w',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {0, 10},
-			['t15'] = {10, 0},
-			['t10'] = {0, 10},
-		},
-		--技能
-		['Ability'] = { 2, 1, 3, 1, 1, 6, 1, 2, 2, 2, 6, 3, 3, 3, 6 },
-		--装备
-		['Buy'] = {
-			"item_tango",
-			"item_flask",
-			"item_stout_shield",
-			"item_quelling_blade",
-			"item_double_branches",
-			"item_magic_stick",
-			"item_ring_of_health", 
-			"item_magic_wand",
-			"item_boots",			
-			"item_bfury", 
-			"item_power_treads",
-			"item_yasha", 
-			"item_basher", 			
-			"item_black_king_bar",
-			"item_manta",
-			"item_abyssal_blade",
-			"item_satanic",
-			"item_travel_boots",
-			"item_moon_shard",
-			"item_travel_boots_2",
-			"item_ultimate_scepter",
-			"item_ultimate_scepter_2",
-		},
-		--出售
-		['Sell'] = {
-			"item_satanic",
-			"item_magic_wand",
-		},
-	},
-}
---默认数据
-local tDefaultGroupedData = {
-	--天赋树
-	['Talent'] = {
-		['t25'] = {10, 0},
-		['t20'] = {10, 0},
-		['t15'] = {10, 0},
-		['t10'] = {10, 0},
-	},
-	--技能
-	['Ability'] = {3,1,2,2,2,6,2,3,3,3,6,1,1,1,6},
-	--装备
-	['Buy'] = {
-		sOutfit,
-		"item_bfury",
-		"item_manta",
-		"item_skadi",
-		"item_black_king_bar",
-		"item_satanic",
-	},
-	--出售
-	['Sell'] = {
-		"item_manta",
-		"item_stout_shield",
-		
-		'item_black_king_bar',
-		'item_magic_wand',
-	},
+local tTalentTreeList = {
+						['t25'] = {0, 10},
+						['t20'] = {10, 0},
+						['t15'] = {10, 0},
+						['t10'] = {10, 0},
 }
 
---根据组数据生成技能、天赋、装备
-local nAbilityBuildList, nTalentBuildList;
+local tAllAbilityBuildList = {
+						{3,1,2,2,2,6,2,3,3,3,6,1,1,1,6},
+}
 
-nAbilityBuildList, nTalentBuildList, X['sBuyList'], X['sSellList'] = ConversionMode.Combination(tGroupedDataList, tDefaultGroupedData)
+local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
+
+local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
+
+X['sBuyList'] = {
+				'item_melee_carry_outfit',
+				"item_new_bfury",
+				"item_manta",
+				"item_abyssal_blade",
+				"item_skadi",
+				--"item_black_king_bar",
+				"item_satanic",
+}
+
+X['sSellList'] = {
+	'item_skadi',
+	'item_magic_wand',
+}
+
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_antimage' }, {} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
-
 
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
@@ -207,6 +77,8 @@ end
 
 --[[
 
+npc_dota_hero_antimage
+
 "Ability1"		"antimage_mana_break"
 "Ability2"		"antimage_blink"
 "Ability3"		"antimage_counterspell"
@@ -221,6 +93,12 @@ end
 "Ability15"		"special_bonus_unique_antimage"
 "Ability16"		"special_bonus_unique_antimage_4"
 "Ability17"		"special_bonus_unique_antimage_2"
+
+modifier_antimage_mana_break
+modifier_antimage_blink_illusion
+modifier_antimage_spell_shield
+modifier_antimage_counterspell_passive
+modifier_antimage_counterspell
 
 --]]
 
@@ -884,4 +762,4 @@ function X.ReportDetails(bot,npcTarget,EstDamage)
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。

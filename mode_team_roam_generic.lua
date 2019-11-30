@@ -36,6 +36,7 @@ local beInitDone = false;
 local beSpecialSupport = false;
 local beSpecialCarry = false;
 local beTechies = false;
+local bePvNMode = false;
 
 local droppedCheck = -90;
 local cheeseCheck = -90;
@@ -51,6 +52,7 @@ function GetDesire()
 	then
 		beInitDone = true
 		beTechies = string.find(botName, "techies")
+		bePvNMode = J.Role.IsPvNMode()
 		beSpecialCarry = X.IsSpecialCarry(bot)
 		beSpecialSupport = X.IsSpecialSupport(bot)	
 	end
@@ -293,7 +295,8 @@ function Think()
 	
 	if J.CanNotUseAction(bot) then return end
 	
-	if towerCreepMode then
+	if towerCreepMode 
+	then
 		bot:Action_AttackUnit( towerCreep, true );
 		return;	
 	end
@@ -423,7 +426,7 @@ end
 
 function X.SupportFindTarget( bot )
 	
-	if X.CantUseAttack(bot) or DotaTime() < 0 then return nil,0 end
+	if X.CanNotUseAttack(bot) or DotaTime() < 0 then return nil,0 end
 	
 	local IsModeSuitHit = X.IsModeSuitToHitCreep(bot);
 	local nAttackRange = bot:GetAttackRange() + 50;
@@ -545,7 +548,7 @@ function X.SupportFindTarget( bot )
 	
 	local denyDamage = botAD -1;
 	local nNearbyEnemyHeroes = bot:GetNearbyHeroes(750,true,BOT_MODE_NONE); -----------*************
-	if  IsModeSuitHit
+	if  IsModeSuitHit and not bePvNMode
 		and bot:GetNetWorth() < 13998   -----------*************
 		and ( botHP > 0.38 or not bot:WasRecentlyDamagedByAnyHero(3.0))
 		and (nNearbyEnemyHeroes[1] == nil or nNearbyEnemyHeroes[1]:GetLevel() < 10) -----------*************
@@ -579,7 +582,7 @@ function X.SupportFindTarget( bot )
 	end
 		
 	
-	if  IsModeSuitHit
+	if  IsModeSuitHit and not bePvNMode
 		and X.CanAttackTogether(bot)
 		and DotaTime() < 25 * 60
 		and denyDamage < 111
@@ -693,7 +696,7 @@ function X.SupportFindTarget( bot )
 			end
 		end
 				
-		if  bot:DistanceFromFountain() > 3800
+		if  bot:DistanceFromFountain() > 3800 and not bePvNMode
 			and J.GetDistanceFromEnemyFountain(bot) > 5000
 			and nEnemyTowers[1] == nil
 			and bot:GetNetWorth() < 19800
@@ -721,7 +724,7 @@ end
 
 function X.CarryFindTarget( bot )
 	
-	if X.CantUseAttack(bot) or DotaTime() < 0 then return nil,0 end
+	if X.CanNotUseAttack(bot) or DotaTime() < 0 then return nil,0 end
 	
 	local IsModeSuitHit = X.IsModeSuitToHitCreep(bot);
 	local nAttackRange = bot:GetAttackRange() + 50;
@@ -816,8 +819,10 @@ function X.CarryFindTarget( bot )
 	if botName == "npc_dota_hero_chaos_knight"
 	then
 		if  cAbility == nil then cAbility = bot:GetAbilityByName('chaos_knight_chaos_strike') end;
-		if  cAbility ~= nil and (cAbility:IsFullyCastable() or cAbility:GetCooldownTimeRemaining() < bot:GetAttackPoint() +0.8)
-			and IsModeSuitHit and ( botHP > 0.38 or not bot:WasRecentlyDamagedByAnyHero(1.5))
+		if  cAbility ~= nil 
+			and (cAbility:IsFullyCastable() or cAbility:GetCooldownTimeRemaining() < bot:GetAttackPoint() +0.8)
+			and IsModeSuitHit 
+			and ( botHP > 0.38 or not bot:WasRecentlyDamagedByAnyHero(1.5))
 		then
 			
 			local strikeRate = 1.2 + (0.1 + 0.3 * cAbility:GetLevel()) * 0.22;
@@ -920,7 +925,7 @@ function X.CarryFindTarget( bot )
 	
 	local denyDamage = botAD;
 	local nNearbyEnemyHeroes = bot:GetNearbyHeroes(650,true,BOT_MODE_NONE);
-	if  IsModeSuitHit
+	if  IsModeSuitHit and not bePvNMode
 		and bot:GetNetWorth() < 19990
 		and ( botHP > 0.38 or not bot:WasRecentlyDamagedByAnyHero(3.0))
 		and (nNearbyEnemyHeroes[1] == nil or nNearbyEnemyHeroes[1]:GetLevel() < 12)
@@ -954,7 +959,7 @@ function X.CarryFindTarget( bot )
 		end
 	end
 		
-	if  IsModeSuitHit
+	if  IsModeSuitHit and not bePvNMode
 		and X.CanAttackTogether(bot)
 		and DotaTime() < 25 * 60
 		and denyDamage < 111
@@ -1076,7 +1081,7 @@ function X.CarryFindTarget( bot )
 			
 		end
 		
-		if  bot:DistanceFromFountain() > 3800
+		if  bot:DistanceFromFountain() > 3800 and not bePvNMode
 			and J.GetDistanceFromEnemyFountain(bot) > 5000
 			and nEnemyTowers[1] == nil
 			and bot:GetNetWorth() < 19800
@@ -1192,7 +1197,7 @@ function X.GetAttackDamageToCreep( bot )
 end
 
 
-function X.CantUseAttack(bot)
+function X.CanNotUseAttack(bot)
 
 	return not bot:IsAlive()
 		   or bot:NumQueuedActions() > 0 
@@ -1398,7 +1403,7 @@ function X.GetNearbyLastHitCreep(ignorAlly, bEnemy, nDamage, nRadius, bot)
 	
 	for _,nCreep in pairs(nNearbyCreeps)
 	do
-		if X.CanBeAttacked(nCreep) and nCreep:GetHealth() < nDamage * 3.3
+		if X.CanBeAttacked(nCreep) and nCreep:GetHealth() < ( nDamage + 200 )
 		   and ( ignorAlly or not X.IsAllysTarget(nCreep) )
 		then
 		
@@ -1433,7 +1438,7 @@ function X.GetNearbyLastHitCreep(ignorAlly, bEnemy, nDamage, nRadius, bot)
 				end
 			end
 			
-			local nRealDamage = nDamage * bot:GetAttackCombatProficiency(nCreep) ;
+			local nRealDamage = nDamage * bot:GetAttackCombatProficiency(nCreep)
 				
 			if J.WillKillTarget(nCreep,nRealDamage,nDamageType,nAttackProDelayTime)
 			then
@@ -1463,10 +1468,8 @@ function X.GetExceptRangeLastHitCreep(bEnemy,nDamage,nRange,nRadius,bot)
 		local nAttackProDelayTime = J.GetAttackProDelayTime(bot,nCreep);
 		
 		if J.WillKillTarget(nCreep,nDamage,nDamageType,nAttackProDelayTime)
-		then
-		
+		then		
 			return nCreep;
-			
 		end
 
 	end
@@ -1482,7 +1485,7 @@ function X.IsLastHitCreep(nCreep,nDamage)
 		
 		nDamage = nDamage * GetBot():GetAttackCombatProficiency(nCreep);
 		
-		if nCreep:GetActualIncomingDamage(nDamage, DAMAGE_TYPE_PHYSICAL) + J.GetCreepAttackProjectileWillRealDamage(nCreep,0.49) > nCreep:GetHealth() +1
+		if nCreep:GetActualIncomingDamage(nDamage, DAMAGE_TYPE_PHYSICAL) + J.GetCreepAttackProjectileWillRealDamage(nCreep,0.66) > nCreep:GetHealth() +1
 		then 
 		    return true;
 		end
@@ -1518,7 +1521,7 @@ function X.IsAllysTarget(unit)
 	do
 		if  ally ~= bot
 			and not ally:IsIllusion()
-			and J.GetProperTarget(ally) == unit 
+			and ( ally:GetTarget() == unit or ally:GetAttackTarget() == unit )
 		then
 			return true;
 		end
@@ -1627,7 +1630,7 @@ function X.IsMostAttackDamage(bot)
 	for _,ally in pairs(nAllies)
 	do
 		if ally ~= bot
-			and not X.CantUseAttack(ally)
+			and not X.CanNotUseAttack(ally)
 			and ally:GetAttackDamage() > bot:GetAttackDamage()
 		then
 			return false;
@@ -1822,7 +1825,7 @@ end
 local fLastReturnTime = 0
 function X.ShouldAttackTowerCreep(bot)
 
-	if X.CantUseAttack(bot) then return 0,nil;end
+	if X.CanNotUseAttack(bot) then return 0,nil;end
 	
 	--增加对塔和兵营的仇恨
 	if  bot:GetLevel() > 2
@@ -1976,4 +1979,4 @@ function X.ShouldNotRetreat(bot)
 	
 	return false;
 end
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。

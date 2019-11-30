@@ -7,6 +7,7 @@
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
 local X = {}
+local bDebugMode = ( 1 == 10 )
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
@@ -23,7 +24,7 @@ local tTalentTreeList = {
 }
 
 local tAllAbilityBuildList = {
-						{3,1,1,2,1,6,1,2,2,2,6,3,3,3,6},
+						{3,1,1,3,1,6,1,2,2,2,6,2,3,3,6},
 }
 
 local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
@@ -440,4 +441,4 @@ function X.ConsiderR()
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。

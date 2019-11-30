@@ -22,10 +22,10 @@ if gTime == nil then gTime = 0 end
 ----------------------------------------
 ----------------------------------------
 --]]------------------------------------
-local sDota2Version= '7.22h'
-local sDebugVersion= '20191114ver1.5a'
+local sDota2Version= '7.23a'
+local sDebugVersion= '20191127ver1.5d'
 local nDebugTime   = 99999
-local bDebugMode   = false
+local bDebugMode   = ( 1 == 10 )
 local bDebugTeam   = (GBotTeam == TEAM_RADIANT)
 local sDebugHero   = 'npc_dota_hero_luna'
 local tAllyIDList  = GetTeamPlayers(GBotTeam)
@@ -658,6 +658,17 @@ function J.IsSuspiciousIllusion(npcTarget)
 	return false;
 end
 
+function J.CanCastAbilityOnTarget(npcTarget,bIgnoreMagicImmune)
+
+	if bIgnoreMagicImmune 
+	then
+		return J.CanCastOnMagicImmune(npcTarget)
+	end
+
+	return J.CanCastOnNonMagicImmune(npcTarget)
+	
+end
+
 
 function J.CanCastOnMagicImmune(npcTarget)
 	return npcTarget:CanBeSeen() 
@@ -894,19 +905,19 @@ function J.IsTaunted(npcTarget)
 end
 
 
-function J.IsInRange(npcTarget, bot, nCastRange)
-	return GetUnitToUnitDistance( npcTarget, bot ) <= nCastRange;
+function J.IsInRange(bot, npcTarget, nRange)
+	return GetUnitToUnitDistance( bot, npcTarget ) <= nRange
 end
 
 
-function J.IsInLocRange(npcTarget, nLoc, nCastRange)
-	return GetUnitToLocationDistance( npcTarget, nLoc ) <= nCastRange;
+function J.IsInLocRange(npcTarget, nLoc, nRange)
+	return GetUnitToLocationDistance( npcTarget, nLoc ) <= nRange;
 end
 
 
-function J.IsInTeamFight(bot, range)
-	if range == nil or range > 1600 then range = 1600 end;
-	local tableNearbyAttackingAlliedHeroes = bot:GetNearbyHeroes( range, false, BOT_MODE_ATTACK );
+function J.IsInTeamFight(bot, nRange)
+	if nRange == nil or nRange > 1600 then nRange = 1600 end;
+	local tableNearbyAttackingAlliedHeroes = bot:GetNearbyHeroes( nRange, false, BOT_MODE_ATTACK );
 	return #tableNearbyAttackingAlliedHeroes >= 2 and bot:GetActiveMode() ~= BOT_MODE_RETREAT;
 end
 
@@ -1848,11 +1859,13 @@ end
 function J.SetQueueUseSoulRing(bot)
 	local sr = J.IsItemAvailable("item_soul_ring");
 	if sr ~= nil and sr:IsFullyCastable() 
-	   
 	then
-		local nEnemyCount = J.GetEnemyCount(bot, 1600);
-		if J.GetHPR(bot) > 0.426 + 0.1 * nEnemyCount
-	       and J.GetMPR(bot) < 0.98 - 0.1 * nEnemyCount
+		local nEnemyCount = J.GetEnemyCount(bot, 1600)
+		local botHP = J.GetHPR(bot)
+		local botMP = J.GetMPR(bot)
+		if botHP > 0.5 + 0.1 * nEnemyCount
+	       and botMP < 0.98 - 0.1 * nEnemyCount
+		   and (nEnemyCount <= 2 or botHP > botMP * 2.5 )
 		then
 			bot:ActionQueue_UseAbility(sr);
 			return;
@@ -1876,6 +1889,7 @@ end
 
 --debug
 function J.IsPTReady(bot, status)
+	
 	if  not bot:IsAlive()
 		or bot:IsMuted()
 		or bot:IsChanneling()
@@ -2035,18 +2049,19 @@ function J.IsAttacking(bot)
 end
 
 
-function J.GetModifierTime(bot, nModifierName)
+function J.GetModifierTime(bot, sModifierName)
 	
-	if not bot:HasModifier(nModifierName) then return 0; end
+	if not bot:HasModifier(sModifierName) then return 0; end
 
 	local npcModifier = bot:NumModifiers();
 	for i = 0, npcModifier 
 	do
-		if bot:GetModifierName(i) == nModifierName 
+		if bot:GetModifierName(i) == sModifierName 
 		then
 			return bot:GetModifierRemainingDuration(i);
 		end
 	end
+	
 	return 0;
 end
 
@@ -2063,6 +2078,7 @@ function J.GetRemainStunTime(bot)
 			return bot:GetModifierRemainingDuration(i);
 		end
 	end
+	
 	return 0;
 end
 
@@ -2380,7 +2396,7 @@ function J.ConsiderTarget()
 
 	local nAttackRange = bot:GetAttackRange() + 69;	
 	if nAttackRange > 1600 then nAttackRange = 1600 end
-	if nAttackRange < 200  then nAttackRange = 350  end
+	if nAttackRange < 300  then nAttackRange = 350  end
 	
 	local nInAttackRangeWeakestEnemyHero = J.GetAttackableWeakestUnit(true, true, nAttackRange, bot);
 
@@ -3519,6 +3535,7 @@ J.GetMostUltimateCDUnit()
 J.GetPickUltimateScepterUnit()
 J.CanUseRefresherOrb(bot)
 J.IsSuspiciousIllusion(npcTarget)
+J.CanCastAbilityOnTarget(npcTarget,bIgnoreMagicImmune)
 J.CanCastOnMagicImmune(npcTarget)
 J.CanCastOnNonMagicImmune(npcTarget)
 J.CanCastOnTargetAdvanced(npcTarget)
@@ -3653,4 +3670,4 @@ J.GetMagicToPhysicalDamage(bot, nUnit, nMagicDamage)
 
 
 --]]
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。

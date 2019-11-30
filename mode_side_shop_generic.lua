@@ -10,56 +10,17 @@ if GetBot():IsInvulnerable() or not GetBot():IsHero() or not string.find(GetBot(
 	return;
 end
 
-local bot = GetBot();
+local bot = GetBot()
 local X = {}
-local BOT_SIDE_SHOP = GetShopLocation(GetTeam(), SHOP_SIDE )
-local TOP_SIDE_SHOP = GetShopLocation(GetTeam(), SHOP_SIDE2 )
-local closestSideShop = nil;
 
 function GetDesire()
 			
-	if not X.IsSuitableToBuy() then
-		return BOT_MODE_DESIRE_NONE;
-	end
-	
-	local invFull = true;
-	
-	for i=0,8 do 
-		if bot:GetItemInSlot(i) == nil then
-			invFull = false;
-		end	
-	end
-	
-	if invFull then
-		return BOT_MODE_DESIRE_NONE
-	end
-	
-	if bot.SideShop then
-		closestSideShop = X.GetClosestSideShop();
-		if X.IsNearbyEnemyClosestToLoc(closestSideShop) == false then
-			return BOT_MODE_DESIRE_HIGH
-		end
-	end
-
 	return BOT_MODE_DESIRE_NONE
 
 end
 
 function Think()
-	
-	if  bot:IsChanneling() 
-		or bot:NumQueuedActions() > 0
-		or bot:IsCastingAbility()
-		or bot:IsUsingAbility()
-	then 
-		return;
-	end
-	
-	if bot:DistanceFromSideShop() > 0 then
-		bot:Action_MoveToLocation(closestSideShop);
-		return
-	end	
-	
+		
 end
 
 function OnStart()
@@ -69,47 +30,4 @@ end
 function OnEnd()
 
 end
-
-function X.IsNearbyEnemyClosestToLoc(loc)
-	local closestDist = GetUnitToLocationDistance(bot, loc);
-	local closestUnit = bot;
-	local enemies = bot:GetNearbyHeroes(1600, true, BOT_MODE_NONE);
-	for _,enemy in pairs(enemies) do
-		local dist = GetUnitToLocationDistance(enemy, loc);
-		if dist + 200 < closestDist and closestDist > 1200 then
-			return true;
-		end
-	end
-	return false;
-end
-
-function X.GetClosestSideShop()
-
-	local TSSD = GetUnitToLocationDistance(bot, TOP_SIDE_SHOP);
-	local BSSD = GetUnitToLocationDistance(bot, BOT_SIDE_SHOP);
-	
-	if TSSD < BSSD then 
-		return TOP_SIDE_SHOP;
-	else
-		return BOT_SIDE_SHOP;
-	end	
-
-end
-
-function X.IsSuitableToBuy()
-	local mode = bot:GetActiveMode();
-	if ( ( mode == BOT_MODE_RETREAT and bot:GetActiveModeDesire() >= BOT_MODE_DESIRE_HIGH )
-		or mode == BOT_MODE_ATTACK
-		or mode == BOT_MODE_DEFEND_ALLY
-		or mode == BOT_MODE_DEFEND_TOWER_TOP
-		or mode == BOT_MODE_DEFEND_TOWER_MID
-		or mode == BOT_MODE_DEFEND_TOWER_BOT
-		or mode == BOT_MODE_TEAM_ROAM
-		) 
-	then
-		return false;
-	end
-	return true;
-end
-
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。

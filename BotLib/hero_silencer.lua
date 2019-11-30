@@ -7,6 +7,7 @@
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
 local X = {}
+local bDebugMode = ( 1 == 10 )
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
@@ -114,10 +115,8 @@ local aetherRange = 0
 
 function X.SkillsComplement()
 
-	
 	if J.CanNotUseAbility(bot) or bot:IsInvisible() then return end
-	
-	
+
 	nKeepMana = 300; 
 	aetherRange = 0
 	nMP = bot:GetMana()/bot:GetMaxMana();
@@ -128,9 +127,7 @@ function X.SkillsComplement()
 	--计算天赋可能带来的变化
 	local aether = J.IsItemAvailable("item_aether_lens");
 	if aether ~= nil then aetherRange = 250 end	
-	
-	
-	
+
 	
 	castRDesire              = X.ConsiderR();
 	if ( castRDesire > 0 ) 
@@ -159,7 +156,14 @@ function X.SkillsComplement()
 	
 		J.SetQueuePtToINT(bot, false)
 	
-		bot:ActionQueue_UseAbilityOnEntity( abilityE, castETarget )
+		-- bot:ActionQueue_UseAbilityOnEntity( abilityE, castETarget )
+		if bot:HasScepter() 
+		then
+			bot:ActionQueue_UseAbilityOnLocation( abilityE, castETarget:GetLocation() )
+		else
+			bot:ActionQueue_UseAbilityOnEntity( abilityE, castETarget )
+		end
+		
 		return;
 	end
 	
@@ -919,4 +923,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。

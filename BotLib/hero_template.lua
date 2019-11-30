@@ -46,7 +46,6 @@ local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 --出装方案
 --基础出装在jmz_item.lua中编写，对应sOutfit项
 X['sBuyList'] = {
-				"item_stout_shield",
 				sOutfit,
 				"item_blade_mail",
 				"item_mjollnir",

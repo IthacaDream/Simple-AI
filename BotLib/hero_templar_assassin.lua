@@ -7,6 +7,7 @@
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
 local X = {}
+local bDebugMode = ( 1 == 10 )
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
@@ -51,7 +52,7 @@ X['sSellList'] = {
 	'item_magic_wand',
 }
 
-if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_mid' }, {} end
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_TA' }, {} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -208,16 +209,10 @@ local nKeepMana,nMP,nHP,nLV,hEnemyHeroList;
 
 
 function X.SkillsComplement()
-
-	
 	
 	X.TAConsiderTarget();
 	
-	
-	
 	if J.CanNotUseAbility(bot) or bot:HasModifier('modifier_templar_assassin_meld') then return end
-	
-	
 	
 	nKeepMana = 300
 	nLV = bot:GetLevel();
@@ -232,9 +227,6 @@ function X.SkillsComplement()
 		topLoc = GetTower(GetTeam(),TOWER_TOP_1):GetLocation();
 		botLoc = GetTower(GetTeam(),TOWER_BOT_1):GetLocation();
 	end
-	
-	
-	
 		
 	castRDesire, castRLocation = X.ConsiderR();
 	if ( castRDesire > 0 )
@@ -290,11 +282,15 @@ function X.ConsiderQ()
 	-- Mode based usage
 	--------------------------------------
 	local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( 1600, true, BOT_MODE_NONE );
-	for _,npcEnemy in pairs( tableNearbyEnemyHeroes )
-	do
-		if ( bot:WasRecentlyDamagedByHero( npcEnemy, 1.0 ) and ( nLV > 10 or npcEnemy:GetUnitName() ~= "npc_dota_hero_necrolyte" ) )
-		then
-			return BOT_ACTION_DESIRE_MODERATE;
+	if nHP < 0.8 
+	then
+		for _,npcEnemy in pairs( tableNearbyEnemyHeroes )
+		do
+			if bot:WasRecentlyDamagedByHero( npcEnemy, 1.0 ) 
+				 and npcEnemy:GetAttackTarget() == bot
+			then
+				return BOT_ACTION_DESIRE_MODERATE;
+			end
 		end
 	end
 	if nHP < 0.11 and not bot:IsInvisible()
@@ -771,4 +767,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。

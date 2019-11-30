@@ -142,6 +142,10 @@ local abilityNameList = {
     'lich_frost_shield',
     'lich_sinister_gaze',
     'lich_chain_frost',
+    'snapfire_scatterblast',
+    'snapfire_mortimer_kisses',
+    'snapfire_firesnap_cookie',
+    'snapfire_lil_shredder',
 }
 
 --将英雄技能初始入变量

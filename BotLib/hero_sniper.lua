@@ -7,6 +7,7 @@
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
 local X = {}
+local bDebugMode = ( 1 == 10 )
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
@@ -54,7 +55,7 @@ X['sBuyList'] = {
 if RandomInt(1,9) > 6
 then
 	X['sBuyList'] = {
-					sOutfit,
+					'item_mid_outfit',
 					"item_dragon_lance",
 					'item_hand_of_midas',
 					"item_maelstrom",
@@ -161,14 +162,9 @@ function X.SkillsComplement()
 	
 		J.SetQueuePtToINT(bot, true)
 		
-		if bot:HasScepter() 
-		then
-			bot:ActionQueue_UseAbilityOnLocation( abilityR, castRTarget:GetLocation() )
-			return;
-		else		
-			bot:ActionQueue_UseAbilityOnEntity( abilityR, castRTarget )
-			return;
-		end
+		bot:ActionQueue_UseAbilityOnEntity( abilityR, castRTarget )
+		return;
+		
 	end
 	
 	castEDesire = X.ConsiderE();
@@ -577,4 +573,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592
+-- dota2jmz@163.com QQ:2462331592。
