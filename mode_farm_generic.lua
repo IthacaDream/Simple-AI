@@ -106,7 +106,7 @@ function GetDesire()
 		if bAllNotice
 		then
 			bot:ActionImmediate_Chat( sMessage, false);
-			bot:ActionImmediate_Chat("QQ交流群:632117330, Copyright©2019 weibo@Dota2_决明子",true);
+			bot:ActionImmediate_Chat("QQ交流群:632117330",true);
 		elseif not J.Role.IsUserMode() and RandomInt(1,9) > 2
 		then
 			if RandomInt(1,9) > 5

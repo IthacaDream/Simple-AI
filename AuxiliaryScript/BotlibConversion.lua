@@ -146,6 +146,10 @@ local abilityNameList = {
     'snapfire_mortimer_kisses',
     'snapfire_firesnap_cookie',
     'snapfire_lil_shredder',
+    'void_spirit_aether_remnant',
+    'void_spirit_astral_step',
+    'void_spirit_dissimilate',
+    'void_spirit_resonant_pulse',
 }
 
 --将英雄技能初始入变量

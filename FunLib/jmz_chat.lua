@@ -4218,6 +4218,32 @@ Chat['tHeroNameList'] = {
 		['sRuName'] = 0,
 		['sJpName'] = 0,
 		['sEsName'] = 0,
+	},
+
+	--118
+	['npc_dota_hero_snapfire'] = {
+		['sNormName'] = '电炎绝手',
+		['sShortName'] = 'snapfire',
+		['sCnName'] = '电炎绝手',
+		['sEnName'] = 0,
+		['sFrName'] = 0,
+		['sDeName'] = 0,
+		['sRuName'] = 0,
+		['sJpName'] = 0,
+		['sEsName'] = 0,
+	},
+
+	--119
+	['npc_dota_hero_void_spirit'] = {
+		['sNormName'] = '虚无之灵',
+		['sShortName'] = 'void spirit',
+		['sCnName'] = '虚无之灵',
+		['sEnName'] = 0,
+		['sFrName'] = 0,
+		['sDeName'] = 0,
+		['sRuName'] = 0,
+		['sJpName'] = 0,
+		['sEsName'] = 0,
 	}
 }
 
