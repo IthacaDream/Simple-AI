@@ -61,7 +61,7 @@ function H.LocalHttpPost(postData)
 
 end
 
-function H.HttpPost(postData, url, notUUID)
+function H.HttpPost(postData, url, call, config, notUUID)
 
     if UUID ~= nil or notUUID then
 
@@ -70,12 +70,14 @@ function H.HttpPost(postData, url, notUUID)
         local req = CreateRemoteHTTPRequest( url )
         req:SetHTTPRequestRawPostBody("application/json", httpData)
         req:Send( function( result )
-            --此处result为获取到的返回参数
-            print( "GET response:\n" )
             for k,v in pairs( result ) do
-                print( string.format( "%s : %s\n", k, v ) )
+                if type(v) == 'string'
+                   and string.find(v, 'res:') ~= nil 
+                then 
+                    local resdata = string.sub(v, 5);
+                    call(resdata, config)
+                end
             end 
-            print( "Done." )
         end )
         
     else 
@@ -105,7 +107,7 @@ function H.GetUUID(url)
     end )
 end
 
-function jsonFormatting(obj)
+function H.jsonFormatting(obj)
     local json = '{"data":{'
     local count = 1
     for key, value in pairs(obj) do

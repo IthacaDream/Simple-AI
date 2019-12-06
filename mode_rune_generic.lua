@@ -28,10 +28,6 @@ local runeLocation = nil;
 local nStopWaitTime = Role.GetRuneActionTime();
 
 
-local hasPingAndSay = false;
-local randomInt = RandomInt(1,8);
-if randomInt <= 5 then hasPingAndSay = true end;
-
 local ListRune = {
 	RUNE_BOUNTY_1,
 	RUNE_BOUNTY_2,
@@ -176,7 +172,7 @@ function Think()
 		
 		if GetTeam() == TEAM_RADIANT then
 			if bot:GetAssignedLane() == LANE_BOT then 
-				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_3) + RandomVector(121));
+				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_2) + RandomVector(121));
 				return
 			else
 				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_1) + RandomVector(122));
@@ -187,7 +183,7 @@ function Think()
 				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_4) + RandomVector(123));
 				return
 			else
-				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_2) + RandomVector(124));
+				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_3) + RandomVector(124));
 				return
 			end
 		end
@@ -345,9 +341,9 @@ end
 
 function X.IsTeamMustSaveRune(rune)
 	if GetTeam() == TEAM_DIRE then
-		return rune == RUNE_BOUNTY_2 or rune == RUNE_BOUNTY_4 or rune == RUNE_POWERUP_1 or rune == RUNE_POWERUP_2 or DotaTime() > 13 * 60
+		return rune == RUNE_BOUNTY_3 or rune == RUNE_BOUNTY_4 or rune == RUNE_POWERUP_1 or rune == RUNE_POWERUP_2 or DotaTime() > 4 * 60 + 55
 	else
-		return rune == RUNE_BOUNTY_1 or rune == RUNE_BOUNTY_3 or rune == RUNE_POWERUP_1 or rune == RUNE_POWERUP_2 or DotaTime() > 13 * 60
+		return rune == RUNE_BOUNTY_1 or rune == RUNE_BOUNTY_2 or rune == RUNE_POWERUP_1 or rune == RUNE_POWERUP_2 or DotaTime() > 4 * 60 + 55
 	end
 end
 

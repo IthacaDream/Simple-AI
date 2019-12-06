@@ -164,16 +164,16 @@ local independent = {
 
 function X.IsValidUnit(unit)
 	return unit ~= nil 
-	   and unit:IsNull() == false 
-	   and unit:IsAlive();
+	   and not unit:IsNull() 
+	   and unit:IsAlive()
 end
 
 function X.IsValidTarget(target)
 	return target ~= nil 
-	   and target:IsNull() == false 
+	   and not target:IsNull()
 	   and target:CanBeSeen() 
-	   and target:IsInvulnerable() == false 
-	   and target:IsAttackImmune() == false
+	   and not target:IsInvulnerable()
+	   and not target:IsAttackImmune()
 	   and target:IsAlive();
 end
 

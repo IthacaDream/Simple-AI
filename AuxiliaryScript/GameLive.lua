@@ -10,6 +10,7 @@
     7、根据场上状态获取3路危险程度、双方野区危险程度
 ]]
 
+-- 网络模块均可使用，由于服务器设置不完善，暂时禁用（注释掉了）
 
 local L = {}
 local C  = require(GetScriptDirectory()..'/FunLib/jmz_chat')
@@ -42,10 +43,10 @@ function L.init()
 
     if not isInit then
     -- HTTP SYSTEM INIT
-    local postData = {
-        operation = '"init"',
-    }
-    H.HttpPost(postData, '45.77.179.135:3001')
+    --local postData = {
+    --    operation = '"init"',
+    --}
+    --H.HttpPost(postData, '45.77.179.135:3001')
 
     for _,aData in pairs(nArreysTeam)
     do
@@ -63,7 +64,6 @@ function L.init()
                     heroItemCost = heroItemCost + GetItemCost(heroItem[t])
                 end
             end
-            print(C.GetNormName(member))
             nArreysData[botid] = {
                 ['hero'] = member,--指向英雄单位
                 ['player'] = botid,--玩家id
@@ -159,14 +159,14 @@ function L.Update()
     local bot = GetBot()
 
     --每30秒执行一次
-    if DotaTime() > countTime + 30.0
-    then
-        countTime  = DotaTime();
-        local postData = {
-            operation = '"heartbeat"',
-        }
-        H.HttpPost(postData, '45.77.179.135:3001')
-    end
+    --if DotaTime() > countTime + 30.0
+    --then
+    --    countTime  = DotaTime();
+    --    local postData = {
+    --        operation = '"heartbeat"',
+    --    }
+    --    H.HttpPost(postData, '45.77.179.135:3001')
+    --end
 
     for i,data in pairs(nArreysData)
     do
@@ -187,11 +187,11 @@ function L.Update()
         --击杀了哪个敌人
         if GetHeroKills(botid) ~= data['kill'] then
             print(C.GetNormName(data['hero'])..'击杀了敌人')
-            local postData = {
-                operation = '"kill"',
-                hero = '"'..C.GetNormName(data['hero'])..'"',
-            }
-            H.HttpPost(postData, '45.77.179.135:3001')
+            --local postData = {
+            --    operation = '"kill"',
+            --    hero = '"'..C.GetNormName(data['hero'])..'"',
+            --}
+            --H.HttpPost(postData, '45.77.179.135:3001')
             L.Chatwheel(true, data)
             --bug了
             --for _,eData in pairs(nEnemysData) do
@@ -221,11 +221,11 @@ function L.Update()
         --被哪个敌人击杀
         if GetHeroDeaths(botid) > data['death'] then
             print(C.GetNormName(data['hero'])..'被敌人击杀了')
-            local postData = {
-                operation = '"death"',
-                hero = '"'..C.GetNormName(data['hero'])..'"',
-            }
-            H.HttpPost(postData, '45.77.179.135:3001')
+            --local postData = {
+            --    operation = '"death"',
+            --    hero = '"'..C.GetNormName(data['hero'])..'"',
+            --}
+            --H.HttpPost(postData, '45.77.179.135:3001')
             --同样bug了
             --被击杀后检查双方装备差距
             --local situation = L.Situation()
@@ -354,35 +354,47 @@ end
 
 --轮盘嘲讽
 function L.Chatwheel(kill, bot)
-    local general = {
-        '消灭完毕',
-        '脸都秀外啦',
-        'Ceee~eeb',
-        '再见了宝贝',
-        '干嘛呢兄弟',
-        '漂~亮',
-    }
     local mocking = {
         ['doublekill'] = {--连杀
-            general,
+            '消灭完毕',
+            '脸都秀外啦',
+            'Ceee~eeb',
+            '再见了宝贝',
+            '干嘛呢兄弟',
+            '漂~亮',
             '头部撞击',
             '猢狲把戏',
         },
         ['ace'] = {--团灭
-            general,
+            '消灭完毕',
+            '脸都秀外啦',
+            'Ceee~eeb',
+            '再见了宝贝',
+            '干嘛呢兄弟',
+            '漂~亮',
             '你气不气？',
             '头部撞击',
             'what are you cooking？boom！',
         },
         ['buyace'] = {--买活团灭
-            general,
+            '消灭完毕',
+            '脸都秀外啦',
+            'Ceee~eeb',
+            '再见了宝贝',
+            '干嘛呢兄弟',
+            '漂~亮',
             '你气不气？',
             '头部撞击',
             '这波不亏666',
             'what are you cooking？boom！',
         },
         ['gank'] = {--单抓
-            general,
+            '消灭完毕',
+            '脸都秀外啦',
+            'Ceee~eeb',
+            '再见了宝贝',
+            '干嘛呢兄弟',
+            '漂~亮',
             '你气不气？',
             'what are you cooking？boom！',
             '猢狲把戏',

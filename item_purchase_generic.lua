@@ -118,27 +118,26 @@ local function GeneralPurchase()
 	end
 	
 	--buy the item if we have the gold
-	if ( bot:GetGold() >= cost and bot:GetItemInSlot(13) == nil ) 
+	if ( bot:GetGold() >= cost and bot:GetItemInSlot(14) == nil ) 
 	then
 		
-		-- if courier == nil then
-			-- courier = GetCourier(0);
-		-- end
+		if courier == nil then
+			courier = bot.theCourier
+		end
 		
 		--buy done by courier for secret shop item
-		-- if bot.SecretShop 
-		   -- and courier ~= nil 
-		   -- and GetCourierState(courier) == COURIER_STATE_IDLE 
-		   -- and courier:DistanceFromSecretShop() == 0 
-		-- then
-			-- if courier:ActionImmediate_PurchaseItem( bot.currentComponentToBuy ) == PURCHASE_ITEM_SUCCESS then
-				-- bot.currentComponentToBuy = nil;
-				-- bot.currListItemToBuy[#bot.currListItemToBuy] = nil; 
-				-- courier.latestUser = bot;
-				-- bot.SecretShop = false;
-				-- return
-			-- end
-		-- end
+		if bot.SecretShop 
+		   and courier ~= nil 
+		   and GetCourierState(courier) == COURIER_STATE_IDLE 
+		   and courier:DistanceFromSecretShop() == 0 
+		then
+			if courier:ActionImmediate_PurchaseItem( bot.currentComponentToBuy ) == PURCHASE_ITEM_SUCCESS then
+				bot.currentComponentToBuy = nil;
+				bot.currListItemToBuy[#bot.currListItemToBuy] = nil; 
+				bot.SecretShop = false;
+				return
+			end
+		end
 				
 		--Logic to decide in which shop bot have to buy the item
 		if CanPurchaseFromSecret   
@@ -205,8 +204,6 @@ local buyRD = false;
 local buyTP = false;
 local buyBottle = false;
 
-local buyAnotherRD = false
-local lastRDCheck  = 0;
 local buyAnotherTango = false
 local switchTime = 0
 local buyWardTime = -999
@@ -267,7 +264,7 @@ function ItemPurchaseThink()
 	--Update boots availability status to make the bot start buy support item and rain drop
 	if buyBootsStatus == false and nowTime > lastBootsCheck + 2.0 then buyBootsStatus = Item.UpdateBuyBootStatus(bot); lastBootsCheck = nowTime end
 	
-	--buy flying courier and support item
+	--buy support item
 	if bot.theRole == 'support' then
 		if nowTime < 0 
 			and botGold >= GetItemCost( "item_clarity" ) 
@@ -285,12 +282,10 @@ function ItemPurchaseThink()
 			bot:ActionImmediate_PurchaseItem("item_dust"); 
 		elseif GetItemStockCount( "item_ward_observer" ) >= 1 
 			  and buyBootsStatus == true
-			  and botGold >= GetItemCost( "item_ward_observer" ) 
 			  and Item.GetEmptyInventoryAmount(bot) >= 2 
 			  and Item.GetItemCharges(bot, "item_ward_observer") < 1  
 			  and bot:GetCourierValue() == 0
 			  and buyWardTime < nowTime - 3 *60
-			  and not Role.IsPvNMode()
 		then 
 			buyWardTime = nowTime;
 			bot:ActionImmediate_PurchaseItem("item_ward_observer"); 
@@ -360,11 +355,11 @@ function ItemPurchaseThink()
 	   and botGold >= 150 
 	   and botGold < ( 150 + botWorth/40 )
 	   and botHP < 0.08	   
-	   and botLevel < 24
+	   and botLevel < 29
 	   and GetGameMode() ~= 23
 	   and bot:WasRecentlyDamagedByAnyHero(3.1)
 	   and GetItemStockCount( "item_tome_of_knowledge" ) >= 1
-	   and Item.GetItemCharges(bot, 'item_tome_of_knowledge') < 1
+	   and Item.GetItemCharges(bot, 'item_tome_of_knowledge') <= 0
 	then
 		bot:ActionImmediate_PurchaseItem("item_tome_of_knowledge"); 
 		return;
@@ -421,7 +416,7 @@ function ItemPurchaseThink()
 	
 	--sell early game item   
 	if  ( GetGameMode() ~= 23 and botLevel > 5 and nowTime > fullInvCheck + 1.0 
-	      and ( bot:DistanceFromFountain() <= 150 or bot:DistanceFromSecretShop() <= 150 or bot:DistanceFromSideShop() <= 150) ) 
+	      and ( bot:DistanceFromFountain() <= 150 or bot:DistanceFromSecretShop() <= 150 ) ) 
 		or ( GetGameMode() == 23 and botLevel > 8 and nowTime > fullInvCheck + 1.0  )
 	then
 		local emptySlot = Item.GetEmptyInventoryAmount(bot);
@@ -483,7 +478,7 @@ function ItemPurchaseThink()
 	--sale late item 
 	if nowTime > sell_time + 1.0 
 	   and ( bot:GetItemInSlot(6) ~= nil or bot:GetItemInSlot(7) ~= nil )                 
-	   and ( bot:DistanceFromFountain() <= 150 or bot:DistanceFromSecretShop() <= 150 or bot:DistanceFromSideShop() <= 150) 
+	   and ( bot:DistanceFromFountain() <= 150 or bot:DistanceFromSecretShop() <= 150 ) 
 	then
 		sell_time = nowTime;
 		
@@ -504,7 +499,7 @@ function ItemPurchaseThink()
 	--Sell non BoT boots when have BoT
 	if nowTime > 30 *60 and not hasSelltEarlyBoots 
 	   and  ( bot:GetItemInSlot(6) ~= nil or bot:GetItemInSlot(7) ~= nil )
-	   and  ( bot:DistanceFromFountain() <= 150 or bot:DistanceFromSecretShop() <= 150 or bot:DistanceFromSideShop() <= 150 )
+	   and  ( bot:DistanceFromFountain() <= 150 or bot:DistanceFromSecretShop() <= 150 )
 	   and  ( Item.HasItem( bot, "item_travel_boots") or Item.HasItem( bot, "item_travel_boots_2")) 
 	then	
 		for i=1,#Item['tEarlyBoots']
@@ -606,28 +601,23 @@ function ItemPurchaseThink()
 	
 	--Sell cheapie when have travel_boots
 	if  nowTime > 50 *60 --and #bot.itemToBuy == 0 
-		and ( bot:GetItemInSlot(7) ~= nil or bot:GetItemInSlot(8) ~= nil )
+		and ( bot:GetItemInSlot(8) ~= nil or bot:GetItemInSlot(9) ~= nil )
 		and ( Item.HasItem(bot, 'item_travel_boots') or Item.HasItem(bot, 'item_travel_boots_2'))
-		and ( bot:DistanceFromFountain() == 0 or bot:DistanceFromSecretShop() == 0 or bot:DistanceFromSideShop() == 0)
+		and ( bot:DistanceFromFountain() == 0 or bot:DistanceFromSecretShop() == 0 )
 		and ( not Item.HasItem(bot, 'item_refresher_shard') and not Item.HasItem(bot, 'item_cheese') and not Item.HasItem(bot, "item_aegis") )
 		and ( not Item.HasItem(bot, 'item_dust') and not Item.HasItem(bot, "item_ward_observer") )
 		and ( not Item.HasItem(bot, 'item_moon_shard') and not Item.HasItem(bot, "item_hyperstone") )
 	then
 		local itemToSell = nil;
 		local itemToSellValue = 99999;
-		for i = 0, 8
+		for i = 0, 9
 		do
 			local tempItem = bot:GetItemInSlot(i);
 			if tempItem ~= nil 			   
 			then
 				local tempItemName = tempItem:GetName();
-				if tempItemName ~= 'item_black_king_bar'
-				   and tempItemName ~= 'item_satanic'
-				   and tempItemName ~= 'item_skadi'
-				   and tempItemName ~= 'item_travel_boots'
-				   and tempItemName ~= 'item_travel_boots_2'
-				   and tempItemName ~= 'item_rapier'
-				   and tempItemName ~= 'item_gem'
+				if not Item.IsNotSellItem(tempItemName)
+				   and not Item.IsNeutralItem(tempItemName)
 				   and GetItemCost(tempItemName) < itemToSellValue
 				then
 					itemToSell = tempItem;
@@ -641,6 +631,7 @@ function ItemPurchaseThink()
 			return;
 		end
 	end
+	
 		
 	--No need to buy item when no item to buy in the list
 	if #bot.itemToBuy == 0 then bot:SetNextItemPurchaseValue( 0 ); return; end
@@ -659,7 +650,7 @@ function ItemPurchaseThink()
 	end
 	
 	--Check if the bot already has the item formed from its components in their inventory (not stash)
-	if  #bot.currListItemToBuy == 0 and nowTime > lastInvCheck + 3.0 then  
+	if  #bot.currListItemToBuy == 0 and nowTime > lastInvCheck + 1.0 then  
 	    if Item.IsItemInHero(bot.currentItemToBuy) 
 		then   
 			bot.currentItemToBuy = nil;                         

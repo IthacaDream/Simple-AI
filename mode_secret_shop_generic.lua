@@ -45,7 +45,7 @@ function GetDesire()
 		return BOT_MODE_DESIRE_NONE;
 	end
 	
-	local npcCourier = GetCourier(0);	
+	local npcCourier = bot.theCourier
 	local cState = GetCourierState( npcCourier );
 	
 	if bot.SecretShop and cState ~= COURIER_STATE_MOVING  then
@@ -149,7 +149,7 @@ function X.IsSuitableToBuy()
 		or mode == BOT_MODE_DEFEND_TOWER_TOP
 		or mode == BOT_MODE_DEFEND_TOWER_MID
 		or mode == BOT_MODE_DEFEND_TOWER_BOT
-		or Enemies ~= nil and #Enemies >= 2
+		or ( Enemies ~= nil and #Enemies >= 2 )
 		or ( Enemies[1] ~= nil and X.IsStronger(bot, Enemies[1]) )
 		or GetUnitToUnitDistance(bot, GetAncient(GetTeam())) < 2300 
 		or GetUnitToUnitDistance(bot, GetAncient(GetOpposingTeam())) < 3500 

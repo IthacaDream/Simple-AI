@@ -40,17 +40,17 @@ X['sBuyList'] = {
 				"item_heavens_halberd",
 				"item_manta",
 				"item_assault",
-			  --"item_heart",
+				"item_heart",
 }
 
 X['sSellList'] = {
-	"item_crimson_guard",
+	"item_echo_sabre",
 	"item_quelling_blade",
 	
-	"item_manta",
+	"item_assault",
 	"item_echo_sabre",
 	
-	"item_heavens_halberd",
+	"item_manta",
 	"item_magic_wand",
 }
 

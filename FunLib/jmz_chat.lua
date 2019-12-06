@@ -99,6 +99,7 @@ Chat['sAllHeroList'] = {
 	'npc_dota_hero_skywrath_mage',
 	'npc_dota_hero_slardar',
 	'npc_dota_hero_slark',
+	"npc_dota_hero_snapfire",
 	'npc_dota_hero_sniper',
 	'npc_dota_hero_spectre',
 	'npc_dota_hero_spirit_breaker',
@@ -119,6 +120,7 @@ Chat['sAllHeroList'] = {
 	'npc_dota_hero_venomancer',
 	'npc_dota_hero_viper',
 	'npc_dota_hero_visage',
+	'npc_dota_hero_void_spirit',
 	'npc_dota_hero_warlock',
 	'npc_dota_hero_weaver',
 	'npc_dota_hero_windrunner',
@@ -191,7 +193,7 @@ Chat['tLanguageNameList'] = {
 	
 	[6] = {
 		['sRawName'] = 'sJpName',
-		['sLocalName'] = 'ほうぶん',
+		['sLocalName'] = 'わぶん',
 	},
 	
 	[7] = {
@@ -2154,7 +2156,7 @@ Chat['tItemNameList'] = {
 	},
 	
 	[142] = {
-		['sRawName'] = 'item_stout_shield',
+		['sRawName'] = 'item_tpscroll',
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '圆盾',
 		['sEnName'] = 0,
@@ -4219,10 +4221,10 @@ Chat['tHeroNameList'] = {
 		['sJpName'] = 0,
 		['sEsName'] = 0,
 	},
-
+	
 	--118
 	['npc_dota_hero_snapfire'] = {
-		['sNormName'] = '电炎绝手',
+		['sNormName'] = '姨妈',
 		['sShortName'] = 'snapfire',
 		['sCnName'] = '电炎绝手',
 		['sEnName'] = 0,
@@ -4232,11 +4234,11 @@ Chat['tHeroNameList'] = {
 		['sJpName'] = 0,
 		['sEsName'] = 0,
 	},
-
+	
 	--119
 	['npc_dota_hero_void_spirit'] = {
-		['sNormName'] = '虚无之灵',
-		['sShortName'] = 'void spirit',
+		['sNormName'] = '紫猫',
+		['sShortName'] = 'void',
 		['sCnName'] = '虚无之灵',
 		['sEnName'] = 0,
 		['sFrName'] = 0,
@@ -4244,7 +4246,9 @@ Chat['tHeroNameList'] = {
 		['sRuName'] = 0,
 		['sJpName'] = 0,
 		['sEsName'] = 0,
-	}
+	},
+	
+
 }
 
 

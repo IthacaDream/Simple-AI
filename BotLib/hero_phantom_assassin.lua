@@ -24,8 +24,9 @@ local tTalentTreeList = {
 }
 
 local tAllAbilityBuildList = {
-						{1,2,1,3,1,6,2,2,2,1,6,3,3,3,6},
+						{1,2,1,3,1,6,1,3,3,3,6,2,2,2,6},
 						{1,2,1,3,1,6,1,2,2,2,6,3,3,3,6},
+						{1,3,1,2,1,6,1,3,3,3,6,2,2,2,6},
 }
 
 local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
@@ -178,7 +179,7 @@ function X.ConsiderQ()
 	local nSkillLV    = abilityQ:GetLevel(); 
 	local nBonusPer   = 0.1 + 0.15 * nSkillLV;
 	local nDamage     = 65 + nAttackDamage * nBonusPer;
-	local nBonusDamage= 24 * nBonusPer;
+	local nBonusDamage= 18 * nBonusPer;
 	
 	local nDamageType = DAMAGE_TYPE_PHYSICAL;
 	

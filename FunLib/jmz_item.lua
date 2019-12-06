@@ -349,7 +349,102 @@ ItemModule['tConsumableList'] = {
 	'item_infused_raindrop',
 }
 
---'item_stout_shield',
+local sNotSellItemList = {
+	'item_black_king_bar',
+	'item_cheese',
+	'item_dust',
+	'item_gem',
+	'item_hyperstone',
+	'item_rapier',
+	'item_refresher_shard',
+	'item_satanic',
+	'item_skadi',
+	'item_travel_boots',
+	'item_travel_boots_2',
+	'item_ward_observer',
+}
+local tNotSellItemList = {}
+for _,sItem in pairs(sNotSellItemList)
+do
+	tNotSellItemList[sItem] = true
+end
+
+local tNeutralItemLevelList = {
+
+	['item_arcane_ring'] = 1,
+	['item_broom_handle'] = 1,
+	['item_elixir'] = 1,
+	['item_faded_broach'] = 1,
+	['item_iron_talon'] = 1,
+	['item_keen_optic'] = 1,
+	['item_mango_tree'] = 1,
+	['item_ocean_heart'] = 1,
+	['item_poor_mans_shield'] = 1,
+	['item_royal_jelly'] = 1,
+	['item_trusty_shovel'] = 1,
+	['item_recipe_ironwood_tree'] = 1,
+	['item_ironwood_tree'] = 1,
+
+	['item_dragon_scale'] = 2,
+	['item_essence_ring'] = 2,
+	['item_grove_bow'] = 2,
+	['item_imp_claw'] = 2,
+	['item_nether_shawl'] = 2,
+	['item_philosophers_stone'] = 2,
+	['item_pupils_gift'] = 2,
+	['item_repair_kit'] = 2,
+	['item_ring_of_aquila'] = 2,
+	['item_vampire_fangs'] = 2,
+
+	['item_clumsy_net'] = 3,
+	['item_craggy_coat'] = 3,
+	['item_enchanted_quiver'] = 3,
+	['item_greater_faerie_fire'] = 3,
+	['item_helm_of_the_undying'] = 3,
+	['item_mind_breaker'] = 3,
+	['item_orb_of_destruction'] = 3,
+	['item_paladin_sword'] = 3,
+	['item_quickening_charm'] = 3,
+	['item_spider_legs'] = 3,
+	['item_third_eye'] = 3,
+	['item_titan_sliver'] = 3,
+	['item_recipe_vambrace'] = 3,
+	['item_vambrace'] = 3,
+
+
+	['item_flicker'] = 4,
+	['item_havoc_hammer'] = 4,
+	['item_illusionsts_cape'] = 4,
+	['item_panic_button'] = 4,
+	['item_minotaur_horn'] = 4,
+	['item_ninja_gear'] = 4,
+	['item_princes_knife'] = 4,
+	['item_spell_prism'] = 4,
+	['item_spy_gadget'] = 4,
+	['item_the_leveller'] = 4,
+	['item_timeless_relic'] = 4,
+	['item_witless_shako'] = 4,
+
+
+	['item_apex'] = 5,
+	['item_ballista'] = 5,
+	['item_demonicon'] = 5,
+	['item_desolator_2'] = 5,
+	['item_ex_machina'] = 5,
+	['item_recipe_fallen_sky'] = 5,
+	['item_fallen_sky'] = 5,
+	['item_force_boots'] = 5,
+	['item_fusion_rune'] = 5,
+	['item_mirror_shield'] = 5,
+	['item_phoenix_ash'] = 5,
+	['item_pirate_hat'] = 5,
+	['item_seer_stone'] = 5,
+	['item_recipe_trident'] = 5,
+	['item_trident'] = 5,
+	['item_woodland_striders'] = 5,
+
+}
+
 
 if true then
 
@@ -361,7 +456,7 @@ ItemModule['item_arcane_boots']			 = { 'item_boots', 'item_energy_booster' }
 
 ItemModule['item_armlet']				 = { 'item_helm_of_iron_will', 'item_gloves', 'item_blades_of_attack', 'item_recipe_armlet' }
 
-ItemModule['item_assault']				 = { 'item_buckler',  'item_platemail', 'item_hyperstone', 'item_recipe_assault' }
+ItemModule['item_assault']				 = { 'item_platemail', 'item_hyperstone', 'item_buckler', 'item_recipe_assault' }
 
 ItemModule['item_ancient_janggo']		 = { 'item_crown', 'item_wind_lace', 'item_gloves', 'item_recipe_ancient_janggo' }
 
@@ -385,7 +480,7 @@ ItemModule['item_butterfly']			 = { 'item_quarterstaff', 'item_eagle', 'item_tal
 
 ItemModule['item_basher']				 = { 'item_mithril_hammer', 'item_belt_of_strength', 'item_recipe_basher' }
 
-ItemModule['item_crimson_guard']		 = { 'item_helm_of_iron_will', 'item_vanguard', 'item_recipe_crimson_guard' }
+ItemModule['item_crimson_guard']		 = { 'item_vanguard', 'item_helm_of_iron_will', 'item_recipe_crimson_guard' }
 
 ItemModule['item_cyclone']				 = { 'item_wind_lace', 'item_void_stone', 'item_staff_of_wizardry', 'item_recipe_cyclone' }
 
@@ -590,7 +685,7 @@ ItemModule['item_double_crown'] 			= { 'item_crown', 'item_crown',}
 
 ItemModule['item_broken_urn']           	= { 'item_ring_of_protection', 'item_sobi_mask', 'item_recipe_urn_of_shadows' }
 
-ItemModule['item_broken_vladmir']       	= { 'item_buckler', 'item_lifesteal', 'item_recipe_vladmir' }
+ItemModule['item_broken_vladmir']       	= { 'item_lifesteal', 'item_buckler', 'item_recipe_vladmir' }
 
 ItemModule['item_broken_hurricane_pike']	= { 'item_force_staff', 'item_recipe_hurricane_pike' }
 
@@ -635,11 +730,11 @@ ItemModule['item_sven_outfit']				= { 'item_tango', 'item_flask', 'item_quelling
 
 ----------------------------------------------------------------------
 
-ItemModule['item_tank_outfit']			   = { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_double_branches', 'item_magic_stick', 'item_bracer', 'item_recipe_magic_wand', 'item_ring_of_basilius', 'item_power_treads_str', 'item_broken_vladmir', 'item_crimson_guard' }
+ItemModule['item_tank_outfit']			   = { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_magic_stick', 'item_double_branches', 'item_bracer', 'item_recipe_magic_wand', 'item_power_treads_str', 'item_crimson_guard' }
 
-ItemModule['item_dragon_knight_outfit']    = { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_double_branches', 'item_magic_stick', 'item_recipe_magic_wand', 'item_ring_of_basilius', 'item_power_treads_str', 'item_soul_ring', 'item_broken_vladmir', 'item_crimson_guard' }
+ItemModule['item_dragon_knight_outfit']    = { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_magic_stick', 'item_double_branches', 'item_recipe_magic_wand', 'item_power_treads_str', 'item_soul_ring', 'item_crimson_guard' }
 
-ItemModule['item_ogre_magi_outfit']		   = { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_double_branches', 'item_magic_stick', 'item_recipe_magic_wand', 'item_ring_of_basilius', 'item_power_treads_int', 'item_hand_of_midas', 'item_broken_vladmir', 'item_crimson_guard' }
+ItemModule['item_ogre_magi_outfit']		   = { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_magic_stick', 'item_double_branches', 'item_recipe_magic_wand', 'item_power_treads_int', 'item_hand_of_midas', 'item_crimson_guard' }
 
 
 --------------------------------------------------------------------------
@@ -699,6 +794,24 @@ function ItemModule.SetItemBuild(sItemList)
 		ItemModule[sItemName] = sItemList 
 	end
 	
+end
+
+function ItemModule.IsNeutralItem(sItemName)
+
+	return tNeutralItemLevelList[sItemName] ~= nil
+
+end
+
+function ItemModule.GetNetralItemLevel(sItemName)
+
+	return tNeutralItemLevelList[sItemName]
+
+end
+
+function ItemModule.IsNotSellItem(sItemName)
+
+	return tNotSellItemList[sItemName] == true
+
 end
 
 function ItemModule.IsDebugItem(sItemName)

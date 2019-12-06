@@ -19,7 +19,7 @@ local sAbilityList = J.Skill.GetAbilityList(bot)
 local tTalentTreeList = {
 						['t25'] = {10, 0},
 						['t20'] = {0, 10},
-						['t15'] = {10, 0},
+						['t15'] = {0, 10},
 						['t10'] = {0, 10},
 }
 
@@ -34,7 +34,7 @@ local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
 X['sBuyList'] = {
 				'item_mid_outfit',
-				'item_infused_raindrop',
+				--'item_infused_raindrop',
 				"item_dragon_lance",
 				"item_yasha",
 				"item_manta",

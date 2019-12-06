@@ -32,10 +32,10 @@ Site.nTowerList = {
 Site.nRuneList = {
 				RUNE_POWERUP_1, --上
 				RUNE_POWERUP_2, --下
-				RUNE_BOUNTY_1,	--天辉上
-				RUNE_BOUNTY_2,	--夜魇下
-				RUNE_BOUNTY_3,	--天辉下
-				RUNE_BOUNTY_4,	--夜魇上
+				RUNE_BOUNTY_1,	--天辉上  --天辉神秘符
+				RUNE_BOUNTY_2,	--夜魇下  --天辉优势路符
+				RUNE_BOUNTY_3,	--天辉下 --夜魇神秘符
+				RUNE_BOUNTY_4,	--夜魇上 --夜魇优势路符
 }
 
 Site.nShopList = {
@@ -49,10 +49,7 @@ Site.nShopList = {
 Site["top_power_rune"] = Vector(-1767, 1233);
 Site["bot_power_rune"] = Vector(2597, -2014);
 
-Site["roshan"] = Vector(-2328, 1765);
-
-Site["top_side_shop"] = Vector(-7236, 4444);
-Site["bot_side_shop"] = Vector(7253, -4128);
+Site["roshan"] = Vector(-2862,2260);
 
 Site["dire_ancient"] = Vector(5517, 4981);
 Site["radiant_ancient"] = Vector(-5860, -5328);
@@ -117,47 +114,51 @@ Site["dire_hard"] = {
 }
 	
 local visionRad = 1600; --假眼视野范围
-	
+
+local RADIANT_RUNE_WARD = Vector(2467, -2090, 0) 
+
 local RADIANT_T3TOPFALL = Vector(-6600.000000, -3072.000000, 0.000000); --高地防御眼
 local RADIANT_T3MIDFALL = Vector(-4314.000000, -3887.000000, 0.000000);
 local RADIANT_T3BOTFALL = Vector(-3586.000000, -6131.000000, 0.000000);
 
-local RADIANT_T2TOPFALL = Vector(-4340.000000, -1015.000000, 0.000000);
-local RADIANT_T2MIDFALL = Vector(-1023.000000, -4605.000000, 0.000000); --天辉下路野区高台
-local RADIANT_T2BOTFALL = Vector(1010.000000, -5321.000000, 0.000000);
+local RADIANT_T2TOPFALL = Vector(-4355, -1011, 0);  --二塔野区高台
+local RADIANT_T2MIDFALL = Vector(-1791, -4870, 0); --天辉下路野区高台
+local RADIANT_T2BOTFALL = Vector(1024, -4118, 0);  --下路野区内高台
 
-local RADIANT_T1TOPFALL = Vector(-5117.000000, 2068.000000, 0.00000);  --天辉上路野区高台
-local RADIANT_T1MIDFALL = Vector(991.000000, -1574.000000, 0.000000);
-local RADIANT_T1BOTFALL = Vector(5093.000000, -3722.000000, 0.000000);
+local RADIANT_T1TOPFALL = Vector(-5369, 2313, 0);  --天辉上路野区高台
+local RADIANT_T1MIDFALL = Vector(778, -2305, 0);  --中路野区高台
+local RADIANT_T1BOTFALL = Vector(3458, -5185, 0); --下路野区十字路口
 
-local RADIANT_MANDATE1 = Vector(-1250.000000, -250.000000, 0.000000);   ---天辉中路河道眼        
-local RADIANT_MANDATE2 = Vector(3860.000000, -2311.000000, 0.000000);   ---天辉三符眼
+local RADIANT_MANDATE1 = Vector(-1250, -250, 0);   ---天辉中路河道眼        
+local RADIANT_MANDATE2 = RADIANT_RUNE_WARD  ---天辉看符眼
 
-local RADIANT_AGGRESSIVETOP  = Vector(-1221.000000, 4833.000000, 0.000000);
-local RADIANT_AGGRESSIVEMID1 = Vector(1015.000000, 4853.000000, 0.000000);
-local RADIANT_AGGRESSIVEMID2 = Vector(5116.000000, -764.000000, 0.000000);
-local RADIANT_AGGRESSIVEBOT  = Vector(5115.000000, -764.000000, 0.000000);
+local RADIANT_AGGRESSIVETOP  = Vector(1026, 4865, 0); --敌方上路野区高台
+local RADIANT_AGGRESSIVEMID1 = Vector(-247, 2056, 0); --敌方中路高台
+local RADIANT_AGGRESSIVEMID2 = Vector(2044, -772, 0); --敌方中路河道高台
+local RADIANT_AGGRESSIVEBOT  = Vector(5118, 759, 0);  --敌方下路高台
 
 ---DIRE WARDING SPOT
+local DIRE_RUNE_WARD = Vector(2510, -2007, 0)
+
 local DIRE_T3TOPFALL = Vector(3087.000000, 5690.000000, 0.000000);
 local DIRE_T3MIDFALL = Vector(4024.000000, 3445.000000, 0.000000);
 local DIRE_T3BOTFALL = Vector(6354.000000, 2606.000000, 0.000000);
 
-local DIRE_T2TOPFALL = Vector(1022.000000, 4868.000000, 0.000000);    --夜魇上路野区高台
-local DIRE_T2MIDFALL = Vector(1012.000000, 2247.000000, 0.000000);    --夜魇中路上野区入口
-local DIRE_T2BOTFALL = Vector(5113.000000, 773.000000, 0.000000);
+local DIRE_T2TOPFALL = Vector(1026, 4865, 0);    --夜魇上路野区高台
+local DIRE_T2MIDFALL = Vector(2044, -772, 0);    --夜魇中路河道野区入口
+local DIRE_T2BOTFALL = Vector(5118, 759, 0); --夜魇下路高台
 
-local DIRE_T1TOPFALL = Vector(-5697.000000, 3212.000000, 0.000000);
-local DIRE_T1MIDFALL = Vector(1031.000000, -736.000000, 0.000000);
-local DIRE_T1BOTFALL = Vector(5096.000000, -760.000000, 0.000000);
+local DIRE_T1TOPFALL = Vector(-2056, 4863, 0);   --夜魇上路一塔野区高台
+local DIRE_T1MIDFALL = Vector(-247, 2056, 0);    --夜魇中路一塔野区入口高台
+local DIRE_T1BOTFALL = Vector(4866, -2312, 0);   --夜魇下路一塔高台
 
-local DIRE_MANDATE1 =  Vector(3662.000000, -2064.000000, 0.000000);      --夜魇三符眼       
-local DIRE_MANDATE2 =  Vector(-470.000000, 360.000000, 0.000000);        --夜魇中路河道眼       
+local DIRE_MANDATE1 =  DIRE_RUNE_WARD       --夜魇看符眼       
+local DIRE_MANDATE2 =  Vector(-470, 360, 0);   --夜魇中路河道眼       
 
-local DIRE_AGGRESSIVETOP  = Vector(-4625.000000, 738.000000, 0.000000);
-local DIRE_AGGRESSIVEMID1 = Vector(-4348.000000, -1014.000000, 0.000000);
-local DIRE_AGGRESSIVEMID2 = Vector(-1030.000000, -4631.000000, 0.000000);
-local DIRE_AGGRESSIVEBOT  = Vector(1826.000000, -4266.000000, 0.000000);
+local DIRE_AGGRESSIVETOP  = Vector(-5369, 2313, 0);   --敌方一塔高台眼
+local DIRE_AGGRESSIVEMID1 = Vector(-4355, -1011, 0);   --上路高台
+local DIRE_AGGRESSIVEMID2 = Vector(-1791, -4870, 0);  --中下路高台
+local DIRE_AGGRESSIVEBOT  = Vector(1024, -4118, 0);  --敌方下路野区内高台眼
 
 
 local WardSpotTowerFallRadiant = {
@@ -279,8 +280,8 @@ function Site.GetAvailableSpot(bot)
 		end
 	end
 	
-	--8分钟后计算进攻眼位
-	if DotaTime() > 8 *60 then
+	--10分钟后计算进攻眼位
+	if DotaTime() > 10 *60 then
 		for _,s in pairs(Site.GetAggressiveSpot()) do
 			if GetUnitToLocationDistance(bot, s) <= 1200 and not Site.CloseToAvailableWard(s) then
 				table.insert(temp, s);
@@ -493,7 +494,9 @@ function Site.RefreshCamp(bot)
 	end
 	
 	local nCamps = #AllCamps;
+	
 	return AllCamps, nCamps;
+	
 end
 
 
@@ -626,9 +629,10 @@ function Site.FindFarmNeutralTarget(Creeps)
 		end	
 	end
 	
-	if botName == "npc_dota_hero_viper"
+	if Site.IsHaveItem(bot,"item_bfury" )
+	   or Site.IsHaveItem(bot,"item_maelstrom")
+	   or botName == "npc_dota_hero_viper"
 	   or botName == "npc_dota_hero_razor"
-	   or botName == "npc_dota_hero_ogre_magi"
 	   or botName == "npc_dota_hero_huskar"
 	   or ( botName == "npc_dota_hero_medusa"
 			and bot:GetLevel() >= 8  )
@@ -638,13 +642,7 @@ function Site.FindFarmNeutralTarget(Creeps)
 	        and bot:GetMana() > 120 and bot:GetLevel() >= 13 )
 	   or ( botName == "npc_dota_hero_dragon_knight" 
 	        and bot:GetAttackRange() > 330 )
-	   or ( botName == "npc_dota_hero_sniper" 
-	        and Site.IsHaveItem(bot,"item_maelstrom" ) )
-	   or ( botName == "npc_dota_hero_phantom_assassin" 
-	        and bot:GetLevel() >= 15  )
-	   or ( botName == "npc_dota_hero_antimage" 
-	        and Site.IsHaveItem(bot,"item_bfury" ) )
-	then
+   then
 		hTarget = Site.GetMaxHPCreep(Creeps);
 		if hTarget ~= nil then return hTarget end		
 	end
@@ -937,14 +935,14 @@ Site.ConsiderIsTimeToFarm["npc_dota_hero_bristleback"] = function()
 
 	if bot:GetLevel() > 12
 		and #allies < 3
-		and botNetWorth < 12222
+		and botNetWorth < 15000
 	then 
 		return true;
 	end
 	
 	if bot:GetLevel() > 20
 	   and #allies < 2
-	   and botNetWorth < 18888
+	   and botNetWorth < 21000
 	then 
 		return true;
 	end	
@@ -1025,7 +1023,7 @@ Site.ConsiderIsTimeToFarm["npc_dota_hero_drow_ranger"] = function()
 	end
 	
 	if Site.IsHaveItem(bot,"item_ultimate_scepter")
-	   and botNetWorth < 21111
+	   and botNetWorth < 23000
 	then
 		local allies = bot:GetNearbyHeroes(1600,false,BOT_MODE_NONE);
 		if #allies < 2
@@ -1474,9 +1472,7 @@ end
 function Site.IsHaveItem(bot,item_name)
 
     local slot = bot:FindItemSlot(item_name);
-	
-	if slot < 0 then return false end
-	
+		
 	if slot >= 0 and slot <= 5 then
 		return true;
 	end

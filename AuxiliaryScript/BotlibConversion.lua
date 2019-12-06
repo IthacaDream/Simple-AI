@@ -150,6 +150,9 @@ local abilityNameList = {
     'void_spirit_astral_step',
     'void_spirit_dissimilate',
     'void_spirit_resonant_pulse',
+    'storm_spirit_ball_lightning',
+    'storm_spirit_electric_vortex',
+    'storm_spirit_static_remnant'
 }
 
 --将英雄技能初始入变量

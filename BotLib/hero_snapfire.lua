@@ -35,14 +35,14 @@ local tDefaultGroupedData = {
 		'item_greater_crit',
 	},
 	['Sell'] = {
-		"item_maelstrom",
 		"item_mjollnir",
+		"item_maelstrom",
 
-		"item_dragon_lance",
 		"item_hurricane_pike",
+		"item_dragon_lance",
 
-		"item_boots",
 		"item_travel_boots",
+		"item_boots",
 	}
 }
 

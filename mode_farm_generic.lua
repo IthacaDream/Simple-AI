@@ -14,10 +14,14 @@ local bot = GetBot();
 local bDebugMode = (bot:GetUnitName() == "npc_dota_hero_medusa")
 local X = {}
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
-local U = require( GetScriptDirectory() .. "/AuxiliaryScript/RoleTargetsData")
 local C = require( GetScriptDirectory() .. "/AuxiliaryScript/GameLive")
+local Http = require( GetScriptDirectory() .. "/AuxiliaryScript/HttpServer")
 local RB = Vector(-7174.000000, -6671.00000,  0.000000)
 local DB = Vector(7023.000000, 6450.000000, 0.000000)
+
+local RDropLocation = Vector(-7143,-6580,520)
+local DDropLocation = Vector(7009,6355,516)
+
 local botName = bot:GetUnitName();
 local minute = 0;
 local sec = 0;
@@ -108,13 +112,13 @@ function GetDesire()
 			bot:ActionImmediate_Chat( sMessage, false);
 			bot:ActionImmediate_Chat("QQ交流群:632117330",true);
 		elseif not J.Role.IsUserMode() and RandomInt(1,9) > 2
-		then
-			if RandomInt(1,9) > 5
 			then
-				bot:ActionImmediate_Chat("支持设置AI策略的功能,加群了解一下.",true);
-			else
-				bot:ActionImmediate_Chat("跟车队一起玩超疯狂AI,加群体验一下.",true);
-			end
+				if RandomInt(1,9) > 5
+				then				
+					bot:ActionImmediate_Chat("支持设置AI策略的功能,加群了解一下.",true);
+				else
+					bot:ActionImmediate_Chat("跟车队一起玩超疯狂AI,加群体验一下.",true);
+				end
 		end
 		bPushNoticeDone = true
 	end
@@ -1149,14 +1153,14 @@ function X.CouldBlade(bot,nLocation)
 	then
 		local trees = bot:GetNearbyTrees(380);
 		local dist = GetUnitToLocationDistance(bot,nLocation);
-		local locStar = J.Site.GetXUnitsTowardsLocation(bot, nLocation, 32 );
-		local locEnd  = J.Site.GetXUnitsTowardsLocation(bot, nLocation, dist - 32 );
+		local starLocation = J.Site.GetXUnitsTowardsLocation(bot, nLocation, 32 );
+		local endLocation  = J.Site.GetXUnitsTowardsLocation(bot, nLocation, dist - 32 );
 		for _,t in pairs(trees)
 		do
 			if t ~= nil
 			then
 				local treeLoc = GetTreeLocation(t);
-				local tResult = PointToLineDistance(locStar, locEnd, treeLoc);
+				local tResult = PointToLineDistance(starLocation, endLocation, treeLoc);
 				if tResult ~= nil 
 				   and tResult.within 
 				   and tResult.distance <= 96

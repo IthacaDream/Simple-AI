@@ -37,16 +37,17 @@ X['sBuyList'] = {
 				'item_ogre_magi_outfit',
 				"item_crimson_guard",
 				"item_ultimate_scepter",
-				sRandomItem,
+				"item_sheepstick",
+				"item_octarine_core",
 				"item_assault",
 }
 
 X['sSellList'] = {
 
-	"item_crimson_guard",
+	"item_ultimate_scepter",
 	"item_quelling_blade",
 		
-	sRandomItem,
+	"item_octarine_core",
 	"item_magic_wand",
 	
 	"item_assault",

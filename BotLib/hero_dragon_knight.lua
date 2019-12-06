@@ -39,13 +39,15 @@ X['sBuyList'] = {
 				"item_heavens_halberd",
 				"item_assault",
 				"item_heart",
+				"item_black_king_bar",
 }
 
 X['sSellList'] = {
-	"item_crimson_guard",
+
+	"item_heavens_halberd",
 	"item_quelling_blade",
 	
-	"item_assault",
+	"item_heart",
 	"item_magic_wand",
 }
 
@@ -334,7 +336,7 @@ function X.ConsiderW()
 		nCastRange = 400;
 	end
 		
-	local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( nCastRange + 100, true, BOT_MODE_NONE );
+	local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( nCastRange + 200, true, BOT_MODE_NONE );
 	
 	--if we can kill any enemies
 	for _,npcEnemy in pairs(tableNearbyEnemyHeroes)

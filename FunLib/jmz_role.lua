@@ -10,8 +10,8 @@
 local X = {}
 
 local sBotVersion = "New";
-local sVersionDate = " 1.2.1 dev"
-local sABAVersionDate = sBotVersion.." 7.23,2019/12/21."
+local sVersionDate = " 1.2.1"
+local sABAVersionDate = sBotVersion.." 7.23,2019/12/03"
 
 function X.GetBotVersion()
 	return sBotVersion,sVersionDate,sABAVersionDate;
@@ -1869,11 +1869,6 @@ end
 X['lastbbtime'] = -90;
 function X.ShouldBuyBack()
 	return DotaTime() > X['lastbbtime'] + 1.0;
-end
-
-X['courierReturnTime'] = -90;
-function X.ShouldUseCourier()
-	return DotaTime() > X['courierReturnTime'] + 5.0;
 end
 
 X['lastFarmTpTime'] = -90;

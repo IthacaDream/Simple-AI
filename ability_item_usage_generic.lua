@@ -66,7 +66,7 @@ local function AbilityLevelUpComplement()
 	end	
 	
 	if bot:GetAbilityPoints() > 0 
-	   and sAbilityLevelUpList[1] ~= nil
+		and bot:GetLevel() <= 25
 	then
 		local ability = bot:GetAbilityByName(sAbilityLevelUpList[1]);
 		if ability ~= nil 
@@ -184,85 +184,84 @@ end
 local courierTime = -90;
 local cState = -1;
 bot.SShopUser = false;
-if nReturnTime == nil then nReturnTime = -90; end
-
-local nCourierStartDelay = RandomInt(1,30);
-
+local nReturnTime = -90; 
 
 local function CourierUsageComplement()
 
 	if GetGameMode() == 23 
+	   or DotaTime() < -60
 	   or bot:HasModifier("modifier_arc_warden_tempest_double") 
-	   or GetNumCouriers() == 0 
-	   or not J.Role.ShouldUseCourier()
+	   or nReturnTime + 5.0 > DotaTime()
 	then
 		return;
 	end
 	
+	if bot.theCourier == nil then bot.theCourier = X.GetBotCourier(bot) end
+	
 	--------*******----------------*******----------------*******--------
-	local npcCourier = GetCourier(0);	
+	local bDebugCourier = ( 1 == 10 )
+	local npcCourier = bot.theCourier
 	local cState = GetCourierState( npcCourier );
-	local courierPHP = npcCourier:GetHealth() / npcCourier:GetMaxHealth(); 
+	local courierHP = npcCourier:GetHealth() / npcCourier:GetMaxHealth(); 
 	local nowTime   = DotaTime();
 	local botIsAlive = bot:IsAlive();
-	local useCourierCD = 2.0;
+	local botLV = bot:GetLevel();
+	local useCourierCD = 1.2;
 	local protectCourierCD = 5.0;
 	--------*******----------------*******----------------*******--------
 	
-	
-	if cState == COURIER_STATE_DEAD then
-		npcCourier.latestUser = nil;
-		return
-	end	
-	
+		
+	if cState == COURIER_STATE_DEAD then return	end	
 	
 	if X.IsCourierTargetedByUnit(npcCourier) 
 	then
 		if nowTime > nReturnTime + protectCourierCD then
 			nReturnTime = nowTime;
-			J.Role['courierReturnTime'] = nowTime;
-			bot:ActionImmediate_Courier( npcCourier, COURIER_ACTION_RETURN );
+			J.SetReportMotive(bDebugCourier,"IsCourierTargetedByUnit");
+			bot:ActionImmediate_Courier( npcCourier, COURIER_ACTION_RETURN_STASH_ITEMS );
+			if bot:GetLevel() >= 10 then bot:ActionImmediate_Courier( npcCourier, COURIER_ACTION_BURST ) end
+			-- local abilityBurst = npcCourier:GetAbilityByName('courier_burst');
+			-- if abilityBurst:IsFullyCastable() then end
 			return;
 		end
 	end
 		
-	if ( IsCourierAvailable() and cState ~= COURIER_STATE_IDLE )
-	    or ( cState == COURIER_STATE_IDLE and npcCourier.latestUser == nil )
+	if bot.SShopUser and ( not botIsAlive or bot:GetActiveMode() == BOT_MODE_SECRET_SHOP or not bot.SecretShop  ) 
 	then
-		npcCourier.latestUser = "temp";
-	end
-	
-	
-	if bot.SShopUser and ( not botIsAlive or bot:GetActiveMode() == BOT_MODE_SECRET_SHOP or not bot.SecretShop  ) then
-		--bot:ActionImmediate_Chat( "Releasing the courier to anticipate secret shop stuck", true );
-		npcCourier.latestUser = "temp";
 		bot.SShopUser = false;
-		bot:ActionImmediate_Courier( npcCourier, COURIER_ACTION_RETURN );
+		J.SetReportMotive(bDebugCourier,"Releasing the courier to anticipate secret shop stuck");
+		bot:ActionImmediate_Courier( npcCourier, COURIER_ACTION_RETURN_STASH_ITEMS );
 		return
 	end
 	
-	if npcCourier.latestUser ~= nil 
-	   and ( IsCourierAvailable() or cState == COURIER_STATE_RETURNING_TO_BASE or cState == COURIER_STATE_IDLE ) 
+	if (cState == COURIER_STATE_RETURNING_TO_BASE 
+		or cState == COURIER_STATE_AT_BASE
+		or cState == COURIER_STATE_IDLE ) 
 	   and nowTime > nReturnTime + protectCourierCD  
 	then 
 		
-		if cState == COURIER_STATE_AT_BASE and courierPHP < 0.96 then
+		if cState == COURIER_STATE_AT_BASE and courierHP < 0.9 then
 			return;
 		end
 		
 		--RETURN COURIER TO BASE WHEN IDLE (there be a bug to test)
-		if cState == COURIER_STATE_IDLE and npcCourier:DistanceFromFountain() > 800 then
-			bot:ActionImmediate_Courier( npcCourier, COURIER_ACTION_RETURN );
+		if cState == COURIER_STATE_IDLE and npcCourier:DistanceFromFountain() > 800 
+		then
+			J.SetReportMotive(bDebugCourier,"RETURN COURIER TO BASE WHEN IDLE");
+			bot:ActionImmediate_Courier( npcCourier, COURIER_ACTION_RETURN_STASH_ITEMS );
 			return
 		end
 		
 		--TAKE ITEM FROM STASH
-		if  botIsAlive and cState == COURIER_STATE_AT_BASE
+		if botIsAlive 
+		   and ( cState == COURIER_STATE_AT_BASE
+				 or ( cState == COURIER_STATE_IDLE and npcCourier:DistanceFromFountain() < 900 ) )
 		then
 			local nCSlot = X.GetCourierEmptySlot(npcCourier);
 			local nMSlot = X.GetNumStashItem(bot);
 			if nMSlot > 0 and nMSlot <= nCSlot
 			then
+				--J.SetReportMotive(bDebugCourier,"TAKE ITEM FROM STASH");
 				bot:ActionImmediate_Courier( npcCourier, COURIER_ACTION_TAKE_STASH_ITEMS );
 				courierTime = nowTime;
 			end
@@ -270,26 +269,24 @@ local function CourierUsageComplement()
 		
 		--MAKE COURIER GOES TO SECRET SHOP
 		if  botIsAlive and bot.SecretShop and npcCourier:DistanceFromFountain() < 7000 
-			and X.GetCourierEmptySlot(npcCourier) >= 2 and courierPHP > 0.95
+			and X.GetCourierEmptySlot(npcCourier) >= 2 and courierHP > 0.95
 		    and nowTime > courierTime + useCourierCD 
 		then
-			--bot:ActionImmediate_Chat( "Using Courier for secret shop.", true );
+			J.SetReportMotive(bDebugCourier,"MAKE COURIER GOES TO SECRET SHOP");
 			bot:ActionImmediate_Courier( npcCourier, COURIER_ACTION_SECRET_SHOP )
-			npcCourier.latestUser = bot;
 			bot.SShopUser = true;
-			--X.UpdateSShopUserStatus(bot);
 			courierTime = nowTime;
 			return
 		end
 		
 		--TRANSFER ITEM IN COURIER
-		if botIsAlive and bot:GetCourierValue() > 0 and courierPHP > 0.95
-		   and not X.IsInvFull(bot)
-		   and ( npcCourier:DistanceFromFountain() < 6800 or GetUnitToUnitDistance(bot, npcCourier) < 1800 ) 
+		if botIsAlive and bot:GetCourierValue() > 0 and courierHP > 0.95
+		   and ( not X.IsInvFull(bot) or ( X.GetNumStashItem(bot) == 0 and bot.currListItemToBuy ~= nil and #bot.currListItemToBuy == 0) )
+		   and ( npcCourier:DistanceFromFountain() < 4000 + botLV * 200 or GetUnitToUnitDistance(bot, npcCourier) < 1800 ) 
 		   and nowTime > courierTime + useCourierCD
 		then
+			J.SetReportMotive(bDebugCourier,"TRANSFER ITEM IN COURIER");
 			bot:ActionImmediate_Courier( npcCourier, COURIER_ACTION_TRANSFER_ITEMS )
-			npcCourier.latestUser = bot;
 			courierTime = nowTime;
 			return
 		end
@@ -299,12 +296,11 @@ local function CourierUsageComplement()
 		    and ( cState == COURIER_STATE_AT_BASE 
 			      or (cState == COURIER_STATE_IDLE and npcCourier:DistanceFromFountain() < 800 ) )  
 			and bot:GetCourierValue() > 0 
-			and X.GetNumStashItem(bot) < 3
-			and X.GetCourierEmptySlot(npcCourier) >= 4
+			and X.GetNumStashItem(bot) + 4 <= X.GetCourierEmptySlot(npcCourier)
 			and nowTime > courierTime + useCourierCD
 		then
+			J.SetReportMotive(bDebugCourier,"RETURN STASH ITEM WHEN DEATH");
 			bot:ActionImmediate_Courier( npcCourier, COURIER_ACTION_RETURN_STASH_ITEMS );
-			npcCourier.latestUser = bot;
 			courierTime = nowTime;
 			return
 		end
@@ -313,60 +309,19 @@ local function CourierUsageComplement()
 	
 end
 
-
-function X.IsValueToUseCourier(bot)
+function X.GetBotCourier(bot)
 	
-	-- if DotaTime() < 90
-		-- and bot:GetStashValue() > 0
-	-- then
-		-- return true;
-	-- end	
-	
-	-- if bot:GetStashValue() > 199
-	-- then
-		-- return true;
-	-- end
-	
-	-- if bot:GetStashValue() > 49
-	   -- and X.GetCourierEmptySlot(GetCourier(0)) < 9
-	-- then
-		-- return true;
-	-- end
-	
-	return true;
-end
-
-
-
-function X.IsTheClosestToCourier(bot, npcCourier)
-	local numPlayer =  GetTeamPlayers(GetTeam());
-	local closest = nil;
-	local closestD = 100000;
-	for i = 1, #numPlayer
+	local numPlayer = GetTeamPlayers(GetTeam());
+	for i = 1, 5
 	do
-		local member =  GetTeamMember(i);
-		if member ~= nil and member:IsAlive() 
-		   and IsPlayerBot(numPlayer[i]) 
-		   and member:GetCourierValue() > 0 
-		   and J.GetDistanceFromEnemyFountain(member) > 4600
+		local member = GetTeamMember(i);
+		if member == bot
 		then
-			local invFull = X.IsInvFull(member);
-			local nStash = X.GetNumStashItem(member);
-			if not invFull
-				or ( invFull and nStash == 0 and bot.currListItemToBuy ~= nil and #bot.currListItemToBuy == 0 ) 
-			then
-				local dist = GetUnitToUnitDistance(member, npcCourier);
-				
-				if member:GetAssignedLane() == LANE_MID and member:GetLevel() < 8 and dist > 1600 then dist = dist * 1.38; end
-				
-				if dist < closestD then
-					closest = member;
-					closestD = dist;
-				end
-			end	
+			return GetCourier( i - 1 );
 		end
 	end
-	return closest ~= nil and closest == bot
+	
+	return GetCourier( 4 )
 end
 
 
@@ -393,20 +348,6 @@ function X.GetNumStashItem(unit)
 end
 
 
-function X.UpdateSShopUserStatus(bot)
-	local numPlayer =  GetTeamPlayers(GetTeam());
-	for i = 1, #numPlayer
-	do
-		local member =  GetTeamMember(i);
-		if member ~= nil 
-		   and IsPlayerBot(numPlayer[i]) 
-		   and member:GetUnitName() ~= bot:GetUnitName() 
-		then
-			member.SShopUser = false;
-		end
-	end
-end
-
 
 function X.IsCourierTargetedByUnit(courier)
 
@@ -423,9 +364,20 @@ function X.IsCourierTargetedByUnit(courier)
 	do
 		local tower = GetTower(GetOpposingTeam(), i)
 		if tower ~= nil 
-			and tower:GetAttackTarget() == courier 
 		then
-			return true;
+			local towerTarget = tower:GetAttackTarget()
+			
+			if towerTarget == courier 
+			then
+				return true;
+			end
+			
+			if towerTarget == nil
+				and GetUnitToUnitDistance(courier,tower) < 999
+			then
+				return true;
+			end	
+			
 		end
 	end
 	
@@ -651,7 +603,7 @@ X.ConsiderItemDesire = {};
 --深渊
 X.ConsiderItemDesire["item_abyssal_blade"] = function(hItem)
 
-	local nCastRange = 300 + aetherRange
+	local nCastRange = 660 + aetherRange
 	local sCastType = 'unit'
 	local hEffectTarget = nil
 	
@@ -740,7 +692,6 @@ X.ConsiderItemDesire["item_arcane_boots"] = function(hItem)
 	if #hNearbyAllyList >= 2
 		and bot:GetHealth() <= 120
 		and bot:WasRecentlyDamagedByAnyHero(3.0)
-		and #hNearbyAllyList >= 2
 	then
 		return BOT_ACTION_DESIRE_HIGH, hNearbyAllyList[2], sCastType, 'arcane-beforedeath'
 	end
@@ -1023,6 +974,8 @@ end
 
 --赤红甲
 X.ConsiderItemDesire["item_crimson_guard"] = function(hItem)
+
+	if bot:DistanceFromFountain() < 400 then return BOT_ACTION_DESIRE_NONE end
 
 	local nCastRange = 1200
 	local sCastType = 'none'	
@@ -2643,35 +2596,6 @@ X.ConsiderItemDesire["item_refresher_shard"] = function(hItem)
 	
 end
 
---王戒
-X.ConsiderItemDesire["item_ring_of_basilius"] = function(hItem)
-
-	if DotaTime()%2 < 1 then return BOT_ACTION_DESIRE_NONE end
-
-	local nCastRange = 1200
-	local sCastType = 'none'	
-	local hEffectTarget = nil 
-	local nInRangeEnmyList = bot:GetNearbyHeroes(nCastRange,true,BOT_MODE_NONE)
-
-	if #hNearbyEnemyTowerList == 0 
-	   and nMode == BOT_MODE_LANING
-	then
-		if not hItem:GetToggleState() 
-		then
-			hEffectTarget = bot
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'basilius_laning'
-		end
-	else
-		if hItem:GetToggleState() 
-		then
-			hEffectTarget = bot
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'basilius_Default'
-		end
-	end
-	
-	return BOT_ACTION_DESIRE_NONE
-	
-end
 
 --阿托斯
 X.ConsiderItemDesire["item_rod_of_atos"] = function(hItem)
@@ -3974,11 +3898,11 @@ function BuybackUsageThink()
 
 end
 
--- function CourierUsageThink()
+function CourierUsageThink()
 	
-	-- CourierUsageComplement();
+	CourierUsageComplement();
 
--- end
+end
 
 function AbilityLevelUpThink()
 

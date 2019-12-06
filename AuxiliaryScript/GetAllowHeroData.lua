@@ -1451,7 +1451,7 @@ D.hero = {
          {["hero"] = "npc_dota_hero_puck",["weight"] = 3,},
          {["hero"] = "npc_dota_hero_magnus",["weight"] = 3,},
   },["orientation"] = { ["core"] = true, ["durable"] = true,},["attribute"] = { ["type"] = "Agile", },
-  ["evaluation"] = "", ["bot"] = false,},
+  ["evaluation"] = "", ["bot"] = true,},
 ["npc_dota_hero_windrunner"] = {
   ["hero_name"] = "windrunner",
   ["proposal"] = {

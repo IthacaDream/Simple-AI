@@ -124,8 +124,6 @@ X["allows_hero"] = allowsHeroData.hero--[[{
 --'npc_dota_hero_witch_doctor',
 
 X["test_hero"] = {
-    'npc_dota_hero_snapfire',
-    'npc_dota_hero_void_spirit'
 }
 
 X["onlyCM_hero"] = {
@@ -153,7 +151,8 @@ X["onlyCM_hero"] = {
     'npc_dota_hero_dark_willow',
     --'npc_dota_hero_undying',
     --'npc_dota_hero_snapfire',
-    --'npc_dota_hero_void_spirit'
+    'npc_dota_hero_void_spirit',
+    'npc_dota_hero_storm_spirit'
 }
 
 function X.CounterWeightList(hero) --获取推荐阵容列表

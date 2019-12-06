@@ -122,21 +122,6 @@ function X.Consider()
 		end		
 	end
 	
-	if bot:DistanceFromFountain() < 2600
-	then
-		for _,npcEnemy in pairs(hNearbyEnemyHeroList) 
-		do
-			if J.IsValidHero(npcEnemy)
-				and J.CanCastOnMagicImmune(npcEnemy)
-				and npcEnemy:IsFacingLocation(GetAncient(GetTeam()):GetLocation(),40)
-				and GetUnitToLocationDistance(npcEnemy,GetAncient(GetTeam()):GetLocation()) < 1200 
-			then
-				hEffectTarget = npcEnemy
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget;
-			end	
-		end
-	end
-	
 	return BOT_ACTION_DESIRE_NONE, 0;
 	
 end

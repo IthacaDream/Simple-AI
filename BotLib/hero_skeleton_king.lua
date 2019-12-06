@@ -48,17 +48,19 @@ X['sBuyList'] = {
 				"item_heavens_halberd",
 				"item_assault",
 				"item_heart",
+				"item_radiance",
 }
 
 X['sSellList'] = {
-	"item_crimson_guard",
+	
+	"item_echo_sabre",
 	"item_quelling_blade",
 	
 	"item_assault",
-	"item_echo_sabre",
-	
-	"item_heavens_halberd",
 	"item_magic_wand",
+	
+	"item_heart",
+	"item_echo_sabre",
 }
 
 if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_tank' }, {"item_invis_sword",'item_quelling_blade'} end

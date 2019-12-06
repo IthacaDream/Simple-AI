@@ -216,6 +216,12 @@ function GetDesire()
 		if cAbility:IsInAbilityPhase() or bot:IsChanneling() then
 			return BOT_MODE_DESIRE_ABSOLUTE;
 		end	
+	elseif botName == "npc_dota_hero_drow_ranger"
+		then
+			if cAbility == nil then cAbility = bot:GetAbilityByName( "drow_ranger_multishot" ) end;
+			if cAbility:IsInAbilityPhase() or bot:IsChanneling() then
+				return BOT_MODE_DESIRE_ABSOLUTE;
+			end	
 	end
 	
 	if beSpecialSupport
@@ -1182,15 +1188,15 @@ function X.GetAttackDamageToCreep( bot )
 	then
 		if bot:GetAttackRange() > 310 or bot:GetUnitName() == "npc_dota_hero_templar_assassin"
 		then
-			return bot:GetAttackDamage() +7;
+			return bot:GetAttackDamage() +5;
 		else
-			return bot:GetAttackDamage() +24;
+			return bot:GetAttackDamage() +18;
 		end
 	end
 	
 	if bot:FindItemSlot("item_bfury") >= 0
 	then
-		return bot:GetAttackDamage() +24;
+		return bot:GetAttackDamage() +18;
 	end
 	
 	return bot:GetAttackDamage();
@@ -1255,7 +1261,6 @@ function X.GetEnemyCourier(bot,nRadius)
 			   then
 				   return u;
 			   end
-			   break;
 		   end
 		end	
 	end
@@ -1403,7 +1408,7 @@ function X.GetNearbyLastHitCreep(ignorAlly, bEnemy, nDamage, nRadius, bot)
 	
 	for _,nCreep in pairs(nNearbyCreeps)
 	do
-		if X.CanBeAttacked(nCreep) and nCreep:GetHealth() < ( nDamage + 200 )
+		if X.CanBeAttacked(nCreep) and nCreep:GetHealth() < ( nDamage + 260 )
 		   and ( ignorAlly or not X.IsAllysTarget(nCreep) )
 		then
 		
@@ -1930,7 +1935,7 @@ function X.ShouldNotRetreat(bot)
 		return true; 
 	end
 	
-	local nAttackAlly = bot:GetNearbyHeroes(800,false,BOT_MODE_ATTACK);
+	local nAttackAlly = bot:GetNearbyHeroes(1000,false,BOT_MODE_ATTACK);
 	if  ( bot:HasModifier("modifier_item_mask_of_madness_berserk")
 			or bot:HasModifier("modifier_oracle_false_promise_timer") )
 		and ( #nAttackAlly >= 1 or J.GetHPR(bot) > 0.6 )
@@ -1938,7 +1943,7 @@ function X.ShouldNotRetreat(bot)
 		return true;
 	end		
 	
-	local nAllies = J.GetAllyList(bot,900);
+	local nAllies = J.GetAllyList(bot,800);
     if #nAllies <= 1 
 	then 
 	    return false;

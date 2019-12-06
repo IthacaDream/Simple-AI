@@ -22,8 +22,8 @@ if gTime == nil then gTime = 0 end
 ----------------------------------------
 ----------------------------------------
 --]]------------------------------------
-local sDota2Version= '7.23a'
-local sDebugVersion= '20191127ver1.5d'
+local sDota2Version= '7.23b'
+local sDebugVersion= '20191203ver1.5f'
 local nDebugTime   = 99999
 local bDebugMode   = ( 1 == 10 )
 local bDebugTeam   = (GBotTeam == TEAM_RADIANT)

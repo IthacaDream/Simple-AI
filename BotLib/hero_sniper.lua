@@ -32,6 +32,7 @@ end
 
 local tAllAbilityBuildList = {
 						{2,3,3,1,3,6,3,1,1,1,6,2,2,2,6},
+						{2,3,3,1,3,6,3,2,2,2,6,1,1,1,6},
 }
 
 local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
@@ -246,7 +247,7 @@ function X.ConsiderQ()
 	--对多个敌方英雄使用
 	if #nEnemysHeroesInSkillRange >= 2
 		and (nCanHurtHeroLocationAoE.cout ~= nil and nCanHurtHeroLocationAoE.cout >= 2)
-		and bot:GetActiveMode( ) ~= BOT_MODE_LANING
+		and bot:GetActiveMode() ~= BOT_MODE_LANING
 		and (bot:GetActiveMode() ~= BOT_MODE_RETREAT or (bot:GetActiveMode() == BOT_MODE_RETREAT and bot:GetActiveModeDesire( ) < 0.6))
 		and not X.IsAbiltyQCastedHere(nCanHurtHeroLocationAoE.targetloc,nRadius)
     then
@@ -396,7 +397,10 @@ function X.ConsiderQ()
 end
 
 function X.ConsiderE()
-	if not abilityE:IsFullyCastable() or bot:HasModifier("modifier_sniper_take_aim_bonus")  then return 0 end
+
+	if not abilityE:IsFullyCastable() 
+		or bot:HasModifier("modifier_sniper_take_aim")  
+	then return 0 end
 	
 	local nAttackRange = bot:GetAttackRange();
 	local nSkillLV  = abilityE:GetLevel();
@@ -442,7 +446,7 @@ function X.ConsiderR()
 	
 	if J.IsValid(nWeakestEnemyHeroInCastRange)
 	   and ( J.WillMagicKillTarget(bot, nWeakestEnemyHeroInCastRange, nDamage, nCastPoint)
-			 or ( X.ShouldUseR(nTempTarget,nWeakestEnemyHeroInCastRange,nDamage) and (nLV >= 20 or bot:GetMana() > nKeepMana *1.28) ))
+			 or ( X.ShouldUseR(nTempTarget,nWeakestEnemyHeroInCastRange,nDamage) and ( bot:GetMana() > nKeepMana *1.28 or bot:HasScepter() ) ) )
 	then
 		castRTarget = nWeakestEnemyHeroInCastRange;
 		return BOT_ACTION_DESIRE_HIGH,castRTarget;
@@ -486,6 +490,7 @@ function X.GetWeakestUnitInRangeExRadius(nUnits,nRange,nRadius,bot)
 end
 
 function X.GetChannelingUnitInRange(nUnits,nRange,bot)
+	
 	if nUnits[1] == nil then return nil end;
 	
 	local channelingUnit = nil;
@@ -495,7 +500,7 @@ function X.GetChannelingUnitInRange(nUnits,nRange,bot)
 			and not unit:IsMagicImmune()
 			and unit:IsChanneling()
 			and not ( unit:HasModifier("modifier_teleporting") 
-			          and X.GetCastPoint(unit,bot) > J.GetModifierTime(unit,"modifier_teleporting"))
+			          and X.GetCastPoint(bot,unit) > J.GetModifierTime(unit,"modifier_teleporting"))
 		then
 			channelingUnit = unit;
 			break;
@@ -505,7 +510,7 @@ function X.GetChannelingUnitInRange(nUnits,nRange,bot)
 	return channelingUnit;
 end
 
-function X.GetCastPoint(unit,bot)
+function X.GetCastPoint(bot,unit)
 		
 		local nCastTime = abilityR:GetCastPoint();
 		
@@ -526,6 +531,10 @@ function X.IsAbiltyQCastedHere(nLoc,nRadius)
 
 	return true;
 end
+
+--判定是否在不能击杀目标的情况下对目标使用大招
+--1,该目标为队友准备攻击的目标且自己没有攻击范围内的攻击目标
+--2,能与宙斯合力击杀目标
 
 function X.ShouldUseR(nAttackTarget,nEnemy,nDamage)
 	if J.IsRetreating(bot)

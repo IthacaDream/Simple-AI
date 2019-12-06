@@ -36,7 +36,7 @@ local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
 X['sBuyList'] = {
 				"item_mid_outfit",
-				'item_infused_raindrop',
+				--'item_infused_raindrop',
 				"item_yasha",
 				"item_black_king_bar",
 				"item_manta",

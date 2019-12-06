@@ -48,157 +48,71 @@ function X.Consider()
 	-- 确保技能可以使用
     if ability == nil
 	   or ability:IsNull()
-       or not ability:IsFullyCastable()
+	   or not ability:IsFullyCastable()
+	   or bot:IsRooted()
 	then 
 		return BOT_ACTION_DESIRE_NONE, 0; --没欲望
 	end
-	
+
 	-- Get some of its values
-	local nSkillLV    = ability:GetLevel(); 
-	local nRadius    = 250;
-	local nCastRange = ability:GetCastRange();
-	local nCastPoint = ability:GetCastPoint();
-	local nManaCost  = ability:GetManaCost();
-	local nDamage    = (nSkillLV * 50) + 50 + bot:GetAttackDamage();
+	local nSkillLV     = ability:GetLevel(); 
+	local nRadius      = ability:GetSpecialValueInt( "radius" );
+	local nCastRange   = ability:GetSpecialValueInt("max_travel_distance") - 200;
+	local nCastPoint   = ability:GetCastPoint();
+	local nDamage      = ability:GetSpecialValueInt( "pop_damage" );
+	local nSpeed       = 3000;
+	local nManaCost    = ability:GetManaCost( );
+
+	--------------------------------------
+	-- Mode based usage
+	--------------------------------------
+	local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( nCastRange, true, BOT_MODE_NONE );
 	
-	local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( nCastRange + 150, true, BOT_MODE_NONE );
-	local nEnemysHeroesInView = bot:GetNearbyHeroes( 1600, true, BOT_MODE_NONE );
-	
-	if J.IsGoingOnSomeone(bot)
-	then
-		local npcTarget = bot:GetTarget();
-
-		if J.IsValidHero(npcTarget) and J.CanCastOnNonMagicImmune(npcTarget) and J.IsInRange(npcTarget, bot, nCastRange + 200)
-		then
-			return BOT_ACTION_DESIRE_MODERATE, npcTarget:GetExtrapolatedLocation( (GetUnitToUnitDistance(npcTarget, bot) / 1000) + nCastPoint );
-		end
-	end
-
-	if ( J.IsDefending(bot) or J.IsPushing(bot) )
-	then
-		local locationAoE = bot:FindAoELocation( true, false, bot:GetLocation(), nCastRange, nRadius, 0, 0 );
-		if ( locationAoE.count >= 3 ) 
-		then
-			return BOT_ACTION_DESIRE_MODERATE, locationAoE.targetloc;
-		end
-	end
-
 	--if we can kill any enemies
 	for _,npcEnemy in pairs(tableNearbyEnemyHeroes)
 	do
-		if J.CanCastOnNonMagicImmune(npcEnemy) and J.CanKillTarget(npcEnemy, nDamage, DAMAGE_TYPE_MAGICAL) then
-			return BOT_ACTION_DESIRE_HIGH, npcEnemy:GetLocation();
-		end
-	end
-	 
-	if J.IsFarming(bot) and bot:GetMana() > 150
-	then
-		local npcTarget = J.GetProperTarget(bot);
-		if J.IsValid(npcTarget)
-		   and npcTarget:GetTeam() == TEAM_NEUTRAL
-		   and npcTarget:GetMagicResist() < 0.4
-		then
-			local locationAoE = bot:FindAoELocation( true, false, bot:GetLocation(), nCastRange, nRadius, 0, 0 );
-			if ( locationAoE.count >= 2 ) 
-			then
-				return BOT_ACTION_DESIRE_HIGH, locationAoE.targetloc;
+		if J.CanCastOnMagicImmune(npcEnemy) 
+		   and J.CanKillTarget(npcEnemy, nDamage, DAMAGE_TYPE_MAGICAL) then
+			if npcEnemy:GetMovementDirectionStability() < 1.0 then
+				return BOT_ACTION_DESIRE_HIGH, npcEnemy:GetLocation();
+			else
+				local eta = ( GetUnitToUnitDistance(npcEnemy, bot) / nSpeed ) + nCastPoint;
+				return BOT_ACTION_DESIRE_HIGH, npcEnemy:GetExtrapolatedLocation(eta);	
 			end
 		end
-	end	
+	end
 	
 	-- If we're seriously retreating, see if we can land a stun on someone who's damaged us recently
 	if J.IsRetreating(bot)
 	then
-		local locationAoE = bot:FindAoELocation( true, true, bot:GetLocation(), nCastRange - 100, nRadius, 0, 0 );
-		if ( locationAoE.count >= 2  ) 
-		then
-			return BOT_ACTION_DESIRE_LOW, locationAoE.targetloc;
-		end
-		if J.IsValidHero(tableNearbyEnemyHeroes[1]) 
-			and J.CanCastOnNonMagicImmune(tableNearbyEnemyHeroes[1])
-			and J.IsInRange(bot,tableNearbyEnemyHeroes[1],nCastRange - 100)
-		then
-			return BOT_ACTION_DESIRE_HIGH, tableNearbyEnemyHeroes[1]:GetLocation();
-		end
-	end
-	
-	if ( J.IsPushing(bot) or J.IsDefending(bot) or J.IsFarming(bot)) 
-	    and J.IsAllowedToSpam(bot, nManaCost *0.3)
-		and bot:GetLevel() >= 6 
-		and #nEnemysHeroesInView == 0
-	then
-		local lanecreeps = bot:GetNearbyLaneCreeps(nCastRange+200, true);
-		local allyHeroes  = bot:GetNearbyHeroes(1000,true,BOT_MODE_NONE);
-		if #lanecreeps >= 2 
-		   and #allyHeroes <= 2 
-		   and J.IsValid(lanecreeps[1])
-		then
-			local locationAoE = bot:FindAoELocation( true, false, bot:GetLocation(), nCastRange, nRadius, 0, nDamage );
-			if ( locationAoE.count >= 2 and #lanecreeps >= 2  and bot:GetLevel() < 25 and #allyHeroes == 1) 
-			then
-				return BOT_ACTION_DESIRE_HIGH, locationAoE.targetloc;
-			end
-			local locationAoE = bot:FindAoELocation( true, false, bot:GetLocation(), nCastRange, nRadius, 0, 0 );
-			if ( locationAoE.count >= 4 and #lanecreeps >= 4  ) 
-			then
-				return BOT_ACTION_DESIRE_HIGH, locationAoE.targetloc;
-			end
-		end
-	end
-	
-	if J.IsInTeamFight(bot, 1200)
-	then
-		local locationAoE = bot:FindAoELocation( true, true, bot:GetLocation(), nCastRange, nRadius - 30, 0, 0 );
-		if ( locationAoE.count >= 2 ) 
-		then
-			return BOT_ACTION_DESIRE_HIGH, locationAoE.targetloc;
-		end
-		
-		local npcMostDangerousEnemy = nil;
-		local nMostDangerousDamage = 0;				
 		for _,npcEnemy in pairs( tableNearbyEnemyHeroes )
 		do
-			if  J.IsValid(npcEnemy)
-				and J.IsInRange(npcTarget, bot, nCastRange) 
-			    and J.CanCastOnNonMagicImmune(npcEnemy) 
+			if ( bot:WasRecentlyDamagedByHero( npcEnemy, 1.0 ) )
 			then
-				local npcEnemyDamage = npcEnemy:GetEstimatedDamageToTarget( false, bot, 3.0, DAMAGE_TYPE_PHYSICAL );
-				if ( npcEnemyDamage > nMostDangerousDamage )
-				then
-					nMostDangerousDamage = npcEnemyDamage;
-					npcMostDangerousEnemy = npcEnemy;
-				end
+				local loc = J.GetEscapeLoc();
+				return BOT_ACTION_DESIRE_HIGH, J.Site.GetXUnitsTowardsLocation(bot, loc, nCastRange-(#tableNearbyEnemyHeroes*100));
 			end
 		end
-		
-		if ( npcMostDangerousEnemy ~= nil )
-		then
-			return BOT_ACTION_DESIRE_HIGH, npcMostDangerousEnemy:GetExtrapolatedLocation(nCastPoint);
-		end		
 	end
 
-	if J.IsRetreating(bot) or ( bot:GetActiveMode() == BOT_MODE_RETREAT and nHP < 0.16 and bot:DistanceFromFountain() > 600 )
+	-- If we're going after someone
+	if J.IsGoingOnSomeone(bot)
 	then
-		if J.ShouldEscape(bot) or ( bot:DistanceFromFountain() > 600 and  bot:DistanceFromFountain() < 3800 )
+		local npcTarget = bot:GetTarget();
+		if J.IsValidHero(npcTarget)
+		   and J.CanCastOnMagicImmune(npcTarget)
+		   and not J.IsInRange(npcTarget, bot, 350) 
+		   and J.IsInRange(npcTarget, bot, nCastRange) 
 		then
-			local loc = J.GetEscapeLoc();
-			local location = J.Site.GetXUnitsTowardsLocation(bot, loc, nCastRange );
-			return BOT_ACTION_DESIRE_MODERATE, location;
-		end
-	end
-	
-	if bot:GetLevel() < 18
-	then
-		local lanecreeps = bot:GetNearbyLaneCreeps(nCastRange+200, true);
-		local allyHeroes  = bot:GetNearbyHeroes(1000,true,BOT_MODE_NONE);
-		if #lanecreeps >= 3 
-		   and #allyHeroes < 3
-		   and J.IsValid(lanecreeps[1])
-		then
-			local locationAoE = bot:FindAoELocation( true, false, bot:GetLocation(), nCastRange, nRadius, 0, nDamage );
-			if ( locationAoE.count >= 3 and #lanecreeps >= 3  ) 
-			then
-				return BOT_ACTION_DESIRE_HIGH, locationAoE.targetloc;
+			local targetAlly  = npcTarget:GetNearbyHeroes(1000, false, BOT_MODE_NONE);
+			local targetEnemy = npcTarget:GetNearbyHeroes(1000, true, BOT_MODE_NONE);
+			if targetEnemy ~= nil and targetAlly ~= nil and #targetEnemy >= #targetAlly then
+				if npcTarget:GetMovementDirectionStability() < 1.0 then
+					return BOT_ACTION_DESIRE_HIGH, npcTarget:GetLocation();
+				else
+					local eta = ( GetUnitToUnitDistance(npcTarget, bot) / nSpeed ) + nCastPoint;
+					return BOT_ACTION_DESIRE_HIGH, npcTarget:GetExtrapolatedLocation(eta);	
+				end
 			end
 		end
 	end

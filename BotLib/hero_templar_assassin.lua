@@ -397,6 +397,12 @@ function X.ConsiderQ()
 		end
 	end
 	
+	if bot:HasModifier("modifier_rune_regen")
+		or ( nSkillLV >= 3 and nMP > 0.96 and bot:HasModifier("modifier_fountain_aura_buff"))
+	then
+		return BOT_ACTION_DESIRE_LOW;
+	end
+	
 	--通用的
 	if nLV >= 12 and bot:GetMana() > 325
 	then
@@ -407,6 +413,7 @@ function X.ConsiderQ()
 			or #tableNearbyEnemyTowers > 0
 			or #tableNearbyEnemyCreeps > 1
 			or ( J.IsInEnemyArea(bot) and nMP > 0.95 )
+			
 		then
 			return  BOT_ACTION_DESIRE_LOW;
 		end		
