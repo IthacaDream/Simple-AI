@@ -445,6 +445,18 @@ local tNeutralItemLevelList = {
 
 }
 
+local sNeutralItemFormulaList = {
+	'item_recipe_ironwood_tree',
+	'item_vambrace',
+	'item_trident',
+	'item_fallen_sky',
+}
+
+local tNeutralItemFormulaList = {}
+for _,sItem in pairs(sNeutralItemFormulaList)
+do
+	tNeutralItemFormulaList[sItem] = true
+end
 
 if true then
 
@@ -808,6 +820,50 @@ function ItemModule.GetNetralItemLevel(sItemName)
 
 end
 
+function ItemModule.IsNotNeutralFormulaItemSlot(sItemName)
+
+	return tNeutralItemFormulaList[sItemName] == nil
+
+end
+
+function ItemModule.GetAbovecurrentlevelNetralItemSlot(netralItem)
+	local lowItem = nil
+	local bot = GetBot()
+
+	for i = 0, 5 
+	do	
+		local item = bot:GetItemInSlot(i);
+		if item ~= nil 
+		   and ItemModule.IsNeutralItem(item:GetName())
+		   and ItemModule.GetNetralItemLevel(item:GetName()) < ItemModule.GetNetralItemLevel(netralItem)
+		then
+			lowItem = i;
+		end
+	end
+
+	return lowItem
+
+end
+
+function ItemModule.GetLowValueMainInventorySlot(netralItemCost)
+	local lowItem = nil
+	local bot = GetBot()
+	
+	for i = 0, 5 
+	do	
+		local item = bot:GetItemInSlot(i);
+		if item ~= nil 
+		   and not ItemModule.IsNeutralItem(item:GetName())
+		   and GetItemCost(item:GetName()) < netralItemCost
+		then
+			lowItem = i;
+		end
+	end
+
+	return lowItem
+
+end
+
 function ItemModule.IsNotSellItem(sItemName)
 
 	return tNotSellItemList[sItemName] == true
@@ -980,6 +1036,32 @@ function ItemModule.GetEmptyInventoryAmount(bot)
 	
 end
 
+function ItemModule.GetEmptyInventoryAmountMain(bot)
+	
+	local amount = 0;
+
+	for i = 0, 5 
+	do	
+		local item = bot:GetItemInSlot(i);
+		if item == nil 
+		then
+			amount = amount + 1;
+		end
+	end
+	return amount;
+end
+
+function ItemModule.GetEmptyMainInventorySlot(bot)
+	for i = 0, 5 
+	do	
+		local item = bot:GetItemInSlot(i);
+		if item == nil 
+		then
+			return i
+		end
+	end
+	return -1
+end
 
 function ItemModule.GetItemCount(unit, item_name)
 	

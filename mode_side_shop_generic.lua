@@ -26,6 +26,7 @@ function GetDesire()
 	if outpostsTarget ~= nil 
 	   and DotaTime() > 600
 	   and outpostcooldown + 180 < DotaTime() --3分钟占领冷却
+	   and not X.IsThereT3Detroyed() --没被破高
 	then
 		local outpostTarget = nil
 
@@ -76,17 +77,14 @@ function Think()
 			cause = nil;
 			return;
 		end
-
-		local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( 1200, true, BOT_MODE_NONE );
-
-			if GetUnitToUnitDistance(bot, cause) > 800 then
-				bot:Action_MoveToLocation(cause:GetLocation() + RandomVector(20))
-				return
-			else
-				--下方前哨有概率出现傻站着不占领的问题，不确定原因
-				bot:Action_AttackUnit(cause, true)
-				return
-			end
+		if GetUnitToUnitDistance(bot, cause) > 800 then
+			bot:Action_MoveToLocation(cause:GetLocation() + RandomVector(20))
+			return
+		else
+			--下方前哨有概率出现傻站着不占领的问题，不确定原因
+			bot:Action_AttackUnit(cause, true)
+			return
+		end
 	end
 	
 	return;
@@ -112,5 +110,22 @@ function X.GetTargetOutpost()
 		end
 	end
 	return Outposts;
+end
+
+function X.IsThereT3Detroyed()
+	
+	local T3s = {
+		TOWER_TOP_3,
+		TOWER_MID_3,
+		TOWER_BOT_3
+	}
+	
+	for _,t in pairs(T3s) do
+		local tower = GetTower(GetOpposingTeam(), t);
+		if tower == nil or not tower:IsAlive() then
+			return true;
+		end
+	end	
+	return false;
 end
 -- dota2jmz@163.com QQ:2462331592。

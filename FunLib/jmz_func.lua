@@ -113,7 +113,7 @@ end
 ------------------------------------
 -------变量部分完成, 下面开始函数部分
 -----------------------------------]]
-function J.SetUserHeroInit(nAbilityBuildList, nTalentBuildList, sBuyList, sSellList)
+function J.SetUserHeroInit(nAbilityBuildList, nTalentBuildList, sBuyList, sSellList, sApplicableNeutralList)
 
 	local bot = GetBot()
 	
@@ -131,6 +131,7 @@ function J.SetUserHeroInit(nAbilityBuildList, nTalentBuildList, sBuyList, sSellL
 				nTalentBuildList = J.Chat.GetTalentBuildList(BotSet['TianFu'])
 				sBuyList = J.Chat.GetItemBuildList(BotSet['ChuZhuang'])
 				sSellList = J.Chat.GetItemBuildList(BotSet['GuoDuZhuang'])
+				sApplicableNeutralList = BotSet['ZhongLiDiaoLuo']
 				if J.Chat.GetRawGameWord(BotSet['ShiFouDaFuZhu']) == true
 				then J.Role.SetUserSup(bot) end
 			end
@@ -138,7 +139,7 @@ function J.SetUserHeroInit(nAbilityBuildList, nTalentBuildList, sBuyList, sSellL
 		
 	end
 
-	return nAbilityBuildList, nTalentBuildList, sBuyList, sSellList;
+	return nAbilityBuildList, nTalentBuildList, sBuyList, sSellList, sApplicableNeutralList;
 	
 end
 

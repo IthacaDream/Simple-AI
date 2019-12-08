@@ -61,7 +61,7 @@ function H.LocalHttpPost(postData)
 
 end
 
-function H.HttpPost(postData, url, call, config, notUUID)
+function H.HttpPost(postData, url, call, notUUID)
 
     if UUID ~= nil or notUUID then
 
@@ -75,8 +75,9 @@ function H.HttpPost(postData, url, call, config, notUUID)
                    and string.find(v, 'res:') ~= nil 
                 then 
                     local resdata = string.sub(v, 5);
-                    call(resdata, config)
+                    call(resdata)
                 end
+                
             end 
         end )
         
@@ -107,7 +108,7 @@ function H.GetUUID(url)
     end )
 end
 
-function H.jsonFormatting(obj)
+function jsonFormatting(obj)
     local json = '{"data":{'
     local count = 1
     for key, value in pairs(obj) do

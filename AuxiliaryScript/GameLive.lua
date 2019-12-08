@@ -357,7 +357,7 @@ function L.Chatwheel(kill, bot)
     local mocking = {
         ['doublekill'] = {--连杀
             '消灭完毕',
-            '脸都秀外啦',
+            '脸都秀歪啦',
             'Ceee~eeb',
             '再见了宝贝',
             '干嘛呢兄弟',

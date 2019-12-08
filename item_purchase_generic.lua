@@ -33,6 +33,7 @@ bot.SecretShop = false;
 
 local sPurchaseList = BotBuild['sBuyList'];
 local sItemSellList = BotBuild['sSellList'];
+local sApplicableNeutralList = BotBuild['sApplicableNeutralList'];
 
 --Reverse item order
 for i=1,#sPurchaseList
@@ -40,7 +41,7 @@ do
 	bot.itemToBuy[i] = sPurchaseList[#sPurchaseList - i +1];
 end
 
-
+bot.applicableNeutral = sApplicableNeutralList;
 
 local sell_time = -90;
 local check_time = -90;

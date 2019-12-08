@@ -3079,7 +3079,96 @@ X.ConsiderItemDesire["item_tome_of_knowledge"] = function(hItem)
 	
 end
 
+--中立物品
 
+--蜂王蜜
+X.ConsiderItemDesire["item_royal_jelly"] = function(hItem)
+
+	local nCastRange = 300 
+	local sCastType = 'unit'	
+	local hEffectTarget = nil 
+
+	if bot:HasModifier('modifier_royal_jelly') then
+		local nearbyAllies = bot:GetNearbyHeroes(600, false, BOT_MODE_NONE);
+		for _,a in pairs(nearbyAllies) do
+			if a ~= nil and a:HasModifier('modifier_royal_jelly') == false then
+				hEffectTarget = a
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'royal_jelly-npcAlly'
+			end
+		end
+	else
+		hEffectTarget = bot
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'royal_jelly-npcAlly'
+	end
+	
+	return BOT_ACTION_DESIRE_NONE
+	
+end
+
+--灵药
+X.ConsiderItemDesire["item_elixer"] = function(hItem)
+
+	if bot:DistanceFromFountain() < 3000 then return BOT_ACTION_DESIRE_NONE end
+
+	local nCastRange = 1000
+	local sCastType = 'unit'	
+	local hEffectTarget = nil 
+	local nInRangeEnmyList = bot:GetNearbyHeroes(nCastRange,true,BOT_MODE_NONE)
+	
+	if  (bot:GetMaxHealth() - bot:GetHealth() > 550
+		or bot:GetMaxMana() - bot:GetMana() > 250)
+		and #nInRangeEnmyList == 0 
+		and not bot:HasModifier("modifier_elixer_healing") 
+	then
+		hEffectTarget = bot
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'elixer-self'
+	end
+	
+	local hAllyList = J.GetAlliesNearLoc(bot:GetLocation(),700)
+	local hNeedHealAlly = nil
+	local nNeedHealAllyHealth = 99999
+	local nNeedHealAllyMana = 99999
+	for _,npcAlly in pairs(hAllyList) 
+	do
+		if J.IsValid(npcAlly) and npcAlly ~= bot
+		   and not npcAlly:HasModifier("modifier_elixer_healing")  
+		   and not npcAlly:IsIllusion()
+		   and not npcAlly:IsChanneling()
+		   and (npcAlly:GetMaxHealth() - npcAlly:GetHealth() > 550
+		   or npcAlly:GetMaxMana() - npcAlly:GetMana() > 250)
+		then
+			if(npcAlly:GetHealth() < nNeedHealAllyHealth )
+			then
+				hNeedHealAlly = npcAlly
+				nNeedHealAllyHealth = npcAlly:GetHealth()
+			end
+			if(npcAlly:GetHealth() < nNeedHealAllyMana )
+			then
+				hNeedHealAlly = npcAlly
+				nNeedHealAllyMana = npcAlly:GetHealth()
+			end
+		end
+	end		
+	if hNeedHealAlly ~= nil and #hNearbyEnemyHeroList == 0
+	then
+		hEffectTarget = hNeedHealAlly
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'elixer-npcAlly'
+	end
+	
+	return BOT_ACTION_DESIRE_NONE
+	
+end
+
+--芒果树
+X.ConsiderItemDesire["item_mango_tree"] = function(hItem)
+
+	local nCastRange = 300
+	local sCastType = 'ground'	
+	local hEffectTarget = bot:GetLocation() + RandomVector(100)
+
+	return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'mango_tree'
+	
+end
 
 local myTeam = GetTeam()
 local opTeam = GetOpposingTeam()

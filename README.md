@@ -1,5 +1,8 @@
-## Simple AI 1.2.1
+## Simple AI 1.2.2
 更加简单，快捷的构建DOTA2机器人脚本，不需要深入了解脚本制作流程，只需编写你需要的内容，脚本会自动加载。
+
+### 使用
+将脚本全部文件放置在Steam\SteamApps\common\dota 2 beta\game\dota\scripts\vscripts\bots中，游戏中选择本地开发脚本。
 
 ### 说明
 此脚本主要用作快速开发、学习和了解DOTA2机器人脚本，内容基于目前流行的[A Beginner AI](https://steamcommunity.com/sharedfiles/filedetails/?id=1573671599)改写而来，其中包含绝大多数原作者编写的脚本内容。
