@@ -56,7 +56,7 @@ function X.Consider()
 		return BOT_ACTION_DESIRE_NONE; --没欲望
 	end
     
-    local nCastRange = GetProperCastRange(false, bot, 500);
+    local nCastRange = X.GetProperCastRange(false, bot, 500);
 	local nCastPoint = ability:GetCastPoint();
 	local manaCost  = ability:GetManaCost();
 	local nRadius   = ability:GetSpecialValueInt( "destination_radius" );
@@ -97,7 +97,7 @@ function X.Consider()
 
 end
 
-function GetProperCastRange(bIgnore, hUnit, abilityCR)
+function X.GetProperCastRange(bIgnore, hUnit, abilityCR)
 	local attackRng = hUnit:GetAttackRange();
 	if bIgnore then
 		return abilityCR;

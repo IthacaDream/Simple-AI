@@ -152,7 +152,21 @@ local abilityNameList = {
     'void_spirit_resonant_pulse',
     'storm_spirit_ball_lightning',
     'storm_spirit_electric_vortex',
-    'storm_spirit_static_remnant'
+    'storm_spirit_static_remnant',
+    'magnataur_empower',
+    'magnataur_reverse_polarity',
+    'magnataur_shockwave',
+    'magnataur_skewer',
+    'treant_living_armor',
+    'treant_natures_grasp',
+    'treant_leech_seed',
+    'treant_overgrowth',
+    'ursa_earthshock',
+    'ursa_enrage',
+    'ursa_overpower',
+    'mars_spear',
+    'mars_gods_rebuke',
+    'mars_arena_of_blood',
 }
 
 --将英雄技能初始入变量

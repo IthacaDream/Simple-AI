@@ -203,7 +203,6 @@ function GetDesire()
 	end
 	
 	if pickItem ~= nil 
-	   --and bot.applicableNeutral ~= nil
 	then
 		--如果掉落的中立物品适用于当前英雄则拣取
 		if bot.applicableNeutral ~= nil and #bot.applicableNeutral ~= 0
