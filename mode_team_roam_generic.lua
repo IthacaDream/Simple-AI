@@ -210,12 +210,12 @@ function GetDesire()
 			for _,v in pairs(bot.applicableNeutral) do
 				if v == pickItem then
 					pickedItem = pickItem;
-					return BOT_MODE_DESIRE_VERYHIGH;
+					return BOT_MODE_DESIRE_HIGH;
 				end
 			end
 		else
 			pickedItem = pickItem;
-			return BOT_MODE_DESIRE_VERYHIGH;
+			return BOT_MODE_DESIRE_HIGH;
 		end
 	end
 	--后备槽位

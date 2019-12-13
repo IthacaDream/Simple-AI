@@ -162,9 +162,9 @@ X["onlyCM_hero"] = {
     'npc_dota_hero_void_spirit',
     'npc_dota_hero_storm_spirit',
     --'npc_dota_hero_magnataur',
-    --'npc_dota_hero_treant',
-    --'npc_dota_hero_ursa',
-    --'npc_dota_hero_mars',
+    'npc_dota_hero_treant',
+    'npc_dota_hero_ursa',
+    'npc_dota_hero_mars',
 }
 
 function X.CounterWeightList(hero) --获取推荐阵容列表

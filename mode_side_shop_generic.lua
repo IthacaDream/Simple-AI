@@ -23,10 +23,12 @@ function GetDesire()
 		
 	outpostsTarget = X.GetTargetOutpost();
 	
+	local botMode = bot:GetActiveMode();
 	if outpostsTarget ~= nil 
 	   and DotaTime() > 600
-	   and outpostcooldown + 180 < DotaTime() --3分钟占领冷却
+	   and outpostcooldown + 60 * 4 < DotaTime() --4分钟占领冷却
 	   and not X.IsThereT3Detroyed() --没被破高
+	   and X.SuitableToOutposts() --适合去抢前哨
 	then
 		local outpostTarget = nil
 
@@ -46,15 +48,11 @@ function GetDesire()
 		if outpostTarget ~= nil then
 
 			local tableNearbyEnemyHeroes = outpostTarget:GetNearbyHeroes( 1600, true, BOT_MODE_NONE );
-			local tableBotNearbyEnemyHeroes = bot:GetNearbyHeroes( 1200, true, BOT_MODE_NONE );
 
 			--在安全的情况下进行前哨占领
 			if (tableNearbyEnemyHeroes == nil
 			   or (tableNearbyEnemyHeroes ~= nil and #tableNearbyEnemyHeroes < 3)) --确保占领目标旁边不超过2个敌人
-			   and (tableBotNearbyEnemyHeroes == nil
-			   or (tableBotNearbyEnemyHeroes ~= nil and #tableBotNearbyEnemyHeroes < 3)) --确保自己身边不超过2个敌人
 			   and J.GetHPR(bot) > 0.6
-			   and not bot:WasRecentlyDamagedByAnyHero(3.0)
 			then
 				cause = outpostTarget;
 				return BOT_MODE_DESIRE_HIGH;
@@ -126,6 +124,35 @@ function X.IsThereT3Detroyed()
 			return true;
 		end
 	end	
+	return false;
+end
+
+function X.SuitableToOutposts()
+	local Enemies = bot:GetNearbyHeroes(1300, true, BOT_MODE_NONE);
+	local mode = bot:GetActiveMode();
+	if ( ( mode == BOT_MODE_RETREAT and bot:GetActiveModeDesire() >= BOT_MODE_DESIRE_MODERATE )
+		or mode == BOT_MODE_ATTACK
+		or mode == BOT_MODE_RUNE 
+		or mode == BOT_MODE_DEFEND_ALLY
+		or mode == BOT_MODE_DEFEND_TOWER_TOP
+		or mode == BOT_MODE_DEFEND_TOWER_MID
+		or mode == BOT_MODE_DEFEND_TOWER_BOT
+		or #Enemies >= 2
+		or ( #Enemies >= 1 and X.IsIBecameTheTarget(Enemies) )
+		or bot:WasRecentlyDamagedByAnyHero(5.0)
+		) 
+	then
+		return false;
+	end
+	return true;
+end
+
+function X.IsIBecameTheTarget(units)
+	for _,u in pairs(units) do
+		if u:GetAttackTarget() == bot then
+			return true;
+		end
+	end
 	return false;
 end
 -- dota2jmz@163.com QQ:2462331592。

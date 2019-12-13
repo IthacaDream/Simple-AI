@@ -11,9 +11,7 @@ if GetBot():IsInvulnerable() or not GetBot():IsHero() or not string.find(GetBot(
 	return;
 end
 
-local role = require( GetScriptDirectory()..'/FunLib/jmz_role')
-local Site = require( GetScriptDirectory()..'/FunLib/jmz_site')
-local N = require( GetScriptDirectory()..'/AuxiliaryScript/Comicdialogue')
+local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
 local bot = GetBot();
 local X = {}
 local AvailableSpots = {};
@@ -21,62 +19,13 @@ local nWardCastRange = 500;
 local itemWard = nil;
 local targetLoc = nil;
 local wardCastTime = -90;
+local blockBreep = nil;
+local firstCreep = true;
 
 
 bot.lastSwapWardTime = -90;
 bot.ward = false;
-bot.steal = false;
 
-if Site["RandomIntRoute"] == nil then
-	Site["RandomIntRoute"] = RandomInt(1,4)
-end
-local routelist = {
-	{
-		Vector(-108.000000, 2271.000000, 0.000000),
-		Vector(-1276.000000, 3644.000000, 0.000000),
-		Vector(-3148.000000, 3720.000000, 0.000000)
-	},
-	{
-		Vector(-5229.000000, 3687.000000, 0.000000),
-		Vector(-2509.000000, 4789.000000, 0.000000),
-		Vector(-3148.000000, 3720.000000, 0.000000)
-	},
-	{
-		Vector(-5229.000000, 3687.000000, 0.000000),
-		Vector(-1061.000000, 4795.000000, 0.000000),
-		Vector(-3148.000000, 3720.000000, 0.000000)
-	},
-	{
-		Vector(1387.000000, -2905.000000, 0.000000),
-		Vector(3532.000000, -792.000000, 0.000000),
-		Vector(4403.000000, -1604.000000, 0.000000)
-	}
-}
-local route = routelist[Site["RandomIntRoute"]]
-
-local route2list = {
-	{
-		Vector(3597.000000, 351.000000, 0.000000),
-		Vector(4508.000000, -1669.000000, 0.000000),
-		Vector(5409.000000, -3787.000000, 0.000000)
-	},
-	{
-		Vector(3597.000000, 351.000000, 0.000000),
-		Vector(2186.000000, -3656.000000, 0.000000),
-		Vector(3689.000000, -3625.000000, 0.000000)
-	},
-	{
-		Vector(3.000000, 2058.000000, 0.000000),
-		Vector(-2745.000000, 282.000000, 0.000000),
-		Vector(-4242.000000, 649.000000, 0.000000)
-	},
-	{
-		Vector(3597.000000, 351.000000, 0.000000),
-		Vector(2186.000000, -3656.000000, 0.000000),
-		Vector(3689.000000, -3625.000000, 0.000000)
-	}
-}
-local route2 = route2list[Site["RandomIntRoute"]]
 
 local vNonStuck = Vector(-2610.000000, 538.000000, 0.000000);
 
@@ -112,7 +61,7 @@ function GetDesire()
 		end
 	end
 	
-	itemWard = Site.GetItemWard(bot);
+	itemWard = J.Site.GetItemWard(bot);
 
 	if bot:IsChanneling() 
 	   or bot:IsIllusion() 
@@ -122,33 +71,42 @@ function GetDesire()
 	then
 		return BOT_MODE_DESIRE_NONE;
 	end
-	
-	if DotaTime() < 0 then
-		local enemies = bot:GetNearbyHeroes(500, true, BOT_MODE_NONE)
-		if ( (GetTeam() == TEAM_RADIANT and bot:GetAssignedLane() == LANE_TOP) 
-		      or (GetTeam() == TEAM_DIRE and bot:GetAssignedLane() == LANE_BOT) 
-			  or  role.IsSupport(bot:GetUnitName()) 
-			  or ( bot:GetUnitName() == "npc_dota_hero_elder_titan" and DotaTime() > -59 ) 
-			  or ( bot:GetUnitName() == 'npc_dota_hero_wisp' and DotaTime() > -59 )
-			  ) 
-		  and #enemies == 0 
-		then
-			bot.steal = true;
-			return BOT_MODE_DESIRE_ABSOLUTE;
+
+	--由于抢符进程太长，导致卡兵没有时间，如果恰巧没有遇上敌人且抢完符，可以尝试赶着去卡一下试试
+	if DotaTime() > 0
+	   and firstCreep
+	   and bot:IsAlive()
+	then
+		local nEnemys = J.GetAroundTargetEnemyUnitCount(bot, 1000)
+		if nEnemys > 0 then
+			firstCreep = false;
+			return BOT_MODE_DESIRE_NONE;
 		end
-	else	
-		bot.steal = false;
+		--计算出当前分路小兵位置并执行卡兵
+		local fLaneCreepAmount = GetLaneFrontAmount(GetTeam(), bot:GetAssignedLane(), true)
+		local fLaneCreepLocation = GetLocationAlongLane(bot:GetAssignedLane(), fLaneCreepAmount)
+
+		local botLoc = bot:GetLocation()
+		--劣势路卡
+		if ((GetTeam() == TEAM_RADIANT and bot:GetAssignedLane() == LANE_TOP and fLaneCreepLocation.y < botLoc.y)
+		   or (GetTeam() == TEAM_DIRE and bot:GetAssignedLane() == LANE_BOT and fLaneCreepLocation.y > botLoc.y))
+		then
+			blockBreep = fLaneCreepLocation;
+			return BOT_MODE_DESIRE_ABSOLUTE;
+		else
+			firstCreep = false;
+		end
 	end
-	
-	if DotaTime() < 5 + nStartTime
+
+	if DotaTime() < 25 + nStartTime
 	then
 		return BOT_MODE_DESIRE_NONE;
 	end	
 	
 	if itemWard ~= nil  then
 		
-		AvailableSpots = Site.GetAvailableSpot(bot);
-		targetLoc, targetDist = Site.GetClosestSpot(bot, AvailableSpots);
+		AvailableSpots = J.Site.GetAvailableSpot(bot);
+		targetLoc, targetDist = J.Site.GetClosestSpot(bot, AvailableSpots);
 		if targetLoc ~= nil and DotaTime() > wardCastTime + 1.0 then
 			bot.ward = true;
 			return math.floor((RemapValClamped(targetDist, 6000, 0, BOT_MODE_DESIRE_MODERATE, BOT_MODE_DESIRE_VERYHIGH))*20)/20;
@@ -176,9 +134,9 @@ end
 
 function OnEnd()
 	AvailableSpots = {};
-	bot.steal = false;
 	itemWard = nil;
 	walkMode = false;
+	blockBreep = nil;
 end
 
 function Think()
@@ -187,6 +145,66 @@ function Think()
 		return;
 	end
 	
+	if blockBreep ~= nil then
+
+		--外塔位置
+		local teamLocation = X.GetLaningTeamLocation(bot:GetAssignedLane())
+
+		if GetUnitToLocationDistance(bot,blockBreep) <= 1200
+		then
+			--接近目标位置
+			local nCreep = bot:GetNearbyLaneCreeps(1200,false);
+			--如果附近有小兵
+			if nCreep[1] ~= nil and nCreep[1]:IsAlive()
+			then
+				local botToCreepDistance = GetUnitToLocationDistance(bot, nCreep[1]:GetLocation())
+				if botToCreepDistance <= 25
+				   and ((bot:GetAssignedLane() == LANE_TOP and nCreep[1]:GetLocation().y < bot:GetLocation().y)
+				   or (bot:GetAssignedLane() == LANE_BOT and nCreep[1]:GetLocation().y > bot:GetLocation().y))
+				then
+					--距离小兵小于25的时候，卡一下兵
+					if botToCreepDistance > 3 then
+						bot:Action_ClearActions(true);
+					else
+						--如果太近了，预测一个稍远点的地方前进（防止小兵面向影响预测）
+						bot:Action_MoveToLocation(nCreep[1]:GetExtrapolatedLocation(1.5));
+					end
+					return;
+				else
+					--如果离小兵还太远或太近了，则预判小兵位置，跟着走
+					if botToCreepDistance < 200 then
+						bot:Action_MoveToLocation(nCreep[1]:GetExtrapolatedLocation(0.8));
+					else
+						bot:Action_MoveToLocation(nCreep[1]:GetExtrapolatedLocation(2));
+					end
+					return;
+				end
+			end
+			--如果没有小兵，停止卡兵（理论上不应存在这个情况）
+			if #nCreep == 0 then blockBreep = nil; end
+			return;
+		else
+			--没有接近目标位置
+
+			--拦截位置计算
+			local angle = math.deg(math.asin(J.GetLocationToLocationDistance(blockBreep, teamLocation) / GetUnitToLocationDistance(bot, blockBreep)))
+
+			if angle > 1 and angle < 70 then
+				--移动到拦截位置
+				local intercept = blockBreep
+				if bot:GetAssignedLane() == LANE_BOT then
+					intercept = Vector(blockBreep.x + (teamLocation.x - blockBreep.x) * (angle / 100), blockBreep.Y)
+				else
+					intercept = Vector(blockBreep.x, blockBreep.y + (teamLocation.y - blockBreep.y) * (angle / 100))
+				end
+				bot:Action_MoveToLocation(intercept);
+			else
+				--移动到兵线位置
+				bot:Action_MoveToLocation(blockBreep);
+			end
+			return;
+		end
+	end
 
 	if walkMode then
 		local nCreep = bot:GetNearbyLaneCreeps(1000,true);
@@ -231,102 +249,11 @@ function Think()
 			end
 		end
 	end
-
-	if bot.steal == true then
-		local stealCount = CountStealingUnit();
-		smoke = HasItem('item_smoke_of_deceit');
-		local loc = nil;
 	
-		if smoke ~= nil and chat == false then
-			chat = true;
-			bot:ActionImmediate_Chat("走起，偷符ヾ(≧▽≦*)o",false);
-			return
-		end
 	
-		if smoke ~= nil and smoke:IsFullyCastable() and not bot:HasModifier('modifier_smoke_of_deceit') then
-			bot:Action_UseAbility(smoke);
-			return
-		end
-		
-		if ComicDialogue == nil then
-			ComicDialogue = N.ComicDialogue()
-		end
-		
-		if GetTeam() == TEAM_RADIANT then
-			for _,r in pairs(route) do
-				if r ~= nil then
-					loc = r;
-					break;
-				end
-			end
-		else
-			for _,r in pairs(route2) do
-				if r ~= nil then
-					loc = r;
-					break;
-				end
-			end
-		end
-		
-		local allies = CountStealUnitNearLoc(loc, 300);
-		
-		if ( GetTeam() == TEAM_RADIANT and #route == 1 ) or ( GetTeam() == TEAM_DIRE and #route2 == 1 )  then
-			bot:Action_MoveToLocation(loc);
-			return
-		elseif GetUnitToLocationDistance(bot, loc) <= 300 and allies < stealCount then
-			bot:Action_MoveToLocation(loc);
-			return	
-		elseif GetUnitToLocationDistance(bot, loc) > 300 then
-			bot:Action_MoveToLocation(loc);
-			return
-		else
-			if GetTeam() == TEAM_RADIANT then
-				table.remove(route,1);
-			else
-				table.remove(route2,1);
-			end
-		end
-
-	end
 
 end
 
-
-function CountStealingUnit()
-	local count = 0;
-	for i,id in pairs(GetTeamPlayers(GetTeam())) do
-		local unit = GetTeamMember(i);
-		if IsPlayerBot(id) and unit ~= nil and unit.steal == true then
-			count = count + 1;
-		end
-	end
-	return count;
-end
-
-function  CountStealUnitNearLoc(loc, nRadius)
-	local count = 0;
-	for i,id in pairs(GetTeamPlayers(GetTeam())) do
-		local unit = GetTeamMember(i);
-		if unit ~= nil and unit.steal == true and GetUnitToLocationDistance(unit, loc) <= nRadius then
-			count = count + 1;
-		end
-	end
-	return count;
-end
-
-function HasItem(item_name)
-	for i=0,5  do
-		local item = bot:GetItemInSlot(i); 
-		if item ~= nil and item:GetName() == item_name then
-			return item;
-		end
-	end
-	return nil;
-end
-
-function IsSafelaneCarry()
-	return role.CanBeSafeLaneCarry(bot:GetUnitName()) and ( (GetTeam()==TEAM_DIRE and bot:GetAssignedLane()==LANE_TOP) or (GetTeam()==TEAM_RADIANT and bot:GetAssignedLane()==LANE_BOT)  )	
-end
 
 function X.FindLeastItemSlot()
 	local minCost = 100000;
@@ -374,4 +301,26 @@ function X.IsIBecameTheTarget(units)
 	return false;
 end
 
+function X.GetLaningTeamLocation(nLane)
+	local myTeam = GetTeam()
+
+	local teamT1Top = nil; 
+	if GetTower(myTeam,TOWER_TOP_1) ~= nil then teamT1Top = GetTower(myTeam,TOWER_TOP_1):GetLocation(); end
+
+	local teamT1Mid = nil;
+	if GetTower(myTeam,TOWER_MID_1) ~= nil then teamT1Mid = GetTower(myTeam,TOWER_MID_1):GetLocation(); end
+
+	local teamT1Bot = nil;
+	if GetTower(myTeam,TOWER_BOT_1) ~= nil then teamT1Bot = GetTower(myTeam,TOWER_BOT_1):GetLocation(); end
+
+
+	if nLane == LANE_TOP then
+		return teamT1Top
+	elseif nLane == LANE_MID then
+		return teamT1Mid
+	elseif nLane == LANE_BOT then
+		return teamT1Bot			
+	end	
+	return teamT1Mid
+end	
 -- dota2jmz@163.com QQ:2462331592。
