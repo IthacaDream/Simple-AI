@@ -153,35 +153,53 @@ function Think()
 		if GetUnitToLocationDistance(bot,blockBreep) <= 1200
 		then
 			--接近目标位置
-			local nCreep = bot:GetNearbyLaneCreeps(1200,false);
-			--如果附近有小兵
-			if nCreep[1] ~= nil and nCreep[1]:IsAlive()
-			then
-				local botToCreepDistance = GetUnitToLocationDistance(bot, nCreep[1]:GetLocation())
-				if botToCreepDistance <= 25
-				   and ((bot:GetAssignedLane() == LANE_TOP and nCreep[1]:GetLocation().y < bot:GetLocation().y)
-				   or (bot:GetAssignedLane() == LANE_BOT and nCreep[1]:GetLocation().y > bot:GetLocation().y))
+			local nCreeps = bot:GetNearbyLaneCreeps(1200,false);
+			local nLeadCreep = nil
+
+			--计算出领头的小兵
+			for _,creep in pairs(nCreeps) do
+				
+				if creep:IsAlive()
 				then
-					--距离小兵小于25的时候，卡一下兵
+					if nLeadCreep == nil then
+						nLeadCreep = creep;
+					end
+
+					if ((bot:GetAssignedLane() == LANE_TOP and nLeadCreep:GetLocation().y < creep:GetLocation().y)
+					   or (bot:GetAssignedLane() == LANE_BOT and nLeadCreep:GetLocation().y > creep:GetLocation().y))
+					then
+						nLeadCreep = creep;
+					end
+
+				end
+			end
+			--如果附近有小兵
+			if nLeadCreep ~= nil then
+				local botToCreepDistance = GetUnitToLocationDistance(bot, nLeadCreep:GetLocation())
+				--距离小兵小于25的时候，卡一下兵
+				if botToCreepDistance <= 25
+				and ((bot:GetAssignedLane() == LANE_TOP and nLeadCreep:GetLocation().y < bot:GetLocation().y)
+				or (bot:GetAssignedLane() == LANE_BOT and nLeadCreep:GetLocation().y > bot:GetLocation().y))
+				then
 					if botToCreepDistance > 3 then
 						bot:Action_ClearActions(true);
 					else
 						--如果太近了，预测一个稍远点的地方前进（防止小兵面向影响预测）
-						bot:Action_MoveToLocation(nCreep[1]:GetExtrapolatedLocation(1.5));
+						bot:Action_MoveToLocation(nLeadCreep:GetExtrapolatedLocation(1));
 					end
 					return;
 				else
 					--如果离小兵还太远或太近了，则预判小兵位置，跟着走
 					if botToCreepDistance < 200 then
-						bot:Action_MoveToLocation(nCreep[1]:GetExtrapolatedLocation(0.8));
+						bot:Action_MoveToLocation(nLeadCreep:GetExtrapolatedLocation(0.8));
 					else
-						bot:Action_MoveToLocation(nCreep[1]:GetExtrapolatedLocation(2));
+						bot:Action_MoveToLocation(nLeadCreep:GetExtrapolatedLocation(1.5));
 					end
 					return;
 				end
 			end
 			--如果没有小兵，停止卡兵（理论上不应存在这个情况）
-			if #nCreep == 0 then blockBreep = nil; end
+			if #nCreeps == 0 then blockBreep = nil; end
 			return;
 		else
 			--没有接近目标位置
@@ -189,8 +207,8 @@ function Think()
 			--拦截位置计算
 			local angle = math.deg(math.asin(J.GetLocationToLocationDistance(blockBreep, teamLocation) / GetUnitToLocationDistance(bot, blockBreep)))
 
-			if angle > 1 and angle < 70 then
-				--移动到拦截位置
+			--if angle > 1 and angle < 70 then
+				--移动到拦截位置(未知问题，干脆全程拦截)
 				local intercept = blockBreep
 				if bot:GetAssignedLane() == LANE_BOT then
 					intercept = Vector(blockBreep.x + (teamLocation.x - blockBreep.x) * (angle / 100), blockBreep.Y)
@@ -198,10 +216,10 @@ function Think()
 					intercept = Vector(blockBreep.x, blockBreep.y + (teamLocation.y - blockBreep.y) * (angle / 100))
 				end
 				bot:Action_MoveToLocation(intercept);
-			else
-				--移动到兵线位置
-				bot:Action_MoveToLocation(blockBreep);
-			end
+			--else
+			--	--移动到兵线位置
+			--	bot:Action_MoveToLocation(blockBreep);
+			--end
 			return;
 		end
 	end

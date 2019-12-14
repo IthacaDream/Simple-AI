@@ -25,7 +25,7 @@ function GetDesire()
 	
 	local botMode = bot:GetActiveMode();
 	if outpostsTarget ~= nil 
-	   and DotaTime() > 600
+	   and DotaTime() > 60 * 10
 	   and outpostcooldown + 60 * 4 < DotaTime() --4分钟占领冷却
 	   and not X.IsThereT3Detroyed() --没被破高
 	   and X.SuitableToOutposts() --适合去抢前哨

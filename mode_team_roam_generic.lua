@@ -205,17 +205,19 @@ function GetDesire()
 	if pickItem ~= nil 
 	then
 		--如果掉落的中立物品适用于当前英雄则拣取
-		if bot.applicableNeutral ~= nil and #bot.applicableNeutral ~= 0
+		if bot.applicableNeutral ~= nil
 		then
-			for _,v in pairs(bot.applicableNeutral) do
-				if v == pickItem then
-					pickedItem = pickItem;
-					return BOT_MODE_DESIRE_HIGH;
+			if #bot.applicableNeutral ~= 0 then
+				for _,v in pairs(bot.applicableNeutral) do
+					if v == pickItem then
+						pickedItem = pickItem;
+						return BOT_MODE_DESIRE_HIGH;
+					end
 				end
+			else
+				pickedItem = pickItem;
+				return BOT_MODE_DESIRE_HIGH;
 			end
-		else
-			pickedItem = pickItem;
-			return BOT_MODE_DESIRE_HIGH;
 		end
 	end
 	--后备槽位
