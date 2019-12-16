@@ -54,10 +54,7 @@ X['sSellList'] = {
 
 if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_PL' }, {"item_abyssal_blade",'item_quelling_blade'} end
 
-X['sApplicableNeutralList'] = {
-}
-
-nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'],X['sApplicableNeutralList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'],X['sApplicableNeutralList']);
+nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
@@ -439,7 +436,7 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592.
 
 
 

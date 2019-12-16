@@ -44,22 +44,19 @@ X['sBuyList'] = {
 
 X['sSellList'] = {
 	
-	"item_echo_sabre",
+	"item_crimson_guard",
 	"item_quelling_blade",
-	
-	"item_heart",
-	"item_echo_sabre",
 	
 	"item_assault",
 	"item_magic_wand",
+	
+	"item_heart",
+	"item_echo_sabre",
 }
 
 if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_tank' }, {"item_invis_sword",'item_quelling_blade'} end
 
-X['sApplicableNeutralList'] = {
-}
-
-nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'],X['sApplicableNeutralList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'],X['sApplicableNeutralList']);
+nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
@@ -82,7 +79,7 @@ npc_dota_hero_kunkka
 "Ability1"		"kunkka_torrent"
 "Ability2"		"kunkka_tidebringer"
 "Ability3"		"kunkka_x_marks_the_spot"
-"Ability4"		"generic_hidden"
+"Ability4"		"kunkka_torrent_storm"
 "Ability5"		"generic_hidden"
 "Ability6"		"kunkka_ghostship"
 "Ability7"		"kunkka_return"
@@ -115,11 +112,13 @@ local abilityW  = bot:GetAbilityByName( sAbilityList[2] )
 local abilityE  = bot:GetAbilityByName( sAbilityList[3] )
 local abilityE2 = bot:GetAbilityByName( 'kunkka_return' )
 local abilityR  = bot:GetAbilityByName( sAbilityList[6] )
+local abilityD  = bot:GetAbilityByName( sAbilityList[4] )
 
 local castQDesire, castQLocation
 local castWDesire, castWTarget
 local castEDesire, castETarget
 local castE2Desire
+local castDDesire
 local castRDesire, castRLocation
 local Combo1Desire, C1Target, C1Location
 local Combo2Desire, C2Target, C2Location
@@ -133,9 +132,9 @@ local Combo1Time = 0; --X船水  0.4,0.3,0.4,0.4.
 local Combo2Time = 0; --X船
 local Combo3Time = 0; --X水
 
-local C1Delay = 2.23; --2.3MAX
-local C2Delay = 3.33; --3.4MAX
-local C3Delay = 1.93; --2.0MAX 0.4 + 0.4 + 1.6 -0.4
+local C1Delay = 2.25; --2.3MAX
+local C2Delay = 3.35; --3.4MAX
+local C3Delay = 1.95; --2.0MAX 0.4 + 0.4 + 1.6 -0.4
 
 function X.SkillsComplement()
 
@@ -251,6 +250,17 @@ function X.SkillsComplement()
 		J.SetQueuePtToINT(bot, true)
 	
 		bot:ActionQueue_UseAbilityOnLocation(abilityR, castRLocation)
+		return;
+	
+	end
+	
+	--浪
+	castDDesire, castDLocation = X.ConsiderD()
+	if castDDesire > 0
+	then
+		J.SetQueuePtToINT(bot, true)
+		
+		bot:ActionQueue_UseAbility( abilityD )
 		return;
 	
 	end
@@ -396,6 +406,39 @@ function X.ConsiderCombo3()
 	return BOT_ACTION_DESIRE_NONE, nil, {};
 end
 
+function X.ConsiderD()
+
+	if not abilityD:IsFullyCastable()
+		or not bot:HasScepter()
+	then
+		return BOT_ACTION_DESIRE_NONE
+	end
+	
+	if J.IsGoingOnSomeone(bot)
+	then
+		local npcTarget = J.GetProperTarget(bot)
+		if J.IsValidHero(npcTarget)
+			and J.IsInRange(bot,npcTarget,900)
+			and J.CanCastOnNonMagicImmune(npcTarget)
+		then
+			return BOT_ACTION_DESIRE_HIGH;
+		end	
+	end
+	
+	if J.IsRetreating(bot) or J.IsInTeamFight(bot,1200)
+	then
+		local nEnemyHeroList = J.GetEnemyList(bot,1100)
+		if #nEnemyHeroList >= 3
+			or (#nEnemyHeroList >= 2 and nHP <= 0.5)
+			or (#nEnemyHeroList >= 1 and nHP <= 0.4 and bot:WasRecentlyDamagedByHero(3.0))
+		then
+			return BOT_ACTION_DESIRE_HIGH;
+		end	
+	end
+	
+	return BOT_ACTION_DESIRE_NONE
+	
+end
 
 
 function X.ConsiderQ()
@@ -621,4 +664,4 @@ function X.GetNearbyUnit(bot, npcTarget)
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592.

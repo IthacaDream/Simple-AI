@@ -384,7 +384,7 @@ Chat['tSpWordList'] = {
 	[7] = {
 		['sSp1Name'] = 7,
 		['sSp2Name'] = '',
-		['sCnName'] = '运筹帷幄模式  军师:',
+		['sCnName'] = '锦囊模式  军师:',
 		['sEnName'] = 0,
 		['sFrName'] = 0,
 		['sDeName'] = 0,
@@ -397,7 +397,7 @@ Chat['tSpWordList'] = {
 	[8] = {
 		['sSp1Name'] = 8,
 		['sSp2Name'] = '',
-		['sCnName'] = '运筹帷幄模式  中级军师:',
+		['sCnName'] = '锦囊模式  中级军师:',
 		['sEnName'] = 0,
 		['sFrName'] = 0,
 		['sDeName'] = 0,
@@ -410,7 +410,7 @@ Chat['tSpWordList'] = {
 	[9] = {
 		['sSp1Name'] = 9,
 		['sSp2Name'] = '',
-		['sCnName'] = '运筹帷幄模式  高级军师:',
+		['sCnName'] = '锦囊模式  高级军师:',
 		['sEnName'] = 0,
 		['sFrName'] = 0,
 		['sDeName'] = 0,
@@ -423,7 +423,7 @@ Chat['tSpWordList'] = {
 	[10] = {
 		['sSp1Name'] = 10,
 		['sSp2Name'] = '',
-		['sCnName'] = '运筹帷幄模式  客场军师:',
+		['sCnName'] = '锦囊模式  客场军师:',
 		['sEnName'] = 0,
 		['sFrName'] = 0,
 		['sDeName'] = 0,
@@ -4619,4 +4619,211 @@ Eul的神圣法杖  item_cyclone  item_recipe_cyclone
 风灵之纹 item_wind_lace
 
 --]]
--- dota2jmz@163.com QQ:2462331592。
+
+--[[
+第1级物品
+
+万灵药水
+item_elixer
+
+基恩镜片
+item_keen_optic
+
+穷鬼盾
+item_poor_mans_shield
+
+寒铁钢爪
+item_iron_talon
+
+铁树之木
+item_ironwood_tree
+
+蜂皇浆
+item_royal_jelly
+
+芒果树
+item_mango_tree
+
+海洋之心
+item_ocean_heart
+
+扫帚柄
+item_broom_handle
+
+可靠铁铲
+item_trusty_shovel
+
+暗淡胸针
+item_faded_broach
+
+奥术指环
+item_arcane_ring
+
+-----
+-----
+第2级物品
+
+林野长弓
+item_grove_bow
+
+吸血鬼獠牙
+item_vampire_fangs
+
+天鹰之戒
+item_ring_of_aquila
+
+学徒之礼
+item_pupils_gift
+
+魔童之爪
+item_imp_claw
+
+贤者石
+item_philosophers_stone
+
+幽冥披巾
+item_nether_shawl
+
+炎龙之鳞
+item_dragon_scale
+
+精华指环
+item_essence_ring
+
+臂甲
+item_vambrace
+
+笨拙渔网
+item_clumsy_net
+
+阿哈利姆之书
+item_tome_of_aghanim
+
+-------
+-------
+第3级物品
+
+不朽尸王的头盔
+item_helm_of_the_undying
+
+维修器具
+item_repair_kit
+
+崎岖外衣
+item_craggy_coat
+
+高级仙灵之火
+item_greater_faerie_fire
+
+加速护符
+item_quickening_charm
+
+智灭
+item_mind_breaker
+
+网虫腿
+item_spider_legs
+
+魔力箭袋
+item_enchanted_quiver
+
+骑士剑
+item_paladin_sword
+
+毁灭灵球
+item_orb_of_destruction
+
+第三只眼
+item_third_eye
+
+巨神残铁
+item_titan_sliver
+
+-------
+-------
+第4级物品
+
+无知小帽
+item_witless_shako
+
+永恒遗物
+item_timeless_relic
+
+法术棱镜
+item_spell_prism
+
+亲王短刀
+item_princes_knife
+
+闪灵
+item_flicker
+
+望远镜
+item_spy_gadget
+
+忍者用具
+item_ninja_gear
+
+幻术师披风
+item_illusionsts_cape
+
+浩劫巨锤
+item_havoc_hammer
+
+魔力明灯
+item_panic_button
+
+平世剑
+item_the_leveller
+
+灵犀角
+item_minotaur_horn
+
+--------
+--------
+第5级物品
+
+原力靴
+item_force_boots
+
+黯灭2
+item_desolator_2
+
+凤凰余烬
+item_phoenix_ash
+
+先哲之石
+item_seer_stone
+
+神镜盾
+item_mirror_shield
+
+聚合神符
+item_fusion_rune
+
+极品
+item_apex
+
+弩炮
+item_ballista
+
+林地神行靴
+item_woodland_striders
+
+三叉戟
+item_recipe_trident
+
+亡者之书
+item_demonicon
+
+堕天斧
+item_fallen_sky
+
+海盗帽
+item_pirate_hat
+
+机械之心
+item_ex_machina
+
+--]]
+-- dota2jmz@163.com QQ:2462331592.

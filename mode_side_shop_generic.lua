@@ -35,7 +35,7 @@ function GetDesire()
 		for _,target in pairs(outpostsTarget)
 		do
 			
-			if not X.SuitableToOutposts() then --排除不安全的前哨
+			if not X.SuitableToOutposts(target) then --排除不安全的前哨
 				break;
 			end
 
@@ -152,48 +152,49 @@ function X.IsTowerSecurity()
 	return true
 end
 
-function X.SuitableToOutposts()
-	local Enemies = J.GetAroundTargetEnemyUnitCount(bot, 1300);
-	local OutpostsEnemies = J.GetAroundTargetEnemyUnitCount(bot, 1300);
+function X.SuitableToOutposts(outpost)
+	local Enemies = J.GetAroundTargetEnemyUnitCount(bot, 800);
+	local OutpostsEnemies = J.GetAroundTargetEnemyUnitCount(outpost, 800);
+	local Allys =  J.GetUnitAllyCountAroundEnemyTarget(bot, 800);
+	local OutpostsAllys = J.GetUnitAllyCountAroundEnemyTarget(outpost, 800);
 	local tableNearbyEnemyHeroes = bot:GetNearbyHeroes(1300, true, BOT_MODE_NONE);
 
 	local mode = bot:GetActiveMode();
 
 	--如果前哨尚未被任何阵营占领，则降低一些安全条件
 	if GetTeam() ~= TEAM_RADIANT and GetTeam() ~= TEAM_DIRE then
-		if ( ( mode ~= BOT_MODE_RETREAT)
-			or mode ~= BOT_MODE_ATTACK
-			or mode ~= BOT_MODE_RUNE
-			or mode ~= BOT_MODE_DEFEND_ALLY
-			or mode ~= BOT_MODE_DEFEND_TOWER_TOP
-			or mode ~= BOT_MODE_DEFEND_TOWER_MID
-			or mode ~= BOT_MODE_DEFEND_TOWER_BOT
-			or Enemies < 10
-			or #tableNearbyEnemyHeroes <= 2
-			or ( #tableNearbyEnemyHeroes <= 1 and not X.IsIBecameTheTarget(tableNearbyEnemyHeroes) )
+		if ( ( mode == BOT_MODE_RETREAT)
+			or mode == BOT_MODE_ATTACK
+			or mode == BOT_MODE_RUNE
+			or mode == BOT_MODE_DEFEND_ALLY
+			or mode == BOT_MODE_DEFEND_TOWER_TOP
+			or mode == BOT_MODE_DEFEND_TOWER_MID
+			or mode == BOT_MODE_DEFEND_TOWER_BOT
+			or #tableNearbyEnemyHeroes >= 3
+			or not bot:WasRecentlyDamagedByAnyHero(2.0)
+			) 
+		then
+			return false;
+		end
+	else
+		if ( ( mode == BOT_MODE_RETREAT and bot:GetActiveModeDesire() >= BOT_MODE_DESIRE_MODERATE )
+			or mode == BOT_MODE_ATTACK
+			or mode == BOT_MODE_RUNE 
+			or mode == BOT_MODE_DEFEND_ALLY
+			or mode == BOT_MODE_DEFEND_TOWER_TOP
+			or mode == BOT_MODE_DEFEND_TOWER_MID
+			or mode == BOT_MODE_DEFEND_TOWER_BOT
+			or Enemies > Allys
+			or OutpostsEnemies > OutpostsAllys
+			or #tableNearbyEnemyHeroes >= 2
+			or ( #tableNearbyEnemyHeroes >= 1 and X.IsIBecameTheTarget(tableNearbyEnemyHeroes) )
 			or bot:WasRecentlyDamagedByAnyHero(5.0)
 			) 
 		then
-			return true;
+			return false;
 		end
 	end
 
-	if ( ( mode == BOT_MODE_RETREAT and bot:GetActiveModeDesire() >= BOT_MODE_DESIRE_MODERATE )
-		or mode == BOT_MODE_ATTACK
-		or mode == BOT_MODE_RUNE 
-		or mode == BOT_MODE_DEFEND_ALLY
-		or mode == BOT_MODE_DEFEND_TOWER_TOP
-		or mode == BOT_MODE_DEFEND_TOWER_MID
-		or mode == BOT_MODE_DEFEND_TOWER_BOT
-		or Enemies >= 5
-		or OutpostsEnemies >= 6
-		or #tableNearbyEnemyHeroes >= 2
-		or ( #tableNearbyEnemyHeroes >= 1 and X.IsIBecameTheTarget(tableNearbyEnemyHeroes) )
-		or bot:WasRecentlyDamagedByAnyHero(5.0)
-		) 
-	then
-		return false;
-	end
 	return true;
 end
 

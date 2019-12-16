@@ -679,6 +679,10 @@ function Think()
 
 	if not bInitLineUpDone then X.SetLineUpInit() return end
 
+	if GetGameState() == GAME_STATE_HERO_SELECTION then
+		InstallChatCallback(function ( tChat ) X.SetChatHeroBan( tChat.string ); end);
+	end
+
 	if GetGameMode() == GAMEMODE_AP then
 		if GetGameState() == GAME_STATE_HERO_SELECTION then
 			InstallChatCallback(function ( tChat ) X.SetChatHeroBan( tChat.string ); end);
@@ -723,7 +727,7 @@ function AllPickLogic()
 				if sSelectHero == "sRandomHero" 
 				then 
 					sSelectHero = X.GetNotRepeatHero(tSelectPoolList[i]); 
-					if not IsPlayerBot(id) then sSelectHero = Chat['sAllHeroList'][RandomInt(2,118)] end
+					if not IsPlayerBot(id) then sSelectHero = Chat['sAllHeroList'][RandomInt(2,120)] end
 				end
 				
 				SelectHero(id,sSelectHero);
@@ -794,4 +798,4 @@ function UpdateLaneAssignments()
 end
 
 end
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592.

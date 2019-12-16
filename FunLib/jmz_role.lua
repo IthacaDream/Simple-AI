@@ -11,7 +11,7 @@ local X = {}
 
 local sBotVersion = "New";
 local sVersionDate = " 1.2.5 Preview"
-local sABAVersionDate = sBotVersion.." 7.23,2019/12/03"
+local sABAVersionDate = sBotVersion.." 7.23,2019/12/16"
 
 function X.GetBotVersion()
 	return sBotVersion,sVersionDate,sABAVersionDate;
@@ -1777,6 +1777,9 @@ local globalEnemyCheck = false;
 local lastCheck = -90;
 
 function X.UpdateInvisEnemyStatus(bot)
+
+	if X['invisEnemyExist'] then return end
+
 	if globalEnemyCheck == false then
 		local players = GetTeamPlayers(GetOpposingTeam());
 		for i=1,#players do
@@ -1810,7 +1813,7 @@ function X.UpdateInvisEnemyStatus(bot)
 end
 
 function X.IsTheLowestLevel(bot)
-	local lowestLevel = 25;
+	local lowestLevel = 30;
 	local lowestID = -1;
 	local players = GetTeamPlayers(GetTeam());
 	for i=1,#players do
@@ -1876,9 +1879,9 @@ function X.ShouldTpToFarm()
 	return DotaTime() > X['lastFarmTpTime'] + 4.0;
 end
 
-X['lasPowerRuneTime'] = 90;
+X['lastPowerRuneTime'] = 90;
 function X.IsPowerRuneKnown()
-	return math.floor(X['lasPowerRuneTime']/120) == math.floor(DotaTime()/120)
+	return math.floor(X['lastPowerRuneTime']/120) == math.floor(DotaTime()/120)
 end
 
 X['campCount'] = 18;
@@ -2051,4 +2054,4 @@ end
 
 
 return X
--- aaxxxxop@163.com QQ:2462331592。
+-- aaxxxxop@163.com QQ:2462331592.

@@ -19,7 +19,7 @@ local sAbilityList = J.Skill.GetAbilityList(bot)
 local tTalentTreeList = {
 						['t25'] = {10,10},
 						['t20'] = {0, 10},
-						['t15'] = {0, 10},
+						['t15'] = {10, 0},
 						['t10'] = {0, 10},
 }
 
@@ -59,10 +59,7 @@ X['sSellList'] = {
 
 if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_priest' }, {} end
 
-X['sApplicableNeutralList'] = {
-}
-
-nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'],X['sApplicableNeutralList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'],X['sApplicableNeutralList']);
+nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
@@ -532,4 +529,4 @@ function X.ConsiderQ()
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592.

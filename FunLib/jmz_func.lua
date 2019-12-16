@@ -10,20 +10,13 @@
 
 local J = {}
 
---[[------------------------------------
-----------------------------------------
-----------------------------------------
---]]------------------------------------
 GBotTeam = GetTeam()
 GOppTeam = GetOpposingTeam() 
 if gTime == nil then gTime = 0 end
 
---[[------------------------------------
-----------------------------------------
-----------------------------------------
---]]------------------------------------
-local sDota2Version= '7.23b'
-local sDebugVersion= '20191203ver1.5f'
+
+local sDota2Version= '7.23e'
+local sDebugVersion= '20191216ver1.5h'
 local nDebugTime   = 99999
 local bDebugMode   = ( 1 == 10 )
 local bDebugTeam   = (GBotTeam == TEAM_RADIANT)
@@ -46,7 +39,6 @@ local fSpamThreshold = 0.35;
 
 
 --[[------------------------------------
-----------------------------------------
 ----------------------------------------
 --]]------------------------------------
 for i,id in pairs(tAllyIDList)
@@ -113,7 +105,7 @@ end
 ------------------------------------
 -------变量部分完成, 下面开始函数部分
 -----------------------------------]]
-function J.SetUserHeroInit(nAbilityBuildList, nTalentBuildList, sBuyList, sSellList, sApplicableNeutralList)
+function J.SetUserHeroInit(nAbilityBuildList, nTalentBuildList, sBuyList, sSellList)
 
 	local bot = GetBot()
 	
@@ -131,7 +123,6 @@ function J.SetUserHeroInit(nAbilityBuildList, nTalentBuildList, sBuyList, sSellL
 				nTalentBuildList = J.Chat.GetTalentBuildList(BotSet['TianFu'])
 				sBuyList = J.Chat.GetItemBuildList(BotSet['ChuZhuang'])
 				sSellList = J.Chat.GetItemBuildList(BotSet['GuoDuZhuang'])
-				sApplicableNeutralList = BotSet['ZhongLiDiaoLuo']
 				if J.Chat.GetRawGameWord(BotSet['ShiFouDaFuZhu']) == true
 				then J.Role.SetUserSup(bot) end
 			end
@@ -139,7 +130,7 @@ function J.SetUserHeroInit(nAbilityBuildList, nTalentBuildList, sBuyList, sSellL
 		
 	end
 
-	return nAbilityBuildList, nTalentBuildList, sBuyList, sSellList, sApplicableNeutralList;
+	return nAbilityBuildList, nTalentBuildList, sBuyList, sSellList;
 	
 end
 
@@ -1392,14 +1383,13 @@ function J.GetCreepAttackActivityWillRealDamage(nUnit, nTime)
 			
 			if  attackPoint > animCycle 
 				and creep:GetLastAttackTime() < gameTime - 0.1
-				and (attackPoint - animCycle) * attackPerTime  < nTime * ( 0.96 - botLV/150 )
+				and (attackPoint - animCycle) * attackPerTime  < nTime * ( 0.98 - botLV/150 )
 			then
 				nDamage = nDamage + creep:GetAttackDamage() * creep:GetAttackCombatProficiency(nUnit);
 			end		
 		end
 	end
 	
-	--(or J.IsKeyWordUnit( "ranged", creep ) and GetUnitToUnitDistance(creep, nUnit) < 150)
 	
 	return nUnit:GetActualIncomingDamage(nDamage, DAMAGE_TYPE_PHYSICAL);
 
@@ -1707,9 +1697,7 @@ function J.PrintMessage(nMessage, nNumber, n, nIntevel)
 		PrintTime[n] = DotaTime();	
 		local preStr = string.gsub(GetBot():GetUnitName(), "npc_dota_", "")..':';
 		local suffix = string.gsub(tostring(nNumber), "npc_dota_", "");
-		print("++++++++++++++++++++++++++++++++++++＄＄＄＄＄＄＄＄＄START");
 		print(preStr..nMessage..suffix);
-		print("------------------------------------＄＄＄＄＄＄＄＄＄＄＄END");
 	end
 end
 
@@ -1720,9 +1708,7 @@ function J.PrintAndReport(nMessage, nNumber)
 	then
 		PARTime = DotaTime();
 		local pMessage = nMessage..string.gsub(tostring(nNumber), "npc_dota_", "");
-		print("++++++++++++++++++++++++++++++++++++＄＄＄＄＄＄＄＄＄START");
 		print(GetBot():GetUnitName()..pMessage);
-		print("------------------------------------＄＄＄＄＄＄＄＄＄＄＄END");
 		GetBot():ActionImmediate_Chat(pMessage, true);
 	end
 end
@@ -1767,7 +1753,7 @@ function J.SetReportMotive(bDebugFile, sMotive)
 		local nTime = J.GetOne(DotaTime()/10)*10;
 		local sTime = (J.GetOne(nTime/600)*10)..":"..(nTime%60)
 		GetBot():ActionImmediate_Chat(sTime.."_"..sMotive, true);
-		print(J.Chat.GetNormName(GetBot()).."  "..sTime.."  "..sMotive)
+		print(sTime.."  "..J.Chat.GetNormName(GetBot()).."  "..sMotive)
 	end
 
 end
@@ -1888,14 +1874,14 @@ function J.SetQueuePtToINT(bot, bSoulRingUsed)
 
 end
 
---debug
+
 function J.IsPTReady(bot, status)
 	
 	if  not bot:IsAlive()
 		or bot:IsMuted()
 		or bot:IsChanneling()
 		or bot:IsInvisible()
-		or bot:GetHealth()/bot:GetMaxHealth() < 0.25
+		or bot:GetHealth()/bot:GetMaxHealth() < 0.2
 	then
 		return true;
 	end
@@ -3671,4 +3657,4 @@ J.GetMagicToPhysicalDamage(bot, nUnit, nMagicDamage)
 
 
 --]]
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592.

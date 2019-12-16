@@ -177,8 +177,8 @@ X["onlyCM_hero"] = {
     --'npc_dota_hero_abyssal_underlord',
     --'npc_dota_hero_ancient_apparition',
     --'npc_dota_hero_bane',
-    --'npc_dota_hero_bounty_hunter',
-    --'npc_dota_hero_invoker',
+    'npc_dota_hero_bounty_hunter',
+    'npc_dota_hero_invoker',
 }
 
 function X.CounterWeightList(hero) --获取推荐阵容列表

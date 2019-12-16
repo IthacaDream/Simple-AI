@@ -43,19 +43,16 @@ X['sBuyList'] = {
 }
 
 X['sSellList'] = {
-	"item_ultimate_scepter",
+	"item_yasha_and_kaya",
 	"item_urn_of_shadows",
 	
-	'item_mjollnir',
+	'item_black_king_bar',
 	'item_magic_wand',
 }
 
 if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_mid' }, {} end
 
-X['sApplicableNeutralList'] = {
-}
-
-nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'],X['sApplicableNeutralList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'],X['sApplicableNeutralList']);
+nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
@@ -137,7 +134,7 @@ function X.SkillsComplement()
 	castRQDesire, castRQTarget = X.ConsiderRQ();
 	if ( castRQDesire > 0 )
 	then
-		print("使用RQ,目标是:"..J.Chat.GetNormName(castRQTarget));
+		--print("使用RQ,目标是:"..J.Chat.GetNormName(castRQTarget));
 		lastRQTime = DotaTime();
 		
 		J.SetQueuePtToINT(bot, true)
@@ -243,7 +240,8 @@ function X.ConsiderQ()
 
 	if not abilityQ:IsFullyCastable() or bot:IsDisarmed() then return BOT_ACTION_DESIRE_NONE end
 	
-	local nAttackRange = bot:GetAttackRange() + 30;
+	local nSkillLV = abilityQ:GetLevel()
+	local nAttackRange = bot:GetAttackRange() + (nSkillLV - 1) * 40
 	local nAttackDamage = bot:GetAttackDamage();
 	
 	local nTowers = bot:GetNearbyTowers(1000,true)
@@ -255,7 +253,7 @@ function X.ConsiderQ()
 	local npcTarget = J.GetProperTarget(bot)
 	
 	
-	if  J.IsValidHero(npcTarget) 
+	if  J.IsValidHero(npcTarget) and false
 		and J.IsValidHero(nEnemysHerosInAttackRange[1])
 		and not (#nEnemysHerosInAttackRange == 1 and nEnemysHerosInAttackRange[1] == npcTarget)
 		and (bot:GetActiveMode() ~= BOT_MODE_RETREAT or bot:GetActiveModeDesire( ) < 0.65 )
@@ -558,4 +556,4 @@ function X.ConsiderR()
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592.

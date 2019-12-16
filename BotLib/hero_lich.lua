@@ -40,23 +40,19 @@ X['sBuyList'] = {
 				"item_rod_of_atos",
 				"item_guardian_greaves",
 				"item_spirit_vessel",
-				--"item_ultimate_scepter",
 				"item_shivas_guard",
 }
 
 X['sSellList'] = {
 
-	-- "item_ultimate_scepter",
-	-- "item_magic_wand",
+	"item_guardian_greaves",
+	"item_magic_wand",
 
 }
 
 if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_priest' }, {} end
 
-X['sApplicableNeutralList'] = {
-}
-
-nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'],X['sApplicableNeutralList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'],X['sApplicableNeutralList']);
+nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
@@ -916,6 +912,6 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592.
 
 

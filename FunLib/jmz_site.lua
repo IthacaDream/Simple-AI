@@ -26,7 +26,17 @@ Site.nTowerList = {
 					TOWER_TOP_3,
 					TOWER_MID_3,
 					TOWER_BOT_3,
+					TOWER_BASE_1,
+					TOWER_BASE_2,
 				  }
+	
+local vRadiantTowerLocationList = {}	
+local vDireTowerLocationList = {}
+for _,nTower in pairs(Site.nTowerList)
+do
+	vRadiantTowerLocationList[nTower] = GetTower(TEAM_RADIANT,nTower):GetLocation()
+	vDireTowerLocationList[nTower] = GetTower(TEAM_DIRE,nTower):GetLocation()
+end
 
 
 Site.nRuneList = {
@@ -53,65 +63,10 @@ Site["roshan"] = Vector(-2862,2260);
 
 Site["dire_ancient"] = Vector(5517, 4981);
 Site["radiant_ancient"] = Vector(-5860, -5328);
-Site["radiant_secret_shop"] = Vector(-4739, 1263);
-Site["dire_secret_shop"] = Vector(4559, -1554);
 
 Site["radiant_base"] = Vector(-7200, -6666);
-Site["radiant_bot_tower_1"] = Vector(4896, -6140);
-Site["radiant_bot_tower_2"] = Vector(-128, -6244);
-Site["radiant_bot_tower_3"] = Vector(-3966, -6110);
-Site["radiant_mid_tower_1"] = Vector(-1663, -1510);
-Site["radiant_mid_tower_2"] = Vector(-3559, -2783);
-Site["radiant_mid_tower_3"] = Vector(-4647, -4135);
-Site["radiant_top_tower_1"] = Vector(-6202, 1831);
-Site["radiant_top_tower_2"] = Vector(-6157, -860);
-Site["radiant_top_tower_3"] = Vector(-6591, -3397);
-
-Site["radiant_top_shrine"] = Vector(-4229, 1299);
-Site["radiant_bot_shrine"] = Vector(622, -2555);
-Site["radiant_bot_bounty_rune"] = Vector(1276, -4129);
-Site["radiant_top_bounty_rune"] = Vector(-4351, 200);
-
 Site["dire_base"] = Vector(7137, 6548);
-Site["dire_bot_tower_1"] = Vector(6215, -1639);
-Site["dire_bot_tower_2"] = Vector(6242, 400);
-Site["dire_bot_tower_3"] = Vector(-6307, 3043);
-Site["dire_mid_tower_1"] = Vector(1002, 330);
-Site["dire_mid_tower_2"] = Vector(2477, 2114);
-Site["dire_mid_tower_3"] = Vector(4197, 3756);
-Site["dire_top_tower_1"] = Vector(-4714, 6016);
-Site["dire_top_tower_2"] = Vector(0, 6020);
-Site["dire_top_tower_3"] = Vector(3512, 5778);
-Site["dire_top_shrine"] = Vector(-139, 2533);
-Site["dire_bot_shrine"] = Vector(4173, -1613);
-Site["dire_bot_bounty_rune"] = Vector(3471, 295);
-Site["dire_top_bounty_rune"] = Vector(-2821, 4147);
 
-Site["RandomIntRoute"] = nil;
-
-Site["radiant_easy_and_medium"] = {
-				Vector(3017, -4525),
-				Vector(384, -4672),
-				Vector(69 , -1851),
-}
-
-Site["radiant_hard"] = {
-			Vector(-247, -3299),
-			Vector(-1848, -4216),
-			Vector(4800, -4288),
-}
-
-Site["dire_easy_and_medium"] = {
-			Vector(-2464, 4816),
-			Vector(-1864, 4431),
-			Vector(-916 , 2236),
-}
-
-Site["dire_hard"] = {
-			Vector(-132 , 3355),
-			Vector(-4235, 3424),
-			Vector(1346 , 3289),
-}
 	
 local visionRad = 1600; --假眼视野范围
 
@@ -192,6 +147,18 @@ end
 function Site.GetXUnitsTowardsLocation( hUnit, vLocation, nDistance)
     local direction = (vLocation - hUnit:GetLocation()):Normalized()
     return hUnit:GetLocation() + direction * nDistance
+end
+
+--获得塔的初始位置
+function Site.GetTowerLocation(nTeam, nTower)
+
+	if nTeam == TEAM_RADIANT
+	then
+		return vRadiantTowerLocationList[nTower]
+	else
+		return vDireTowerLocationList[nTower]
+	end
+	
 end
 
 --固定强制眼位
@@ -478,7 +445,7 @@ function Site.RefreshCamp(bot)
 			then
 				table.insert(AllCamps, {idx=k, cattr=camp});
 			end
-		elseif nAverageLV < 9 then
+		elseif nAverageLV <= 10 then
 			if not Site.IsEnemyCamp(camp) and not Site.IsAncientCamp(camp)
 			then
 				table.insert(AllCamps, {idx=k, cattr=camp});
@@ -785,7 +752,7 @@ end
 
 function Site.IsTimeToFarm(bot)
 
-	if DotaTime() < 8 *60 then return false	end
+	if DotaTime() < 7 * 60 then return false	end
 	
 	local botName = bot:GetUnitName()
 	local botNetWorth = bot:GetNetWorth()
@@ -1481,4 +1448,4 @@ function Site.IsHaveItem(bot,item_name)
 end
 
 return Site;
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592.

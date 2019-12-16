@@ -30,7 +30,7 @@ X['sBuyList'] = {
                 "item_double_branches",
                 "item_null_talisman",
                 "item_arcane_boots",
-                "item_recipe_magic_wand"
+                "item_recipe_magic_wand",
                 "item_urn_of_shadows",
 				"item_ultimate_scepter",
 				"item_cyclone",
@@ -46,10 +46,7 @@ X['sSellList'] = {
 	"item_arcane_boots",
 }
 
-X['sApplicableNeutralList'] = {
-}
-
-nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'],X['sApplicableNeutralList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'],X['sApplicableNeutralList']);
+nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 

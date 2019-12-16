@@ -19,9 +19,6 @@ local Http = require( GetScriptDirectory() .. "/AuxiliaryScript/HttpServer")
 local RB = Vector(-7174.000000, -6671.00000,  0.000000)
 local DB = Vector(7023.000000, 6450.000000, 0.000000)
 
-local RDropLocation = Vector(-7143,-6580,520)
-local DDropLocation = Vector(7009,6355,516)
-
 local botName = bot:GetUnitName();
 local minute = 0;
 local sec = 0;
@@ -693,7 +690,7 @@ function Think()
 				
 				if X.CouldBlade(bot,targetFarmLoc) then return end;
 							
-				bot:Action_MoveToLocation(targetFarmLoc + RandomVector(30));
+				bot:Action_MoveToLocation(targetFarmLoc);
 				return;
 		else
 			local neutralCreeps = bot:GetNearbyNeutralCreeps(1000); 
@@ -739,7 +736,7 @@ function Think()
 				
 				bot:SetTarget(nil);
 				
-				if cDist > 200 then bot:Action_MoveToLocation(targetFarmLoc + RandomVector(200)) return end
+				if cDist > 200 then bot:Action_MoveToLocation(targetFarmLoc) return end
 			end
 		end			
 	end
@@ -935,7 +932,7 @@ function X.ShouldRun(bot)
 	
 	--没破高地塔
 	if not X.IsThereT3Detroyed() 
-	   and aliveEnemyCount > 2 
+	   and aliveEnemyCount >= 3 
 	   and #hAllyHeroList < aliveEnemyCount + 2
 	   and not J.Role.IsPvNMode()
 	then
@@ -944,10 +941,10 @@ function X.ShouldRun(bot)
 		local enemyLevel = J.GetAverageLevel(true);
 		if enemyFountainDistance < 4765
 		then
-			local nAllyLaneCreeps = bot:GetNearbyLaneCreeps(350,false);
+			local nAllyLaneCreeps = bot:GetNearbyLaneCreeps(550,false);
 			if( allyLevel - 4 < enemyLevel and allyLevel < 24 )
 			   and not ( allyLevel - 2 > enemyLevel and aliveEnemyCount == 3)
-			   and #nAllyLaneCreeps < 5
+			   and #nAllyLaneCreeps <= 4
 			then
 				return 1.33;
 			end
@@ -1316,4 +1313,4 @@ function X.IsVeryHighFarmer(bot)
 		or botName == "npc_dota_hero_razor"
 		
 end
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592.

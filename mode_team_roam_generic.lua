@@ -17,7 +17,6 @@ local X = {}
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
 
-
 local botName = bot:GetUnitName();
 local cAbility = nil;
 local distance = 2500; --吃锅距离
@@ -42,7 +41,6 @@ local droppedCheck = -90;
 local cheeseCheck = -90;
 local refShardCheck = -90;
 local pickedItem = nil;
-local dropItem = nil;
 local lastBootSlotCheck = -90;
 
 
@@ -181,96 +179,6 @@ function GetDesire()
 		end
 		lastBootSlotCheck = DotaTime();
 	end
-
-	-- 中立物品
-	local dropped = GetDroppedItemList();--掉落物品列表
-	local pickItem = nil;
-	for _,drop in pairs(dropped) do
-		--有空位并且物品是中立掉落
-		if J.Item.IsNeutralItem(drop.item:GetName()) 
-		   and J.Item.GetEmptyInventoryAmount(bot) > 0
-		   and bot:DistanceFromFountain() > 1800
-		then
-			--附近的盟友
-			local nearAllies = J.GetAlliesNearLoc(drop.location, 800)
-			for _,hero in pairs (nearAllies) do
-				if hero:GetUnitName() == bot:GetUnitName() then
-					pickItem = drop;
-					break;
-				end
-			end
-		end
-	end
-	
-	if pickItem ~= nil 
-	then
-		--如果掉落的中立物品适用于当前英雄则拣取
-		if bot.applicableNeutral ~= nil
-		then
-			if #bot.applicableNeutral ~= 0 then
-				for _,v in pairs(bot.applicableNeutral) do
-					if v == pickItem then
-						pickedItem = pickItem;
-						return BOT_MODE_DESIRE_HIGH;
-					end
-				end
-			else
-				pickedItem = pickItem;
-				return BOT_MODE_DESIRE_HIGH;
-			end
-		end
-	end
-	--后备槽位
-	for i = 6, 9
-	do
-		--物品是中立掉落物在后备插槽中
-		local item = bot:GetItemInSlot(i);
-		
-		if item ~= nil
-		then
-			local itemName = item:GetName();
-
-			if J.Item.IsNeutralItem(itemName)
-			   and bot:GetItemSlotType(i) == ITEM_SLOT_TYPE_BACKPACK
-			then
-				--如果主槽中有空位则将物品挪至空位
-				if J.Item.GetEmptyInventoryAmountMain(bot) > 0
-				   and J.Item.IsNotNeutralFormulaItemSlot(itemName)
-				then
-					local freeSlot = J.Item.GetEmptyMainInventorySlot(bot)
-					if freeSlot ~= -1 then
-						bot:ActionImmediate_SwapItems(i, freeSlot);
-						break
-					end
-				end
-				
-				--如果主槽中有低于当前物品价值的东西，则和主槽交换位置(设定每个等级价值600) 和现在的价值交换条件有冲突
-				--local highlItem = J.Item.GetLowValueMainInventorySlot(J.Item.GetNetralItemLevel(itemName) * 600);
-				--
-				--if highlItem ~= nil then
-				--	bot:ActionImmediate_SwapItems(i, highlItem);
-				--	break
-				--end
-
-				--如果存在比现有主槽中更高级的物品则替换掉
-				local highNetralItem = J.Item.GetAbovecurrentlevelNetralItemSlot(itemName);
-
-				if highNetralItem ~= nil
-				   and J.Item.IsNotNeutralFormulaItemSlot(itemName)
-				then
-					bot:ActionImmediate_SwapItems(i, highNetralItem);
-					break
-				end
-
-				--如果主槽没空位，那就扔掉后备槽的物品不要占用槽位
-				if bot:DistanceFromFountain() < 300
-				then
-					dropItem = item
-					return BOT_MODE_DESIRE_HIGH;
-				end
-			end
-		end
-	end
 	
 	if GetGameMode() == GAMEMODE_1V1MID and bot:GetAssignedLane() ~= LANE_MID then
 		return BOT_MODE_DESIRE_ABSOLUTE;
@@ -374,7 +282,6 @@ function OnEnd()
 
 	targetShrine = nil;
 	pickedItem = nil;
-	dropItem = nil;
 	towerTime = 0;
 	towerCreepMode = false;
 	bot:SetTarget(nil);
@@ -392,11 +299,6 @@ function Think()
 	end
 	
 	if J.CanNotUseAction(bot) then return end
-
-	if dropItem ~= nil then
-		bot:ActionPush_DropItem(dropItem, bot:GetLocation() + RandomVector(200));
-		return
-	end
 	
 	if towerCreepMode 
 	then
@@ -405,12 +307,12 @@ function Think()
 	end
 
 	if pickedItem ~= nil then
-		if not pickedItem.item:IsNull() then print(botName.." picking up item"..pickedItem.item:GetName()); end
+		if not pickedItem.item:IsNull() then  print(botName.." picking up item"..pickedItem.item:GetName()); end
 		if GetUnitToLocationDistance(bot, pickedItem.location) > 500 then
-			bot:ActionQueue_MoveToLocation(pickedItem.location);
+			bot:Action_MoveToLocation(pickedItem.location);
 			return
 		else
-			bot:ActionQueue_PickUpItem(pickedItem.item);
+			bot:Action_PickUpItem(pickedItem.item);
 			return
 		end
 	end
@@ -2081,4 +1983,4 @@ function X.ShouldNotRetreat(bot)
 	
 	return false;
 end
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592.

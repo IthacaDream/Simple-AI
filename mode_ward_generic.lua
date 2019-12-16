@@ -157,6 +157,7 @@ function Think()
 			--接近目标位置
 			local nCreeps = bot:GetNearbyLaneCreeps(1200,false);
 			local nLeadCreep = nil
+			local bnearby = false
 
 			--计算出领头的小兵
 			for _,creep in pairs(nCreeps) do
@@ -170,6 +171,12 @@ function Think()
 					if ((bot:GetAssignedLane() == LANE_TOP and nLeadCreep:GetLocation().y < creep:GetLocation().y)
 					   or (bot:GetAssignedLane() == LANE_BOT and nLeadCreep:GetLocation().y > creep:GetLocation().y))
 					then
+						--领头小兵相对距离过近
+						if (bot:GetAssignedLane() == LANE_TOP and creep:GetLocation().y - nLeadCreep:GetLocation().y < 5)
+						   or (bot:GetAssignedLane() == LANE_BOT and nLeadCreep:GetLocation().y - creep:GetLocation().y < 5)
+						then
+							bnearby = true
+						end
 						nLeadCreep = creep;
 					end
 
@@ -185,20 +192,20 @@ function Think()
 				and ((bot:GetAssignedLane() == LANE_TOP and nLeadCreep:GetLocation().y < bot:GetLocation().y)
 				or (bot:GetAssignedLane() == LANE_BOT and nLeadCreep:GetLocation().y > bot:GetLocation().y))
 				then
-					if botToCreepDistance > 3 then
+					if botToCreepDistance > 3 and not bnearby then
 						bot:Action_ClearActions(true);
 					else
 						--如果太近了，预测一个稍远点的地方前进（防止小兵面向影响预测）
-						if offsetAngle > 15 then
-							--如果偏移超过15°则向中间走
-							bot:Action_MoveToLocation(nLeadCreep:GetExtrapolatedLocation(1) + Vector((teamLocation2.x - nLeadCreep:GetLocation().x) * 0.7,0));
-						else
+						--if offsetAngle > 15 then
+						--	--如果偏移超过15°则向中间走
+						--	bot:Action_MoveToLocation(nLeadCreep:GetExtrapolatedLocation(1) + Vector((teamLocation2.x - nLeadCreep:GetLocation().x) * 0.4,0));
+						--else
 							bot:Action_MoveToLocation(nLeadCreep:GetExtrapolatedLocation(1));
-						end
+						--end
 					end
 					return;
 				else
-					--如果离小兵还太远或太近了，则预判小兵位置，跟着走
+					--如果离小兵还太远，则预判小兵位置，跟着走
 					if botToCreepDistance < 200 then
 						bot:Action_MoveToLocation(nLeadCreep:GetExtrapolatedLocation(0.8));
 					else
