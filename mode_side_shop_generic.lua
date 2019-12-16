@@ -196,4 +196,13 @@ function X.SuitableToOutposts()
 	end
 	return true;
 end
+
+function X.IsIBecameTheTarget(units)
+	for _,u in pairs(units) do
+		if u:GetAttackTarget() == bot then
+			return true;
+		end
+	end
+	return false;
+end
 -- dota2jmz@163.com QQ:2462331592。

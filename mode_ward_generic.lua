@@ -148,7 +148,9 @@ function Think()
 	if blockBreep ~= nil then
 
 		--外塔位置
-		local teamLocation = X.GetLaningTeamLocation(bot:GetAssignedLane())
+		local teamLocation = X.GetLaningTeamLocation(bot:GetAssignedLane(), 1)
+		--内塔位置
+		local teamLocation2 = X.GetLaningTeamLocation(bot:GetAssignedLane(), 3)
 
 		if GetUnitToLocationDistance(bot,blockBreep) <= 1200
 		then
@@ -175,9 +177,11 @@ function Think()
 			end
 			--如果附近有小兵
 			if nLeadCreep ~= nil then
+				--计算兵线偏移
+				local offsetAngle = math.deg(math.tan(J.GetLocationToLocationDistance(nLeadCreep:GetLocation(), teamLocation2) / (nLeadCreep:GetLocation().y - teamLocation2.y) ))
 				local botToCreepDistance = GetUnitToLocationDistance(bot, nLeadCreep:GetLocation())
-				--距离小兵小于25的时候，卡一下兵
-				if botToCreepDistance <= 25
+				--距离小兵小于10的时候，卡一下兵
+				if botToCreepDistance <= 10
 				and ((bot:GetAssignedLane() == LANE_TOP and nLeadCreep:GetLocation().y < bot:GetLocation().y)
 				or (bot:GetAssignedLane() == LANE_BOT and nLeadCreep:GetLocation().y > bot:GetLocation().y))
 				then
@@ -185,7 +189,12 @@ function Think()
 						bot:Action_ClearActions(true);
 					else
 						--如果太近了，预测一个稍远点的地方前进（防止小兵面向影响预测）
-						bot:Action_MoveToLocation(nLeadCreep:GetExtrapolatedLocation(1));
+						if offsetAngle > 15 then
+							--如果偏移超过15°则向中间走
+							bot:Action_MoveToLocation(nLeadCreep:GetExtrapolatedLocation(1) + Vector((teamLocation2.x - nLeadCreep:GetLocation().x) * 0.7,0));
+						else
+							bot:Action_MoveToLocation(nLeadCreep:GetExtrapolatedLocation(1));
+						end
 					end
 					return;
 				else
@@ -319,26 +328,40 @@ function X.IsIBecameTheTarget(units)
 	return false;
 end
 
-function X.GetLaningTeamLocation(nLane)
+function X.GetLaningTeamLocation(nLane, tower)
 	local myTeam = GetTeam()
+	local towers = {}
+	if tower == 3 then
+		towers['TOP'] = TOWER_TOP_3
+		towers['MID'] = TOWER_MID_3
+		towers['BOT'] = TOWER_BOT_3
+	elseif tower == 2 then
+		towers['TOP'] = TOWER_TOP_2
+		towers['MID'] = TOWER_MID_2
+		towers['BOT'] = TOWER_BOT_2
+	else
+		towers['TOP'] = TOWER_TOP_1
+		towers['MID'] = TOWER_MID_1
+		towers['BOT'] = TOWER_BOT_1
+	end
 
-	local teamT1Top = nil; 
-	if GetTower(myTeam,TOWER_TOP_1) ~= nil then teamT1Top = GetTower(myTeam,TOWER_TOP_1):GetLocation(); end
+	local teamTop = nil; 
+	if GetTower(myTeam,towers['TOP']) ~= nil then teamTop = GetTower(myTeam,towers['TOP']):GetLocation(); end
 
-	local teamT1Mid = nil;
-	if GetTower(myTeam,TOWER_MID_1) ~= nil then teamT1Mid = GetTower(myTeam,TOWER_MID_1):GetLocation(); end
+	local teamMid = nil;
+	if GetTower(myTeam,towers['MID']) ~= nil then teamMid = GetTower(myTeam,towers['MID']):GetLocation(); end
 
-	local teamT1Bot = nil;
-	if GetTower(myTeam,TOWER_BOT_1) ~= nil then teamT1Bot = GetTower(myTeam,TOWER_BOT_1):GetLocation(); end
+	local teamBot = nil;
+	if GetTower(myTeam,towers['BOT']) ~= nil then teamBot = GetTower(myTeam,towers['BOT']):GetLocation(); end
 
 
 	if nLane == LANE_TOP then
-		return teamT1Top
+		return teamTop
 	elseif nLane == LANE_MID then
-		return teamT1Mid
+		return teamMid
 	elseif nLane == LANE_BOT then
-		return teamT1Bot			
+		return teamBot			
 	end	
-	return teamT1Mid
+	return teamMid
 end	
 -- dota2jmz@163.com QQ:2462331592。
