@@ -24,7 +24,13 @@ local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
 X['sBuyList'] = {
-                sOutfit,
+                "item_tango",
+                "item_flask",
+                "item_magic_stick",
+                "item_double_branches",
+                "item_null_talisman",
+                "item_arcane_boots",
+                "item_recipe_magic_wand"
                 "item_urn_of_shadows",
 				"item_ultimate_scepter",
 				"item_cyclone",
@@ -136,8 +142,7 @@ function X.SkillsComplement()
 	
 	--移植写法，后续分析
 	castTODesire, castTOLocation = ConsiderTornado(bot, nearbyEnemyHeroes)
-    --castEMPDesire, castEMPLocation = ConsiderEMP(bot)
-    castEMPDesire = 0
+    castEMPDesire, castEMPLocation = ConsiderEMP(bot)
     castCMDesire, castCMLocation = ConsiderChaosMeteor(bot,nearbyEnemyHeroes)
     castDBDesire, castDBLocation = ConsiderDeafeningBlast(bot)
     castSSDesire, castSSLocation = ConsiderSunStrike(bot)

@@ -96,6 +96,11 @@ X["allows_hero"] = allowsHeroData.hero--[[{
 --'npc_dota_hero_treant',
 --'npc_dota_hero_ursa',
 --'npc_dota_hero_mars',
+--'npc_dota_hero_abyssal_underlord',
+--'npc_dota_hero_ancient_apparition',
+--'npc_dota_hero_bane',
+--'npc_dota_hero_bounty_hunter',
+--'npc_dota_hero_invoker',
 ----原脚本
 --'npc_dota_hero_antimage',
 --'npc_dota_hero_arc_warden',
@@ -131,6 +136,10 @@ X["allows_hero"] = allowsHeroData.hero--[[{
 --'npc_dota_hero_witch_doctor',
 
 X["test_hero"] = {
+    --'npc_dota_hero_alchemist',
+    --'npc_dota_hero_beastmaster',
+    --'npc_dota_hero_brewmaster',
+    --'npc_dota_hero_broodmother',
 }
 
 X["onlyCM_hero"] = {
@@ -165,6 +174,11 @@ X["onlyCM_hero"] = {
     'npc_dota_hero_treant',
     'npc_dota_hero_ursa',
     'npc_dota_hero_mars',
+    --'npc_dota_hero_abyssal_underlord',
+    --'npc_dota_hero_ancient_apparition',
+    --'npc_dota_hero_bane',
+    --'npc_dota_hero_bounty_hunter',
+    --'npc_dota_hero_invoker',
 }
 
 function X.CounterWeightList(hero) --获取推荐阵容列表

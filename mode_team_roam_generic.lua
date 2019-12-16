@@ -263,7 +263,7 @@ function GetDesire()
 				end
 
 				--如果主槽没空位，那就扔掉后备槽的物品不要占用槽位
-				if bot:DistanceFromFountain() < 500
+				if bot:DistanceFromFountain() < 300
 				then
 					dropItem = item
 					return BOT_MODE_DESIRE_HIGH;
@@ -407,10 +407,10 @@ function Think()
 	if pickedItem ~= nil then
 		if not pickedItem.item:IsNull() then print(botName.." picking up item"..pickedItem.item:GetName()); end
 		if GetUnitToLocationDistance(bot, pickedItem.location) > 500 then
-			bot:Action_MoveToLocation(pickedItem.location);
+			bot:ActionQueue_MoveToLocation(pickedItem.location);
 			return
 		else
-			bot:Action_PickUpItem(pickedItem.item);
+			bot:ActionQueue_PickUpItem(pickedItem.item);
 			return
 		end
 	end

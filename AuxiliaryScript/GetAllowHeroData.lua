@@ -1098,7 +1098,7 @@ D.hero = {
          {["hero"] = "npc_dota_hero_storm_spirit",["weight"] = 3,},
          {["hero"] = "npc_dota_hero_queenofpain",["weight"] = 3,},
   },["orientation"] = { ["core"] = true, ["durable"] = true,},["attribute"] = { ["type"] = "Agile", },
-  ["evaluation"] = "", ["bot"] = false,},
+  ["evaluation"] = "", ["bot"] = true,},
 ["npc_dota_hero_ursa"] = {
   ["hero_name"] = "ursa",
   ["proposal"] = {
@@ -2547,7 +2547,7 @@ D.hero = {
          {["hero"] = "npc_dota_hero_rubick",["weight"] = 3,},
          {["hero"] = "npc_dota_hero_broodmother",["weight"] = 3,},
   },["orientation"] = { ["core"] = true, ["durable"] = true,},["attribute"] = { ["type"] = "Agile", },
-  ["evaluation"] = "", ["bot"] = false,},
+  ["evaluation"] = "", ["bot"] = true,},
 ["npc_dota_hero_bloodseeker"] = {
   ["hero_name"] = "bloodseeker",
   ["proposal"] = {
@@ -3133,7 +3133,7 @@ D.hero = {
          {["hero"] = "npc_dota_hero_omniknight",["weight"] = 3,},
          {["hero"] = "npc_dota_hero_phantom_lancer",["weight"] = 3,},
   },["orientation"] = { ["core"] = true, ["durable"] = true,},["attribute"] = { ["type"] = "Agile", },
-  ["evaluation"] = "", ["bot"] = false,},
+  ["evaluation"] = "", ["bot"] = true,},
 ["npc_dota_hero_lich"] = {
   ["hero_name"] = "lich",
   ["proposal"] = {
@@ -3580,7 +3580,7 @@ D.hero = {
          {["hero"] = "npc_dota_hero_naga_siren",["weight"] = 3,},
          {["hero"] = "npc_dota_hero_leshrac",["weight"] = 3,},
   },["orientation"] = { ["core"] = true, ["durable"] = true,},["attribute"] = { ["type"] = "Agile", },
-  ["evaluation"] = "", ["bot"] = false,},
+  ["evaluation"] = "", ["bot"] = true,},
 ["npc_dota_hero_invoker"] = {
   ["hero_name"] = "invoker",
   ["proposal"] = {
@@ -3612,7 +3612,7 @@ D.hero = {
          {["hero"] = "npc_dota_hero_tusk",["weight"] = 3,},
          {["hero"] = "npc_dota_hero_morphling",["weight"] = 3,},
   },["orientation"] = { ["core"] = true, ["durable"] = true,},["attribute"] = { ["type"] = "Agile", },
-  ["evaluation"] = "", ["bot"] = false,},
+  ["evaluation"] = "", ["bot"] = true,},
 ["npc_dota_hero_obsidian_destroyer"] = {
   ["hero_name"] = "obsidian_destroyer",
   ["proposal"] = {
