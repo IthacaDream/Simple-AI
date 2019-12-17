@@ -138,7 +138,7 @@ function X.SkillsComplement()
 		return;
 	end
 
-	castRDesire, castRLocation = X.ConsiderQ();
+	castRDesire, castRLocation = X.ConsiderR();
 	if ( castRDesire > 0 ) 
 	then
 		J.SetQueuePtToINT(bot, true)

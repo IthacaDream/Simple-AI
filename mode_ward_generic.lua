@@ -185,14 +185,18 @@ function Think()
 			--如果附近有小兵
 			if nLeadCreep ~= nil then
 				--计算兵线偏移
-				local offsetAngle = math.deg(math.tan(J.GetLocationToLocationDistance(nLeadCreep:GetLocation(), teamLocation2) / (nLeadCreep:GetLocation().y - teamLocation2.y) ))
+				--local offsetAngle = math.deg(math.tan(J.GetLocationToLocationDistance(nLeadCreep:GetLocation(), teamLocation2) / (nLeadCreep:GetLocation().y - teamLocation2.y) ))
 				local botToCreepDistance = GetUnitToLocationDistance(bot, nLeadCreep:GetLocation())
-				--距离小兵小于10的时候，卡一下兵
-				if botToCreepDistance <= 10
-				and ((bot:GetAssignedLane() == LANE_TOP and nLeadCreep:GetLocation().y < bot:GetLocation().y)
-				or (bot:GetAssignedLane() == LANE_BOT and nLeadCreep:GetLocation().y > bot:GetLocation().y))
+				if bot.blockBreepCD == nil then bot.blockBreepCD = DotaTime() end
+				--距离小兵小于150的时候，卡一下兵
+				if botToCreepDistance <= 150
+				   and ((bot:GetAssignedLane() == LANE_TOP and nLeadCreep:GetLocation().y < bot:GetLocation().y)
+				   or (bot:GetAssignedLane() == LANE_BOT and nLeadCreep:GetLocation().y > bot:GetLocation().y))
 				then
-					if botToCreepDistance > 3 and not bnearby then
+					if botToCreepDistance > 140 
+					   and not bnearby
+					   and bot.blockBreepCD < DotaTime() + 2
+					then
 						bot:Action_ClearActions(true);
 					else
 						--如果太近了，预测一个稍远点的地方前进（防止小兵面向影响预测）
@@ -200,14 +204,15 @@ function Think()
 						--	--如果偏移超过15°则向中间走
 						--	bot:Action_MoveToLocation(nLeadCreep:GetExtrapolatedLocation(1) + Vector((teamLocation2.x - nLeadCreep:GetLocation().x) * 0.4,0));
 						--else
-							bot:Action_MoveToLocation(nLeadCreep:GetExtrapolatedLocation(1));
+							bot:Action_MoveToLocation(nLeadCreep:GetExtrapolatedLocation(2));
 						--end
+						bot.blockBreepCD = DotaTime()
 					end
 					return;
 				else
 					--如果离小兵还太远，则预判小兵位置，跟着走
 					if botToCreepDistance < 200 then
-						bot:Action_MoveToLocation(nLeadCreep:GetExtrapolatedLocation(0.8));
+						bot:Action_MoveToLocation(nLeadCreep:GetExtrapolatedLocation(1.2));
 					else
 						bot:Action_MoveToLocation(nLeadCreep:GetExtrapolatedLocation(1.5));
 					end
@@ -221,7 +226,7 @@ function Think()
 			--没有接近目标位置
 
 			--拦截位置计算
-			local angle = math.deg(math.asin(J.GetLocationToLocationDistance(blockBreep, teamLocation) / GetUnitToLocationDistance(bot, blockBreep)))
+			local angle = math.deg(math.sin(J.GetLocationToLocationDistance(blockBreep, teamLocation) / GetUnitToLocationDistance(bot, blockBreep)))
 
 			--if angle > 1 and angle < 70 then
 				--移动到拦截位置(未知问题，干脆全程拦截)

@@ -34,10 +34,6 @@ function GetDesire()
 
 		for _,target in pairs(outpostsTarget)
 		do
-			
-			if not X.SuitableToOutposts(target) then --排除不安全的前哨
-				break;
-			end
 
 			if outpostTarget == nil 
 			   and target:GetTeam() ~= bot:GetTeam() 
@@ -55,6 +51,7 @@ function GetDesire()
 		if outpostTarget ~= nil then
 			--在安全的情况下进行前哨占领
 			if J.GetHPR(bot) > 0.6
+			   and X.SuitableToOutposts(outpostTarget)
 			then
 				cause = outpostTarget;
 				return BOT_MODE_DESIRE_HIGH;
@@ -163,7 +160,7 @@ function X.SuitableToOutposts(outpost)
 
 	--如果前哨尚未被任何阵营占领，则降低一些安全条件
 	if GetTeam() ~= TEAM_RADIANT and GetTeam() ~= TEAM_DIRE then
-		if ( ( mode == BOT_MODE_RETREAT)
+		if ( ( mode == BOT_MODE_RETREAT and bot:GetActiveModeDesire() >= BOT_MODE_DESIRE_MODERATE )
 			or mode == BOT_MODE_ATTACK
 			or mode == BOT_MODE_RUNE
 			or mode == BOT_MODE_DEFEND_ALLY
@@ -184,8 +181,8 @@ function X.SuitableToOutposts(outpost)
 			or mode == BOT_MODE_DEFEND_TOWER_TOP
 			or mode == BOT_MODE_DEFEND_TOWER_MID
 			or mode == BOT_MODE_DEFEND_TOWER_BOT
-			or Enemies > Allys
-			or OutpostsEnemies > OutpostsAllys
+			or Enemies > Allys + 2
+			or OutpostsEnemies > OutpostsAllys + 2
 			or #tableNearbyEnemyHeroes >= 2
 			or ( #tableNearbyEnemyHeroes >= 1 and X.IsIBecameTheTarget(tableNearbyEnemyHeroes) )
 			or bot:WasRecentlyDamagedByAnyHero(5.0)
