@@ -152,13 +152,22 @@ function X.SkillsComplement()
 	end
 	
 	
-	castRDesire  = X.ConsiderR();
+	castRDesire, blinkLocation  = X.ConsiderR();
 	if ( castRDesire > 0 ) 
 	then
 	
 		J.SetQueuePtToINT(bot, true)
+
+		if blinkLocation ~= nil then
+			local blink = IsItemAvailable("item_blink");
+			if blink ~= nil and blink:IsFullyCastable() then
+				bot:Action_UseAbilityOnLocation(blink, blinkLocation);
+				bot:ActionQueue_UseAbility( abilityR )
+			end
+		else
+			bot:ActionQueue_UseAbility( abilityR )
+		end
 	
-		bot:ActionQueue_UseAbility( abilityR )
 		return;
 	
 	end
@@ -356,6 +365,37 @@ function X.ConsiderR()
 			and npcTarget:IsFacingLocation(bot:GetLocation(),30)
 		then
 			return BOT_ACTION_DESIRE_HIGH;
+		end
+
+		--跳刀
+		local blink = IsItemAvailable("item_blink");
+		if blink ~= nil and blink:IsFullyCastable() then
+			local locationAoE = bot:FindAoELocation( true, true, bot:GetLocation(), nAttackRange, 1600, 0, 0 );
+			if ( locationAoE.count >= 2 ) 
+			then
+				local nInvUnit = J.GetInvUnitInLocCount(bot, nAttackRange+1400, 400, locationAoE.targetloc, true);
+				if nInvUnit >= locationAoE.count then
+					return BOT_ACTION_DESIRE_MODERATE, locationAoE.targetloc;
+				end
+			end
+			
+			local nAoe = bot:FindAoELocation( true, true, bot:GetLocation(), 1400, 700, 1.0, 0 );
+			if nAoe.count >= 3
+			then
+				return BOT_ACTION_DESIRE_HIGH, nAoe.targetloc;
+			end	
+			
+			local npcTarget = J.GetProperTarget(bot);		
+			if J.IsValidHero(npcTarget) 
+				and J.CanCastOnNonMagicImmune(npcTarget) 
+				and not J.IsDisabled(true, npcTarget)
+				and GetUnitToUnitDistance(npcTarget,bot) <= bot:GetAttackRange() + 1400
+				and npcTarget:GetHealth() > 600
+				and npcTarget:GetPrimaryAttribute() ~= ATTRIBUTE_INTELLECT
+				and npcTarget:IsFacingLocation(bot:GetLocation(),30)
+			then
+				return BOT_ACTION_DESIRE_HIGH, npcTarget:GetLocation();
+			end
 		end
 		
 	end

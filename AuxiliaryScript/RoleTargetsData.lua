@@ -140,7 +140,8 @@ X["test_hero"] = {
     --'npc_dota_hero_beastmaster',
     --'npc_dota_hero_brewmaster',
     --'npc_dota_hero_broodmother',
-    'npc_dota_hero_ancient_apparition'
+    'npc_dota_hero_ancient_apparition',
+    'npc_dota_hero_magnataur',
 }
 
 X["onlyCM_hero"] = {

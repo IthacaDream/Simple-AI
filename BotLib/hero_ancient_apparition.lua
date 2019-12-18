@@ -144,7 +144,7 @@ function X.SkillsComplement()
 		J.SetQueuePtToINT(bot, true)
 	
 		bot:ActionQueue_UseAbilityOnLocation( abilityR, castRLocation )
-		ReleaseLoc = castIBLocation;
+		ReleaseLoc = castRLocation;
 		return;
 	
 	end
