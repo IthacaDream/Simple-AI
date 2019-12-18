@@ -1495,7 +1495,7 @@ D.hero = {
               {["hero"] = "npc_dota_hero_terrorblade",["weight"] = 2,},
   },["orientation"] = { ["core"] = true, ["durable"] = true,},["attribute"] = { ["type"] = "Agile", },
   ["evaluation"] = "", ["bot"] = false,},
-["npc_dota_hero_     _lancer"] = {
+["npc_dota_hero_phantom_lancer"] = {
   ["hero_name"] = "phantom_lancer",
   ["proposal"] = {
          {["hero"] = "npc_dota_hero_crystal_maiden",["weight"] = 3,},

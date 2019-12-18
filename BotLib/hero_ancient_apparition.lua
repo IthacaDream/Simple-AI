@@ -75,7 +75,7 @@ end
 local abilityQ = bot:GetAbilityByName( sAbilityList[1] )
 local abilityW = bot:GetAbilityByName( sAbilityList[2] )
 local abilityE = bot:GetAbilityByName( sAbilityList[3] )
-local abilityD = bot:GetAbilityByName( sAbilityList[4] )
+local abilityD = bot:GetAbilityByName( "ancient_apparition_ice_blast_release" )
 local abilityR = bot:GetAbilityByName( sAbilityList[6] )
 
 

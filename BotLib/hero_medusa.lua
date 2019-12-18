@@ -159,7 +159,7 @@ function X.SkillsComplement()
 		J.SetQueuePtToINT(bot, true)
 
 		if blinkLocation ~= nil then
-			local blink = IsItemAvailable("item_blink");
+			local blink = J.IsItemAvailable("item_blink");
 			if blink ~= nil and blink:IsFullyCastable() then
 				bot:Action_UseAbilityOnLocation(blink, blinkLocation);
 				bot:ActionQueue_UseAbility( abilityR )
@@ -368,7 +368,7 @@ function X.ConsiderR()
 		end
 
 		--跳刀
-		local blink = IsItemAvailable("item_blink");
+		local blink = J.IsItemAvailable("item_blink");
 		if blink ~= nil and blink:IsFullyCastable() then
 			local locationAoE = bot:FindAoELocation( true, true, bot:GetLocation(), nAttackRange, 1600, 0, 0 );
 			if ( locationAoE.count >= 2 ) 
