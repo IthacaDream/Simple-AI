@@ -61,7 +61,7 @@ function H.LocalHttpPost(postData)
 
 end
 
-function H.HttpPost(postData, url, call, notUUID)
+function H.HttpPost(postData, url, call, calldata, notUUID)
 
     if UUID ~= nil or notUUID then
 
@@ -75,7 +75,7 @@ function H.HttpPost(postData, url, call, notUUID)
                    and string.find(v, 'res:') ~= nil 
                 then 
                     local resdata = string.sub(v, 5);
-                    call(resdata)
+                    call(resdata, calldata)
                 end
                 
             end 

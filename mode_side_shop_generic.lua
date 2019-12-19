@@ -76,11 +76,10 @@ function Think()
 		end
 		if GetUnitToUnitDistance(bot, cause) > 800 then
 			bot:Action_MoveToLocation(cause:GetLocation() + RandomVector(20))
-			return
+			return;
 		else
-			--下方前哨有概率出现傻站着不占领的问题，不确定原因
 			bot:Action_AttackUnit(cause, true)
-			return
+			return;
 		end
 	end
 	

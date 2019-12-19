@@ -62,6 +62,8 @@ local bPushNoticeDone = false;
 local bAllNotice = true;
 local nPushNoticeTime = nil;
 
+local message = nil;
+
 if J.Role.IsPvNMode()
 then
 	sVersionDate = " (PvN) "..sVersionDate;
@@ -88,7 +90,26 @@ function GetDesire()
 		nPushNoticeTime = DotaTime();
 		bAllNotice = false
 	end
-	
+	InstallChatCallback(function ( tChat )
+		local postData = {
+			operation = '"message"',
+			message = '"'..tChat.string..'"',
+		}
+		local allmes = not tChat.team_only
+		Http.HttpPost(postData, '45.77.179.135:3010',
+		function (x, t)
+			message = {
+				mes = x,
+				all = t
+			}
+			print(x)
+		end
+		, allmes,true);
+	end);
+	if message ~= nil then
+		bot:ActionImmediate_Chat(message.mes, message.all)
+		message = nil
+	end
 	--PushNotice
 	if not bPushNoticeDone
 	   and DotaTime() < 0
@@ -1297,7 +1318,6 @@ function X.IsHighFarmer(bot)
 		or botName == "npc_dota_hero_dazzle"
 		or botName == "npc_dota_hero_batrider"
 		or botName == "npc_dota_hero_axe"
-		or botName == "npc_dota_hero_void_spirit"
 		
 end
 
