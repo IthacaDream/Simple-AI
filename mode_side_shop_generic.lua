@@ -180,8 +180,8 @@ function X.SuitableToOutposts(outpost)
 			or mode == BOT_MODE_DEFEND_TOWER_TOP
 			or mode == BOT_MODE_DEFEND_TOWER_MID
 			or mode == BOT_MODE_DEFEND_TOWER_BOT
-			or Enemies > Allys + 2
-			or OutpostsEnemies > OutpostsAllys + 2
+			or Enemies > 4
+			or OutpostsEnemies > OutpostsAllys
 			or #tableNearbyEnemyHeroes >= 2
 			or ( #tableNearbyEnemyHeroes >= 1 and X.IsIBecameTheTarget(tableNearbyEnemyHeroes) )
 			or bot:WasRecentlyDamagedByAnyHero(5.0)
