@@ -25,7 +25,7 @@ function GetDesire()
 	
 	local botMode = bot:GetActiveMode();
 	if outpostsTarget ~= nil 
-	   and DotaTime() > 60 * 10
+	   and DotaTime() > 60 * 9 + 40 -- 9分40秒
 	   and outpostcooldown + 60 * 4 < DotaTime() --4分钟占领冷却
 	   and not X.IsThereT3Detroyed() --没被破高
 	   and X.IsTowerSecurity() --没有塔被攻击
