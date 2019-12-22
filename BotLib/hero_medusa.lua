@@ -344,13 +344,13 @@ function X.ConsiderR()
 		end
 		
 		local nEnemysHerosInSkillRange = bot:GetNearbyHeroes(800,true,BOT_MODE_NONE);
-		if #nEnemysHerosInSkillRange >= 3
+		if #nEnemysHerosInSkillRange >= 2
 		then
 			return BOT_ACTION_DESIRE_HIGH;
 		end		
 		
 		local nAoe = bot:FindAoELocation( true, true, bot:GetLocation(), 10, 700, 1.0, 0 );
-		if nAoe.count >= 3
+		if nAoe.count >= 2
 		then
 			return BOT_ACTION_DESIRE_HIGH;
 		end	
@@ -380,7 +380,7 @@ function X.ConsiderR()
 			end
 			
 			local nAoe = bot:FindAoELocation( true, true, bot:GetLocation(), 1400, 700, 1.0, 0 );
-			if nAoe.count >= 3
+			if nAoe.count >= 2
 			then
 				return BOT_ACTION_DESIRE_HIGH, nAoe.targetloc;
 			end	
@@ -392,7 +392,6 @@ function X.ConsiderR()
 				and GetUnitToUnitDistance(npcTarget,bot) <= bot:GetAttackRange() + 1400
 				and npcTarget:GetHealth() > 600
 				and npcTarget:GetPrimaryAttribute() ~= ATTRIBUTE_INTELLECT
-				and npcTarget:IsFacingLocation(bot:GetLocation(),30)
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcTarget:GetLocation();
 			end

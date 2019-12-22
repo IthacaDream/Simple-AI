@@ -1,9 +1,11 @@
 local P = {}
 local role = require( GetScriptDirectory()..'/FunLib/jmz_role')
-local P.Locations = {
+
+P['Locations'] = {
 	["RadiantSpawn"]= Vector(-6950,-6275),
 	["DireSpawn"]= Vector(7150, 6300),
 }
+
 --获取接近的道路
 function P.GetLane( nTeam ,hHero )
         local vBot = GetLaneFrontLocation(nTeam, LANE_BOT, 0)
@@ -268,7 +270,7 @@ function P.getCreepsNearTower(npcBot,tower)
 	return creeps
 end
 
-function getMyTarget(npcBot,lane,TargetLocation)
+function P.getMyTarget(npcBot,lane,TargetLocation)
 	local team = GetTeam()
 	local front = GetLaneFrontLocation( team, lane, 0 )
 	local EnemyTower = P.GetNearestBuilding(GetOpposingTeam(), front)
@@ -312,7 +314,7 @@ function P.UnitPushLaneThink(npcBot,lane)
 
 	local enemys = npcBot:GetNearbyHeroes(1000,true,BOT_MODE_NONE)
 	
-	local target=getMyTarget(npcBot,lane,TargetLocation)
+	local target=P.getMyTarget(npcBot,lane,TargetLocation)
 
 	if target~=nil then
 		TargetLocation=P.GetSafeLocation(npcBot,target:GetLocation(),0)

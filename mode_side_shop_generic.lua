@@ -25,7 +25,7 @@ function GetDesire()
 	
 	local botMode = bot:GetActiveMode();
 	if outpostsTarget ~= nil 
-	   and DotaTime() > 60 * 9 + 40 -- 9分40秒
+	   and DotaTime() > 60 * 9 + 50 -- 9分50秒
 	   and outpostcooldown + 60 * 4 < DotaTime() --4分钟占领冷却
 	   and not X.IsThereT3Detroyed() --没被破高
 	   and X.IsTowerSecurity() --没有塔被攻击
@@ -54,7 +54,7 @@ function GetDesire()
 			   and X.SuitableToOutposts(outpostTarget)
 			then
 				cause = outpostTarget;
-				return BOT_MODE_DESIRE_HIGH;
+				return BOT_MODE_DESIRE_MODERATE;
 			end
 		else
 			--没有可以占领的前哨时设置冷却，防止双方无限制争夺前哨
@@ -180,7 +180,7 @@ function X.SuitableToOutposts(outpost)
 			or mode == BOT_MODE_DEFEND_TOWER_TOP
 			or mode == BOT_MODE_DEFEND_TOWER_MID
 			or mode == BOT_MODE_DEFEND_TOWER_BOT
-			or Enemies > Allys + 2
+			or Enemies > 5
 			or OutpostsEnemies > OutpostsAllys + 2
 			or #tableNearbyEnemyHeroes >= 2
 			or ( #tableNearbyEnemyHeroes >= 1 and X.IsIBecameTheTarget(tableNearbyEnemyHeroes) )
