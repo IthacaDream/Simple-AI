@@ -4341,6 +4341,20 @@ function Chat.GetRawItemName(sName)
 	
 end
 
+--由本地名获得装备代码名
+function Chat.GetItemName(sName)
+	
+	for _,t in pairs(Chat['tItemNameList'])
+	do
+		if t['sRawName'] == sName
+		then
+			return t['sCnName']
+		end	
+	end
+	
+	return '未知物品'  --如果是错误物品,则改为未知物品
+	
+end
 
 --由本地名获得游戏词汇代码名
 function Chat.GetRawGameWord(sName)

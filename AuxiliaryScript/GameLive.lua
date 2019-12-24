@@ -158,6 +158,49 @@ function L.Update()
     
     local bot = GetBot()
 
+    --游戏结束
+	local win = nil
+    if GetAncient(GetTeam()):GetHealth()/GetAncient(GetTeam()):GetMaxHealth() < 0.15 then
+        win = GetOpposingTeam()
+    elseif J.GetHPR(GetAncient(GetOpposingTeam())) < 0.15 then
+        win = GetTeam()
+    end
+
+    if win ~= nil and (bot.GameEND == nil or not bot.GameEND) then
+        local data = {
+            operation = '"gameEnd"'
+        }
+                
+        local winTeam = 'true'
+        if win ~= GetTeam() then winTeam = 'false'end
+        data.Win        = '"'..winTeam..'"'                --胜利方
+        data.Hero       = '"'..C.GetNormName(bot)..'"'     --英雄
+        data.Level      = bot:GetLevel()                   --等级
+        data.MaxHealth  = bot:GetMaxHealth()               --最大生命值
+        data.MaxMana    = bot:GetMaxMana()                 --最大魔法值
+        data.Gold       = bot:GetGold()                    --金钱
+        data.kill       = GetHeroKills(bot:GetPlayerID())  --击杀数
+        data.Death      = GetHeroDeaths(bot:GetPlayerID()) --死亡数
+        data.Assist     = GetHeroAssists(bot:GetPlayerID())--助攻数
+        for i=0,5 do                                       --装备
+            local item = bot:GetItemInSlot(i);
+            if item ~= nil then
+                data['Item'..i] = '"'..C.GetItemName(item:GetName())..'"'
+            else
+                data['Item'..i] = '"none"'
+            end
+        end
+
+        H.HttpPost(data, '45.77.179.135:3010',
+            function (res, par)
+                print(par..'数据已上报')
+            end
+        , data.Hero, true);
+        
+        
+        bot.GameEND = true
+    end
+
     --每30秒执行一次
     --if DotaTime() > countTime + 30.0
     --then

@@ -102,7 +102,7 @@ function GetDesire()
 				mes = x,
 				all = t
 			}
-			print(x)
+			print('来自网络获取的消息：'..x)
 		end
 		, allmes,true);
 	end);
