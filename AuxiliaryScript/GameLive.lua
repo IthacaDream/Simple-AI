@@ -162,7 +162,7 @@ function L.Update()
 	local win = nil
     if GetAncient(GetTeam()):GetHealth()/GetAncient(GetTeam()):GetMaxHealth() < 0.15 then
         win = GetOpposingTeam()
-    elseif J.GetHPR(GetAncient(GetOpposingTeam())) < 0.15 then
+    elseif GetAncient(GetOpposingTeam()):GetHealth()/GetAncient(GetOpposingTeam()):GetMaxHealth() < 0.15 then
         win = GetTeam()
     end
 

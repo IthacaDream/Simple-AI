@@ -150,7 +150,7 @@ function getmessage(message, ctx) {
 }
 //gameEnd
 function installHeroData(heroData, gameInfo) {
-    serverdb.queryData(`
+    serverdb.executeSql(`
     INSERT INTO heroData (Hero, MaxHealth, MaxMana, kill, Death, Assist, Level, Gold, Item0, Item1, Item2, Item3, Item4, Item5, Win, Time, Date)
     VALUES (
     '${heroData.Hero}',
@@ -171,9 +171,7 @@ function installHeroData(heroData, gameInfo) {
     '${gameInfo.gameTime}',
     '${new Date()}'
     );
-    `, () => {
-        ctx.send(`res:${content}`);
-    });
+    `);
 }
 //杂项
 function randomNum(minNum,maxNum){ 
