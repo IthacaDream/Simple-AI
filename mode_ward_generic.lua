@@ -44,8 +44,6 @@ bot.ward = false;
 
 local vNonStuck = Vector(-2610.000000, 538.000000, 0.000000);
 
-local chat = false;
-local height = -1;
 
 local walkMode = false;
 local walkLocation = Vector(0,0);
@@ -88,7 +86,7 @@ function GetDesire()
 	then
 		return BOT_MODE_DESIRE_NONE;
 	end
-
+	
 	--由于抢符进程太长，导致卡兵没有时间，如果恰巧没有遇上敌人且抢完符，可以尝试赶着去卡一下试试
 	if DotaTime() > 0
 	   and firstCreep
@@ -155,7 +153,10 @@ function GetDesire()
 		
 		AvailableSpots = J.Site.GetAvailableSpot(bot);
 		targetLoc, targetDist = J.Site.GetClosestSpot(bot, AvailableSpots);
-		if targetLoc ~= nil and DotaTime() > wardCastTime + 1.0 then
+		if targetLoc ~= nil 
+			and targetDist < 6666
+			and DotaTime() > wardCastTime + 1.0 
+		then
 			bot.ward = true;
 			return math.floor((RemapValClamped(targetDist, 6000, 0, BOT_MODE_DESIRE_MODERATE, BOT_MODE_DESIRE_VERYHIGH))*20)/20;
 		end
@@ -581,4 +582,4 @@ function X.IsHumanPlayerInTeam()
 	
 	return false;
 end
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592..

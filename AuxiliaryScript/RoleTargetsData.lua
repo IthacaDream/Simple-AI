@@ -152,7 +152,6 @@ X["onlyCM_hero"] = {
     'npc_dota_hero_leshrac',
     'npc_dota_hero_batrider',
     --'npc_dota_hero_dazzle',
-    --'npc_dota_hero_abaddon',
     --'npc_dota_hero_grimstroke',
     'npc_dota_hero_puck',
     --'npc_dota_hero_invoker',

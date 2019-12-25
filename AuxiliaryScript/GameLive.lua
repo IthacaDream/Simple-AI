@@ -10,8 +10,6 @@
     7、根据场上状态获取3路危险程度、双方野区危险程度
 ]]
 
--- 网络模块均可使用，由于服务器设置不完善，暂时禁用（注释掉了）
-
 local L = {}
 local C  = require(GetScriptDirectory()..'/FunLib/jmz_chat')
 local H  = require(GetScriptDirectory()..'/AuxiliaryScript/HttpServer')
@@ -36,6 +34,7 @@ local evenDeathStatistics = 0
 --数据发送
 local data = {}
 local lastUpdate = -1000.0
+local L.DataUpload = false
 
 --发言冷却
 
@@ -166,7 +165,7 @@ function L.Update()
         win = GetTeam()
     end
 
-    if win ~= nil and (bot.GameEND == nil or not bot.GameEND) then
+    if win ~= nil and (bot.GameEND == nil or not bot.GameEND) and L.DataUpload then
         local data = {
             operation = '"gameEnd"'
         }

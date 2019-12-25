@@ -39,8 +39,7 @@ for i=1,#sPurchaseList
 do
 	bot.itemToBuy[i] = sPurchaseList[#sPurchaseList - i + 1];
 end
-
-
+ 
 
 local sell_time = -90;
 local check_time = -90;
@@ -202,17 +201,18 @@ local lastBootsCheck = -90;
 local buyBootsStatus = false;
 local buyRD = false;
 local buyTP = false;
-local buyBottle = false;
 
 local buyAnotherTango = false
 local switchTime = 0
 local buyWardTime = -999
 
 local hasSelltEarlyBoots = false
-local checkBKBTime = 40 *60
-local checkMoonShareTime = 30 *60
 local addTB2toBuy     = false
 local addTravelBoots  = false
+local hasBuyFallenSky = false
+local hasBuyIronwoodTree = false
+local hasBuyTrident = false
+local hasBuyVambrace = false
 
 local buyTPtime = 0;
 
@@ -230,7 +230,7 @@ function ItemPurchaseThink()
 	end	
 	
 	--------*******----------------*******----------------*******--------
-	local nowTime  = DotaTime();
+	local currentTime = DotaTime();
 	local botName  = bot:GetUnitName();
 	local botLevel = bot:GetLevel();
 	local botGold  = bot:GetGold();
@@ -241,7 +241,7 @@ function ItemPurchaseThink()
 	
 	
 	--buy another tango for midlaner
-	if nowTime > 60 and nowTime < 4 *60 
+	if currentTime > 60 and currentTime < 4 *60 
 	   and bot.theRole == "midlaner" 
 	   and buyAnotherTango == false
 	   and not Item.HasItem(bot,"item_tango_single")
@@ -262,41 +262,44 @@ function ItemPurchaseThink()
 	if Role['invisEnemyExist'] == false then Role.UpdateInvisEnemyStatus(bot); end
 	
 	--Update boots availability status to make the bot start buy support item and rain drop
-	if buyBootsStatus == false and nowTime > lastBootsCheck + 2.0 then buyBootsStatus = Item.UpdateBuyBootStatus(bot); lastBootsCheck = nowTime end
+	if buyBootsStatus == false and currentTime > lastBootsCheck + 2.0 then buyBootsStatus = Item.UpdateBuyBootStatus(bot); lastBootsCheck = currentTime end
 	
 	--buy support item
 	if bot.theRole == 'support' then
-		if nowTime < 0 
+		if currentTime < 0 
 			and botGold >= GetItemCost( "item_clarity" ) 
 			and Item.HasItem(bot, "item_clarity") == false 
 			and not Role.IsPvNMode()
 		then
-			bot:ActionImmediate_PurchaseItem("item_clarity");	
+			bot:ActionImmediate_PurchaseItem("item_clarity");
+			return;
 		elseif botLevel >= 5 
 			and Role['invisEnemyExist'] == true 
 			and buyBootsStatus == true 
 			and botGold >= GetItemCost( "item_dust" ) 
 			and Item.GetEmptyInventoryAmount(bot) >= 2 
-			and Item.GetItemCharges(bot, "item_dust") < 1 and bot:GetCourierValue() == 0   
+			and Item.GetItemCharges(bot, "item_dust") <= 0 and bot:GetCourierValue() == 0   
 		then
-			bot:ActionImmediate_PurchaseItem("item_dust"); 
-		elseif GetItemStockCount( "item_ward_observer" ) >= 1 
+			bot:ActionImmediate_PurchaseItem("item_dust");
+			return;
+		elseif GetItemStockCount( "item_ward_observer" ) >= 2 
 			  and buyBootsStatus == true
 			  and Item.GetEmptyInventoryAmount(bot) >= 2 
 			  and Item.GetItemCharges(bot, "item_ward_observer") < 1  
 			  and bot:GetCourierValue() == 0
-			  and buyWardTime < nowTime - 3 *60
+			  and buyWardTime < currentTime - 3 *60
 		then 
-			buyWardTime = nowTime;
+			buyWardTime = currentTime;
 			bot:ActionImmediate_PurchaseItem("item_ward_observer"); 
+			return;
 		end
 	end
 	
 	
 	--buy raindrop
 	if buyRD == false
-	   and nowTime >= 3 *60
-	   and nowTime <= 20 *60
+	   and currentTime >= 3 *60
+	   and currentTime <= 20 *60
 	   and buyBootsStatus == true
 	   and GetItemStockCount( "item_infused_raindrop" ) >= 1 
 	   and Item.GetItemCharges(bot, 'item_infused_raindrop') <= 0
@@ -309,14 +312,15 @@ function ItemPurchaseThink()
 	end
 	
 	
-	if buyRD == false and nowTime < 0
+	if buyRD == false 
+		and currentTime < 0
 		and bot.theRole ~= 'support'
 	then
 		buyRD = true
 	end
 	
 	
-	--buy tp when die
+	--buy tp before die
 	if botGold >= 50 
 	   and bot:IsAlive()
 	   and botGold < ( 50 + botWorth/40 )
@@ -333,7 +337,7 @@ function ItemPurchaseThink()
 	end	 
 
 	
-	--buy dust when die
+	--buy dust before die
 	if botGold >= 90 
 	   and bot:IsAlive()
 	   and botLevel > 6
@@ -349,8 +353,8 @@ function ItemPurchaseThink()
 		return;
 	end
 	
-	--buy tom of knowledge when die
-	if nowTime > 10 *60
+	--buy tom of knowledge before die
+	if currentTime > 10 *60
 	   and bot:IsAlive()
 	   and botGold >= 150 
 	   and botGold < ( 150 + botWorth/40 )
@@ -366,9 +370,9 @@ function ItemPurchaseThink()
 	end
 	
 		
-	--swap raindrop when it will be broken
-	if nowTime > 180 and nowTime < 1800
-	   and switchTime < nowTime - 5.6
+	--swap raindrop when it may be broken
+	if currentTime > 180 and currentTime < 1800
+	   and switchTime < currentTime - 5.6
 	then
 		local raindrop = bot:FindItemSlot("item_infused_raindrop");
 		local raindropCharge = Item.GetItemCharges(bot, "item_infused_raindrop");
@@ -379,25 +383,26 @@ function ItemPurchaseThink()
 		         or bot:WasRecentlyDamagedByAnyHero(3.1))
 		   and ( raindropCharge == 1 or raindropCharge >= 7 )
 		then
-		    switchTime = nowTime;
+		    switchTime = currentTime;
 			bot:ActionImmediate_SwapItems( raindrop, 6 );
 			return;
 		end
 	end
 	
-	--swap ward,flask,tango_single,Neutral
-	if nowTime > 60
+	--swap ward,flask,tango_single,neutral_item
+	if currentTime > 0
 		and botMode ~= BOT_MODE_WARD
-		and check_time < nowTime - 7
+		and check_time < currentTime - 3.0
 	then
-		check_time = nowTime;
+		check_time = currentTime;
 		
 		--ward
 		local wardSlot = bot:FindItemSlot('item_ward_observer');
 		if wardSlot >=0 and wardSlot <= 5 
-		   and bot.lastSwapWardTime < nowTime - 10 
+		   and bot.lastSwapWardTime < currentTime - 11
+		   and currentTime > 3 * 60
 		then
-			local mostCostItem = Item.GetTheItemSolt(bot, 6, 8, true)
+			local mostCostItem = Item.GetTheItemSolt(bot, 6, 9, true)
 			if mostCostItem ~= -1 then
 				bot:ActionImmediate_SwapItems( wardSlot, mostCostItem );
 				return;
@@ -409,16 +414,16 @@ function ItemPurchaseThink()
 		if tango_single >= 0 and tango_single <= 5 
 		   and Item.GetItemCountInSolt(bot, "item_tango_single", 0, 5) >= 2 
 		then
-			local mostCostItem = Item.GetTheItemSolt(bot, 6, 8, true)
+			local mostCostItem = Item.GetTheItemSolt(bot, 6, 9, true)
 			if mostCostItem ~= -1 then
 				bot:ActionImmediate_SwapItems( tango_single, mostCostItem );
 				return;
 			end
 		end
 		
-		--获取背包中最高级中立物品格子与等级
+		--获取副背包中最高级中立物品格子与等级
 		--获取主背包中最低级中立物品格子与等级
-		--如果主的等级小于背包的等级就交换
+		--如果主的等级小于副的等级就交换
 		local nNeutralBackpackSolt = -1
 		local nNeutralBackpackLevel = -1
 		for i =6,9
@@ -464,7 +469,7 @@ function ItemPurchaseThink()
 			if nNeutralBackpackLevel > nNeutralMainLevel 
 			then
 				bot:ActionImmediate_SwapItems( nNeutralBackpackSolt, nNeutralMainSolt );
-				print(bot:GetUnitName().."SwapItem:"..nNeutralBackpackSolt..":"..nNeutralMainSolt)
+				--print(bot:GetUnitName().."SwapItem:"..nNeutralBackpackSolt..":"..nNeutralMainSolt)
 				return;
 			end			
 		end
@@ -474,9 +479,9 @@ function ItemPurchaseThink()
 		--铁树之木
 		local recipeIronwoodTree = bot:FindItemSlot('item_recipe_ironwood_tree');
 		if recipeIronwoodTree >= 0
-			and bot.hasBuyIronwoodTree == nil
+			and not hasBuyIronwoodTree
 		then
-			bot.hasBuyIronwoodTree = true
+			hasBuyIronwoodTree = true
 			bot.currentComponentToBuy = nil;
 			bot.currListItemToBuy[#bot.currListItemToBuy+1] = 'item_branches';
 			bot.currListItemToBuy[#bot.currListItemToBuy+1] = 'item_branches';
@@ -487,36 +492,68 @@ function ItemPurchaseThink()
 		--臂甲
 		local recipeVambrace = bot:FindItemSlot('item_recipe_vambrace');
 		if recipeVambrace >= 0
-			and bot.hasBuyVambrace == nil
+			and not hasBuyVambrace
 		then
-			bot.hasBuyVambrace = true
+			hasBuyVambrace = true
 			local sVambraceComponent, sVambraceComponent_1, sVambraceComponent_2 = Item.GetVambraceComponent(bot);
 			if bot:FindItemSlot(sVambraceComponent) >= 0
 			then
 				bot.currentComponentToBuy = nil;
+				bot.currListItemToBuy[#bot.currListItemToBuy+1] = sVambraceComponent_2;
 				bot.currListItemToBuy[#bot.currListItemToBuy+1] = 'item_circlet';
 				bot.currListItemToBuy[#bot.currListItemToBuy+1] = sVambraceComponent_1;
-				bot.currListItemToBuy[#bot.currListItemToBuy+1] = sVambraceComponent_2;
 				return;
 			else
 				bot.currentComponentToBuy = nil;
-				bot.currListItemToBuy[#bot.currListItemToBuy+1] = 'item_circlet';
-				bot.currListItemToBuy[#bot.currListItemToBuy+1] = sVambraceComponent_1;
 				bot.currListItemToBuy[#bot.currListItemToBuy+1] = sVambraceComponent_2;
 				bot.currListItemToBuy[#bot.currListItemToBuy+1] = 'item_circlet';
 				bot.currListItemToBuy[#bot.currListItemToBuy+1] = sVambraceComponent_1;
 				bot.currListItemToBuy[#bot.currListItemToBuy+1] = sVambraceComponent_2;
+				bot.currListItemToBuy[#bot.currListItemToBuy+1] = 'item_circlet';
+				bot.currListItemToBuy[#bot.currListItemToBuy+1] = sVambraceComponent_1;
 				return;
 			end
 		end
+		
+		--堕天斧
+		local recipeFallenSky = bot:FindItemSlot('item_recipe_fallen_sky');
+		if recipeFallenSky >= 0
+			and not hasBuyFallenSky
+		then
+			hasBuyFallenSky = true
+			if #bot.itemToBuy >= 1 
+			then
+				table.insert(bot.itemToBuy,#bot.itemToBuy,'item_fallen_sky')
+			else
+				bot.itemToBuy = { 'item_fallen_sky' }
+			end
+			return;
+		end		
+		
+		--三叉戟
+		local recipeTrident = bot:FindItemSlot('item_recipe_trident');
+		if recipeTrident >= 0
+			and not hasBuyTrident
+		then
+			hasBuyTrident = true
+			local sTridentNameToBuy = Item.GetTridentNameToBuy(bot)
+			if #bot.itemToBuy >= 1 
+			then
+				table.insert(bot.itemToBuy,#bot.itemToBuy,sTridentNameToBuy)
+			else
+				bot.itemToBuy = { sTridentNameToBuy }
+			end
+			return;
+		end
+		
 		
 	end
 	
 	
 	--sell early game item   
-	if  ( GetGameMode() ~= 23 and botLevel > 5 and nowTime > fullInvCheck + 1.0 
-	      and ( bot:DistanceFromFountain() <= 150 or bot:DistanceFromSecretShop() <= 150 ) ) 
-		or ( GetGameMode() == 23 and botLevel > 8 and nowTime > fullInvCheck + 1.0  )
+	if  ( GetGameMode() ~= 23 and botLevel > 6 and currentTime > fullInvCheck + 1.0 
+	      and ( bot:DistanceFromFountain() <= 100 or bot:DistanceFromSecretShop() <= 100 ) ) 
+		or ( GetGameMode() == 23 and botLevel > 9 and currentTime > fullInvCheck + 1.0  )
 	then
 		local emptySlot = Item.GetEmptyInventoryAmount(bot);
 		local slotToSell = nil;
@@ -528,19 +565,19 @@ function ItemPurchaseThink()
 			do
 				local item = Item['tEarlyItem'][i];
 				local itemSlot = bot:FindItemSlot(item);
-				if itemSlot >= 0 and itemSlot <= 8 then
+				if itemSlot >= 0 and itemSlot <= 9 
+				then
 					if item == "item_magic_wand" or item == "item_magic_stick" 
 					then
-						if 	( emptySlot == 0 or botWorth > 18000) 
-						    and botWorth > 15000
+						if 	( emptySlot == 0 and botWorth > 8000) 
+						    or botWorth > 12000
 						then
 							slotToSell = itemSlot;
 							break;
 						end
-					elseif  item == "item_branches" and botWorth > 7000
+					elseif ( item == "item_bracer" or item == "item_wraith_band" or item == "item_null_talisman" )
 						then
-							if  ( bot.theRole ~= 'support' and bot:GetPrimaryAttribute() ~= ATTRIBUTE_STRENGTH )
-								or botWorth > 15000
+							if not Item.HasItem(bot,"item_recipe_vambrace")
 							then
 								slotToSell = itemSlot;
 								break;
@@ -554,15 +591,17 @@ function ItemPurchaseThink()
 		end	
 		
 		--for wand and neutral item
-		if botWorth > 4000 
+		if botWorth > 4200 
 		then
 			local wand = bot:FindItemSlot("item_magic_wand");
 			local assitItem =  bot:FindItemSlot("item_infused_raindrop");
 			if assitItem < 0 then assitItem =  bot:FindItemSlot("item_bracer"); end
 			if assitItem < 0 then assitItem =  bot:FindItemSlot("item_null_talisman"); end
 			if assitItem < 0 then assitItem =  bot:FindItemSlot("item_wraith_band"); end		
-			if assitItem >= 0 and not Item.HasItem(bot,"item_recipe_vambrace")
-				and ( ( wand >= 6 and wand <= 9 ) or Item.GetEmptyInventoryAmount(bot) <= 2 )
+			if	assitItem >= 0 
+				and not Item.HasItem(bot,"item_recipe_vambrace")
+				and (	( wand >= 6 and wand <= 9 ) 
+						or Item.GetEmptyInventoryAmount(bot) <= 2 )
 			then
 				slotToSell = assitItem;
 			end	
@@ -573,49 +612,52 @@ function ItemPurchaseThink()
 			return;
 		end
 		
-		fullInvCheck = nowTime;
+		fullInvCheck = currentTime;
 	end
 	
 	--sale late item 
-	if nowTime > sell_time + 1.0 
-	   and ( bot:GetItemInSlot(6) ~= nil or bot:GetItemInSlot(7) ~= nil )                 
+	if currentTime > sell_time + 0.5
+	   and ( bot:GetItemInSlot(6) ~= nil or bot:GetItemInSlot(7) ~= nil or bot:GetItemInSlot(8) ~= nil)
 	   and ( bot:DistanceFromFountain() <= 100 or bot:DistanceFromSecretShop() <= 100 ) 
 	then
-		sell_time = nowTime;
+		sell_time = currentTime;
 		
-		for i = 2 ,#sItemSellList, 2
-		do
-			local nNewSlot = bot:FindItemSlot(sItemSellList[i -1]);
-			local nOldSlot = bot:FindItemSlot(sItemSellList[i]);
-			if nNewSlot >= 0 and nOldSlot >= 0
-			then
-				--print(sItemSellList[i -1]..sItemSellList[i]);
-				bot:ActionImmediate_SellItem(bot:GetItemInSlot(nOldSlot));
-				return;
+		if not Item.HasItem(bot,"item_recipe_vambrace") 
+			or ( not Item.HasItem(bot,"item_recipe_vambrace") and not Item.HasItem(bot,"item_recipe_vambrace") and not Item.HasItem(bot,"item_recipe_vambrace") )
+		then		
+			for i = 2 ,#sItemSellList, 2
+			do
+				local nNewSlot = bot:FindItemSlot(sItemSellList[i -1]);
+				local nOldSlot = bot:FindItemSlot(sItemSellList[i]);
+				if nNewSlot >= 0 and nOldSlot >= 0
+				then
+					--print(sItemSellList[i -1]..sItemSellList[i]);
+					bot:ActionImmediate_SellItem(bot:GetItemInSlot(nOldSlot));
+					return;
+				end
 			end
 		end
+		
+		--Sell non travel_boot when have travel_boot
+		if currentTime > 30 *60 and not hasSelltEarlyBoots 
+		   and  ( Item.HasItem( bot, "item_travel_boots") or Item.HasItem( bot, "item_travel_boots_2")) 
+		then	
+			for i=1,#Item['tEarlyBoots']
+			do
+				local bootsSlot = bot:FindItemSlot(Item['tEarlyBoots'][i]);
+				if bootsSlot >= 0 then
+					bot:ActionImmediate_SellItem(bot:GetItemInSlot(bootsSlot));
+					hasSelltEarlyBoots = true;
+					return;
+				end
+			end
+		end		
 		
 	end
 	
-	--Sell non travel_boot when have travel_boot
-	if nowTime > 30 *60 and not hasSelltEarlyBoots 
-	   and  ( bot:GetItemInSlot(6) ~= nil or bot:GetItemInSlot(7) ~= nil )
-	   and  ( bot:DistanceFromFountain() <= 100 or bot:DistanceFromSecretShop() <= 100 )
-	   and  ( Item.HasItem( bot, "item_travel_boots") or Item.HasItem( bot, "item_travel_boots_2")) 
-	then	
-		for i=1,#Item['tEarlyBoots']
-		do
-			local bootsSlot = bot:FindItemSlot(Item['tEarlyBoots'][i]);
-			if bootsSlot >= 0 then
-				bot:ActionImmediate_SellItem(bot:GetItemInSlot(bootsSlot));
-				hasSelltEarlyBoots = true;
-				return;
-			end
-		end
-	end
 	
 	--Insert tp scroll to list item to buy and then change the buyTP flag so the bots don't reapeatedly add the tp scroll to list item to buy 
-	if nowTime > 4 *60 
+	if	currentTime > 4 *60 
 	    and buyTP == false 
 		and bot:GetCourierValue() == 0 
 		and (bot:FindItemSlot('item_tpscroll') == -1 
@@ -627,7 +669,7 @@ function ItemPurchaseThink()
 		if botLevel < 12 or (botLevel >= 12 and tCharges == 1)
 		then
 			buyTP = true;
-			buyTPtime = nowTime;
+			buyTPtime = currentTime;
 			bot.currentComponentToBuy = nil;	
 			bot.currListItemToBuy[#bot.currListItemToBuy+1] = 'item_tpscroll';
 			return;
@@ -636,7 +678,7 @@ function ItemPurchaseThink()
 		if botLevel >= 12 and tCharges == 0 and botGold >= 100
 		then
 			buyTP = true;
-			buyTPtime = nowTime;
+			buyTPtime = currentTime;
 			bot.currentComponentToBuy = nil;	
 			bot.currListItemToBuy[#bot.currListItemToBuy+1] = 'item_tpscroll';
 			bot.currListItemToBuy[#bot.currListItemToBuy+1] = 'item_tpscroll';
@@ -645,14 +687,15 @@ function ItemPurchaseThink()
 	end
 	
 	--Change the flag to buy tp scroll to false when it already has it in inventory so the bot can insert tp scroll to list item to buy whenever they don't have any tp scroll
-	if buyTP == true and buyTPtime < nowTime - 70
+	if buyTP == true and buyTPtime < currentTime - 70
 	then
 		buyTP = false;
 	end
 	
 	--Add travelboots,moonshare,bkb to buy when in very late
-	if #bot.itemToBuy == 0 
-		and not Role.IsUserMode() --there be bug
+	if currentTime > 10 * 60 
+		and #bot.itemToBuy == 0 
+		and not Role.IsUserMode() 
 	then
 
 		if addTravelBoots == false
@@ -671,7 +714,7 @@ function ItemPurchaseThink()
 		end
 	
 		if Role.ShouldBuyMoonShare()
-		   and botGold > 4000 + bot:GetBuybackCost() + ( 0 + botWorth/40 ) - 333
+		   and botGold > 4000 + bot:GetBuybackCost() + ( 50 + botWorth/40 ) - 333
 		then
 			
 			bot.itemToBuy = {'item_moon_shard' };
@@ -701,13 +744,14 @@ function ItemPurchaseThink()
 	end
 	
 	--Sell cheapie when have travel_boots
-	if  nowTime > 50 *60 --and #bot.itemToBuy == 0 
-		and ( bot:GetItemInSlot(8) ~= nil or bot:GetItemInSlot(9) ~= nil )
+	if  currentTime > 52 * 60 --and #bot.itemToBuy == 0 
+		and ( ( bot:GetItemInSlot(7) ~= nil or bot:GetItemInSlot(8) ~= nil ) and bot:GetItemInSlot(6) ~= nil )
 		and ( Item.HasItem(bot, 'item_travel_boots') or Item.HasItem(bot, 'item_travel_boots_2'))
 		and ( bot:DistanceFromFountain() <= 100 or bot:DistanceFromSecretShop() == 0 )
 		and ( not Item.HasItem(bot, 'item_refresher_shard') and not Item.HasItem(bot, 'item_cheese') and not Item.HasItem(bot, "item_aegis") )
 		and ( not Item.HasItem(bot, 'item_dust') and not Item.HasItem(bot, "item_ward_observer") )
 		and ( not Item.HasItem(bot, 'item_moon_shard') and not Item.HasItem(bot, "item_hyperstone") )
+		and ( not Item.HasItem(bot, 'item_recipe_trident') and not Item.HasItem(bot, "item_recipe_fallen_sky") )
 	then
 		local itemToSell = nil;
 		local itemToSellValue = 99999;
@@ -751,13 +795,13 @@ function ItemPurchaseThink()
 	end
 	
 	--Check if the bot already has the item formed from its components in their inventory (not stash)
-	if  #bot.currListItemToBuy == 0 and nowTime > lastInvCheck + 1.0 then  
+	if  #bot.currListItemToBuy == 0 and currentTime > lastInvCheck + 1.0 then  
 	    if Item.IsItemInHero(bot.currentItemToBuy) 
 		then   
 			bot.currentItemToBuy = nil;                         
 			bot.itemToBuy[#bot.itemToBuy] = nil;           
 		else
-			lastInvCheck = nowTime;
+			lastInvCheck = currentTime;
 		end
 	--Added item component to current item component to buy and do the BotBuild	
 	elseif #bot.currListItemToBuy > 0 then           
@@ -773,4 +817,4 @@ function ItemPurchaseThink()
 	end
 
 end
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592..

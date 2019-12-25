@@ -42,22 +42,25 @@ X['sBuyList'] = {
 				"item_broken_satanic", 
 				"item_orchid",
 				"item_bloodthorn",
-				"item_heart",
+				"item_abyssal_blade",
 }
 
 X['sSellList'] = {
 	
 	"item_mask_of_madness",
 	"item_quelling_blade",
+		
+	'item_blink',
+	'item_magic_wand',
 	
 	"item_bloodthorn",
 	"item_phase_boots",
 	
+	"item_abyssal_blade",
 	'item_blink',
-	'item_magic_wand',
 }
 
-if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_melee_carry' }, {"item_abyssal_blade",'item_quelling_blade'} end
+if J.Role.IsPvNMode() or J.Role.IsAllShadow() then X['sBuyList'],X['sSellList'] = { 'PvN_str_carry' }, {"item_invis_sword",'item_quelling_blade'} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -571,4 +574,4 @@ function X.SvenConsiderTarget()
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592..

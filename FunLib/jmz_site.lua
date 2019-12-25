@@ -38,6 +38,26 @@ do
 	vDireTowerLocationList[nTower] = GetTower(TEAM_DIRE,nTower):GetLocation()
 end
 
+local nWatchTower_1 = nil
+local nWatchTower_2 = nil
+local allUnitList = GetUnitList(UNIT_LIST_ALL)
+for _,v in pairs(allUnitList)
+do
+	if v:GetUnitName() == 'npc_dota_watch_tower'
+	then
+		if nWatchTower_1 == nil
+		then
+			nWatchTower_1 = v
+		else
+			nWatchTower_2 = v
+		end
+	end
+end
+
+Site.nWatchTowerList = {
+	nWatchTower_1,
+	nWatchTower_2,
+}
 
 Site.nRuneList = {
 				RUNE_POWERUP_1, --上
@@ -68,7 +88,7 @@ Site["radiant_base"] = Vector(-7200, -6666);
 Site["dire_base"] = Vector(7137, 6548);
 
 	
-local visionRad = 1600; --假眼视野范围
+local visionRad = 2000; --假眼查重范围
 
 local RADIANT_RUNE_WARD = Vector(2467, -2090, 0) 
 
@@ -161,6 +181,24 @@ function Site.GetTowerLocation(nTeam, nTower)
 	
 end
 
+function Site.GetNearestWatchTower(bot)
+
+	if GetUnitToUnitDistance(bot,nWatchTower_1) < GetUnitToUnitDistance(bot,nWatchTower_2)
+	then
+		return nWatchTower_1
+	else
+		return nWatchTower_2		
+	end
+	
+end
+
+function Site.GetAllWatchTower()
+
+	return Site.nWatchTowerList
+
+end
+
+
 --固定强制眼位
 function Site.GetMandatorySpot()
 	local MandatorySpotRadiant = {
@@ -220,7 +258,7 @@ end
 
 
 function Site.GetItemWard(bot)
-	for i = 0,8 do
+	for i = 0,9 do
 		local item = bot:GetItemInSlot(i);
 		if item ~= nil and item:GetName() == 'item_ward_observer' then
 			return item;
@@ -234,9 +272,12 @@ function Site.GetAvailableSpot(bot)
 	local temp = {};
 	
 	--先算必插眼位
-	for _,s in pairs(Site.GetMandatorySpot()) do
-		if not Site.CloseToAvailableWard(s) then
-			table.insert(temp, s);
+	if DotaTime() < 35 * 60
+	then
+		for _,s in pairs(Site.GetMandatorySpot()) do
+			if not Site.CloseToAvailableWard(s) then
+				table.insert(temp, s);
+			end
 		end
 	end
 	
@@ -1448,4 +1489,4 @@ function Site.IsHaveItem(bot,item_name)
 end
 
 return Site;
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592..

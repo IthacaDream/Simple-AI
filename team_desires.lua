@@ -477,14 +477,13 @@ function GetLaneTower(team,lane,i)
 	return nil;
 end
 
-function HasItem( hero, item_name )
-	for i = 0, 5, 1 do
-	    local item = hero:GetItemInSlot(i);
-		if (item~=nil) then
-			if(item:GetName() == item_name) then
-				return true
-			end
-		end
-	end
-	return false
+function HasItem(bot, item_name)
+	
+	if bot:IsMuted() then return false end 
+	
+	local Slot = bot:FindItemSlot(item_name);
+	
+	if Slot >= 0 and Slot <= 5 then	return true end
+	
+	return false;
 end

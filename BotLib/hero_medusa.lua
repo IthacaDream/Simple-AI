@@ -47,14 +47,15 @@ X['sSellList'] = {
 	"item_manta",
 	"item_urn_of_shadows",
 	
+	"item_maelstrom",
+	"item_magic_wand",
+	
 	"item_skadi",
 	"item_dragon_lance",
 	
-	"item_skadi",
-	"item_magic_wand",
 }
 
-if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_mid' }, {} end
+if J.Role.IsPvNMode() or J.Role.IsAllShadow() then X['sBuyList'],X['sSellList'] = { 'PvN_mid' }, {} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 

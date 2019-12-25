@@ -5,6 +5,7 @@ const http = require('http'),
       api = require('express')(),
       server = require('http').createServer(api),
       SqliteDB = require('./sqlist');
+      uuid = require('node-uuid');
 
 let serverdb = SqliteDB.SqliteDB('db.db');
 let apicont = 0;
@@ -26,6 +27,17 @@ api.post('/', function(req, res){
     case 'gameEnd':
         installHeroData(result.data, result.info)
         console.log(result)
+    break;
+    case 'getGameData':
+        serverdb.queryData(`SELECT * from heroData;`, (data) => {
+            if (data.length > 0) {
+                res.send(JSON.stringify(data));
+            }
+        })
+    break;
+    case 'getuuid':
+      let newUUID = uuid.v1()
+      res.send(`UUID:${newUUID}`);
     break;
 
     default:
@@ -66,7 +78,7 @@ function startRequest(message, ctx) {
                 SET count = ${data[0].count + 1}
                 WHERE message = '${message.toLowerCase()}' and content = '${send}';
                 `)
-                ctx.send(`res:${send}`);
+                sendCheck(ctx, send)
             } else {
                 serverdb.queryData(`
                 INSERT INTO message (message, content, time, count)
@@ -77,7 +89,7 @@ function startRequest(message, ctx) {
                 1
                 );
                 `, () => {
-                    ctx.send(`res:${send}`);
+                    sendCheck(ctx, send)
                 });
             }
         });
@@ -97,7 +109,7 @@ function startRequest(message, ctx) {
                         SET count = ${content.count + 1}
                         WHERE message = '${message}' and content = '${content.content}';
                         `)
-                        ctx.send(`res:${content.content}`);
+                        sendCheck(ctx, content.content)
                     }
                 }
             } else {
@@ -124,7 +136,7 @@ function getmessage(message, ctx) {
                         SET count = ${data[0].count + 1}
                         WHERE message = '${message}' and content = '${content}';
                         `)
-                        ctx.send(`res:${content}`);
+                        sendCheck(ctx, content)
                     } else {
                         serverdb.queryData(`
                         INSERT INTO message (message, content, time, count)
@@ -135,7 +147,7 @@ function getmessage(message, ctx) {
                         1
                         );
                         `, () => {
-                            ctx.send(`res:${content}`);
+                            sendCheck(ctx, content)
                         });
                     }
                 });
@@ -148,11 +160,21 @@ function getmessage(message, ctx) {
         ctx.send({error: '当前服务超过上限'});
     }
 }
+function sendCheck(ctx, content) {
+    serverdb.queryData(`SELECT content from blockWord where content = '${content}';`, (data) => {
+        if (data.length > 0) {
+            ctx.send(`res:(⊙﹏⊙)，不想做出回答。`);
+        } else {
+            ctx.send(`res:${content}`);
+        }
+    })
+}
 //gameEnd
 function installHeroData(heroData, gameInfo) {
     serverdb.executeSql(`
-    INSERT INTO heroData (Hero, MaxHealth, MaxMana, kill, Death, Assist, Level, Gold, Item0, Item1, Item2, Item3, Item4, Item5, Win, Time, Date)
+    INSERT INTO heroData (GameID, Hero, MaxHealth, MaxMana, kill, Death, Assist, Level, Gold, Item0, Item1, Item2, Item3, Item4, Item5, Win, Time, Date)
     VALUES (
+    '${gameInfo.uuid}',
     '${heroData.Hero}',
     '${heroData.MaxHealth}',
     '${heroData.MaxMana}',
@@ -167,7 +189,7 @@ function installHeroData(heroData, gameInfo) {
     '${heroData.Item3}',
     '${heroData.Item4}',
     '${heroData.Item5}',
-    '${heroData.Win == 'true'}',
+    '${heroData.Win == 'true' ? '赢' : '输'}',
     '${gameInfo.gameTime}',
     '${new Date()}'
     );
