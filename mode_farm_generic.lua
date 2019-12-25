@@ -63,6 +63,7 @@ local bAllNotice = true;
 local nPushNoticeTime = nil;
 
 local message = nil;
+local closeMessage = false;
 
 if J.Role.IsPvNMode()
 then
@@ -91,20 +92,43 @@ function GetDesire()
 		bAllNotice = false
 	end
 	InstallChatCallback(function ( tChat )
-		local postData = {
-			operation = '"message"',
-			message = '"'..tChat.string..'"',
-		}
-		local allmes = not tChat.team_only
-		Http.HttpPost(postData, '45.77.179.135:3010',
-		function (x, t)
+		if tChat.string == '关闭聊天' then 
+			closeMessage = true
 			message = {
-				mes = x,
-				all = t
+				mes = '聊天功能已关闭',
+				all = false
 			}
-			print(x)
+		elseif tChat.string == '开启聊天' then 
+			closeMessage = false
+			message = {
+				mes = '聊天功能已开启',
+				all = false
+			}
+		elseif tChat.string == '上报数据' then
+			Http.GetUUID('45.77.179.135:3010',
+			function (x, t)
+				message = {
+					mes = '当前游戏编号为：'..x..',游戏数据将在游戏结束后上报。',
+					all = false
+				}
+				C.DataUpload = true
+			end);
+		elseif not closeMessage then
+			local postData = {
+				operation = '"message"',
+				message = '"'..tChat.string..'"',
+			}
+			local allmes = not tChat.team_only
+			Http.HttpPost(postData, '45.77.179.135:3010',
+			function (x, t)
+				message = {
+					mes = x,
+					all = t
+				}
+				print('来自网络获取的消息：'..x)
+			end
+			, allmes,true);
 		end
-		, allmes,true);
 	end);
 	if message ~= nil then
 		bot:ActionImmediate_Chat(message.mes, message.all)
@@ -128,7 +152,7 @@ function GetDesire()
 		if bAllNotice
 		then
 			bot:ActionImmediate_Chat( sMessage, false);
-			bot:ActionImmediate_Chat("QQ交流群:632117330",true);
+			bot:ActionImmediate_Chat("输入“关闭聊天”关闭电脑互动聊天功能，输入“上报数据”会在比赛结束后上报当场比赛数据，QQ交流群:632117330",true);
 		elseif not J.Role.IsUserMode() and RandomInt(1,9) > 2
 			then
 				if RandomInt(1,9) > 5
@@ -556,7 +580,9 @@ function Think()
 	
 	if hLaneCreepList ~= nil and #hLaneCreepList > 0 then
 		local farmTarget = J.Site.GetFarmLaneTarget(hLaneCreepList);
-		local nNeutrals = bot:GetNearbyNeutralCreeps(bot:GetAttackRange() + 180);
+		local nSearchRange = bot:GetAttackRange() + 180
+		if nSearchRange > 1600 then nSearchRange = 1600 end
+		local nNeutrals = bot:GetNearbyNeutralCreeps(nSearchRange);
 		if farmTarget ~= nil and #nNeutrals == 0 then
 						
 			if farmTarget:GetTeam() == bot:GetTeam() 
@@ -904,7 +930,7 @@ function X.ShouldRun(bot)
 	local rushEnemyTowerDistance = 250;
 	
 	--禁止冲泉
-	if enemyFountainDistance < 1200
+	if enemyFountainDistance < 1400
 	then
 		return 2;
 	end
@@ -931,7 +957,7 @@ function X.ShouldRun(bot)
 		and enemyFountainDistance < 8111
 	then
 		if botTarget ~= nil and botTarget:IsHero()
-		   and J.GetHPR(botTarget) > 0.38
+		   and J.GetHPR(botTarget) > 0.35
 		   and (  not J.IsInRange(bot,botTarget,bot:GetAttackRange() + 150) 
 				  or not J.CanKillTarget(botTarget, bot:GetAttackDamage() * 2.33, DAMAGE_TYPE_PHYSICAL) )
 		then
@@ -948,7 +974,7 @@ function X.ShouldRun(bot)
 	   and bot:DistanceFromFountain() > 3000
 	then
 		bot:SetTarget(nil);
-		return 4.21;
+		return 6.21;
 	end
 	
 	--没破高地塔
@@ -956,6 +982,7 @@ function X.ShouldRun(bot)
 	   and aliveEnemyCount >= 3 
 	   and #hAllyHeroList < aliveEnemyCount + 2
 	   and not J.Role.IsPvNMode()
+	   and DotaTime() % 600 > 285 --处于夜间
 	then
 		--不冲高地
 		local allyLevel = J.GetAverageLevel(false);
@@ -977,7 +1004,7 @@ function X.ShouldRun(bot)
 	local nEnemyBrracks = bot:GetNearbyBarracks(800,true);
 	
 	--破兵营前不冲基地
-	if #nEnemyBrracks >= 1 and aliveEnemyCount > 1
+	if #nEnemyBrracks >= 1 and aliveEnemyCount >= 2
 	then
 		if #nEnemyTowers >= 2
 		   or enemyAncientDistance <= 1314
@@ -987,8 +1014,8 @@ function X.ShouldRun(bot)
 		end
 	end
 	
-	--22级前不冲塔杀人
-	if nEnemyTowers[1] ~= nil and botLevel < 22
+	--20级前不冲塔杀人
+	if nEnemyTowers[1] ~= nil and botLevel < 20
 	then
 		if nEnemyTowers[1]:HasModifier("modifier_invulnerable") and aliveEnemyCount > 1
 		then
@@ -1058,7 +1085,7 @@ function X.ShouldRun(bot)
 	end
 	
 	--隐身了别浪
-	if  bot:IsInvisible()
+	if  bot:IsInvisible() and DotaTime() > 8 * 60
 		and botMode == BOT_MODE_RETREAT
 		and bot:GetActiveModeDesire() > 0.4
 		and #hAllyHeroList < 2
@@ -1171,14 +1198,14 @@ function X.CouldBlade(bot,nLocation)
 	then
 		local trees = bot:GetNearbyTrees(380);
 		local dist = GetUnitToLocationDistance(bot,nLocation);
-		local starLocation = J.Site.GetXUnitsTowardsLocation(bot, nLocation, 32 );
-		local endLocation  = J.Site.GetXUnitsTowardsLocation(bot, nLocation, dist - 32 );
+		local vStart = J.Site.GetXUnitsTowardsLocation(bot, nLocation, 32 );
+		local vEnd  = J.Site.GetXUnitsTowardsLocation(bot, nLocation, dist - 32 );
 		for _,t in pairs(trees)
 		do
 			if t ~= nil
 			then
 				local treeLoc = GetTreeLocation(t);
-				local tResult = PointToLineDistance(starLocation, endLocation, treeLoc);
+				local tResult = PointToLineDistance(vStart, vEnd, treeLoc);
 				if tResult ~= nil 
 				   and tResult.within 
 				   and tResult.distance <= 96

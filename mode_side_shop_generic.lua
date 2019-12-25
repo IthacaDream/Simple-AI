@@ -6,60 +6,51 @@
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
-if GetBot():IsInvulnerable() or not GetBot():IsHero() or not string.find(GetBot():GetUnitName(), "hero") or  GetBot():IsIllusion() then
+if GetBot():IsInvulnerable() or not GetBot():IsHero() or not string.find(GetBot():GetUnitName(), "hero") or GetBot():IsIllusion() then
 	return;
 end
 
 local bot = GetBot()
 local X = {}
-local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
-
-local cause = nil;
-local outpostsTarget = nil;
-local outpostcooldown = 0;
+local targetWatchTower = nil
+local activeWatchTowerCD = 12.0
+local lastActiveWatchTowerTime = 0
+local nWatchTower_1 = nil
+local nWatchTower_2 = nil
 
 function GetDesire()
-	if DotaTime() < 10 then return 0.0 end
-		
-	outpostsTarget = X.GetTargetOutpost();
-	
-	local botMode = bot:GetActiveMode();
-	if outpostsTarget ~= nil 
-	   and DotaTime() > 60 * 10
-	   and outpostcooldown + 60 * 4 < DotaTime() --4分钟占领冷却
-	   and not X.IsThereT3Detroyed() --没被破高
-	   and X.IsTowerSecurity() --没有塔被攻击
+
+	if DotaTime() < 9 * 60 + 55 
+		or bot:HasModifier("modifier_arc_warden_tempest_double") 
+		or bot:GetCurrentActionType() == BOT_ACTION_TYPE_IDLE 
 	then
-		local outpostTarget = nil
+		return BOT_MODE_DESIRE_NONE
+	end
 
-		for _,target in pairs(outpostsTarget)
-		do
-
-			if outpostTarget == nil 
-			   and target:GetTeam() ~= bot:GetTeam() 
-			then
-				outpostTarget = target
-			end
-			
-			if target:GetTeam() ~= bot:GetTeam()
-			   and GetUnitToUnitDistance(bot, outpostTarget) > GetUnitToUnitDistance(bot, target)
-			then
-				outpostTarget = target
-			end
-		end
-
-		if outpostTarget ~= nil then
-			--在安全的情况下进行前哨占领
-			if J.GetHPR(bot) > 0.6
-			   and X.SuitableToOutposts(outpostTarget)
-			then
-				cause = outpostTarget;
-				return BOT_MODE_DESIRE_HIGH;
-			end
-		else
-			--没有可以占领的前哨时设置冷却，防止双方无限制争夺前哨
-			outpostcooldown = DotaTime()
-		end
+	if targetWatchTower ~= nil
+		and GetUnitToUnitDistance(bot,targetWatchTower) <= 3300
+		and targetWatchTower:GetTeam() ~= bot:GetTeam()
+		and lastActiveWatchTowerTime + activeWatchTowerCD < DotaTime()
+		and X.IsSuitableToActiveWatchTower()
+	then
+		local nBonusDesire = -0.05
+		
+		if DotaTime() % 600 > 540 then nBonusDesire = 0.03 end
+		
+		if GetUnitToUnitDistance(bot,targetWatchTower) <= 600 
+		then nBonusDesire = nBonusDesire + 0.02 end
+		
+		if bot:IsChanneling() and bot:GetActiveMode() == BOT_MODE_SIDE_SHOP 
+		then nBonusDesire = nBonusDesire + 0.1 end
+	
+		return BOT_MODE_DESIRE_HIGH + nBonusDesire
+	end
+	
+	targetWatchTower = X.GetNearestWatchTower(bot)	
+	if	targetWatchTower ~= nil
+		and targetWatchTower:GetTeam() == bot:GetTeam()
+	then
+		lastActiveWatchTowerTime = DotaTime()
 	end
 			
 	return BOT_MODE_DESIRE_NONE
@@ -67,139 +58,94 @@ function GetDesire()
 end
 
 function Think()
-	if cause ~= nil then
 
-		if cause:IsNull()
-		then
-			cause = nil;
-			return;
-		end
-		if GetUnitToUnitDistance(bot, cause) > 800 then
-			bot:Action_MoveToLocation(cause:GetLocation() + RandomVector(20))
-			return;
-		else
-			bot:Action_AttackUnit(cause, true)
-			return;
-		end
+	if  bot:IsChanneling() 
+		or bot:NumQueuedActions() > 0
+		or bot:IsCastingAbility()
+		or bot:IsUsingAbility()
+	then 
+		return
 	end
 	
-	return;
+	if GetUnitToUnitDistance(bot,targetWatchTower) > 600
+	then
+		bot:Action_MoveToLocation(targetWatchTower:GetLocation())
+	else
+		bot:Action_AttackUnit(targetWatchTower,false)
+	end
+		
 end
 
 function OnStart()
 
 end
 
+
 function OnEnd()
-	cause = nil;
-	outpostsTarget = nil;
+
+	targetWatchTower = nil
+
 end
 
-function X.GetTargetOutpost()
-	local unitlist = GetUnitList(UNIT_LIST_ALL)
-	local Outposts = {}
-	if #unitlist > 0 then
-		for _,t in pairs(unitlist) do
-			if t:GetUnitName() == 'npc_dota_watch_tower' then
-				table.insert(Outposts, t)
+function X.GetNearestWatchTower(bot)	
+	
+	if nWatchTower_1 == nil 
+	then
+		local allUnitList = GetUnitList(UNIT_LIST_ALL)
+		for _,v in pairs(allUnitList)
+		do
+			if v:GetUnitName() == 'npc_dota_watch_tower'
+			then
+				if nWatchTower_1 == nil
+				then
+					nWatchTower_1 = v
+				else
+					nWatchTower_2 = v
+				end
 			end
-		end
+		end	
 	end
-	return Outposts;
-end
 
-function X.IsThereT3Detroyed()
-	
-	local T3s = {
-		TOWER_TOP_3,
-		TOWER_MID_3,
-		TOWER_BOT_3
-	}
-	
-	for _,t in pairs(T3s) do
-		local tower = GetTower(GetOpposingTeam(), t);
-		if tower == nil or not tower:IsAlive() then
-			return true;
-		end
-	end	
-	return false;
-end
-
-function X.IsTowerSecurity()
-	local towersList = {
-		TOWER_BASE_1,
-		TOWER_BASE_2,
-		TOWER_MID_3,
-		TOWER_BOT_3,
-		TOWER_TOP_3,
-		TOWER_MID_2,
-		TOWER_BOT_2,
-		TOWER_TOP_2,
-		TOWER_MID_1,
-		TOWER_BOT_1,
-		TOWER_TOP_1
-	}
-	for i = 1, #towersList do
-		local tower = GetTower(GetTeam(), i)
-		if tower ~= nil and tower:WasRecentlyDamagedByAnyHero(3.0) then
-			return false
-		end
-	end
-	return true
-end
-
-function X.SuitableToOutposts(outpost)
-	local Enemies = J.GetAroundTargetEnemyUnitCount(bot, 800);
-	local OutpostsEnemies = J.GetAroundTargetEnemyUnitCount(outpost, 800);
-	local Allys =  J.GetUnitAllyCountAroundEnemyTarget(bot, 800);
-	local OutpostsAllys = J.GetUnitAllyCountAroundEnemyTarget(outpost, 800);
-	local tableNearbyEnemyHeroes = bot:GetNearbyHeroes(1300, true, BOT_MODE_NONE);
-
-	local mode = bot:GetActiveMode();
-
-	--如果前哨尚未被任何阵营占领，则降低一些安全条件
-	if GetTeam() ~= TEAM_RADIANT and GetTeam() ~= TEAM_DIRE then
-		if ( ( mode == BOT_MODE_RETREAT and bot:GetActiveModeDesire() >= BOT_MODE_DESIRE_MODERATE )
-			or mode == BOT_MODE_ATTACK
-			or mode == BOT_MODE_RUNE
-			or mode == BOT_MODE_DEFEND_ALLY
-			or mode == BOT_MODE_DEFEND_TOWER_TOP
-			or mode == BOT_MODE_DEFEND_TOWER_MID
-			or mode == BOT_MODE_DEFEND_TOWER_BOT
-			or #tableNearbyEnemyHeroes >= 3
-			or not bot:WasRecentlyDamagedByAnyHero(2.0)
-			) 
-		then
-			return false;
-		end
+	if  nWatchTower_1 ~= nil and nWatchTower_2 ~= nil
+		and GetUnitToUnitDistance(bot,nWatchTower_1) < GetUnitToUnitDistance(bot,nWatchTower_2)
+	then
+		return nWatchTower_1
 	else
-		if ( ( mode == BOT_MODE_RETREAT and bot:GetActiveModeDesire() >= BOT_MODE_DESIRE_MODERATE )
-			or mode == BOT_MODE_ATTACK
-			or mode == BOT_MODE_RUNE 
-			or mode == BOT_MODE_DEFEND_ALLY
-			or mode == BOT_MODE_DEFEND_TOWER_TOP
-			or mode == BOT_MODE_DEFEND_TOWER_MID
-			or mode == BOT_MODE_DEFEND_TOWER_BOT
-			or Enemies > Allys + 2
-			or OutpostsEnemies > OutpostsAllys + 2
-			or #tableNearbyEnemyHeroes >= 2
-			or ( #tableNearbyEnemyHeroes >= 1 and X.IsIBecameTheTarget(tableNearbyEnemyHeroes) )
-			or bot:WasRecentlyDamagedByAnyHero(5.0)
-			) 
+		return nWatchTower_2		
+	end
+	
+	return nil
+end
+
+function X.IsSuitableToActiveWatchTower()
+
+	local mode = bot:GetActiveMode()
+	local nEnemies = bot:GetNearbyHeroes(1400, true, BOT_MODE_NONE)
+	local nAttackAllies = bot:GetNearbyHeroes(1200,false,BOT_MODE_ATTACK)
+	local nRetreatAllies = bot:GetNearbyHeroes(1200,false,BOT_MODE_RETREAT)
+	
+	if ( mode == BOT_MODE_RETREAT and bot:GetActiveModeDesire() > BOT_MODE_DESIRE_HIGH )
+		or ( mode == BOT_MODE_RETREAT and bot:WasRecentlyDamagedByAnyHero(2.0) )
+		or ( #nAttackAllies >= 1 )
+		or ( #nEnemies >= 1 and ( X.IsEnemyTargetBot(nEnemies) or #nEnemies >= 2 ) )	
+		or ( #nRetreatAllies >= 2 and nRetreatAllies[2]:GetActiveModeDesire() > BOT_MODE_DESIRE_HIGH )
+	then
+		return false
+	end
+
+	return true
+	
+end
+
+function X.IsEnemyTargetBot(units)
+	for _,u in pairs(units) 
+	do
+		if u:GetAttackTarget() == bot 
+		   or u:IsFacingLocation(bot:GetLocation(),16)
 		then
-			return false;
+			return true
 		end
 	end
-
-	return true;
+	return false
 end
-
-function X.IsIBecameTheTarget(units)
-	for _,u in pairs(units) do
-		if u:GetAttackTarget() == bot then
-			return true;
-		end
-	end
-	return false;
-end
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592..

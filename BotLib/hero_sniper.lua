@@ -48,12 +48,12 @@ X['sBuyList'] = {
 				"item_maelstrom",
 				"item_hurricane_pike",
 				"item_skadi",
+				"item_mjollnir",
 				"item_broken_satanic",	
 				"item_monkey_king_bar",
-				"item_mjollnir",
 }
 
-if RandomInt(1,9) > 6
+if RandomInt(1,99) >= 88
 then
 	X['sBuyList'] = {
 					'item_mid_outfit',
@@ -61,26 +61,30 @@ then
 					'item_hand_of_midas',
 					"item_maelstrom",
 					"item_hurricane_pike",
-					"item_skadi",
-					"item_black_king_bar",	
-					"item_monkey_king_bar",
 					"item_mjollnir",
+					"item_skadi",
+					"item_greater_crit",
+					"item_monkey_king_bar",
+					'item_ultimate_scepter_2',
 	}
 end
 
 
 X['sSellList'] = {
-	"item_maelstrom",
+	"item_mask_of_madness",
 	"item_urn_of_shadows",
 	
-	'item_hurricane_pike',
+	'item_maelstrom',
 	'item_magic_wand',
+		
+	'item_hand_of_midas',
+	"item_urn_of_shadows",
 	
-	"item_black_king_bar",	
+	"item_greater_crit",	
 	'item_hand_of_midas',
 }
 
-if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_mid' }, {} end
+if J.Role.IsPvNMode() or J.Role.IsAllShadow() then X['sBuyList'],X['sSellList'] = { 'PvN_mid' }, {} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -582,4 +586,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592..

@@ -2,12 +2,19 @@
 
 local U = {}
 
-local allowsHeroData = require(GetScriptDirectory() .. "/AuxiliaryScript/GetAllowHeroData")
-local dota2team = allowsHeroData.team
+local allowsHeroData = require(GetScriptDirectory() .. "/AuxiliaryScript/GameNameTable")
+local dota2team = allowsHeroData.Name
 
 function U.GetDota2Team()
 	local bot_names = {};
-	local rand = RandomInt(1, #dota2team); 
+	for i = 0,4 do
+		table.insert(bot_names, U.RandName(bot_names));
+	end
+	return bot_names;
+end
+
+function U.RandName(botnames)
+	local rand = RandomInt(1, #dota2team);
 	if GetTeam() == TEAM_RADIANT then
 		while rand%2 ~= 0 do
 			rand = RandomInt(1, #dota2team); 
@@ -17,13 +24,11 @@ function U.GetDota2Team()
 			rand = RandomInt(1, #dota2team); 
 		end
 	end
-	local team = dota2team[rand];
-	for _,player in pairs(team.players) do
-		if #bot_names < 5 then
-			table.insert(bot_names, player);
+	for i = 0, #botnames do
+		if dota2team[rand] == botnames[i] then 
+			return U.RandName(botnames)
 		end
 	end
-	return bot_names;
+	return dota2team[rand]
 end
-
 return U

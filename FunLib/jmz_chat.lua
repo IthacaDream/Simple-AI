@@ -128,39 +128,6 @@ Chat['sAllHeroList'] = {
 	'npc_dota_hero_wisp',
 	'npc_dota_hero_witch_doctor',
 	'npc_dota_hero_zuus',
-	'npc_dota_hero_skywrath_mage',
-	'npc_dota_hero_ogre_magi',
-	'npc_dota_hero_phantom_lancer',
-	'npc_dota_hero_razor',
-	'npc_dota_hero_lina',
-	'npc_dota_hero_huskar',
-	'npc_dota_hero_oracle',
-	'npc_dota_hero_lich',
-	'npc_dota_hero_witch_doctor',
-	'npc_dota_hero_death_prophet',
-	'npc_dota_hero_pugna',
-	'npc_dota_hero_vengefulspirit',
-	'npc_dota_hero_shadow_demon',
-	'npc_dota_hero_tidehunter',
-	'npc_dota_hero_disruptor',
-	'npc_dota_hero_axe',
-	'npc_dota_hero_leshrac',
-	'npc_dota_hero_batrider',
-	'npc_dota_hero_dazzle',
-	'npc_dota_hero_abaddon',
-	'npc_dota_hero_grimstroke',
-	'npc_dota_hero_puck',
-	'npc_dota_hero_centaur',
-	'npc_dota_hero_faceless_void',
-	'npc_dota_hero_obsidian_destroyer',
-	'npc_dota_hero_queenofpain',
-	'npc_dota_hero_slardar',
-	'npc_dota_hero_omniknight',
-	'npc_dota_hero_rubick',
-	'npc_dota_hero_tiny',
-	'npc_dota_hero_earthshaker',
-	'npc_dota_hero_undying',
-	'npc_dota_hero_dark_willow'
 }
 
 
@@ -4341,6 +4308,20 @@ function Chat.GetRawItemName(sName)
 	
 end
 
+--由本地名获得装备代码名
+function Chat.GetItemName(sName)
+	
+	for _,t in pairs(Chat['tItemNameList'])
+	do
+		if t['sRawName'] == sName
+		then
+			return t['sCnName']
+		end	
+	end
+	
+	return '未知物品'  --如果是错误物品,则改为未知物品
+	
+end
 
 --由本地名获得游戏词汇代码名
 function Chat.GetRawGameWord(sName)

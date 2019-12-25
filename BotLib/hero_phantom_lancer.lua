@@ -44,15 +44,15 @@ X['sBuyList'] = {
 
 X['sSellList'] = {
 	
-	"item_manta",
+	"item_diffusal_blade",
 	"item_quelling_blade",
 	
-	"item_sphere",
+	"item_manta",
 	"item_magic_wand",
 
 }
 
-if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_PL' }, {"item_abyssal_blade",'item_quelling_blade'} end
+if J.Role.IsPvNMode() or J.Role.IsAllShadow() then X['sBuyList'],X['sSellList'] = { 'PvN_PL' }, {"item_manta",'item_quelling_blade'} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -436,7 +436,7 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592..
 
 
 

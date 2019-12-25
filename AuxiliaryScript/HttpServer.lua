@@ -42,7 +42,7 @@
 
 local H = {}
 
-local UUID = nil
+H.UUID = nil
 
 function H.LocalHttpPost(postData)
 
@@ -63,7 +63,7 @@ end
 
 function H.HttpPost(postData, url, call, calldata, notUUID)
 
-    if UUID ~= nil or notUUID then
+    if H.UUID ~= nil or notUUID then
 
         local httpData = jsonFormatting(postData)
 
@@ -87,7 +87,7 @@ function H.HttpPost(postData, url, call, calldata, notUUID)
 
 end
 
-function H.GetUUID(url)
+function H.GetUUID(url, call)
     local postData = {
         operation = '"getuuid"'
     }
@@ -99,10 +99,13 @@ function H.GetUUID(url)
             if type(v) == 'string'
                and string.find(v, 'UUID:') ~= nil 
             then 
-                UUID = string.sub(v, 6);
+                H.UUID = string.sub(v, 6);
+                if call ~= nil then
+                    call(H.UUID)
+                end
             end
         end
-        if UUID == nil then 
+        if H.UUID == nil then 
             print('服务器返回数据错误，无法获取UUID')
         end
     end )
@@ -117,7 +120,7 @@ function jsonFormatting(obj)
         count = count + 1
     end
     json = json..'},"info":{'
-    local uuid = UUID
+    local uuid = H.UUID
     if uuid == nil then uuid = 'local' end
     local info = {
         uuid = '"'..uuid..'"',

@@ -10,8 +10,6 @@
     7、根据场上状态获取3路危险程度、双方野区危险程度
 ]]
 
--- 网络模块均可使用，由于服务器设置不完善，暂时禁用（注释掉了）
-
 local L = {}
 local C  = require(GetScriptDirectory()..'/FunLib/jmz_chat')
 local H  = require(GetScriptDirectory()..'/AuxiliaryScript/HttpServer')
@@ -36,6 +34,7 @@ local evenDeathStatistics = 0
 --数据发送
 local data = {}
 local lastUpdate = -1000.0
+L.DataUpload = false
 
 --发言冷却
 
@@ -157,6 +156,49 @@ end
 function L.Update()
     
     local bot = GetBot()
+
+    --游戏结束
+	local win = nil
+    if GetAncient(GetTeam()):GetHealth()/GetAncient(GetTeam()):GetMaxHealth() < 0.15 then
+        win = GetOpposingTeam()
+    elseif GetAncient(GetOpposingTeam()):GetHealth()/GetAncient(GetOpposingTeam()):GetMaxHealth() < 0.15 then
+        win = GetTeam()
+    end
+
+    if win ~= nil and (bot.GameEND == nil or not bot.GameEND) and L.DataUpload then
+        local data = {
+            operation = '"gameEnd"'
+        }
+                
+        local winTeam = 'true'
+        if win ~= GetTeam() then winTeam = 'false'end
+        data.Win        = '"'..winTeam..'"'                --胜利方
+        data.Hero       = '"'..C.GetNormName(bot)..'"'     --英雄
+        data.Level      = bot:GetLevel()                   --等级
+        data.MaxHealth  = bot:GetMaxHealth()               --最大生命值
+        data.MaxMana    = bot:GetMaxMana()                 --最大魔法值
+        data.Gold       = bot:GetGold()                    --金钱
+        data.kill       = GetHeroKills(bot:GetPlayerID())  --击杀数
+        data.Death      = GetHeroDeaths(bot:GetPlayerID()) --死亡数
+        data.Assist     = GetHeroAssists(bot:GetPlayerID())--助攻数
+        for i=0,5 do                                       --装备
+            local item = bot:GetItemInSlot(i);
+            if item ~= nil then
+                data['Item'..i] = '"'..C.GetItemName(item:GetName())..'"'
+            else
+                data['Item'..i] = '"none"'
+            end
+        end
+
+        H.HttpPost(data, '45.77.179.135:3010',
+            function (res, par)
+                print(par..'数据已上报')
+            end
+        , data.Hero, true);
+        
+        
+        bot.GameEND = true
+    end
 
     --每30秒执行一次
     --if DotaTime() > countTime + 30.0

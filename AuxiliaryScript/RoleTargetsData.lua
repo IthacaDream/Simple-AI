@@ -152,7 +152,6 @@ X["onlyCM_hero"] = {
     'npc_dota_hero_leshrac',
     'npc_dota_hero_batrider',
     --'npc_dota_hero_dazzle',
-    --'npc_dota_hero_abaddon',
     --'npc_dota_hero_grimstroke',
     'npc_dota_hero_puck',
     --'npc_dota_hero_invoker',
@@ -593,7 +592,7 @@ function X.getApHero()
     local botSelectHero = nil;
     --趣味模式
     if X.interestingMode == nil  then
-        local randomMode = RandomInt(1,400)
+        local randomMode = RandomInt(1,800)
         if randomMode == 48 then
             X.interestingMode = '拉比克大魔王';
             interestingList = {
@@ -612,7 +611,7 @@ function X.getApHero()
                 'npc_dota_hero_bristleback',
                 'npc_dota_hero_bristleback',
             };
-        elseif randomMode == 67 then
+        elseif randomMode == 667 then
             X.interestingMode = '刺客联盟';
             interestingList = {
                 'npc_dota_hero_phantom_assassin',
@@ -621,7 +620,7 @@ function X.getApHero()
                 'npc_dota_hero_templar_assassin',
                 'npc_dota_hero_phantom_assassin',
             };
-        elseif randomMode == 344 then
+        elseif randomMode == 744 then
             X.interestingMode = '猴子成群';
             interestingList = {
                 'npc_dota_hero_phantom_lancer',
@@ -630,7 +629,7 @@ function X.getApHero()
                 'npc_dota_hero_phantom_lancer',
                 'npc_dota_hero_phantom_lancer',
             };
-        elseif randomMode == 199 then
+        elseif randomMode == 599 then
             X.interestingMode = '雷霆';
             interestingList = {
                 'npc_dota_hero_zuus',
