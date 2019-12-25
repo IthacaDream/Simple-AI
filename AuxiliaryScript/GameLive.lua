@@ -34,7 +34,7 @@ local evenDeathStatistics = 0
 --数据发送
 local data = {}
 local lastUpdate = -1000.0
-local L.DataUpload = false
+L.DataUpload = false
 
 --发言冷却
 
