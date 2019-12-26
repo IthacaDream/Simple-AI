@@ -113,6 +113,14 @@ function GetDesire()
 				}
 				C.DataUpload = true
 			end);
+		elseif tChat.string == '取消上报' then
+			local postData = {
+				operation = '"delUUID"'
+			}
+			Http.HttpPost('45.77.179.135:3010',
+			function (x, t)
+				C.DataUpload = false
+			end,'',true);
 		elseif not closeMessage then
 			local postData = {
 				operation = '"message"',
@@ -146,13 +154,21 @@ function GetDesire()
 		local fMessage = "Simple AI: "..sVersionDate;
 		local sMessage = "This script is adapted from A Beginner AI: "..sABAVersionDate;
 		C.init()
+		Http.GetUUID('45.77.179.135:3010',
+		function (x, t)
+			message = {
+				mes = '当前游戏编号为：'..x..',游戏数据将在游戏结束后上报。',
+				all = false
+			}
+			C.DataUpload = true
+		end);
 		if J.Role.IsShuBuQi() then secondMessage = "为了老哥的鼠标键盘和屏幕着想,不建议您亲自指导我们的相关策略." end;
 	
 		bot:ActionImmediate_Chat( fMessage, true);
 		if bAllNotice
 		then
 			bot:ActionImmediate_Chat( sMessage, false);
-			bot:ActionImmediate_Chat("输入“关闭聊天”关闭电脑互动聊天功能，输入“上报数据”会在比赛结束后上报当场比赛数据，QQ交流群:632117330",true);
+			bot:ActionImmediate_Chat("输入“关闭聊天”关闭电脑互动聊天功能，输入“取消上报”取消数据上报操作，QQ交流群:632117330",true);
 		elseif not J.Role.IsUserMode() and RandomInt(1,9) > 2
 			then
 				if RandomInt(1,9) > 5

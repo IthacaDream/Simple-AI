@@ -19,6 +19,7 @@ api.use(bodyParser());
 
 api.post('/', function(req, res){
     var result = req.body;
+    let ip = req.ip.match(/\d+\.\d+\.\d+\.\d+/);
     //res.send(JSON.stringify(result));
     switch (result.data.operation) {
     case 'message':
@@ -26,7 +27,7 @@ api.post('/', function(req, res){
     break;
     case 'gameEnd':
         installHeroData(result.data, result.info)
-        console.log(result)
+        serverdb.executeSql(`DELETE FROM UUID WHERE ip = '${ip}';`)
     break;
     case 'getGameData':
         serverdb.queryData(`SELECT * from heroData;`, (data) => {
@@ -35,11 +36,35 @@ api.post('/', function(req, res){
             }
         })
     break;
-    case 'getuuid':
-      let newUUID = uuid.v1()
-      res.send(`UUID:${newUUID}`);
+    case 'getGameDataCount':
+        serverdb.queryData(`SELECT hero as "英雄" ,cast(avg(kill) as int) as "平均击杀",cast(avg(Death) as int) as "平均死亡", cast(avg(Assist) as int) as "平均助攻", cast(avg(Level) as int) as "平均等级",count(case when Win="赢" then 1 end) as "胜利场数",count(case when Win="输" then 1 end) as "失败场数"
+        FROM "heroData" WHERE Bot = "电脑" GROUP BY Hero ORDER BY 胜利场数 DESC, 失败场数 DESC`, (data) => {
+            if (data.length > 0) {
+                res.send(JSON.stringify(data));
+            }
+        })
     break;
-
+    case 'getuuid':
+        serverdb.queryData(`SELECT uuid from UUID where ip = '${ip}';`, (data) => {
+            if (data.length > 0) {
+                res.send(`UUID:${data[0].uuid}`);
+            } else {
+                let newUUID = uuid.v1()
+                serverdb.queryData(`
+                INSERT INTO UUID (ip, uuid)
+                VALUES (
+                '${ip}',
+                '${newUUID}'
+                );
+                `, () => {
+                    res.send(`UUID:${newUUID}`);
+                });
+            }
+        });
+    break;
+    case 'delUUID':
+        serverdb.executeSql(`DELETE FROM UUID WHERE ip = '${ip}';`)
+    break;
     default:
         res.send({error: '未知指令'});
     break;
@@ -172,7 +197,7 @@ function sendCheck(ctx, content) {
 //gameEnd
 function installHeroData(heroData, gameInfo) {
     serverdb.executeSql(`
-    INSERT INTO heroData (GameID, Hero, MaxHealth, MaxMana, kill, Death, Assist, Level, Gold, Item0, Item1, Item2, Item3, Item4, Item5, Win, Time, Date)
+    INSERT INTO heroData (GameID, Hero, MaxHealth, MaxMana, kill, Death, Assist, Level, Gold, Item0, Item1, Item2, Item3, Item4, Item5, Win, Time, Date, Bot)
     VALUES (
     '${gameInfo.uuid}',
     '${heroData.Hero}',
@@ -191,7 +216,8 @@ function installHeroData(heroData, gameInfo) {
     '${heroData.Item5}',
     '${heroData.Win == 'true' ? '赢' : '输'}',
     '${gameInfo.gameTime}',
-    '${new Date()}'
+    '${new Date()}',
+    '${heroData.Bot == 'false' ? '玩家' : '电脑'}'
     );
     `);
 }
