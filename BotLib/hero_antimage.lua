@@ -37,16 +37,16 @@ X['sBuyList'] = {
 				"item_manta",
 				"item_abyssal_blade",
 				"item_skadi",
-				--"item_black_king_bar",
 				"item_satanic",
+				'item_ultimate_scepter_2',
 }
 
 X['sSellList'] = {
-	'item_skadi',
+	'item_abyssal_blade',
 	'item_magic_wand',
 }
 
-if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_antimage' }, {} end
+if J.Role.IsPvNMode() or J.Role.IsAllShadow() then X['sBuyList'],X['sSellList'] = { 'PvN_antimage' }, {} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -762,4 +762,4 @@ function X.ReportDetails(bot,npcTarget,EstDamage)
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592..

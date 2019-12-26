@@ -21,7 +21,7 @@ local sNeedDebugItemList =
 	"item_essence_ring",
 	"item_repair_kit",
 	"item_greater_faerie_fire",
-	"item_spider_legs",
+--	"item_spider_legs",
 	"item_flicker",
 	"item_ninja_gear",
 	"item_illusionsts_cape",
@@ -98,8 +98,8 @@ local sNeedDebugItemList =
 	"item_solar_crest",
 	"item_sphere",
 	"item_spirit_vessel",
-	"item_tango",
-	"item_tango_single",
+--	"item_tango",
+--	"item_tango_single",
 	"item_tome_of_knowledge",
 	"item_tpscroll",
 	"item_travel_boots",
@@ -331,6 +331,7 @@ Item['tEarlyBoots'] = {
 Item['sCanNotSwitchItems'] = {
 		'item_aegis',
 		'item_refresher_shard',
+		'item_cheese',
 		'item_bloodstone',
 		'item_gem',
 }
@@ -341,25 +342,67 @@ do
 end
 
 
-Item['tConsumableList'] = {
+local sConsumableList = {
 	'item_clarity',
 	'item_tango',
 	'item_flask',
 	'item_faerie_fire',
 	'item_enchanted_mango',
 	'item_infused_raindrop',
+	
+	'item_mango_tree',
+	'item_royal_jelly',
+	'item_greater_faerie_fire',
+	"item_repair_kit",
+	'item_fusion_rune',
+	'item_phoenix_ash',	
+	
+	'item_cheese',
+	'item_refresher_shard',
+	'item_aegis',
+	
 }
+local tConsumableItemList = {}
+for _,sItem in pairs(sConsumableList)
+do
+	tConsumableItemList[sItem] = true
+end
+
 
 local sNotSellItemList = {
+	'item_abyssal_blade',
+	'item_assault',
 	'item_black_king_bar',
+	'item_bloodstone',
+	'item_bloodthorn',
+	'item_butterfly',
+	'item_bfury',
 	'item_cheese',
+	'item_crimson_guard',
+	'item_pipe',
 	'item_dust',
 	'item_gem',
+	'item_greater_crit',
+	'item_guardian_greaves',
+	'item_heart',
+	'item_heavens_halberd',
 	'item_hyperstone',
+	--'item_manta',
+	'item_hurricane_pike',
+	'item_mjollnir',
+	'item_nullifier',
+	'item_octarine_core',
+	'item_radiance',
 	'item_rapier',
+	'item_refresher',
 	'item_refresher_shard',
 	'item_satanic',
+	'item_sheepstick',
+	'item_shivas_guard',
+	'item_silver_edge',
 	'item_skadi',
+	'item_sphere',
+	'item_ultimate_scepter',
 	'item_travel_boots',
 	'item_travel_boots_2',
 	'item_ward_observer',
@@ -373,73 +416,73 @@ end
 local tNeutralItemLevelList = {
 
 
-	['item_arcane_ring'] = 5,
-	['item_broom_handle'] = 6,
-	['item_faded_broach'] = 1,
-	['item_iron_talon'] = 11.5,
-	['item_keen_optic'] = 3,
-	['item_mango_tree'] = 98,
-	['item_ocean_heart'] = 4,
-	['item_poor_mans_shield'] = 8,
+	['item_arcane_ring'] = 35,
+	['item_broom_handle'] = 33,
+	['item_faded_broach'] = 31,
+	['item_iron_talon'] = 39,
+	['item_keen_optic'] = 29, -- 基恩镜片
+	['item_mango_tree'] = 95,
+	['item_ocean_heart'] = 43,
+	['item_poor_mans_shield'] = 34,
 	['item_royal_jelly'] = 96,
-	['item_trusty_shovel'] = 5.5,
+	['item_trusty_shovel'] = 32,
 	['item_recipe_ironwood_tree'] = 1,
-	['item_ironwood_tree'] = 10.5,
+	['item_ironwood_tree'] = 44,
 
-	['item_dragon_scale'] = 11,
-	['item_essence_ring'] = 7,
-	['item_grove_bow'] = 1,
-	['item_imp_claw'] = 12,
-	['item_nether_shawl'] = 2 ,
-	['item_philosophers_stone'] = 14,
-	['item_pupils_gift'] = 9,
-	['item_ring_of_aquila'] = 13.5,
-	['item_vampire_fangs'] = 15,
-	['item_clumsy_net'] = 13,
-	['item_vambrace'] = 25.5,
+	['item_dragon_scale'] = 38,	-- 炎龙之鳞
+	['item_essence_ring'] = 37,	-- 精华指环
+	['item_grove_bow'] = 40, -- 林野长弓
+	['item_imp_claw'] = 43,	-- 魔童之爪
+	['item_nether_shawl'] = 28,	-- 幽冥披巾
+	['item_philosophers_stone'] = 42, -- 贤者石
+	['item_pupils_gift'] = 41,
+	['item_ring_of_aquila'] = 46,
+	['item_vampire_fangs'] = 48, -- 吸血鬼獠牙
+	['item_clumsy_net'] = 45,
+	['item_vambrace'] = 52,
 	['item_recipe_vambrace'] = 2,
 	
-	['item_spy_gadget'] = 17,
-	['item_craggy_coat'] = 18,
-	['item_enchanted_quiver'] = 19,
-	['item_greater_faerie_fire'] = 27.5,
-	['item_mind_breaker'] = 22,
-	['item_orb_of_destruction'] = 23,
-	['item_paladin_sword'] = 24,
-	['item_quickening_charm'] = 25,
-	['item_repair_kit'] = 26,
-	['item_titan_sliver'] = 27,
-	['item_spider_legs'] = 28,
+	['item_spy_gadget'] = 36, -- 望远镜
+	['item_craggy_coat'] = 47, -- 崎岖外衣
+	['item_enchanted_quiver'] = 44, -- 魔力箭袋
+	['item_greater_faerie_fire'] = 56,
+	['item_mind_breaker'] = 55,
+	['item_orb_of_destruction'] = 53, -- 毁灭灵球
+	['item_paladin_sword'] = 40, -- 骑士剑
+	['item_quickening_charm'] = 50,
+	['item_repair_kit'] = 51,
+	['item_titan_sliver'] = 54,	-- 巨神残铁
+	['item_spider_legs'] = 60,
 	
-	['item_flicker'] = 29,
-	['item_havoc_hammer'] = 30,
-	['item_illusionsts_cape'] = 31,
-	['item_panic_button'] = 32,
-	['item_minotaur_horn'] = 33,
-	['item_ninja_gear'] = 34,
-	['item_princes_knife'] = 35,
-	['item_spell_prism'] = 36,
-	['item_the_leveller'] = 37,
-	['item_timeless_relic'] = 38,
-	['item_witless_shako'] = 39,
+	['item_flicker'] = 49,	-- 闪灵
+	['item_havoc_hammer'] = 63,	-- 浩劫巨锤
+	['item_illusionsts_cape'] = 64,
+	['item_panic_button'] = 57,	-- 魔力明灯
+	['item_minotaur_horn'] = 65, -- 灵犀角
+	['item_ninja_gear'] = 58, -- 忍者用具
+	['item_princes_knife'] = 62, -- 亲王短刀
+	['item_spell_prism'] = 69, -- 法术棱镜
+	['item_the_leveller'] = 61, -- 平世剑
+	['item_timeless_relic'] = 59, -- 永恒遗物
+	['item_witless_shako'] = 68, -- 无知小帽
 
 
-	['item_apex'] = 42,
-	['item_ballista'] = 41,
-	['item_demonicon'] = 40,
-	['item_desolator_2'] = 43,
-	['item_ex_machina'] = 44,
+	['item_apex'] = 72, -- 极品
+	['item_ballista'] = 55, -- 弩炮
+	['item_demonicon'] = 73,
+	['item_desolator_2'] = 75,
+	['item_ex_machina'] = 71,
 	['item_recipe_fallen_sky'] = 5,
-	['item_fallen_sky'] = 45,
-	['item_force_boots'] = 46,
+	['item_fallen_sky'] = 80,
+	['item_force_boots'] = 66,
 	['item_fusion_rune'] = 88,
-	['item_mirror_shield'] = 48,
+	['item_mirror_shield'] = 77,
 	['item_phoenix_ash'] = 89,
-	['item_pirate_hat'] = 50,
-	['item_seer_stone'] = 51,
+	['item_pirate_hat'] = 74,
+	['item_seer_stone'] = 40,
 	['item_recipe_trident'] = 5,
-	['item_trident'] = 52,
-	['item_woodland_striders'] = 53,
+	['item_trident'] = 79,
+	['item_woodland_striders'] = 70,
 
 }
 
@@ -457,11 +500,11 @@ local tNeutralItemCostList = {
 	['item_recipe_trident'] = 1,
 	['item_recipe_vambrace'] = 1,
 	['item_recipe_fallen_sky'] = 1,
-	['item_fallen_sky'] = 4751,
 	['item_recipe_ironwood_tree'] = 1,
+	['item_ironwood_tree'] = 151,
 	['item_iron_talon'] = 301,
 	['item_vambrace'] = 1021,
-	['item_ironwood_tree'] = 151,
+	['item_fallen_sky'] = 4751,
 
 }
 
@@ -479,205 +522,213 @@ local tSmallItemList = {
 
 if true then
 
-Item['item_abyssal_blade']		 = { 'item_basher', 'item_vanguard', 'item_recipe_abyssal_blade' }
+Item['item_abyssal_blade']				= { 'item_basher', 'item_vanguard', 'item_recipe_abyssal_blade' }
 
-Item['item_aether_lens']			 = { 'item_void_stone', 'item_energy_booster', 'item_recipe_aether_lens' }
+Item['item_aether_lens']				= { 'item_void_stone', 'item_energy_booster', 'item_recipe_aether_lens' }
 
-Item['item_arcane_boots']			 = { 'item_boots', 'item_energy_booster' }
+Item['item_arcane_boots']				= { 'item_boots', 'item_energy_booster' }
 
-Item['item_armlet']				 = { 'item_helm_of_iron_will', 'item_gloves', 'item_blades_of_attack', 'item_recipe_armlet' }
+Item['item_armlet']						= { 'item_helm_of_iron_will', 'item_gloves', 'item_blades_of_attack', 'item_recipe_armlet' }
 
-Item['item_assault']				 = { 'item_platemail', 'item_hyperstone', 'item_buckler', 'item_recipe_assault' }
+Item['item_assault']					= { 'item_platemail', 'item_hyperstone', 'item_buckler', 'item_recipe_assault' }
 
-Item['item_ancient_janggo']		 = { 'item_crown', 'item_wind_lace', 'item_gloves', 'item_recipe_ancient_janggo' }
+Item['item_ancient_janggo']				= { 'item_crown', 'item_wind_lace', 'item_gloves', 'item_recipe_ancient_janggo' }
 
-Item['item_aeon_disk']			 = { 'item_vitality_booster', 'item_energy_booster', 'item_recipe_aeon_disk' }
+Item['item_aeon_disk']					= { 'item_vitality_booster', 'item_energy_booster', 'item_recipe_aeon_disk' }
 
-Item['item_bfury']				 = { 'item_quelling_blade',  'item_pers', 'item_demon_edge', 'item_recipe_bfury' }
+Item['item_bfury']						= { 'item_quelling_blade',  'item_pers', 'item_demon_edge', 'item_recipe_bfury' }
 
-Item['item_black_king_bar']		 = { 'item_mithril_hammer', 'item_ogre_axe', 'item_recipe_black_king_bar' }
+Item['item_black_king_bar']				= { 'item_mithril_hammer', 'item_ogre_axe', 'item_recipe_black_king_bar' }
 
-Item['item_blade_mail']			 = {  'item_chainmail', 'item_robe', 'item_broadsword' }
+Item['item_blade_mail']					= {  'item_chainmail', 'item_robe', 'item_broadsword' }
 
-Item['item_bloodstone']			 = { 'item_kaya', 'item_soul_booster' }
+Item['item_bloodstone']					= { 'item_kaya', 'item_soul_booster' }
 
-Item['item_bloodthorn']			 = { 'item_orchid',  'item_lesser_crit',  'item_recipe_bloodthorn' }
+Item['item_bloodthorn']					= { 'item_orchid',  'item_lesser_crit',  'item_recipe_bloodthorn' }
 
-Item['item_bracer']				 = {  'item_gauntlets', 'item_circlet', 'item_recipe_bracer' }
+Item['item_bracer']						= {  'item_gauntlets', 'item_circlet', 'item_recipe_bracer' }
 
-Item['item_buckler']				 = { 'item_branches', 'item_ring_of_protection', 'item_recipe_buckler' }
+Item['item_buckler']					= { 'item_branches', 'item_ring_of_protection', 'item_recipe_buckler' }
 
-Item['item_butterfly']			 = { 'item_quarterstaff', 'item_eagle', 'item_talisman_of_evasion' }
+Item['item_butterfly']					= { 'item_quarterstaff', 'item_eagle', 'item_talisman_of_evasion' }
 
-Item['item_basher']				 = { 'item_mithril_hammer', 'item_belt_of_strength', 'item_recipe_basher' }
+Item['item_basher']						= { 'item_mithril_hammer', 'item_belt_of_strength', 'item_recipe_basher' }
 
-Item['item_crimson_guard']		 = { 'item_vanguard', 'item_helm_of_iron_will', 'item_recipe_crimson_guard' }
+Item['item_crimson_guard']				= { 'item_vanguard', 'item_helm_of_iron_will', 'item_recipe_crimson_guard' }
 
-Item['item_cyclone']				 = { 'item_wind_lace', 'item_void_stone', 'item_staff_of_wizardry', 'item_recipe_cyclone' }
+Item['item_cyclone']					= { 'item_wind_lace', 'item_void_stone', 'item_staff_of_wizardry', 'item_recipe_cyclone' }
 
-Item['item_dagon']				 = { 'item_crown', 'item_staff_of_wizardry', 'item_recipe_dagon' }
+Item['item_dagon']						= { 'item_crown', 'item_staff_of_wizardry', 'item_recipe_dagon' }
 
-Item['item_dagon_2']				 = { 'item_dagon', 'item_recipe_dagon' }
+Item['item_dagon_2']					= { 'item_dagon', 'item_recipe_dagon' }
 
-Item['item_dagon_3']				 = { 'item_dagon_2', 'item_recipe_dagon' }
+Item['item_dagon_3']					= { 'item_dagon_2', 'item_recipe_dagon' }
 
-Item['item_dagon_4']				 = { 'item_dagon_3', 'item_recipe_dagon' }
+Item['item_dagon_4']					= { 'item_dagon_3', 'item_recipe_dagon' }
 
-Item['item_dagon_5']				 = { 'item_dagon_4', 'item_recipe_dagon' }
+Item['item_dagon_5']					= { 'item_dagon_4', 'item_recipe_dagon' }
 
-Item['item_desolator']			 = { 'item_mithril_hammer', 'item_mithril_hammer', 'item_blight_stone' }
+Item['item_desolator']					= { 'item_mithril_hammer', 'item_mithril_hammer', 'item_blight_stone' }
 
-Item['item_diffusal_blade']		 = { 'item_blade_of_alacrity', 'item_blade_of_alacrity', 'item_robe', 'item_recipe_diffusal_blade' }
+Item['item_diffusal_blade']				= { 'item_blade_of_alacrity', 'item_blade_of_alacrity', 'item_robe', 'item_recipe_diffusal_blade' }
 
-Item['item_diffusal_blade_2']		 = { 'item_diffusal_blade', 'item_recipe_diffusal_blade' }
+Item['item_dragon_lance']				= { 'item_boots_of_elves', 'item_boots_of_elves', 'item_ogre_axe' }
 
-Item['item_dragon_lance']			 = { 'item_boots_of_elves', 'item_boots_of_elves', 'item_ogre_axe' }
+Item['item_echo_sabre']					= { 'item_ogre_axe', 'item_oblivion_staff' }
 
-Item['item_echo_sabre']			 = { 'item_ogre_axe', 'item_oblivion_staff' }
+Item['item_ethereal_blade']				= { 'item_ghost', 'item_eagle' }
 
-Item['item_ethereal_blade']		 = { 'item_ghost', 'item_eagle' }
+Item['item_force_staff']				= { 'item_staff_of_wizardry', 'item_ring_of_regen', 'item_recipe_force_staff' }
 
-Item['item_force_staff']			 = { 'item_staff_of_wizardry', 'item_ring_of_regen', 'item_recipe_force_staff' }
+Item['item_fallen_sky']					= { 'item_meteor_hammer', 'item_blink', 'item_recipe_fallen_sky' }
 
-Item['item_glimmer_cape']			 = { 'item_shadow_amulet', 'item_cloak' }
+Item['item_glimmer_cape']				= { 'item_shadow_amulet', 'item_cloak' }
 
-Item['item_guardian_greaves']		 = { 'item_arcane_boots', 'item_mekansm', 'item_recipe_guardian_greaves' }
+Item['item_guardian_greaves']			= { 'item_arcane_boots', 'item_mekansm', 'item_recipe_guardian_greaves' }
 
-Item['item_greater_crit']			 = { 'item_lesser_crit', 'item_demon_edge', 'item_recipe_greater_crit' }
+Item['item_greater_crit']				= { 'item_lesser_crit', 'item_demon_edge', 'item_recipe_greater_crit' }
 
-Item['item_hand_of_midas']		 = { 'item_gloves', 'item_recipe_hand_of_midas' }
+Item['item_hand_of_midas']				= { 'item_gloves', 'item_recipe_hand_of_midas' }
 
-Item['item_headdress']			 = { 'item_branches', 'item_ring_of_regen', 'item_recipe_headdress' }
+Item['item_headdress']					= { 'item_branches', 'item_ring_of_regen', 'item_recipe_headdress' }
 
-Item['item_heart']				 = { 'item_reaver' , 'item_ring_of_tarrasque', 'item_vitality_booster', 'item_recipe_heart' }
+Item['item_heart']						= { 'item_reaver' , 'item_ring_of_tarrasque', 'item_vitality_booster', 'item_recipe_heart' }
 
-Item['item_heavens_halberd']		 = { 'item_sange', 'item_talisman_of_evasion' }
+Item['item_heavens_halberd']			= { 'item_sange', 'item_talisman_of_evasion' }
 
-Item['item_helm_of_the_dominator'] = { 'item_headdress', 'item_crown', 'item_broadsword', 'item_recipe_helm_of_the_dominator ' }
+Item['item_helm_of_the_dominator']		= { 'item_headdress', 'item_crown', 'item_broadsword', 'item_recipe_helm_of_the_dominator ' }
 
-Item['item_hood_of_defiance'] 	 = { 'item_ring_of_health', 'item_cloak', 'item_ring_of_regen' }
+Item['item_hood_of_defiance']			= { 'item_ring_of_health', 'item_cloak', 'item_ring_of_regen' }
 
-Item['item_hurricane_pike'] 		 = { 'item_dragon_lance', 'item_force_staff', 'item_recipe_hurricane_pike' }
+Item['item_hurricane_pike']				= { 'item_dragon_lance', 'item_force_staff', 'item_recipe_hurricane_pike' }
 
-Item['item_holy_locket'] 			 = { 'item_magic_wand', 'item_ring_of_tarrasque', 'item_energy_booster', 'item_recipe_holy_locket' }
+Item['item_holy_locket']				= { 'item_magic_wand', 'item_ring_of_tarrasque', 'item_energy_booster', 'item_recipe_holy_locket' }
 
-Item['item_invis_sword']			 = { 'item_shadow_amulet', 'item_claymore' }
+Item['item_invis_sword']				= { 'item_shadow_amulet', 'item_claymore' }
 
-Item['item_kaya']					 = { 'item_robe', 'item_staff_of_wizardry', 'item_recipe_kaya' }
+Item['item_kaya']						= { 'item_robe', 'item_staff_of_wizardry', 'item_recipe_kaya' }
 
-Item['item_kaya_and_sange']		 = { 'item_sange', 'item_kaya' }
+Item['item_kaya_and_sange']				= { 'item_sange', 'item_kaya' }
 
-Item['item_lotus_orb']			 = { 'item_pers', 'item_platemail', 'item_energy_booster' }
+Item['item_lotus_orb']					= { 'item_pers', 'item_platemail', 'item_energy_booster' }
 
-Item['item_lesser_crit']			 = { 'item_broadsword', 'item_blades_of_attack', 'item_recipe_lesser_crit' }
+Item['item_lesser_crit']				= { 'item_broadsword', 'item_blades_of_attack', 'item_recipe_lesser_crit' }
 
-Item['item_maelstrom']			 = { 'item_javelin', 'item_mithril_hammer' }
+Item['item_maelstrom']					= { 'item_javelin', 'item_mithril_hammer' }
 
-Item['item_magic_wand']			 = { 'item_branches', 'item_branches', 'item_magic_stick', 'item_recipe_magic_wand' }
+Item['item_magic_wand']					= { 'item_branches', 'item_branches', 'item_magic_stick', 'item_recipe_magic_wand' }
 
-Item['item_manta']				 = { 'item_yasha', 'item_ultimate_orb', 'item_recipe_manta' }
+Item['item_manta']						= { 'item_yasha', 'item_ultimate_orb', 'item_recipe_manta' }
 
-Item['item_mask_of_madness']		 = { 'item_quarterstaff', 'item_lifesteal' }
+Item['item_mask_of_madness']			= { 'item_quarterstaff', 'item_lifesteal' }
 
-Item['item_medallion_of_courage']	 = { 'item_blight_stone', 'item_sobi_mask', 'item_chainmail' }
+Item['item_medallion_of_courage']		= { 'item_blight_stone', 'item_sobi_mask', 'item_chainmail' }
 
-Item['item_mekansm']				 = { 'item_chainmail', 'item_headdress', 'item_recipe_mekansm' }
+Item['item_mekansm']					= { 'item_chainmail', 'item_headdress', 'item_recipe_mekansm' }
 
-Item['item_mjollnir']				 = { 'item_maelstrom', 'item_hyperstone', 'item_recipe_mjollnir' }
+Item['item_mjollnir']					= { 'item_maelstrom', 'item_hyperstone', 'item_recipe_mjollnir' }
 
-Item['item_monkey_king_bar']		 = { 'item_quarterstaff', 'item_javelin', 'item_demon_edge' }
+Item['item_monkey_king_bar']			= { 'item_quarterstaff', 'item_javelin', 'item_demon_edge' }
 
-Item['item_moon_shard']			 = { 'item_hyperstone', 'item_hyperstone' }
+Item['item_moon_shard']					= { 'item_hyperstone', 'item_hyperstone' }
 
-Item['item_meteor_hammer']		 = { 'item_ring_of_regen', 'item_sobi_mask', 'item_ogre_axe', 'item_staff_of_wizardry' }
+Item['item_meteor_hammer']				= { 'item_ring_of_regen', 'item_sobi_mask', 'item_ogre_axe', 'item_staff_of_wizardry' }
 
-Item['item_necronomicon']			 = { 'item_sobi_mask', 'item_sobi_mask', 'item_belt_of_strength', 'item_recipe_necronomicon' }
+Item['item_necronomicon']				= { 'item_sobi_mask', 'item_sobi_mask', 'item_belt_of_strength', 'item_recipe_necronomicon' }
 
-Item['item_necronomicon_2']		 = { 'item_necronomicon', 'item_recipe_necronomicon' }
+Item['item_necronomicon_2']				= { 'item_necronomicon', 'item_recipe_necronomicon' }
 
-Item['item_necronomicon_3']		 = { 'item_necronomicon_2', 'item_recipe_necronomicon' }
+Item['item_necronomicon_3']				= { 'item_necronomicon_2', 'item_recipe_necronomicon' }
 	    
-Item['item_null_talisman']		 = {  'item_circlet', 'item_mantle', 'item_recipe_null_talisman' }
+Item['item_null_talisman']				= {  'item_circlet', 'item_mantle', 'item_recipe_null_talisman' }
 
-Item['item_nullifier']			 = { 'item_helm_of_iron_will', 'item_relic' }
+Item['item_nullifier']					= { 'item_helm_of_iron_will', 'item_relic' }
 
-Item['item_oblivion_staff']		 = { 'item_quarterstaff', 'item_robe', 'item_sobi_mask' }
+Item['item_oblivion_staff']				= { 'item_quarterstaff', 'item_robe', 'item_sobi_mask' }
 
-Item['item_octarine_core']		 = { 'item_soul_booster', 'item_mystic_staff' }
+Item['item_octarine_core']				= { 'item_soul_booster', 'item_mystic_staff' }
 
-Item['item_orchid']				 = { 'item_oblivion_staff', 'item_oblivion_staff', 'item_recipe_orchid' }
+Item['item_orchid']						= { 'item_oblivion_staff', 'item_oblivion_staff', 'item_recipe_orchid' }
 
-Item['item_pers']					 = { 'item_ring_of_health', 'item_void_stone' }
+Item['item_pers']						= { 'item_ring_of_health', 'item_void_stone' }
 
-Item['item_phase_boots']			 = { 'item_boots', 'item_blades_of_attack', 'item_chainmail' }
+Item['item_phase_boots']				= { 'item_boots', 'item_blades_of_attack', 'item_chainmail' }
 
-Item['item_pipe']					 = { 'item_hood_of_defiance', 'item_headdress', 'item_recipe_pipe' }
+Item['item_pipe']						= { 'item_hood_of_defiance', 'item_headdress', 'item_recipe_pipe' }
 
-Item['item_power_treads_agi']		 = { 'item_boots', 'item_boots_of_elves', 'item_gloves' }
+Item['item_power_treads_agi']			= { 'item_boots', 'item_boots_of_elves', 'item_gloves' }
 
-Item['item_power_treads_int']		 = { 'item_boots', 'item_robe', 'item_gloves' }
+Item['item_power_treads_int']			= { 'item_boots', 'item_robe', 'item_gloves' }
 
-Item['item_power_treads_str']		 = { 'item_boots', 'item_belt_of_strength' , 'item_gloves' }
+Item['item_power_treads_str']			= { 'item_boots', 'item_belt_of_strength' , 'item_gloves' }
 
-Item['item_power_treads']			 = { 'item_boots', 'item_belt_of_strength', 'item_gloves' }
+Item['item_power_treads']				= { 'item_boots', 'item_belt_of_strength', 'item_gloves' }
 
-Item['item_radiance']				 = { 'item_relic', 'item_recipe_radiance' }
+Item['item_radiance']					= { 'item_relic', 'item_recipe_radiance' }
 
-Item['item_rapier']				 = { 'item_relic', 'item_demon_edge' }
+Item['item_rapier']						= { 'item_relic', 'item_demon_edge' }
 
-Item['item_refresher']			 = { 'item_pers', 'item_pers', 'item_recipe_refresher' }
+Item['item_refresher']					= { 'item_pers', 'item_pers', 'item_recipe_refresher' }
 							    
-Item['item_ring_of_basilius']		 = {  'item_branches', 'item_sobi_mask', 'item_recipe_ring_of_basilius' }
+Item['item_ring_of_basilius']			= {  'item_branches', 'item_sobi_mask', 'item_recipe_ring_of_basilius' }
 				
-Item['item_rod_of_atos']			 = { 'item_crown', 'item_crown', 'item_staff_of_wizardry', 'item_recipe_rod_of_atos' }
+Item['item_rod_of_atos']				= { 'item_crown', 'item_crown', 'item_staff_of_wizardry', 'item_recipe_rod_of_atos' }
 
-Item['item_sange']				 = { 'item_belt_of_strength', 'item_ogre_axe', 'item_recipe_sange' }
+Item['item_sange']						= { 'item_belt_of_strength', 'item_ogre_axe', 'item_recipe_sange' }
 			    
-Item['item_sange_and_yasha']		 = { 'item_yasha', 'item_sange' }
+Item['item_sange_and_yasha']			= { 'item_yasha', 'item_sange' }
 
-Item['item_satanic']				 = { 'item_lifesteal', 'item_claymore', 'item_reaver' }
+Item['item_satanic']					= { 'item_lifesteal', 'item_claymore', 'item_reaver' }
 
-Item['item_sheepstick']			 = { 'item_ultimate_orb', 'item_void_stone', 'item_mystic_staff' }
+Item['item_sheepstick']					= { 'item_ultimate_orb', 'item_void_stone', 'item_mystic_staff' }
 
-Item['item_sphere']				 = { 'item_pers', 'item_ultimate_orb', 'item_recipe_sphere' }
+Item['item_sphere']						= { 'item_pers', 'item_ultimate_orb', 'item_recipe_sphere' }
 
-Item['item_shivas_guard']			 = { 'item_mystic_staff', 'item_platemail', 'item_recipe_shivas_guard' }
+Item['item_shivas_guard']				= { 'item_mystic_staff', 'item_platemail', 'item_recipe_shivas_guard' }
 
-Item['item_silver_edge']			 = { 'item_invis_sword', 'item_ultimate_orb', 'item_recipe_silver_edge' }
+Item['item_silver_edge']				= { 'item_invis_sword', 'item_ultimate_orb', 'item_recipe_silver_edge' }
 
-Item['item_solar_crest']			 = { 'item_medallion_of_courage', 'item_wind_lace', 'item_ultimate_orb', 'item_recipe_solar_crest' }
+Item['item_solar_crest']				= { 'item_medallion_of_courage', 'item_wind_lace', 'item_ultimate_orb', 'item_recipe_solar_crest' }
 
-Item['item_soul_booster']			 = { 'item_point_booster', 'item_vitality_booster', 'item_energy_booster' }
+Item['item_soul_booster']				= { 'item_point_booster', 'item_vitality_booster', 'item_energy_booster' }
 
-Item['item_soul_ring']			 = { 'item_ring_of_regen', 'item_gauntlets', 'item_gauntlets', 'item_recipe_soul_ring' }
+Item['item_soul_ring']					= { 'item_ring_of_regen', 'item_gauntlets', 'item_gauntlets', 'item_recipe_soul_ring' }
 
-Item['item_skadi']				 = { 'item_ultimate_orb', 'item_point_booster', 'item_ultimate_orb' }
+Item['item_skadi']						= { 'item_ultimate_orb', 'item_point_booster', 'item_ultimate_orb' }
 
-Item['item_spirit_vessel']		 = { 'item_urn_of_shadows', 'item_wind_lace', 'item_vitality_booster', 'item_recipe_spirit_vessel' }
+Item['item_spirit_vessel']				= { 'item_urn_of_shadows', 'item_wind_lace', 'item_vitality_booster', 'item_recipe_spirit_vessel' }
 
-Item['item_tranquil_boots']		 = { 'item_wind_lace', 'item_boots', 'item_ring_of_regen' }
+Item['item_tranquil_boots']				= { 'item_wind_lace', 'item_boots', 'item_ring_of_regen' }
 
-Item['item_travel_boots']			 = { 'item_boots', 'item_recipe_travel_boots' }
+Item['item_travel_boots']				= { 'item_boots', 'item_recipe_travel_boots' }
 
-Item['item_travel_boots_2']		 = { 'item_travel_boots', 'item_recipe_travel_boots' }
+Item['item_travel_boots_2']				= { 'item_travel_boots', 'item_recipe_travel_boots' }
 
-Item['item_urn_of_shadows']		 = { 'item_circlet', 'item_ring_of_protection', 'item_sobi_mask', 'item_recipe_urn_of_shadows' }
+Item['item_trident']					= { 'item_yasha', 'item_sange', 'item_kaya', 'item_recipe_trident'}
 
-Item['item_ultimate_scepter']		 = { 'item_point_booster', 'item_ogre_axe', 'item_blade_of_alacrity', 'item_staff_of_wizardry'  }
+Item['item_trident_sange']				= { 'item_yasha_and_kaya', 'item_sange', 'item_recipe_trident'}
 
-Item['item_ultimate_scepter_2']    = { 'item_ultimate_scepter', 'item_recipe_ultimate_scepter_2' }
+Item['item_trident_yasha']				= { 'item_kaya_and_sange', 'item_yasha', 'item_recipe_trident'}
 
-Item['item_vanguard']				 = { 'item_vitality_booster', 'item_ring_of_health', "item_recipe_vanguard"}
+Item['item_trident_kaya']				= { 'item_sange_and_yasha', 'item_kaya', 'item_recipe_trident'}
 
-Item['item_veil_of_discord']		 = { 'item_ring_of_basilius', 'item_crown', 'item_recipe_veil_of_discord' }
+Item['item_urn_of_shadows']				= { 'item_circlet', 'item_ring_of_protection', 'item_sobi_mask', 'item_recipe_urn_of_shadows' }
 
-Item['item_vladmir']				 = { 'item_ring_of_basilius', 'item_lifesteal', 'item_recipe_vladmir' }
+Item['item_ultimate_scepter']			= { 'item_point_booster', 'item_ogre_axe', 'item_blade_of_alacrity', 'item_staff_of_wizardry'  }
 
-Item['item_wraith_band']			 = { 'item_slippers', 'item_circlet', 'item_recipe_wraith_band' }
+Item['item_ultimate_scepter_2']			= { 'item_ultimate_scepter', 'item_recipe_ultimate_scepter_2' }
 
-Item['item_yasha']				 = { 'item_boots_of_elves', 'item_blade_of_alacrity', 'item_recipe_yasha' }
+Item['item_vanguard']					= { 'item_vitality_booster', 'item_ring_of_health', "item_recipe_vanguard"}
 
-Item['item_yasha_and_kaya']		 = { 'item_yasha', 'item_kaya' }
+Item['item_veil_of_discord']			= { 'item_ring_of_basilius', 'item_crown', 'item_recipe_veil_of_discord' }
+
+Item['item_vladmir']					= { 'item_ring_of_basilius', 'item_lifesteal', 'item_recipe_vladmir' }
+
+Item['item_wraith_band']				= { 'item_slippers', 'item_circlet', 'item_recipe_wraith_band' }
+
+Item['item_yasha']						= { 'item_boots_of_elves', 'item_blade_of_alacrity', 'item_recipe_yasha' }
+
+Item['item_yasha_and_kaya']				= { 'item_yasha', 'item_kaya' }
 
 end
 
@@ -703,6 +754,11 @@ local tDefineItemRealName = {
 ['item_power_treads_str'] = "item_power_treads",
 
 
+['item_trident_yasha'] = 'item_trident',
+['item_trident_sange'] = 'item_trident',
+['item_trident_kaya'] = 'item_trident',
+
+
 ['item_mid_outfit'] = "item_urn_of_shadows",
 ['item_templar_assassin_outfit'] = "item_urn_of_shadows",
 
@@ -719,7 +775,7 @@ local tDefineItemRealName = {
 ['item_mage_outfit'] = "item_magic_wand",
 ['item_priest_outfit'] = "item_magic_wand",
 ['item_crystal_maiden_outfit'] = "item_magic_wand",
-['item_jakiro_outfit'] = "item_magic_wand",
+
 
 }
 
@@ -731,13 +787,13 @@ Item['item_double_tango'] 			= { 'item_tango', 'item_tango',}
 	
 Item['item_double_clarity']			= { 'item_clarity', 'item_clarity',}
 	
-Item['item_double_flask']				= { 'item_flask', 'item_flask',}
+Item['item_double_flask']			= { 'item_flask', 'item_flask',}
 
-Item['item_double_enchanted_mango'] 	= { 'item_enchanted_mango', 'item_enchanted_mango',}
+Item['item_double_enchanted_mango']	= { 'item_enchanted_mango', 'item_enchanted_mango',}
 
-Item['item_double_circlet'] 			= { 'item_circlet', 'item_circlet',}
+Item['item_double_circlet']			= { 'item_circlet', 'item_circlet',}
 
-Item['item_double_slippers'] 			= { 'item_slippers', 'item_slippers',}
+Item['item_double_slippers']		= { 'item_slippers', 'item_slippers',}
 
 Item['item_double_mantle'] 			= { 'item_mantle', 'item_mantle',}
 
@@ -774,7 +830,7 @@ Item['item_new_bfury']				= { 'item_quelling_blade',  'item_ring_of_health', 'it
 ------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------
 
-Item['item_mid_outfit']				= { "item_ward_observer", 'item_tango', 'item_faerie_fire', 'item_double_branches', 'item_wraith_band', 'item_circlet', 'item_flask', 'item_magic_stick', 'item_recipe_magic_wand', 'item_power_treads_agi', 'item_broken_urn', }
+Item['item_mid_outfit']					= { "item_ward_observer", 'item_tango', 'item_faerie_fire', 'item_double_branches', 'item_wraith_band', 'item_circlet', 'item_flask', 'item_magic_stick', 'item_recipe_magic_wand', 'item_power_treads_agi', 'item_broken_urn', }
 
 Item['item_templar_assassin_outfit']	= { "item_ward_observer", 'item_tango', 'item_faerie_fire', 'item_double_branches', 'item_wraith_band', 'item_circlet', 'item_flask', 'item_magic_stick', 'item_recipe_magic_wand', 'item_power_treads_agi', 'item_broken_urn', 'item_blight_stone', }
 
@@ -783,69 +839,69 @@ Item['item_templar_assassin_outfit']	= { "item_ward_observer", 'item_tango', 'it
 ----------------------------------------------------------------------
 
 
-Item['item_ranged_carry_outfit']		= { 'item_tango', 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_wraith_band', 'item_recipe_magic_wand', 'item_power_treads_agi', 'item_infused_raindrop' } 
+Item['item_ranged_carry_outfit']		= { 'item_tango', 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_wraith_band', 'item_recipe_magic_wand', 'item_power_treads_agi' } 
 
-Item['item_melee_carry_outfit']		= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_magic_stick', 'item_double_branches', 'item_wraith_band', 'item_recipe_magic_wand', 'item_power_treads_agi' }
+Item['item_melee_carry_outfit']			= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_magic_stick', 'item_double_branches', 'item_wraith_band', 'item_recipe_magic_wand', 'item_power_treads_agi' }
 
 Item['item_phantom_assassin_outfit']	= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_magic_stick', 'item_double_branches', 'item_wraith_band', 'item_recipe_magic_wand', 'item_power_treads_agi', 'item_blight_stone' } 
 
-Item['item_huskar_outfit']			= { 'item_tango', 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_bracer', 'item_boots', 'item_bracer', 'item_recipe_magic_wand', 'item_blades_of_attack', 'item_chainmail' }
+Item['item_huskar_outfit']				= { 'item_tango', 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_bracer', 'item_boots', 'item_bracer', 'item_recipe_magic_wand', 'item_blades_of_attack', 'item_chainmail' }
 
 Item['item_sven_outfit']				= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_magic_stick', 'item_double_branches', 'item_bracer', 'item_recipe_magic_wand', 'item_phase_boots' }
 
 
 ----------------------------------------------------------------------
 
-Item['item_tank_outfit']			   = { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_magic_stick', 'item_double_branches', 'item_bracer', 'item_recipe_magic_wand', 'item_power_treads_str', 'item_crimson_guard' }
+Item['item_tank_outfit']				= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_magic_stick', 'item_double_branches', 'item_bracer', 'item_recipe_magic_wand', 'item_power_treads_str', 'item_crimson_guard' }
 
-Item['item_dragon_knight_outfit']	= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_magic_stick', 'item_double_branches', 'item_recipe_magic_wand', 'item_power_treads_str', 'item_soul_ring', 'item_crimson_guard' }
+Item['item_dragon_knight_outfit']		= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_magic_stick', 'item_double_branches', 'item_recipe_magic_wand', 'item_power_treads_str', 'item_soul_ring', 'item_crimson_guard' }
 
-Item['item_ogre_magi_outfit']		   = { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_magic_stick', 'item_double_branches', 'item_recipe_magic_wand', 'item_power_treads_int', 'item_hand_of_midas', 'item_crimson_guard' }
+Item['item_ogre_magi_outfit']			= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_magic_stick', 'item_double_branches', 'item_recipe_magic_wand', 'item_power_treads_int', 'item_hand_of_midas', 'item_crimson_guard' }
 
 
 --------------------------------------------------------------------------
 
-Item['item_priest_outfit']		  	 = { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_circlet', 'item_arcane_boots', 'item_recipe_magic_wand' }
+Item['item_priest_outfit']				= { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_circlet', 'item_arcane_boots', 'item_recipe_magic_wand' }
 
-Item['item_necrolyte_outfit']        = { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_circlet', 'item_arcane_boots', 'item_recipe_magic_wand' }
-
-
------------------------------------------------------------------------------
-
-
-Item['item_mage_outfit']			 = { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_null_talisman', 'item_arcane_boots', 'item_recipe_magic_wand' }
-
-Item['item_jakiro_outfit']           = { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_crown', 'item_arcane_boots', 'item_recipe_magic_wand' }
-
-Item['item_crystal_maiden_outfit']   = { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_crown', 'item_power_treads_int', 'item_recipe_magic_wand' }
+Item['item_necrolyte_outfit']			= { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_circlet', 'item_arcane_boots', 'item_recipe_magic_wand' }
 
 
 -----------------------------------------------------------------------------
 
 
-Item['PvN_priest']		= { 'item_tango', 'item_flask', 'item_bracer', 'item_bracer', 'item_power_treads_int', "item_glimmer_cape", "item_cyclone", "item_rod_of_atos", "item_sheepstick", 'item_travel_boots'}
+Item['item_mage_outfit']				= { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_branches', 'item_arcane_boots', 'item_recipe_magic_wand' }
 
-Item['PvN_mage']		= { 'item_tango', 'item_flask', 'item_bracer', 'item_bracer', 'item_power_treads_int', "item_glimmer_cape", "item_lotus_orb", "item_cyclone", "item_sheepstick", 'item_travel_boots'}
+Item['item_crystal_maiden_outfit']		= { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_branches', 'item_power_treads_int', 'item_recipe_magic_wand' }
 
-Item['PvN_melee_carry']	= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_bracer', 'item_bracer', 'item_power_treads_agi', "item_echo_sabre", "item_invis_sword", "item_blade_mail", "item_abyssal_blade", "item_broken_silver_edge", 'item_travel_boots'}
 
-Item['PvN_ranged_carry']= { 'item_tango', 'item_tango', 'item_flask', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_wraith_band', "item_dragon_lance", "item_invis_sword", "item_manta", "item_broken_hurricane_pike", "item_satanic", "item_broken_silver_edge", 'item_travel_boots'}
+-----------------------------------------------------------------------------
 
-Item['PvN_tank']		= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_bracer', 'item_bracer', 'item_power_treads_str', "item_echo_sabre", "item_heavens_halberd", "item_invis_sword", "item_assault", "item_broken_silver_edge", 'item_travel_boots'}
 
-Item['PvN_mid']			= { 'item_tango', 'item_flask', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', "item_dragon_lance", "item_invis_sword", "item_skadi", "item_broken_hurricane_pike", "item_satanic", "item_broken_silver_edge", 'item_travel_boots'}
+Item['PvN_priest']		= { 'item_tango', 'item_flask', 'item_bracer', 'item_power_treads_int', 'item_bracer', 'item_glimmer_cape', 'item_cyclone', 'item_rod_of_atos', 'item_sheepstick', 'item_travel_boots'}
 
-Item['PvN_antimage']	= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_broken_bfury', "item_manta", "item_abyssal_blade", "item_skadi", 'item_travel_boots'}
+Item['PvN_mage']		= { 'item_tango', 'item_flask', 'item_bracer', 'item_power_treads_int', 'item_bracer', 'item_glimmer_cape', 'item_lotus_orb', 'item_cyclone', 'item_sheepstick', 'item_travel_boots'}
 
-Item['PvN_huskar']		= { 'item_tango', 'item_flask', 'item_bracer', 'item_bracer', 'item_bracer', 'item_power_treads_agi', "item_dragon_lance", "item_invis_sword", "item_heavens_halberd", "item_broken_hurricane_pike", "item_satanic", "item_broken_silver_edge", 'item_travel_boots'}
+Item['PvN_melee_carry']	= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_diffusal_blade', 'item_invis_sword', 'item_skadi', 'item_abyssal_blade', 'item_broken_silver_edge', 'item_travel_boots'}
 
-Item['PvN_TA']			= { 'item_tango', 'item_flask', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', "item_dragon_lance", "item_desolator", "item_sange_and_yasha", "item_broken_hurricane_pike", "item_bloodthorn", 'item_travel_boots'}
+Item['PvN_str_carry']	= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_bracer', 'item_bracer', 'item_power_treads_str', 'item_echo_sabre', 'item_invis_sword', 'item_blade_mail', 'item_abyssal_blade', 'item_broken_silver_edge', 'item_travel_boots'}
 
-Item['PvN_PA']			= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', "item_desolator", "item_invis_sword", "item_abyssal_blade", "item_satanic", "item_broken_silver_edge", 'item_travel_boots'}
+Item['PvN_ranged_carry']= { 'item_tango', 'item_tango', 'item_flask', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_wraith_band', 'item_dragon_lance', 'item_invis_sword', 'item_manta', 'item_broken_hurricane_pike', 'item_bloodthorn', 'item_broken_silver_edge', 'item_travel_boots'}
 
-Item['PvN_PL']			= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', "item_diffusal_blade", "item_manta", "item_invis_sword", "item_abyssal_blade", "item_broken_silver_edge", 'item_travel_boots'}
+Item['PvN_tank']		= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_bracer', 'item_bracer', 'item_power_treads_str', 'item_echo_sabre', 'item_heavens_halberd', 'item_invis_sword', 'item_assault', 'item_broken_silver_edge', 'item_travel_boots'}
 
-Item['PvN_OM']			= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_power_treads_str', 'item_bracer', "item_hand_of_midas", "item_heavens_halberd", "item_invis_sword", "item_sheepstick", "item_broken_silver_edge", 'item_travel_boots'}
+Item['PvN_mid']			= { 'item_tango', 'item_flask', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_dragon_lance', 'item_invis_sword', 'item_skadi', 'item_broken_hurricane_pike', 'item_bloodthorn', 'item_broken_silver_edge', 'item_travel_boots'}
+
+Item['PvN_antimage']	= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_broken_bfury', 'item_manta', 'item_abyssal_blade', 'item_skadi', 'item_travel_boots'}
+
+Item['PvN_huskar']		= { 'item_tango', 'item_flask', 'item_bracer', 'item_bracer', 'item_bracer', 'item_power_treads_agi', 'item_dragon_lance', 'item_invis_sword', 'item_heavens_halberd', 'item_broken_hurricane_pike', 'item_satanic', 'item_broken_silver_edge', 'item_travel_boots'}
+
+Item['PvN_TA']			= { 'item_tango', 'item_flask', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_dragon_lance', 'item_desolator', 'item_invis_sword', 'item_broken_hurricane_pike', 'item_bloodthorn', 'item_broken_silver_edge', 'item_travel_boots'}
+
+Item['PvN_PA']			= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_desolator', 'item_invis_sword', 'item_abyssal_blade', 'item_nullifier', 'item_broken_silver_edge', 'item_travel_boots'}
+
+Item['PvN_PL']			= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_diffusal_blade', 'item_manta', 'item_invis_sword', 'item_abyssal_blade', 'item_broken_silver_edge', 'item_travel_boots'}
+
+Item['PvN_OM']			= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_bracer', 'item_bracer', 'item_power_treads_int', 'item_hand_of_midas', 'item_heavens_halberd', 'item_invis_sword', 'item_sheepstick', 'item_broken_silver_edge', 'item_travel_boots'}
 
 end
 ------------------------------------------------------------------------------------------------------
@@ -860,6 +916,12 @@ function Item.SetItemBuild(sItemList)
 		Item[botName] = sItemList 
 	end
 	
+end
+
+function Item.IsConsumableItem(sItemName)
+
+	return tConsumableItemList[sItemName] == true
+
 end
 
 function Item.IsSmallItem(sItemName)
@@ -894,29 +956,45 @@ function Item.GetNeutralItemLevel(sItemName)
 
 end
 
---捡中立物品的逻辑
+--捡中立物品
 function Item.GetInGroundItem(bot)
 	
 	local botEmptyInventoryCount = Item.GetEmptyInventoryAmount(bot)
 	
 	if botEmptyInventoryCount == 0 then return nil end	
 	
+	if botEmptyInventoryCount == 1 
+	then
+		for i=1,5
+		do
+			local nAlly = GetTeamMember(i);
+			if nAlly ~= nil
+				and nAlly ~= bot
+				and nAlly:IsAlive()
+				and GetUnitToUnitDistance(bot,nAlly) <= 600
+				and Item.GetEmptyInventoryAmount(nAlly) >= 2
+			then
+				return nil
+			end
+		end
+	end
+	
 	if ( bot:DistanceFromFountain() < 1800 and botEmptyInventoryCount >= 4 )
-		or ( bot:DistanceFromFountain() > 1800 and botEmptyInventoryCount >= 2 )
+		or ( bot:DistanceFromFountain() > 1800 and botEmptyInventoryCount >= 1 )
 	then
 		local tDropList = GetDroppedItemList()
 		local nMaxLevel = -1
 		local nTargetItem = nil
 		for _,tDropItem in pairs(tDropList)
 		do
-			if tDropItem.item ~= nil and tDropItem.location ~= nil
+			if tDropItem.item ~= nil 
+				and tDropItem.location ~= nil
+				and GetUnitToLocationDistance(bot,tDropItem.location) <= 1200
 			then
 				local sDropName = tDropItem.item:GetName()
-				local vDropLocation = tDropItem.location
 				local nDropOwner = tDropItem.owner
-				if 	nDropOwner ~= bot
+				if 	( nDropOwner ~= bot or botEmptyInventoryCount >= 5 )
 					and Item.IsNeutralItem(sDropName)
-					and GetUnitToLocationDistance(bot,vDropLocation) <= 1200
 					and Item.GetNeutralItemLevel(sDropName) > nMaxLevel
 				then
 					nMaxLevel = Item.GetNeutralItemLevel(sDropName)
@@ -943,6 +1021,8 @@ function Item.GetNeedDropNeutralItem(bot)
 	local botNeutralItemCount = Item.GetNeutralItemCount(bot)
 	
 	if botEmptyInventoryCount >= 4 or botNeutralItemCount <= 1 then return nil end	
+	
+	if botEmptyInventoryCount == 3 and bot:FindItemSlot('item_ward_observer') >= 0 then return nil end
 
 	local hNeedDropItem = nil
 	local nMinItemLevel = 99
@@ -992,6 +1072,7 @@ function Item.GetNeedDropNeutralItem(bot)
 				then
 					local memberEmptyInventoryCount = Item.GetEmptyInventoryAmount(member)
 					if memberEmptyInventoryCount >= botEmptyInventoryCount + 2
+						and memberEmptyInventoryCount >= 3
 					then
 						nTargetMember = member;
 						break;
@@ -1024,6 +1105,23 @@ function Item.GetVambraceComponent(bot)
 			return "item_wraith_band", 'item_slippers', "item_recipe_wraith_band"
 	else
 		return "item_bracer", 'item_gauntlets', "item_recipe_bracer"
+	end
+
+end
+
+function Item.GetTridentNameToBuy(bot)
+
+	if bot:FindItemSlot('item_sange_and_yasha') >= 0
+	then
+		return 'item_trident_kaya'
+	elseif bot:FindItemSlot('item_yasha_and_kaya') >= 0
+		then
+			return 'item_trident_sange'
+	elseif bot:FindItemSlot('item_kaya_and_sange') >= 0
+		then
+			return 'item_trident_yasha'
+	else
+		return 'item_trident'
 	end
 
 end
@@ -1203,6 +1301,8 @@ function Item.GetNeutralItemCount(bot)
 		then
 			local itemName = item:GetName()
 			if Item.IsNeutralItem(itemName)
+				and not Item.IsNeutralItemRecipe(itemName)
+				and not Item.IsConsumableItem(itemName)
 			then
 				amount = amount +1;
 			end
@@ -1290,7 +1390,7 @@ function Item.GetTheItemSolt(bot, nSlotMin, nSlotMax, bMaxCost)
 
 	if bMaxCost 
 	then
-		local nMaxCost = 0;
+		local nMaxCost = -9999;
 		local idx = -1;
 		for i = nSlotMin, nSlotMax 
 		do
@@ -1329,4 +1429,4 @@ end
 
 
 return Item;
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592..

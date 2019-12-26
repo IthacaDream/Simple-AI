@@ -207,7 +207,7 @@ local function CourierUsageComplement()
 	local npcCourier = bot.theCourier
 	local cState = GetCourierState( npcCourier );
 	local courierHP = npcCourier:GetHealth() / npcCourier:GetMaxHealth(); 
-	local nowTime   = DotaTime();
+	local currentTime = DotaTime();
 	local botIsAlive = bot:IsAlive();
 	local botLV = bot:GetLevel();
 	local useCourierCD = 1.2;
@@ -219,15 +219,15 @@ local function CourierUsageComplement()
 	
 	if X.IsCourierTargetedByUnit(npcCourier) 
 	then
-		if nowTime > nReturnTime + protectCourierCD then
-			nReturnTime = nowTime;
+		if currentTime > nReturnTime + protectCourierCD then
+			nReturnTime = currentTime;
 			
 			J.SetReportMotive(bDebugCourier,"IsCourierTargetedByUnit");
 			
 			bot:ActionImmediate_Courier( npcCourier, COURIER_ACTION_RETURN_STASH_ITEMS );
 			
 			local abilityBurst = npcCourier:GetAbilityByName('courier_burst');
-			if bot:GetLevel() >= 10 and abilityBurst:IsFullyCastable() 
+			if botLV >= 10 and abilityBurst:IsFullyCastable() 
 			then bot:ActionImmediate_Courier( npcCourier, COURIER_ACTION_BURST ) end
 			
 			return;
@@ -245,14 +245,14 @@ local function CourierUsageComplement()
 	if (cState == COURIER_STATE_RETURNING_TO_BASE 
 		or cState == COURIER_STATE_AT_BASE
 		or cState == COURIER_STATE_IDLE ) 
-	   and nowTime > nReturnTime + protectCourierCD  
+	   and currentTime > nReturnTime + protectCourierCD  
 	then 
 		
 		if cState == COURIER_STATE_AT_BASE and courierHP < 0.9 then
 			return;
 		end
 		
-		--RETURN COURIER TO BASE WHEN IDLE (there be a bug to test)
+		--RETURN COURIER TO BASE WHEN IDLE (THERE BE A BUG TO TEST)
 		if cState == COURIER_STATE_IDLE and npcCourier:DistanceFromFountain() > 800 
 		then
 			J.SetReportMotive(bDebugCourier,"RETURN COURIER TO BASE WHEN IDLE");
@@ -260,42 +260,49 @@ local function CourierUsageComplement()
 			return
 		end
 		
-		--TAKE ITEM FROM STASH
+		--TAKE ITEM FROM STASH (AND COURIER WILL TRANSFER IT)
 		if botIsAlive 
 		   and ( cState == COURIER_STATE_AT_BASE
 				 or ( cState == COURIER_STATE_IDLE and npcCourier:DistanceFromFountain() < 900 ) )
 		then
-			local nCSlot = X.GetCourierEmptySlot(npcCourier);
 			local nMSlot = X.GetNumStashItem(bot);
-			if nMSlot > 0 and nMSlot <= nCSlot
-			then
-				--J.SetReportMotive(bDebugCourier,"TAKE ITEM FROM STASH");
-				bot:ActionImmediate_Courier( npcCourier, COURIER_ACTION_TAKE_STASH_ITEMS );
-				courierTime = nowTime;
+			if nMSlot > 0 
+ 			then
+				if ( bot.currListItemToBuy ~= nil and #bot.currListItemToBuy == 0 )
+					or ( bot.currentComponentToBuy ~= nil 
+						 and ( IsItemPurchasedFromSecretShop(bot.currentComponentToBuy) 
+								or bot:GetGold() + 50 < GetItemCost( bot.currentComponentToBuy )))
+				then
+					J.SetReportMotive(bDebugCourier,"TAKE ITEM FROM STASH");
+					bot:ActionImmediate_Courier( npcCourier, COURIER_ACTION_TAKE_STASH_ITEMS );
+					courierTime = currentTime;
+				end
 			end
 		end
 		
 		--MAKE COURIER GOES TO SECRET SHOP
 		if  botIsAlive and bot.SecretShop and npcCourier:DistanceFromFountain() < 7000 
-			and X.GetCourierEmptySlot(npcCourier) >= 2 and courierHP > 0.95
-		    and nowTime > courierTime + useCourierCD 
+			and X.GetCourierEmptySlot(npcCourier) >= 2
+		    and currentTime > courierTime + useCourierCD 
 		then
 			J.SetReportMotive(bDebugCourier,"MAKE COURIER GOES TO SECRET SHOP");
 			bot:ActionImmediate_Courier( npcCourier, COURIER_ACTION_SECRET_SHOP )
 			bot.SShopUser = true;
-			courierTime = nowTime;
+			courierTime = currentTime;
 			return
 		end
 		
 		--TRANSFER ITEM IN COURIER
-		if botIsAlive and bot:GetCourierValue() > 0 and courierHP > 0.95
-		   and ( not X.IsInvFull(bot) or ( X.GetNumStashItem(bot) == 0 and bot.currListItemToBuy ~= nil and #bot.currListItemToBuy == 0) )
-		   and ( npcCourier:DistanceFromFountain() < 4000 + botLV * 200 or GetUnitToUnitDistance(bot, npcCourier) < 1800 ) 
-		   and nowTime > courierTime + useCourierCD
+		if	botIsAlive 
+			and bot:GetCourierValue() > 0
+			and bot:GetStashValue() < 100
+			and ( not X.IsInvFull(bot) or ( X.GetNumStashItem(bot) == 0 and bot.currListItemToBuy ~= nil and #bot.currListItemToBuy == 0) )
+			and ( npcCourier:DistanceFromFountain() < 4000 + botLV * 200 or GetUnitToUnitDistance(bot, npcCourier) < 1800 ) 
+			and currentTime > courierTime + useCourierCD
 		then
 			J.SetReportMotive(bDebugCourier,"TRANSFER ITEM IN COURIER");
 			bot:ActionImmediate_Courier( npcCourier, COURIER_ACTION_TRANSFER_ITEMS )
-			courierTime = nowTime;
+			courierTime = currentTime;
 			return
 		end
 		
@@ -305,11 +312,11 @@ local function CourierUsageComplement()
 			      or (cState == COURIER_STATE_IDLE and npcCourier:DistanceFromFountain() < 800 ) )  
 			and bot:GetCourierValue() > 0 
 			and X.GetNumStashItem(bot) + 4 <= X.GetCourierEmptySlot(npcCourier)
-			and nowTime > courierTime + useCourierCD
+			and currentTime > courierTime + useCourierCD
 		then
 			J.SetReportMotive(bDebugCourier,"RETURN STASH ITEM WHEN DEATH");
 			bot:ActionImmediate_Courier( npcCourier, COURIER_ACTION_RETURN_STASH_ITEMS );
-			courierTime = nowTime;
+			courierTime = currentTime;
 			return
 		end
 		
@@ -319,12 +326,14 @@ end
 
 function X.GetBotCourier(bot)
 	
+	local nPlayerID = bot:GetPlayerID()
+	
 	for nCourierID = 0, 4
 	do
-		local member = GetTeamMember(nCourierID + 1);
-		if member:GetPlayerID() == bot:GetPlayerID()
+		local courier = GetCourier( nCourierID )
+		if courier:GetPlayerID() == nPlayerID
 		then
-			return GetCourier( nCourierID );
+			return courier
 		end
 	end
 	
@@ -353,7 +362,6 @@ function X.GetNumStashItem(unit)
 	end
 	return amount;
 end
-
 
 
 function X.IsCourierTargetedByUnit(courier)
@@ -397,7 +405,7 @@ function X.IsCourierTargetedByUnit(courier)
 				local dInfo = info[1];
 				if dInfo ~= nil 
 				   and GetUnitToLocationDistance(courier, dInfo.location) <= 800 
-				   and dInfo.time_since_seen < 1.5
+				   and dInfo.time_since_seen < 1.8
 			    then
 					return true;
 				end
@@ -501,8 +509,8 @@ function X.GiveToMidLaner()
 end
 
 
+local fLastStashItemTimeList = {}
 local lastGiveTangoTime = -99;
-local firstUseTime = 0;
 local aetherRange = 0;
 local lastAmuletTime = 0;
 local thereBeMonkey = false;
@@ -513,6 +521,8 @@ local botTarget = nil
 local nMode = -1
 
 local function ItemUsageComplement()
+
+	X.SetStashItemTimeUpdate()
 
 	if not bot:IsAlive() 
 	   or bot:IsMuted() 
@@ -546,7 +556,8 @@ local function ItemUsageComplement()
 			and hItem:IsFullyCastable()
 		then
 			local sItemName = hItem:GetName()
-			if X.ConsiderItemDesire[sItemName] ~= nil
+			if	X.ConsiderItemDesire[sItemName] ~= nil
+				and not X.IsItemInStash(sItemName)
 			then
 				local nItemDesire,hItemTarget,sCastType,sMotive = X.ConsiderItemDesire[sItemName](hItem)
 				
@@ -607,13 +618,54 @@ function X.IsWithoutSpellShield(npcEnemy)
 
 end
 
+local lastDeleteTime = -90
+function X.SetStashItemTimeUpdate()
+
+	local currentTime = DotaTime()
+
+	for i = 6,9
+	do
+		local hItem = bot:GetItemInSlot(i);
+		if hItem ~= nil
+		then
+			fLastStashItemTimeList[hItem:GetName()] = currentTime
+		end		
+	end
+	
+	if currentTime > lastDeleteTime + 7.0
+	then
+		lastDeleteTime = currentTime
+		for k,v in pairs(fLastStashItemTimeList)
+		do 
+			if	v ~= nil
+				and v < currentTime - 7.0
+			then
+				fLastStashItemTimeList[k] = nil
+			end
+		end
+	end
+
+end
+
+function X.IsItemInStash(sItemName)
+
+	if fLastStashItemTimeList[sItemName] ~= nil
+		and DotaTime() < fLastStashItemTimeList[sItemName] + 6.01
+	then
+		return true
+	end
+	
+	return false
+
+end
+
 
 X.ConsiderItemDesire = {};
 
 --深渊
 X.ConsiderItemDesire["item_abyssal_blade"] = function(hItem)
 
-	local nCastRange = 660 + aetherRange
+	local nCastRange = 620 + aetherRange
 	local sCastType = 'unit'
 	local hEffectTarget = nil
 	
@@ -624,7 +676,7 @@ X.ConsiderItemDesire["item_abyssal_blade"] = function(hItem)
 	do
 		
 		if J.IsValid(npcEnemy)
-		   and J.CanCastOnMagicImmune(npcEnemy)
+		   and J.CanCastOnNonMagicImmune(npcEnemy)
 		   and X.IsWithoutSpellShield(npcEnemy)
 		then
 			--Check
@@ -650,7 +702,7 @@ X.ConsiderItemDesire["item_abyssal_blade"] = function(hItem)
 	then		
 		if  J.IsValidHero(botTarget)
 			and J.IsInRange(bot,botTarget,nCastRange + 50)
-			and J.CanCastOnMagicImmune(botTarget) 
+			and J.CanCastOnNonMagicImmune(botTarget) 
 			and X.IsWithoutSpellShield(botTarget)
 			and not J.IsDisabled(true,botTarget)			
 		then
@@ -894,6 +946,53 @@ X.ConsiderItemDesire["item_blink"] = function(hItem)
 	
 end
 
+
+--奶酪
+X.ConsiderItemDesire["item_cheese"] = function(hItem)
+
+	if bot:DistanceFromFountain() < 1200 then return BOT_ACTION_DESIRE_NONE end
+	
+	local nCastRange = 800
+	local sCastType = 'none'	
+	local hEffectTarget = nil 
+	local nInRangeEnmyList = bot:GetNearbyHeroes(nCastRange,true,BOT_MODE_NONE)
+	
+	local nLostHealth = bot:GetMaxHealth() - bot:GetHealth()
+	local botHP = bot:GetHealth()/bot:GetMaxHealth()
+	local nLostMana = bot:GetMaxMana() - bot:GetMana()
+	local botMP = bot:GetMana()/bot:GetMaxMana()
+	
+	
+	if ( nLostHealth > 2500 and nLostMana > 1500 )
+		or ( nLostHealth > 2000 and nLostHealth + nLostMana > 3000)
+		or ( botHP < 0.4 and botMP < 0.4)
+		or ( botHP < 0.2 )
+		or ( botMP < 0.1 )
+	then	
+		if J.IsGoingOnSomeone(bot) 
+		then
+			if J.IsValidHero(botTarget)
+				and J.IsInRange(bot,botTarget,2000)
+				and J.CanCastOnMagicImmune(botTarget)
+			then
+				hEffectTarget = bot
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Attack'		
+			end
+		end
+		
+		if J.IsRetreating(bot)
+			and bot:WasRecentlyDamagedByAnyHero(4.0)
+		then
+			hEffectTarget = bot
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Retreat'		
+		end
+	end
+	
+	return BOT_ACTION_DESIRE_NONE
+
+end
+
+
 --血精石
 X.ConsiderItemDesire["item_bloodstone"] = function(hItem)
 
@@ -915,6 +1014,14 @@ X.ConsiderItemDesire["item_bloodstone"] = function(hItem)
 	
 	return BOT_ACTION_DESIRE_NONE
 	
+end
+
+
+--血棘
+X.ConsiderItemDesire["item_bloodthorn"] = function(hItem)
+
+	return X.ConsiderItemDesire["item_orchid"](hItem)
+
 end
 
 --魔瓶
@@ -1225,7 +1332,7 @@ X.ConsiderItemDesire["item_enchanted_mango"] = function(hItem)
 	
 
 	if J.IsGoingOnSomeone(bot) 
-	   and bot:GetMana() < 100 + bot:GetLevel() * 10
+	   and bot:GetMana() < 100 + bot:GetLevel() * 6
 	   and J.IsValidHero(botTarget)
 	   and J.IsInRange(bot,botTarget,1000)
 	then
@@ -1276,7 +1383,7 @@ X.ConsiderItemDesire["item_faerie_fire"] = function(hItem)
 	if ( nMode == BOT_MODE_RETREAT 
 		 and bot:GetActiveModeDesire() >= BOT_MODE_DESIRE_HIGH 
 		 and bot:WasRecentlyDamagedByAnyHero(3.0)
-		 and ( bot:GetHealth() / bot:GetMaxHealth() ) < 0.15 ) 
+		 and ( bot:GetHealth() / bot:GetMaxHealth() ) < 0.2 ) 
 	then
 		hEffectTarget = bot
 		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Retreat'
@@ -1833,9 +1940,10 @@ X.ConsiderItemDesire["item_hurricane_pike"] = function(hItem)
 			and J.CanCastOnNonMagicImmune(botTarget)
 			and GetUnitToUnitDistance(botTarget,bot) > bot:GetAttackRange() + 100
 			and GetUnitToUnitDistance(botTarget,bot) < bot:GetAttackRange() + 700
+			and GetUnitToUnitDistance(botTarget,bot) < GetUnitToLocationDistance(bot,J.GetCorrectLoc(botTarget,1.0)) - 100
 			and bot:IsFacingLocation(botTarget:GetLocation(),20)
-			and not botTarget:IsFacingLocation(bot:GetLocation(),90)
-			and J.GetEnemyCount(bot,1600) < 3
+			and not botTarget:IsFacingLocation(bot:GetLocation(),120)
+			and J.GetEnemyCount(bot,1600) <= 2
 		then
 			hEffectTarget = bot
 			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Attack'
@@ -2182,7 +2290,7 @@ X.ConsiderItemDesire["item_mask_of_madness"] = function(hItem)
 			then
 				bot:SetTarget(nAttackTarget);
 				hEffectTarget = nAttackTarget
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, ''
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'mask'
 			end	
 		end
 	end
@@ -2267,43 +2375,31 @@ X.ConsiderItemDesire["item_moon_shard"] = function(hItem)
 	local hEffectTarget = nil 
 	
 	
-	
-	if firstUseTime == 0 
+	if bot:GetPrimaryAttribute() == ATTRIBUTE_AGILITY 
+		and not bot:HasModifier("modifier_item_moon_shard_consumed")
 	then
-		firstUseTime = DotaTime();
+		hEffectTarget = bot
+		return BOT_ACTION_DESIRE_HIGH,hEffectTarget,sCastType,"moon_shard-self"
 	end
-	
-	if firstUseTime < DotaTime() - 6.1
-	then
-	
-		if bot:GetPrimaryAttribute() == ATTRIBUTE_AGILITY 
-			and not bot:HasModifier("modifier_item_moon_shard_consumed")
-		then
-			firstUseTime = 0;	
-			hEffectTarget = bot
-			return BOT_ACTION_DESIRE_HIGH,hEffectTarget,sCastType,"moon_shard-self"
-		end
 
-		local numPlayer = GetTeamPlayers(GetTeam());
-		local targetMember = nil;
-		local targetDamage = 0;
-		for i = 1, #numPlayer
-		do
-		   local member = GetTeamMember(i);
-		   if member ~= nil and member:IsAlive()		   
-			  and member:GetAttackDamage() > targetDamage
-			  and not member:HasModifier("modifier_item_moon_shard_consumed")
-		   then
-			   targetMember = member;
-			   targetDamage = member:GetAttackDamage();
-		   end
-		end
-		if targetMember ~= nil
-		then
-			firstUseTime = 0;	
-			hEffectTarget = targetMember
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'ally'
-		end
+	local numPlayer = GetTeamPlayers(GetTeam());
+	local targetMember = nil;
+	local targetDamage = 0;
+	for i = 1, #numPlayer
+	do
+	   local member = GetTeamMember(i);
+	   if member ~= nil and member:IsAlive()		   
+		  and member:GetAttackDamage() > targetDamage
+		  and not member:HasModifier("modifier_item_moon_shard_consumed")
+	   then
+		   targetMember = member;
+		   targetDamage = member:GetAttackDamage();
+	   end
+	end
+	if targetMember ~= nil
+	then
+		hEffectTarget = targetMember
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'ally'
 	end
 
 	
@@ -2324,7 +2420,7 @@ X.ConsiderItemDesire["item_necronomicon"] = function(hItem)
 	   and J.IsInRange(bot, botTarget, 700)
 	then
 		hEffectTarget = botTarget
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, ' '
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Attack'
 	end	
 	
 	return BOT_ACTION_DESIRE_NONE
@@ -2410,7 +2506,7 @@ X.ConsiderItemDesire["item_orchid"] = function(hItem)
 			and X.IsWithoutSpellShield(botTarget)			
 		then
 			hEffectTarget = botTarget
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'attack:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Attack:'..J.Chat.GetNormName(hEffectTarget)
 		end
 	end
 		
@@ -2951,17 +3047,17 @@ X.ConsiderItemDesire["item_sphere"] = function(hItem)
 		if #nNearAllyList >= 2
 		then
 			local targetAlly = nil
-			local targetDis = 9999
+			local targetDistance = 9999
 			for _,npcAlly in pairs(nNearAllyList)
 			do 
 				if  npcAlly ~= bot
 					and not npcAlly:IsIllusion()
-					and J.IsInRange(npcAlly,botTarget,targetDis)
+					and J.IsInRange(npcAlly,botTarget,targetDistance)
 					and not npcAlly:HasModifier("modifier_item_sphere_target")
 					and not npcAlly:HasModifier('modifier_antimage_spell_shield') 
 				then
 					targetAlly = npcAlly;
-					targetDis = GetUnitToUnitDistance(botTarget,npcAlly);
+					targetDistance = GetUnitToUnitDistance(botTarget,npcAlly);
 					if J.IsHumanPlayer(npcAlly) then break end
 				end
 			end
@@ -3148,15 +3244,9 @@ X.ConsiderItemDesire["item_tome_of_knowledge"] = function(hItem)
 	local hEffectTarget = nil 
 	local nInRangeEnmyList = bot:GetNearbyHeroes(nCastRange,true,BOT_MODE_NONE)
 	
-
-	if firstUseTime == 0 
-	then
-		firstUseTime = DotaTime();
-	end
 	
-	if firstUseTime < DotaTime() - 6.1
+	if hItem:IsFullyCastable()
 	then
-		firstUseTime = 0;
 		hEffectTarget = bot
 		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'knowledge'
 	end
@@ -3316,7 +3406,8 @@ end
 --TP
 X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 
-	if     ( bot:HasModifier("modifier_kunkka_x_marks_the_spot") )
+	if  nMode == BOT_MODE_RUNE
+		or ( bot:HasModifier("modifier_kunkka_x_marks_the_spot") )
 		or ( bot:HasModifier("modifier_sniper_assassinate") )
 		or ( bot:HasModifier("modifier_viper_nethertoxin") )
 		or ( bot:HasModifier("modifier_oracle_false_promise_timer")
@@ -3478,7 +3569,7 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 		
 		--第二种情况:有多个敌人但可以卡视野TP
 		local nAttackAllyList = bot:GetNearbyHeroes(999,false,BOT_MODE_ATTACK)
-		if botHP < ( 0.16 + 0.16 * nEnemyCount)
+		if botHP < ( 0.16 + 0.24 * nEnemyCount)
 			and (botHP < 0.2 or #nAttackAllyList == 0)
 			and bot:WasRecentlyDamagedByAnyHero(6.0)
 			and X.CanJuke() 
@@ -3612,7 +3703,6 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 	
 	--支援团战和守家
 	if	bot:GetLevel() > 10
-		and nMode ~= BOT_MODE_RUNE
 		and nMode ~= BOT_MODE_SECRET_SHOP
 		and nMode ~= BOT_MODE_ROSHAN
 		and nMode ~= BOT_MODE_ATTACK
@@ -3867,8 +3957,10 @@ end
 
 --芒果树
 X.ConsiderItemDesire["item_mango_tree"] = function(hItem)
+
+	local oppositeID_1 = GetTeamPlayers(opTeam)[1]
 	
-	if bot:DistanceFromFountain() > 3000 then return BOT_ACTION_DESIRE_NONE end
+	if bot:DistanceFromFountain() > 2222 and not IsPlayerBot(oppositeID_1) then return BOT_ACTION_DESIRE_NONE end
 	
 	local nCastRange = 200
 	local sCastType = 'ground'	
@@ -3919,21 +4011,28 @@ X.ConsiderItemDesire["item_arcane_ring"] = function(hItem)
 end
 
 --蜂王浆
+local royalJellyTime = nil
 X.ConsiderItemDesire["item_royal_jelly"] = function(hItem)
 
 	local nCastRange = 800 
 	local sCastType = 'unit'	
 	local hEffectTarget = nil 
 	local hAllyList = J.GetAlliesNearLoc(bot:GetLocation(),800)
-	
 
 	for _,npcAlly in pairs(hAllyList)
 	do 
 		if J.IsValidHero(npcAlly)
 			and not npcAlly:HasModifier("modifier_royal_jelly")
 		then
-			hEffectTarget = npcAlly
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Ally'
+			if royalJellyTime == nil
+			then
+				royalJellyTime = DotaTime()
+			elseif royalJellyTime < DotaTime() - 3.0
+				then
+					royalJellyTime = nil
+					hEffectTarget = npcAlly
+					return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Ally'
+			end
 		end	
 	end
 	
@@ -3976,7 +4075,7 @@ X.ConsiderItemDesire["item_clumsy_net"] = function(hItem)
 			and J.CanCastOnNonMagicImmune(botTarget)
 			and J.CanCastOnTargetAdvanced(botTarget)				
 			and J.IsInRange(botTarget, bot, nCastRange)
-			and ( J.IsMoving(botTarget) or botTarget:HasModifier("modifier_teleporting") )
+			and ( J.IsRunning(botTarget) or botTarget:HasModifier("modifier_teleporting") )
 		then
 			hEffectTarget = botTarget
 			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Attack'
@@ -4025,7 +4124,7 @@ X.ConsiderItemDesire["item_repair_kit"] = function(hItem)
 		do 
 			if J.IsValidBuilding(nTower)
 				and J.GetHPR(nTower) < 0.88
-				and nTower:GetAttackTarget() ~= nil
+				and ( nTower:GetAttackTarget() ~= nil or J.GetHPR(nTower) < 0.18 )
 				and not nTower:HasModifier('modifier_repair_kit')
 			then			
 				hEffectTarget = nTower
@@ -4046,7 +4145,7 @@ X.ConsiderItemDesire["item_greater_faerie_fire"] = function(hItem)
 	local hEffectTarget = nil 
 
 	if J.IsGoingOnSomeone(bot) 
-		and hItem:GetCurrentCharges() >= 2
+		and ( hItem:GetCurrentCharges() >= 2 or J.GetHPR(bot) < 0.5 )
 		and bot:GetMaxHealth() - bot:GetHealth() > 500
 	then
 		if J.IsValidHero(botTarget)
@@ -4082,6 +4181,16 @@ X.ConsiderItemDesire["item_flicker"] = function(hItem)
 	local hEffectTarget = nil 
 	local nInRangeEnmyList = bot:GetNearbyHeroes(800,true,BOT_MODE_NONE)
 	
+	if J.IsGoingOnSomeone(bot)
+	then
+		if J.IsValidHero(botTarget)
+			and ( bot:IsSilenced() or bot:IsRooted() )
+		then
+			hEffectTarget = bot
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'debuff'
+		end
+	end
+	
 	
 	if J.IsRetreating(bot)
 		and bot:WasRecentlyDamagedByAnyHero(3.0)
@@ -4115,7 +4224,7 @@ X.ConsiderItemDesire["item_ninja_gear"] = function(hItem)
 			if #hEnemyCreepList == 0 and #hNearbyEnemyHeroList == 0
 			then
 				hEffectTarget = botTarget
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'attack:'..J.Chat.GetNormName(hEffectTarget)
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Attack:'..J.Chat.GetNormName(hEffectTarget)
 			end	
 		end		
 	end
@@ -4268,6 +4377,7 @@ X.ConsiderItemDesire["item_fallen_sky"] = function(hItem)
 	local nRadius = 315
 	local nCastDelay = 0.5
 	local hEffectTarget = nil
+	local nInRangeEnmyList = bot:GetNearbyHeroes(1200,true,BOT_MODE_NONE)
 	
 
 	if J.IsGoingOnSomeone(bot)
@@ -4291,6 +4401,21 @@ X.ConsiderItemDesire["item_fallen_sky"] = function(hItem)
 			end
 		end	
 	end
+	
+	if J.IsRetreating(bot)
+		and bot:WasRecentlyDamagedByAnyHero(3.0)
+	then
+		local bLocation = J.GetLocationTowardDistanceLocation(bot, GetAncient(GetTeam()):GetLocation(), 1600 );
+		local nAttackAllyList = bot:GetNearbyHeroes(800,false,BOT_MODE_ATTACK);
+		if bot:DistanceFromFountain() > 800 
+		   and IsLocationPassable(bLocation) 
+		   and ( #nAttackAllyList == 0 or bot:GetActiveModeDesire() > BOT_MODE_DESIRE_VERYHIGH *0.9 )
+		   and #nInRangeEnmyList >= 1
+		then
+			hEffectTarget = bLocation
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Retreat'
+		end	
+	end
 
 	return BOT_ACTION_DESIRE_NONE
 
@@ -4299,7 +4424,37 @@ end
 --机械之心
 X.ConsiderItemDesire["item_ex_machina"] = function(hItem)
 
-	return X.ConsiderItemDesire["item_refresher"](hItem)
+	local nCastRange = 800 
+	local sCastType = 'none'
+	local hEffectTarget = nil
+	local nInRangeEnmyList = bot:GetNearbyHeroes(nCastRange,true,BOT_MODE_NONE)
+	
+
+	if J.IsGoingOnSomeone(bot)
+	then
+		if J.IsValidHero(botTarget)
+		then
+			local nSoltList = { 0, 1, 2, 3, 4, 5 }
+			local nRemainTime = 0
+			for _,nSlot in pairs(nSoltList)
+			do
+				local hItem = bot:GetItemInSlot(nSlot)
+				if hItem ~= nil and hItem:GetName() ~= 'item_refresher'
+				then
+					local nCooldownTime = hItem:GetCooldownTimeRemaining()
+					nRemainTime = nRemainTime + nCooldownTime
+				end
+			end
+		
+			if nRemainTime >= 20
+			then
+				hEffectTarget = botTarget
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Attack'
+			end
+		end
+	end
+	
+	return BOT_ACTION_DESIRE_NONE
 
 end
 
@@ -4442,4 +4597,4 @@ function AbilityLevelUpThink()
 	AbilityLevelUpComplement();
 
 end
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592..

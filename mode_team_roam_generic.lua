@@ -12,7 +12,7 @@ end
 
 
 local bot = GetBot();
-local bDebugMode = (bot:GetUnitName() == "npc_dota_hero_medusa")
+local bDebugMode = ( 1 == 1 )
 local X = {}
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
@@ -23,8 +23,6 @@ local distance = 2500; --吃锅距离
 local targetShrine = nil;
 
 local targetUnit = nil;
-local cItem = nil
-
 
 local towerCreepMode = false;
 local towerCreep = nil;
@@ -82,7 +80,7 @@ function GetDesire()
 			
 			--捡A杖
 			local pickScepterHero = J.GetPickUltimateScepterUnit();
-			if pickScepterHero ~= nil 
+			if pickScepterHero ~= nil and false
 			   and pickScepterHero:IsBot() 
 			   and bot == pickScepterHero 
 			   and J.Item.GetEmptyInventoryAmount(bot) > 0 
@@ -274,9 +272,7 @@ end
 
 function OnStart()
 	
-
 end
-
 
 function OnEnd()
 
@@ -526,7 +522,6 @@ function X.SupportFindTarget( bot )
 		   and J.IsWithoutTarget(bot)
 		   and X.IsLastHitCreep(nEnemyTowers[1],botAD * 2)
 		then 
-			J.SetReportAndPingLocation(nEnemyTowers[1]:GetLocation(),"补刀敌塔,伤害:",botAD * 2)
 			return nEnemyTowers[1],BOT_MODE_DESIRE_ABSOLUTE; 
 		end	
 		
@@ -543,7 +538,6 @@ function X.SupportFindTarget( bot )
 					and not X.IsAllysTarget(nNeutrals[i])
 					and X.IsLastHitCreep(nNeutrals[i],attackDamage)
 				then 
-					J.SetReportAndPingLocation(nNeutrals[i]:GetLocation(),"补一刀野,伤害:",attackDamage)
 					return nNeutrals[i],BOT_MODE_DESIRE_ABSOLUTE; 
 				end	
 			end
@@ -580,7 +574,6 @@ function X.SupportFindTarget( bot )
 			   and J.GetHPR(nAllyTowers[1]) < 0.08
 			   and X.IsLastHitCreep(nAllyTowers[1],denyDamage * 3)
 			then 
-				J.SetReportAndPingLocation(nAllyTowers[1]:GetLocation(),"反补塔,伤害:",denyDamage * 3)
 				return nAllyTowers[1],BOT_MODE_DESIRE_ABSOLUTE; 
 			end	
 		end
@@ -733,7 +726,7 @@ function X.CarryFindTarget( bot )
 	
 	local IsModeSuitHit = X.IsModeSuitToHitCreep(bot);
 	local nAttackRange = bot:GetAttackRange() + 50;
-	if nAttackRange > 1200 then nAttackRange = 1200 end
+	if nAttackRange > 1170 then nAttackRange = 1170 end
 	if botName == "npc_dota_hero_templar_assassin" then nAttackRange = nAttackRange + 100 end;
 	
 	
@@ -855,7 +848,7 @@ function X.CarryFindTarget( bot )
 	end
 	
 	
-	if cItem == nil then cItem = J.IsItemAvailable("item_echo_sabre") end;
+	local cItem = J.IsItemAvailable("item_echo_sabre")
     if  cItem ~= nil and (cItem:IsFullyCastable() or cItem:GetCooldownTimeRemaining() < bot:GetAttackPoint() +0.8)
 		and IsModeSuitHit
 		and (botHP > 0.35 or not bot:WasRecentlyDamagedByAnyHero(1.0))
@@ -886,13 +879,15 @@ function X.CarryFindTarget( bot )
 	if  IsModeSuitHit
 		and ( botHP > 0.5 or not bot:WasRecentlyDamagedByAnyHero(2.0))
 	then
-		local nBonusRange = 400;
-		if botLV > 12 then nBonusRange = 340; end
-		if botLV > 20 then nBonusRange = 280; end
+		local nBonusRange = 430;
+		if botLV > 12 then nBonusRange = 380; end
+		if botLV > 20 then nBonusRange = 330; end
 
 		nTarget = X.GetNearbyLastHitCreep(true, true, attackDamage, nAttackRange + nBonusRange, bot); 
 		if nTarget ~= nil 
-		then		
+		then
+			--输出 近战攻击 远程攻击 弹道距离攻击 攻击时间 延迟时间 英雄距离
+		
 			return nTarget,BOT_MODE_DESIRE_ABSOLUTE; 
 		end		
 		
@@ -902,7 +897,6 @@ function X.CarryFindTarget( bot )
 		   and J.IsWithoutTarget(bot)
 		   and X.IsLastHitCreep(nEnemyTowers[1],botAD * 2)
 		then 
-			J.SetReportAndPingLocation(nEnemyTowers[1]:GetLocation(),"补刀敌塔,伤害:",botAD * 2)
 			return nEnemyTowers[1],BOT_MODE_DESIRE_ABSOLUTE; 
 		end	
 		
@@ -918,7 +912,6 @@ function X.CarryFindTarget( bot )
 					and not X.IsAllysTarget(nNeutrals[i])
 					and X.IsLastHitCreep(nNeutrals[i],attackDamage)
 				then 
-					J.SetReportAndPingLocation(nNeutrals[i]:GetLocation(),"补一刀野,伤害:",attackDamage)
 					return nNeutrals[i],BOT_MODE_DESIRE_ABSOLUTE; 
 				end	
 			end
@@ -958,7 +951,6 @@ function X.CarryFindTarget( bot )
 			   and J.GetHPR(nAllyTowers[1]) < 0.05
 			   and X.IsLastHitCreep(nAllyTowers[1],denyDamage * 3)
 			then 
-				J.SetReportAndPingLocation(nAllyTowers[1]:GetLocation(),"反补塔,伤害:",denyDamage * 3)
 				return nAllyTowers[1],BOT_MODE_DESIRE_ABSOLUTE; 
 			end	
 		end
@@ -1162,7 +1154,6 @@ function X.CarryFindTarget( bot )
 						and not X.IsAllysTarget(nNeutrals[i])
 						and X.IsLastHitCreep(nNeutrals[i],attackDamage * 2)
 					then 
-						J.SetReportAndPingLocation(nNeutrals[i]:GetLocation(),"收两刀野,伤害:",attackDamage * 2)
 						return nNeutrals[i],BOT_MODE_DESIRE_ABSOLUTE; 
 					end	
 				end
@@ -1829,7 +1820,7 @@ end
 local fLastReturnTime = 0
 function X.ShouldAttackTowerCreep(bot)
 
-	if X.CanNotUseAttack(bot) then return 0,nil;end
+	if X.CanNotUseAttack(bot) then return 0 end
 	
 	--增加对塔和兵营的仇恨
 	if  bot:GetLevel() > 2
@@ -1983,4 +1974,4 @@ function X.ShouldNotRetreat(bot)
 	
 	return false;
 end
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592..

@@ -12,10 +12,22 @@ if GetBot():IsInvulnerable() or not GetBot():IsHero() or not string.find(GetBot(
 end
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
+local wardUtils = require( GetScriptDirectory()..'/AuxiliaryScript/WardUtility')
 local bot = GetBot();
 local X = {}
+local AvailableObsSpots = {};
+local AvailableSentrySpots = {};
 local AvailableSpots = {};
 local nWardCastRange = 500;
+
+local wt = nil;
+local observerWard = nil;
+local sentryWard = nil;
+local wardSentryCastTime = -90;
+local swapTime = -90;
+local swapSentryTime = -90;
+local enemyPids = nil;
+
 local itemWard = nil;
 local targetLoc = nil;
 local wardCastTime = -90;
@@ -24,6 +36,9 @@ local firstCreep = true;
 
 
 bot.lastSwapWardTime = -90;
+bot.wardObs = false;
+bot.wardSentry = false;
+bot.steal = false;
 bot.ward = false;
 
 
@@ -71,7 +86,7 @@ function GetDesire()
 	then
 		return BOT_MODE_DESIRE_NONE;
 	end
-
+	
 	--由于抢符进程太长，导致卡兵没有时间，如果恰巧没有遇上敌人且抢完符，可以尝试赶着去卡一下试试
 	if DotaTime() > 0
 	   and firstCreep
@@ -98,6 +113,37 @@ function GetDesire()
 		end
 	end
 
+	observerWard = wardUtils.GetItemObserverWard(bot);
+	sentryWard = wardUtils.GetItemSentryWard(bot);
+	
+	if observerWard ~= nil and X.IsHumanPlayerInTeam() then
+		--bot:ActionImmediate_Chat("observerWard not nil!", true);
+		pinged, wt = wardUtils.IsPingedByHumanPlayer(bot);
+		if pinged then	
+			return RemapValClamped(GetUnitToUnitDistance(bot, wt), 1000, 0, BOT_MODE_DESIRE_HIGH, BOT_MODE_DESIRE_VERYHIGH);
+		end
+		
+		AvailableObsSpots = wardUtils.GetAvailableObsSpot(bot);
+		targetLoc, targetDist = wardUtils.GetClosestSpot(bot, AvailableObsSpots);
+		if targetLoc ~= nil and DotaTime() > wardCastTime + 1.0 and X.IsEnemyCloserToWardLoc(targetLoc, targetDist) == false then
+			bot.wardObs = true;
+			return RemapValClamped(targetDist, 6000, 0, BOT_MODE_DESIRE_HIGH, BOT_MODE_DESIRE_ABSOLUTE);
+		end
+	else
+		bot.lastPlayerChat = nil;
+	end
+
+	if sentryWard ~= nil and X.IsHumanPlayerInTeam() then
+		--bot:ActionImmediate_Chat("sentryWard not nil!", true);
+		AvailableSentrySpots = wardUtils.GetAvailableSentrySpot(bot);
+		targetLoc, targetDist = wardUtils.GetClosestSpot(bot, AvailableSentrySpots);
+		if targetLoc ~= nil and DotaTime() > wardSentryCastTime + 6.0 then
+			bot.wardSentry = true;
+			--bot:ActionImmediate_Chat("targetDist = "..targetDist, true);
+			return RemapValClamped(targetDist, 6000, 0, BOT_MODE_DESIRE_HIGH, BOT_MODE_DESIRE_ABSOLUTE);
+		end
+	end
+
 	if DotaTime() < 25 + nStartTime
 	then
 		return BOT_MODE_DESIRE_NONE;
@@ -107,7 +153,10 @@ function GetDesire()
 		
 		AvailableSpots = J.Site.GetAvailableSpot(bot);
 		targetLoc, targetDist = J.Site.GetClosestSpot(bot, AvailableSpots);
-		if targetLoc ~= nil and DotaTime() > wardCastTime + 1.0 then
+		if targetLoc ~= nil 
+			and targetDist < 6666
+			and DotaTime() > wardCastTime + 1.0 
+		then
 			bot.ward = true;
 			return math.floor((RemapValClamped(targetDist, 6000, 0, BOT_MODE_DESIRE_MODERATE, BOT_MODE_DESIRE_VERYHIGH))*20)/20;
 		end
@@ -117,6 +166,32 @@ function GetDesire()
 end
 
 function OnStart()
+	if observerWard ~= nil and X.IsHumanPlayerInTeam() then
+		local wardSlot = bot:FindItemSlot(observerWard:GetName());
+		if bot:GetItemSlotType(wardSlot) == ITEM_SLOT_TYPE_BACKPACK then
+			local leastCostItem = X.FindLeastItemSlot();
+			if leastCostItem ~= -1 then
+				swapTime = DotaTime();
+				bot:ActionImmediate_SwapItems( wardSlot, leastCostItem );
+				return
+			end
+			local active = bot:GetItemInSlot(leastCostItem);
+			print(tostring(active:IsFullyCastable()));
+		end
+	end
+	if sentryWard ~= nil and X.IsHumanPlayerInTeam() then
+		local wardSlot = bot:FindItemSlot(sentryWard:GetName());
+		if bot:GetItemSlotType(wardSlot) == ITEM_SLOT_TYPE_BACKPACK then
+			local leastCostItem = X.FindLeastItemSlot();
+			if leastCostItem ~= -1 then
+				swapSentryTime = DotaTime();
+				bot:ActionImmediate_SwapItems( wardSlot, leastCostItem );
+				return
+			end
+			local active = bot:GetItemInSlot(leastCostItem);
+			print(tostring(active:IsFullyCastable()));
+		end
+	end
 	if itemWard ~= nil and not walkMode then
 		local wardSlot = bot:FindItemSlot(itemWard:GetName());
 		if bot:GetItemSlotType(wardSlot) == ITEM_SLOT_TYPE_BACKPACK then
@@ -137,6 +212,11 @@ function OnEnd()
 	itemWard = nil;
 	walkMode = false;
 	blockBreep = nil;
+	AvailableObsSpots = {};
+	AvailableSentrySpots = {};
+	observerWard = nil;
+	sentryWard = nil;
+	wt = nil;
 end
 
 function Think()
@@ -262,6 +342,60 @@ function Think()
 		end
 	end
 
+	if bot.wardObs then
+		if targetDist <= nWardCastRange then
+			--bot:ActionImmediate_Chat( "targetDist = "..targetDist..", nWardCastRange = "..nWardCastRange, true );
+			if  DotaTime() > swapTime + 7.0 then
+				bot:Action_UseAbilityOnLocation(observerWard, targetLoc+RandomVector(50)); -- kriz
+				wardCastTime = DotaTime();	
+				return
+			else
+				if targetLoc.x == Vector(-2948.000000, 769.000000, 0.000000) then
+					bot:Action_MoveToLocation(vNonStuck+RandomVector(300));
+					return
+				else	
+					bot:Action_MoveToLocation(targetLoc+RandomVector(300));
+					return
+				end
+			end
+		else
+			if targetLoc == Vector(-2948.000000, 769.000000, 0.000000) then
+				bot:Action_MoveToLocation(vNonStuck);
+				return
+			else	
+				bot:Action_MoveToLocation(targetLoc);
+				return
+			end
+		end
+	end
+
+	if bot.wardSentry then
+		--bot:ActionImmediate_Chat( "wardSentry = true", true );
+		if targetDist <= nWardCastRange then
+			--bot:ActionImmediate_Chat( "targetDist = "..targetDist..", nWardCastRange = "..nWardCastRange, true );
+			if  DotaTime() > swapSentryTime + 7.0 then
+				bot:Action_UseAbilityOnLocation(sentryWard, targetLoc+RandomVector(10));
+				wardSentryCastTime = DotaTime();	
+				return
+			else
+				if targetLoc.x == Vector(-2948.000000, 769.000000, 0.000000) then
+					bot:Action_MoveToLocation(vNonStuck+RandomVector(300));
+					return
+				else	
+					bot:Action_MoveToLocation(targetLoc+RandomVector(300));
+					return
+				end
+			end
+		else
+			if targetLoc == Vector(-2948.000000, 769.000000, 0.000000) then
+				bot:Action_MoveToLocation(vNonStuck);
+				return
+			else	
+				bot:Action_MoveToLocation(targetLoc);
+				return
+			end
+		end
+	end
 	
 	if bot.ward then
 		if targetDist <= nWardCastRange then
@@ -288,7 +422,6 @@ function Think()
 			end
 		end
 	end
-	
 	
 
 end
@@ -376,4 +509,77 @@ function X.GetLaningTeamLocation(nLane, tower)
 	end	
 	return teamMid
 end	
--- dota2jmz@163.com QQ:2462331592。
+
+function X.FindLeastItemSlot()
+	local minCost = 100000;
+	local idx = -1;
+	for i=0,5 do
+		if  bot:GetItemInSlot(i) ~= nil and bot:GetItemInSlot(i):GetName() ~= "item_aegis"  then
+			local _item = bot:GetItemInSlot(i):GetName()
+			if( GetItemCost(_item) < minCost ) then
+				minCost = GetItemCost(_item);
+				idx = i;
+			end
+		end
+	end
+	return idx;
+end
+
+
+--check if the condition is suitable for warding
+function X.IsSuitableToWard()
+	local Enemies = bot:GetNearbyHeroes(1300, true, BOT_MODE_NONE);
+	local mode = bot:GetActiveMode();
+	if ( ( mode == BOT_MODE_RETREAT and bot:GetActiveModeDesire() >= BOT_MODE_DESIRE_HIGH )
+		or mode == BOT_MODE_ATTACK
+		or mode == BOT_MODE_RUNE 
+		or mode == BOT_MODE_DEFEND_ALLY
+		or mode == BOT_MODE_DEFEND_TOWER_TOP
+		or mode == BOT_MODE_DEFEND_TOWER_MID
+		or mode == BOT_MODE_DEFEND_TOWER_BOT
+		or ( #Enemies >= 1 and X.IsIBecameTheTarget(Enemies) )
+		or bot:WasRecentlyDamagedByAnyHero(5.0)
+		) 
+	then
+		return false;
+	end
+	return true;
+end
+
+function X.IsIBecameTheTarget(units)
+	for _,u in pairs(units) do
+		if u:GetAttackTarget() == bot then
+			return true;
+		end
+	end
+	return false;
+end
+
+function X.IsEnemyCloserToWardLoc(wardLoc, botDist)
+	if enemyPids == nil then
+		enemyPids = GetTeamPlayers(GetOpposingTeam())
+	end	
+	for i = 1, #enemyPids do
+		local info = GetHeroLastSeenInfo(enemyPids[i])
+		if info ~= nil then
+			local dInfo = info[1]; 
+			if dInfo ~= nil and dInfo.time_since_seen < 3.0  and J.Site.GetDistance(dInfo.location, wardLoc) <  botDist
+			then	
+				return true;
+			end
+		end	
+	end
+	return false;
+end
+
+function X.IsHumanPlayerInTeam()
+
+	local numPlayer =  GetTeamPlayers(GetTeam());
+	if not IsPlayerBot(numPlayer[1]) 
+	then
+		return true;
+	end
+	
+	return false;
+end
+-- dota2jmz@163.com QQ:2462331592..

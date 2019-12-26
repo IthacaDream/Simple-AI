@@ -10,10 +10,8 @@
     7、根据场上状态获取3路危险程度、双方野区危险程度
 ]]
 
--- 网络模块均可使用，由于服务器设置不完善，暂时禁用（注释掉了）
-
 local L = {}
-local C  = require(GetScriptDirectory()..'/FunLib/jmz_chat')
+local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
 local H  = require(GetScriptDirectory()..'/AuxiliaryScript/HttpServer')
 
 local isInit = false
@@ -36,6 +34,8 @@ local evenDeathStatistics = 0
 --数据发送
 local data = {}
 local lastUpdate = -1000.0
+L.DataUpload = false
+L.DataUploadPlayerList = {}
 
 --发言冷却
 
@@ -48,10 +48,10 @@ function L.init()
     --}
     --H.HttpPost(postData, '45.77.179.135:3001')
 
-    for _,aData in pairs(nArreysTeam)
+    for i,aData in pairs(nArreysTeam)
     do
         local botid = aData
-		local member = GetTeamMember(botid);
+		local member = GetTeamMember(i);
         if member ~= nil then
             local heroItem = {}
             local heroItemCost = 0
@@ -100,10 +100,10 @@ function L.init()
         end
         
     end
-    for _,eData in pairs(nEnemysTeam)
+    for i,eData in pairs(nEnemysTeam)
     do
         local botid = eData
-        local member = GetTeamMember(botid);
+        local member = GetTeamMember(i);
         
         if member ~= nil then
             local heroItem = {}
@@ -158,6 +158,95 @@ function L.Update()
     
     local bot = GetBot()
 
+    --游戏结束
+	local win = nil
+    if GetAncient(GetTeam()):GetHealth()/GetAncient(GetTeam()):GetMaxHealth() < 0.15 then
+        win = GetOpposingTeam()
+    elseif GetAncient(GetOpposingTeam()):GetHealth()/GetAncient(GetOpposingTeam()):GetMaxHealth() < 0.15 then
+        win = GetTeam()
+    end
+
+    if win ~= nil and (bot.GameEND == nil or not bot.GameEND) and L.DataUpload then
+        local data = {
+            operation = '"gameEnd"'
+        }
+                
+        local Team = GetTeamPlayers(GetTeam())
+
+        for i,aTeam in pairs(nArreysTeam)
+        do
+            if bot:GetPlayerID() == aTeam or (not IsPlayerBot(aTeam) and not J.IsExistInTable(aTeam, L.DataUploadPlayerList)) then
+                local member = GetTeamMember(i)
+
+                local winTeam = 'true'
+                if win ~= GetTeam() then winTeam = 'false' end
+                local isBot = 'false'
+                if IsPlayerBot(aTeam) then isBot = 'true' end
+                data.Win        = '"'..winTeam..'"'                   --胜利方
+                data.Hero       = '"'..J.Chat.GetNormName(member)..'"'     --英雄
+                data.Level      = member:GetLevel()                   --等级
+                data.MaxHealth  = member:GetMaxHealth()               --最大生命值
+                data.MaxMana    = member:GetMaxMana()                 --最大魔法值
+                data.Gold       = member:GetGold()                    --金钱
+                data.kill       = GetHeroKills(member:GetPlayerID())  --击杀数
+                data.Death      = GetHeroDeaths(member:GetPlayerID()) --死亡数
+                data.Assist     = GetHeroAssists(member:GetPlayerID())--助攻数
+                data.Bot        = '"'..isBot..'"'                     --是否为电脑
+                for i=0,5 do                                          --装备
+                    local item = member:GetItemInSlot(i);
+                    if item ~= nil then
+                        data['Item'..i] = '"'..J.Chat.GetItemName(item:GetName())..'"'
+                    else
+                        data['Item'..i] = '"none"'
+                    end
+                end
+
+                H.HttpPost(data, '45.77.179.135:3010',
+                    function (res, par)
+                        print(par..'数据已上报')
+                    end
+                , data.Hero, true);
+                
+                if isBot == 'false' then
+                    table.insert(L.DataUploadPlayerList,aTeam)
+                else
+                    bot.GameEND = true
+                end
+
+            end
+        end
+--[[
+        local winTeam = 'true'
+        if win ~= GetTeam() then winTeam = 'false'end
+        data.Win        = '"'..winTeam..'"'                --胜利方
+        data.Hero       = '"'..J.Chat.GetNormName(bot)..'"'     --英雄
+        data.Level      = bot:GetLevel()                   --等级
+        data.MaxHealth  = bot:GetMaxHealth()               --最大生命值
+        data.MaxMana    = bot:GetMaxMana()                 --最大魔法值
+        data.Gold       = bot:GetGold()                    --金钱
+        data.kill       = GetHeroKills(bot:GetPlayerID())  --击杀数
+        data.Death      = GetHeroDeaths(bot:GetPlayerID()) --死亡数
+        data.Assist     = GetHeroAssists(bot:GetPlayerID())--助攻数
+        for i=0,5 do                                       --装备
+            local item = bot:GetItemInSlot(i);
+            if item ~= nil then
+                data['Item'..i] = '"'..J.Chat.GetItemName(item:GetName())..'"'
+            else
+                data['Item'..i] = '"none"'
+            end
+        end
+
+        H.HttpPost(data, '45.77.179.135:3010',
+            function (res, par)
+                print(par..'数据已上报')
+            end
+        , data.Hero, true);
+        
+        
+        bot.GameEND = true
+        ]]
+    end
+
     --每30秒执行一次
     --if DotaTime() > countTime + 30.0
     --then
@@ -186,10 +275,10 @@ function L.Update()
 
         --击杀了哪个敌人
         if GetHeroKills(botid) ~= data['kill'] then
-            print(C.GetNormName(data['hero'])..'击杀了敌人')
+            print(J.Chat.GetNormName(data['hero'])..'击杀了敌人')
             --local postData = {
             --    operation = '"kill"',
-            --    hero = '"'..C.GetNormName(data['hero'])..'"',
+            --    hero = '"'..J.Chat.GetNormName(data['hero'])..'"',
             --}
             --H.HttpPost(postData, '45.77.179.135:3001')
             L.Chatwheel(true, data)
@@ -200,18 +289,18 @@ function L.Update()
             --        nArreysData[i]['killhero'] = eData['name']
             --        local postData = {
             --            operation = '"击杀信息"',
-            --            hero = '"'..C.GetNormName(data['hero'])..'"',
-            --            kill = '"'..C.GetNormName(eData['hero'])..'"',
+            --            hero = '"'..J.Chat.GetNormName(data['hero'])..'"',
+            --            kill = '"'..J.Chat.GetNormName(eData['hero'])..'"',
             --        }
             --        H.HttpPost(postData, '45.77.179.135:3002')
-            --        print(C.GetNormName(data['hero'])..'击杀了'..C.GetNormName(eData['hero']))
+            --        print(J.Chat.GetNormName(data['hero'])..'击杀了'..J.Chat.GetNormName(eData['hero']))
             --        L.Chatwheel(true, nArreysData[i])
             --    end
             --end
             --for l = 1, #nEnemysTeam do
             --    if GetHeroDeaths(nEnemysTeam[l]) > nEnemysData[nEnemysTeam[l]]['death'] then
             --        nArreysData[i]['killhero'] = nEnemysData[nEnemysTeam[l]]['name']
-            --        print(C.GetNormName(data['hero'])..'击杀了'..C.GetNormName(nEnemysData[nEnemysTeam[l]]['hero']))
+            --        print(J.Chat.GetNormName(data['hero'])..'击杀了'..J.Chat.GetNormName(nEnemysData[nEnemysTeam[l]]['hero']))
             --        L.Chatwheel(true, nArreysData[i])
             --    end
             --end
@@ -220,10 +309,10 @@ function L.Update()
 
         --被哪个敌人击杀
         if GetHeroDeaths(botid) > data['death'] then
-            print(C.GetNormName(data['hero'])..'被敌人击杀了')
+            print(J.Chat.GetNormName(data['hero'])..'被敌人击杀了')
             --local postData = {
             --    operation = '"death"',
-            --    hero = '"'..C.GetNormName(data['hero'])..'"',
+            --    hero = '"'..J.Chat.GetNormName(data['hero'])..'"',
             --}
             --H.HttpPost(postData, '45.77.179.135:3001')
             --同样bug了
@@ -239,9 +328,9 @@ function L.Update()
             --        and  eData['itemCost'] > situation['arreyItemCost'] / 5 
             --    then
             --        --数据统计
-            --        print(C.GetNormName(eData['hero']))
-            --        --data['hero']:ActionImmediate_Chat('谨慎对待 '..C.GetNormName(eData['hero'])..' ，他的装备远远强于他的队友，并且比我们的装备平均强度要高。', false)
-            --        --bot:ActionImmediate_Chat('谨慎对待 '..C.GetNormName(eData['hero'])..' ，他的装备远远强于他的队友，并且比我们的装备平均强度要高。', false)
+            --        print(J.Chat.GetNormName(eData['hero']))
+            --        --data['hero']:ActionImmediate_Chat('谨慎对待 '..J.Chat.GetNormName(eData['hero'])..' ，他的装备远远强于他的队友，并且比我们的装备平均强度要高。', false)
+            --        --bot:ActionImmediate_Chat('谨慎对待 '..J.Chat.GetNormName(eData['hero'])..' ，他的装备远远强于他的队友，并且比我们的装备平均强度要高。', false)
             --    end
             --end
 
@@ -451,8 +540,8 @@ end
 function speech(team, mocking, bot)
     local text = mocking[RandomInt(1, #mocking)]
     local spbot = GetBot()
-    local heroname = C.GetNormName(bot['hero'])
-    local killname = C.GetCnName(bot['killhero'])
+    local heroname = J.Chat.GetNormName(bot['hero'])
+    local killname = J.Chat.GetCnName(bot['killhero'])
     --spbot:ActionImmediate_Chat(killname..' '..text, team)
     spbot:ActionImmediate_Chat(text, team)
     evenDeathStatistics = 0

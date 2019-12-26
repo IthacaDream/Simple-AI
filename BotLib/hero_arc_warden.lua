@@ -46,17 +46,18 @@ X['sBuyList'] = {
 }
 
 X['sSellList'] = {
-	"item_bloodthorn",
-	"item_diffusal_blade",
+			
+	'item_diffusal_blade',
+	'item_magic_wand',
 	
 	"item_mjollnir",
 	"item_hand_of_midas",
 	
-	'item_manta',
-	'item_magic_wand',
+	"item_bloodthorn",
+	"item_diffusal_blade",
 }
 
-if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_ranged_carry' }, {} end
+if J.Role.IsPvNMode() or J.Role.IsAllShadow() then X['sBuyList'],X['sSellList'] = { 'PvN_ranged_carry' }, {} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -710,4 +711,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592..

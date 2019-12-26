@@ -10,8 +10,8 @@
 local X = {}
 
 local sBotVersion = "New";
-local sVersionDate = " 1.2.6"
-local sABAVersionDate = sBotVersion.." 7.23,2019/12/16"
+local sVersionDate = " 1.3.0"
+local sABAVersionDate = sBotVersion.." 7.23,2019/12/25"
 
 function X.GetBotVersion()
 	return sBotVersion,sVersionDate,sABAVersionDate;
@@ -1541,7 +1541,7 @@ function X.IsPusher(hero)
 end
 
 function X.IsMelee(attackRange)
-	return attackRange <= 320;
+	return attackRange <= 326;
 end
 
 function X.BetterBuyPhaseBoots(hero)
@@ -2023,20 +2023,25 @@ end
 
 X["bPvNMode"] = false
 function X.IsPvNMode()
+
 	
-	if DotaTime() > 0 then return X["bPvNMode"] end
+	if X["bPvNMode"] or DotaTime() > 60 then return X["bPvNMode"] end
 	
 	local oppositePlayerCount = #GetTeamPlayers(GetOpposingTeam())
 	
-	if oppositePlayerCount <= 3 
-	then
-		X["bPvNMode"] = true
-		return true 
-	end
+	if oppositePlayerCount <= 3 then X["bPvNMode"] = true end
 	
-	return false
+	return X["bPvNMode"]
 	
 end
+
+local nShadowNumber = RandomInt(1,5555)
+function X.IsAllShadow()
+
+	return nShadowNumber <= 5
+
+end
+
 
 function X.GetHighestValueRoles(bot)
 	local maxVal = -1;
@@ -2054,4 +2059,4 @@ end
 
 
 return X
--- aaxxxxop@163.com QQ:2462331592.
+-- aaxxxxop@163.com QQ:2462331592..

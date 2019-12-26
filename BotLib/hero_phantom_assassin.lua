@@ -41,7 +41,7 @@ X['sBuyList'] = {
 				"item_desolator",
 				"item_black_king_bar",
 				"item_satanic",
-				"item_monkey_king_bar",
+				"item_abyssal_blade",
 }
 
 
@@ -52,7 +52,7 @@ X['sSellList'] = {
 	
 }
 
-if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_PA' }, {"item_abyssal_blade",'item_quelling_blade'} end
+if J.Role.IsPvNMode() or J.Role.IsAllShadow() then X['sBuyList'],X['sSellList'] = { 'PvN_PA' }, {"item_desolator",'item_quelling_blade'} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -748,4 +748,4 @@ function X.ConsiderE()
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592..

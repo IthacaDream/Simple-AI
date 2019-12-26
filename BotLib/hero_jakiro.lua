@@ -33,13 +33,13 @@ local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
 
 X['sBuyList'] = {
-				'item_jakiro_outfit',
+				'item_mage_outfit',
 				"item_pipe",
 				"item_glimmer_cape",
 				"item_veil_of_discord",
 				"item_cyclone",
 				"item_sheepstick",
-				"item_ultimate_scepter",
+				"item_ultimate_scepter_2",
 }
 
 X['sSellList'] = {
@@ -50,7 +50,7 @@ X['sSellList'] = {
 	"item_arcane_boots",
 }
 
-if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_mage' }, {} end
+if J.Role.IsPvNMode() or J.Role.IsAllShadow() then X['sBuyList'],X['sSellList'] = { 'PvN_mage' }, {} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -544,4 +544,4 @@ function X.ConsiderR()
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592..
