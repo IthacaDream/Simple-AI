@@ -183,7 +183,7 @@ function L.Update()
                 local isBot = 'false'
                 if IsPlayerBot(aTeam) then isBot = 'true' end
                 data.Win        = '"'..winTeam..'"'                   --胜利方
-                data.Hero       = '"'..J.Chat.GetNormName(member)..'"'     --英雄
+                data.Hero       = '"'..J.Chat.GetNormName(member)..'"'--英雄
                 data.Level      = member:GetLevel()                   --等级
                 data.MaxHealth  = member:GetMaxHealth()               --最大生命值
                 data.MaxMana    = member:GetMaxMana()                 --最大魔法值

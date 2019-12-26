@@ -22,19 +22,22 @@ local tDefaultGroupedData = {
 	['Ability'] = {1,2,3,2,2,6,2,3,3,3,6,1,1,1,6},
 	['Buy'] = {
 		"item_tango",
-		"item_double_enchanted_mango",
 		"item_double_branches",
 		"item_quelling_blade",
+		"item_null_talisman",
 		"item_phase_boots",
-		"item_maelstrom",
-		"item_blade_mail",
-		"item_echo_sabre", 
-		"item_mjollnir",
-		"item_octarine_core",
+		"item_veil_of_discord",
+		"item_cyclone",
+		"item_octarine_core", 
+		"item_sheepstick",
+		"item_dagon_5",
 	},
 	['Sell'] = {
 		"item_desolator",
 		"item_quelling_blade",
+
+		"item_null_talisman",
+		"item_black_king_bar",
 
 		"item_travel_boots",
 		"item_phase_boots",

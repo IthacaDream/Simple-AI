@@ -167,7 +167,7 @@ X["onlyCM_hero"] = {
     'npc_dota_hero_dark_willow',
     --'npc_dota_hero_undying',
     --'npc_dota_hero_snapfire',
-    --'npc_dota_hero_void_spirit',
+    'npc_dota_hero_void_spirit',
     'npc_dota_hero_storm_spirit',
     --'npc_dota_hero_magnataur',
     --'npc_dota_hero_treant',
