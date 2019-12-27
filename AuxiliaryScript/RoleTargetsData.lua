@@ -157,7 +157,7 @@ X["onlyCM_hero"] = {
     --'npc_dota_hero_invoker',
     'npc_dota_hero_centaur',
     'npc_dota_hero_faceless_void',
-    --'npc_dota_hero_obsidian_destroyer',
+    'npc_dota_hero_obsidian_destroyer',
     'npc_dota_hero_queenofpain',
     'npc_dota_hero_slardar',
     'npc_dota_hero_omniknight',
@@ -166,7 +166,7 @@ X["onlyCM_hero"] = {
     'npc_dota_hero_earthshaker',
     'npc_dota_hero_dark_willow',
     --'npc_dota_hero_undying',
-    --'npc_dota_hero_snapfire',
+    'npc_dota_hero_snapfire',
     'npc_dota_hero_void_spirit',
     'npc_dota_hero_storm_spirit',
     --'npc_dota_hero_magnataur',
@@ -594,13 +594,13 @@ function X.getApHero()
     if X.interestingMode == nil  then
         local randomMode = RandomInt(1,800)
         if randomMode == 48 then
-            X.interestingMode = '拉比克大魔王';
+            X.interestingMode = '毒液的味道';
             interestingList = {
-                'npc_dota_hero_rubick',
-                'npc_dota_hero_rubick',
-                'npc_dota_hero_rubick',
-                'npc_dota_hero_rubick',
-                'npc_dota_hero_rubick',
+                'npc_dota_hero_viper',
+                'npc_dota_hero_viper',
+                'npc_dota_hero_viper',
+                'npc_dota_hero_viper',
+                'npc_dota_hero_viper',
             };
         elseif randomMode == 104 then
             X.interestingMode = '刺球';

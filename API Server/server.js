@@ -30,7 +30,17 @@ api.post('/', function(req, res){
         serverdb.executeSql(`DELETE FROM UUID WHERE ip = '${ip}';`)
     break;
     case 'getGameData':
-        serverdb.queryData(`SELECT * from heroData;`, (data) => {
+        let page = 0
+        if (result.data.page) {page = result.data.page}
+        serverdb.queryData(`SELECT * from heroData ORDER BY Date LIMIT 100 OFFSET ${page * 30};`, (data) => {
+            if (data.length > 0) {
+                res.send(JSON.stringify(data));
+            }
+        })
+    break;
+    case 'getheat':
+        serverdb.queryData(`SELECT hero as 英雄, COUNT(hero) as 热度
+        FROM "heroData" where bot = '电脑' GROUP BY hero ORDER BY 热度 DESC`, (data) => {
             if (data.length > 0) {
                 res.send(JSON.stringify(data));
             }
