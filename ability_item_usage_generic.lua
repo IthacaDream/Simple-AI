@@ -18,6 +18,7 @@ then
 end
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
+local C  = require(GetScriptDirectory()..'/AuxiliaryScript/BotChat')
 local BotBuild = dofile(GetScriptDirectory().."/BotLib/"..string.gsub(bot:GetUnitName(), "npc_dota_", ""))
 
 if BotBuild == nil then return end
@@ -27,6 +28,7 @@ then
 	print(J.Chat.GetNormName(bot)..': Hello, Dota2 World!')
 end
 
+C.GetScenario()
 local bDeafaultAbilityHero = BotBuild['bDeafaultAbility'];
 local bDeafaultItemHero = BotBuild['bDeafaultItem'];
 local sAbilityLevelUpList = BotBuild['sSkillList'];

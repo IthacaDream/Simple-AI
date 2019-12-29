@@ -32,7 +32,7 @@ api.post('/', function(req, res){
     case 'getGameData':
         let page = 0
         if (result.data.page) {page = result.data.page}
-        serverdb.queryData(`SELECT * from heroData ORDER BY Date LIMIT 100 OFFSET ${page * 30};`, (data) => {
+        serverdb.queryData(`SELECT * from heroData ORDER BY Date DESC LIMIT 100 OFFSET ${page * 30};`, (data) => {
             if (data.length > 0) {
                 res.send(JSON.stringify(data));
             }
@@ -40,7 +40,7 @@ api.post('/', function(req, res){
     break;
     case 'getheat':
         serverdb.queryData(`SELECT hero as 英雄, COUNT(hero) as 热度
-        FROM "heroData" where bot = '电脑' GROUP BY hero ORDER BY 热度 DESC`, (data) => {
+        FROM "heroData" where bot = '电脑' GROUP BY hero ORDER BY 热度`, (data) => {
             if (data.length > 0) {
                 res.send(JSON.stringify(data));
             }
@@ -120,7 +120,7 @@ function startRequest(message, ctx) {
                 VALUES (
                 '${message.toLowerCase()}',
                 '${send}',
-                '${new Date()}',
+                '${dateFormat("YYYY-mm-dd HH:MM:SS", new Date())}',
                 1
                 );
                 `, () => {
@@ -178,7 +178,7 @@ function getmessage(message, ctx) {
                         VALUES (
                         '${message}',
                         '${content}',
-                        '${new Date()}',
+                        '${dateFormat("YYYY-mm-dd HH:MM:SS", new Date())}',
                         1
                         );
                         `, () => {
@@ -226,7 +226,7 @@ function installHeroData(heroData, gameInfo) {
     '${heroData.Item5}',
     '${heroData.Win == 'true' ? '赢' : '输'}',
     '${gameInfo.gameTime}',
-    '${new Date()}',
+    '${dateFormat("YYYY-mm-dd HH:MM:SS", new Date())}',
     '${heroData.Bot == 'false' ? '玩家' : '电脑'}'
     );
     `);
@@ -241,6 +241,26 @@ function randomNum(minNum,maxNum){
         default: 
             return 0; 
     } 
-} 
+}
+
+function dateFormat(fmt, date) {
+    let ret;
+    let opt = {
+        "Y+": date.getFullYear().toString(),        // 年
+        "m+": (date.getMonth() + 1).toString(),     // 月
+        "d+": date.getDate().toString(),            // 日
+        "H+": date.getHours().toString(),           // 时
+        "M+": date.getMinutes().toString(),         // 分
+        "S+": date.getSeconds().toString()          // 秒
+        // 有其他格式化字符需求可以继续添加，必须转化成字符串
+    };
+    for (let k in opt) {
+        ret = new RegExp("(" + k + ")").exec(fmt);
+        if (ret) {
+            fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].padStart(ret[1].length, "0")))
+        };
+    };
+    return fmt;
+}
 
 module.exports = router;

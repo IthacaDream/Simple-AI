@@ -692,31 +692,31 @@ function X.getApHero()
 		heroTeam = TEAM_DIRE;
     end
 
-     for i,id in pairs(ourIds) --找出我方已选英雄
-     do
-         if GetSelectedHeroName(id) ~= "" or GetSelectedHeroName(id) ~= nil
-         then
-             if GetTeam() == TEAM_RADIANT then
-                 apHeroList[GetSelectedHeroName(id)] = TEAM_RADIANT;
-             else
-                 apHeroList[GetSelectedHeroName(id)] = TEAM_DIRE;
-             end
-         end
-     end
+    for i,id in pairs(ourIds) --找出我方已选英雄
+    do
+        if GetSelectedHeroName(id) ~= "" or GetSelectedHeroName(id) ~= nil
+        then
+            if GetTeam() == TEAM_RADIANT then
+                apHeroList[GetSelectedHeroName(id)] = TEAM_RADIANT;
+            else
+                apHeroList[GetSelectedHeroName(id)] = TEAM_DIRE;
+            end
+        end
+    end
 
-     for i,id in pairs(enemyIds) --找出对方已选英雄
-     do
-         if GetSelectedHeroName(id) ~= "" or GetSelectedHeroName(id) ~= nil
-         then
-             if GetTeam() == TEAM_RADIANT then
-                 apHeroList[GetSelectedHeroName(id)] = TEAM_DIRE;
-             else
-                 apHeroList[GetSelectedHeroName(id)] = TEAM_RADIANT;
-             end
-         end
-     end
+    for i,id in pairs(enemyIds) --找出对方已选英雄
+    do
+        if GetSelectedHeroName(id) ~= "" or GetSelectedHeroName(id) ~= nil
+        then
+            if GetTeam() == TEAM_RADIANT then
+                apHeroList[GetSelectedHeroName(id)] = TEAM_DIRE;
+            else
+                apHeroList[GetSelectedHeroName(id)] = TEAM_RADIANT;
+            end
+        end
+    end
 
-     botSelectHero = X.IntelligentHeroListAnalysis(apHeroList); --智能库去筛选合适的英雄队列
+    botSelectHero = X.IntelligentHeroListAnalysis(apHeroList); --智能库去筛选合适的英雄队列
 
     local botHero;
 
