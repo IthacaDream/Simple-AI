@@ -100,11 +100,11 @@ function C.Speech()
                 scenario           剧本
                 handling           结束处理
             ]]
-            local triggerScenario = bot.triggerScenario.scenario
-            local handling = bot.triggerScenario.handling
-            local triggerId = bot.triggerScenario.triggerScenarioId
+            local triggerScenario = bot.triggerScenario.scenario --剧本
+            local handling = bot.triggerScenario.handling --结束内容
+            local triggerId = bot.triggerScenario.triggerScenarioId --剧本id
 
-            --触发中的剧本执行完了
+            --触发中的剧本执行完了，执行结束设定操作
             if #triggerScenario == 0 then
                 if handling == 'reset' then --重置
                     bot.scenario.trigger[triggerId].state = false
@@ -117,12 +117,29 @@ function C.Speech()
                 return
             end
 
-            local scenario = triggerScenario[#triggerScenario]
+            local scenario = triggerScenario[#triggerScenario] --设置当前要执行的剧本内容
 
             if bot.triggerspeechTime == nil then bot.triggerspeechTime = time end --如果从未说过话，设置时间为当前时间
 
             if bot.triggerspeechTime + scenario.interval < time then --到说话时间了
-                if scenario.botId == bot:GetPlayerID() then
+                if scenario.botId == bot:GetPlayerID()
+                   or scenario.botId == 'one'
+                   or scenario.botId == 'all'
+                then
+                    if scenario.botId == 'one' then --删除其他人的此条说话数据
+                        local numPlayers =  GetTeamPlayers(GetTeam())
+                        for i,id in pairs(numPlayers) 
+                        do
+                            local aBot = GetTeamMember(i)
+                            if id ~= bot:GetPlayerID() 
+                               and aBot.triggerScenario ~= nil
+                               and aBot.triggerScenario.scenario ~= nil
+                               and #aBot.triggerScenario.scenario == #triggerScenario
+                            then
+                                table.remove(aBot.triggerScenario.scenario[#triggerScenario])
+                            end
+                        end
+                    end
                     bot:ActionImmediate_Chat(scenario['speech'], scenario['all'])
                     bot.triggerspeechTime = time --设置上一次说话时间
                 end
@@ -149,7 +166,8 @@ function C.JoinScenario(bot, scenario)
         if sequential.botId ~= nil then botId = sequential.botId end --如果指定了bot说话，更改说话id
         --if botId == 'one' and oneScenario == nil then oneScenario = true end --如果指定只说一次则设置状态
         if botId == bot:GetPlayerID() 
-           or botId == 'all' 
+           --or botId == 'one'
+           or botId == 'all'
            --or oneScenario 
         then
             --oneScenario = false
@@ -209,19 +227,19 @@ function C.GetScenario()
                 {
                     speech = '能不能好好打',
                     all = false,
-                    interval = 1,
+                    interval = 3,
                     botId = 'one'
                 },
                 {
                     speech = '简直没法打',
                     all = true,
-                    interval = 5,
+                    interval = 10,
                     botId = 'one'
                 },
                 {
                     speech = '你们太狠了',
                     all = true,
-                    interval = 0,
+                    interval = 2,
                     botId = 'one'
                 },
             },
@@ -235,14 +253,54 @@ function C.GetScenario()
                 {
                     speech = '漂亮',
                     all = false,
-                    interval = 0,
+                    interval = 3,
                     botId = 'one'
                 },
                 {
                     speech = '是你们太菜了',
                     all = true,
-                    interval = 2,
+                    interval = 5,
                     botId = 'all'
+                }
+            },
+            state = false,
+            handling = 'reset'
+        },
+        {
+            scenarioType = '击杀',
+            scenarioTimeNeeded = 12,
+            scenario = {
+                {
+                    speech = '我才不上当',
+                    all = true,
+                    interval = 8,
+                    botId = 'one'
+                },
+                {
+                    speech = '哈哈哈',
+                    all = true,
+                    interval = 2,
+                    botId = 'one'
+                }
+            },
+            state = false,
+            handling = 'reset'
+        },
+        {
+            scenarioType = '死亡',
+            scenarioTimeNeeded = 12,
+            scenario = {
+                {
+                    speech = '是不是输不起',
+                    all = false,
+                    interval = 12,
+                    botId = 'one'
+                },
+                {
+                    speech = '有什么了不起的，有能耐来单挑',
+                    all = true,
+                    interval = 5,
+                    botId = 'one'
                 }
             },
             state = false,
@@ -277,14 +335,14 @@ function C.CheckTrigger(bot, script, id)
             end
             if not bot.inWipe then
                 local operation = {}
-                operation.triggerScenarioId = id
-                operation.scenario = script.scenario
-                operation.handling = handling
-                bot.triggerScenario = operation
-                bot.inWipe = true
+                operation.triggerScenarioId = id --触发器id
+                operation.scenario = script.scenario --剧本
+                operation.handling = handling --结束方式
+                bot.triggerScenario = operation --正在执行的触发器配置
+                bot.inWipe = true --在团灭触发中
             end
         else
-            bot.inWipe = false
+            bot.inWipe = false --设置结束团灭中状态，允许同类再次触发
         end
     end
     if script.scenarioType == '被团灭' then
@@ -303,6 +361,38 @@ function C.CheckTrigger(bot, script, id)
             end
         else
             bot.inEnemyWipe = false
+        end
+    end
+    if script.scenarioType == '击杀' then
+        if C.NumOfAliveHero(false) == 0 then 
+            --击杀敌人时的操作
+            if bot.botKill == nil then
+                bot.botKill = GetHeroKills(bot:GetPlayerID())
+            end
+            if bot.botKill < GetHeroKills(bot:GetPlayerID()) then
+                local operation = {}
+                operation.triggerScenarioId = id
+                operation.scenario = script.scenario
+                operation.handling = handling
+                bot.triggerScenario = operation
+                bot.botKill = GetHeroKills(bot:GetPlayerID())
+            end
+        end
+    end
+    if script.scenarioType == '死亡' then
+        if C.NumOfAliveHero(false) == 0 then 
+            --死亡时的操作
+            if bot.inEnembotDeathsyWipe == nil then
+                bot.botDeaths = GetHeroDeaths(bot:GetPlayerID())
+            end
+            if bot.botDeaths < GetHeroDeaths(bot:GetPlayerID()) then
+                local operation = {}
+                operation.triggerScenarioId = id
+                operation.scenario = script.scenario
+                operation.handling = handling
+                bot.triggerScenario = operation
+                bot.botDeaths = GetHeroDeaths(bot:GetPlayerID())
+            end
         end
     end
 

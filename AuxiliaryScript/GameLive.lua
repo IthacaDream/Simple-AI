@@ -281,7 +281,7 @@ function L.Update()
             --    hero = '"'..J.Chat.GetNormName(data['hero'])..'"',
             --}
             --H.HttpPost(postData, '45.77.179.135:3001')
-            L.Chatwheel(true, data)
+            --L.Chatwheel(true, data)
             --bug了
             --for _,eData in pairs(nEnemysData) do
             --    print(GetHeroDeaths(eData['player']) ..' - '.. eData['death'])
