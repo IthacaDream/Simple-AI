@@ -116,11 +116,12 @@ function jsonFormatting(obj)
     local count = 1
     for key, value in pairs(obj) do
         if count > 1 then json = json..',' end
-        if type(value) == 'table' then 
-            json = json .. '"' .. key .. '": ['.. H.jsonFormattingDataProcessing(obj) ..']'
-        else
-            json = json .. '"' .. key .. '": ' .. value
-        end
+        json = json .. '"' .. key .. '": ' .. value
+        --if type(value) == 'table' then 
+        --    json = json .. '"' .. key .. '": ['.. H.jsonFormattingDataProcessing(value) ..']'
+        --else
+        --    json = json .. '"' .. key .. '": ' .. value
+        --end
         count = count + 1
     end
     json = json..'},"info":{'
@@ -147,7 +148,7 @@ function H.jsonFormattingDataProcessing(obj)
     for key, value in pairs(obj) do
         if count > 1 then json = json..',' end
         if type(value) == 'table' then 
-            json = json .. '"' .. key .. '": ['.. H.jsonFormattingDataProcessing(count, obj) ..']'
+            json = json .. '"' .. key .. '": ['.. H.jsonFormattingDataProcessing(value) ..']'
         else
             json = json .. '"' .. key .. '": ' .. value
         end
