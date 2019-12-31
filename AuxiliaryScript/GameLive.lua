@@ -168,53 +168,60 @@ function L.Update()
 
     if win ~= nil and (bot.GameEND == nil or not bot.GameEND) and L.DataUpload then
         local data = {
-            operation = '"gameEnd"'
+            operation = '"gameEnd"',
+            gameData = {}
         }
                 
         local Team = GetTeamPlayers(GetTeam())
 
         for i,aTeam in pairs(nArreysTeam)
         do
-            if bot:GetPlayerID() == aTeam or (not IsPlayerBot(aTeam) and not J.IsExistInTable(aTeam, L.DataUploadPlayerList)) then
+            --if bot:GetPlayerID() == aTeam or (not IsPlayerBot(aTeam) and not J.IsExistInTable(aTeam, L.DataUploadPlayerList)) then
+                local memberData = {}
                 local member = GetTeamMember(i)
 
                 local winTeam = 'true'
                 if win ~= GetTeam() then winTeam = 'false' end
                 local isBot = 'false'
                 if IsPlayerBot(aTeam) then isBot = 'true' end
-                data.Win        = '"'..winTeam..'"'                   --胜利方
-                data.Hero       = '"'..J.Chat.GetNormName(member)..'"'--英雄
-                data.Level      = member:GetLevel()                   --等级
-                data.MaxHealth  = member:GetMaxHealth()               --最大生命值
-                data.MaxMana    = member:GetMaxMana()                 --最大魔法值
-                data.Gold       = member:GetGold()                    --金钱
-                data.kill       = GetHeroKills(member:GetPlayerID())  --击杀数
-                data.Death      = GetHeroDeaths(member:GetPlayerID()) --死亡数
-                data.Assist     = GetHeroAssists(member:GetPlayerID())--助攻数
-                data.Bot        = '"'..isBot..'"'                     --是否为电脑
+                memberData.Win        = '"'..winTeam..'"'                   --胜利方
+                memberData.Hero       = '"'..J.Chat.GetNormName(member)..'"'--英雄
+                memberData.Level      = member:GetLevel()                   --等级
+                memberData.MaxHealth  = member:GetMaxHealth()               --最大生命值
+                memberData.MaxMana    = member:GetMaxMana()                 --最大魔法值
+                memberData.Gold       = member:GetGold()                    --金钱
+                memberData.kill       = GetHeroKills(member:GetPlayerID())  --击杀数
+                memberData.Death      = GetHeroDeaths(member:GetPlayerID()) --死亡数
+                memberData.Assist     = GetHeroAssists(member:GetPlayerID())--助攻数
+                memberData.Bot        = '"'..isBot..'"'                     --是否为电脑
                 for i=0,5 do                                          --装备
                     local item = member:GetItemInSlot(i);
                     if item ~= nil then
-                        data['Item'..i] = '"'..J.Chat.GetItemName(item:GetName())..'"'
+                        memberData['Item'..i] = '"'..J.Chat.GetItemName(item:GetName())..'"'
                     else
-                        data['Item'..i] = '"none"'
+                        memberData['Item'..i] = '"none"'
                     end
                 end
-
-                H.HttpPost(data, '45.77.179.135:3010',
-                    function (res, par)
-                        print(par..'数据已上报')
-                    end
-                , data.Hero, true);
+                table.insert(data.gameData,memberData)
+                --H.HttpPost(data, '45.77.179.135:3010',
+                --    function (res, par)
+                --        print(par..'数据已上报')
+                --    end
+                --, data.Hero, true);
                 
-                if isBot == 'false' then
-                    table.insert(L.DataUploadPlayerList,aTeam)
-                else
+                --if isBot == 'false' then
+                --    table.insert(L.DataUploadPlayerList,aTeam)
+                --else
                     bot.GameEND = true
-                end
+                --end
 
-            end
+            --end
         end
+        H.HttpPost(data, '45.77.179.135:3010',
+            function (res, par)
+                print(par..'数据已上报')
+            end
+        , data.Hero, true);
 --[[
         local winTeam = 'true'
         if win ~= GetTeam() then winTeam = 'false'end
@@ -281,7 +288,7 @@ function L.Update()
             --    hero = '"'..J.Chat.GetNormName(data['hero'])..'"',
             --}
             --H.HttpPost(postData, '45.77.179.135:3001')
-            --L.Chatwheel(true, data)
+            L.Chatwheel(true, data)
             --bug了
             --for _,eData in pairs(nEnemysData) do
             --    print(GetHeroDeaths(eData['player']) ..' - '.. eData['death'])

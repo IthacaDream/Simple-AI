@@ -26,7 +26,13 @@ api.post('/', function(req, res){
         startRequest(result.data.message, res)
     break;
     case 'gameEnd':
-        installHeroData(result.data, result.info)
+        if (Array.isArray(result.data)) {
+            for (let i = 0; i < result.data.length; i++) {
+                installHeroData(result.data[i], result.info)
+            }
+        } else {
+            installHeroData(result.data, result.info)
+        }
         serverdb.executeSql(`DELETE FROM UUID WHERE ip = '${ip}';`)
     break;
     case 'getGameData':
