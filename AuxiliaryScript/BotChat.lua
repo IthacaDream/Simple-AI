@@ -81,6 +81,7 @@ function C.Speech()
                     do
                         local aBot = GetTeamMember(i)
                         if id ~= bot:GetPlayerID() --如果是自己，则不删除
+                           and aBot ~= nil
                            and aBot.scenario ~= nil
                            and aBot.scenario.sequential ~= nil
                            and #aBot.scenario.sequential == #bot.scenario.sequential --这个bot第一个执行，删掉其他人的触发，其他人执行的时候，这个触发已经全部删除了，大概
@@ -157,6 +158,7 @@ function C.Speech()
                         do
                             local aBot = GetTeamMember(i)
                             if id ~= bot:GetPlayerID() --如果是自己，则不删除
+                               and aBot ~= nil
                                and aBot.triggerScenario ~= nil
                                and aBot.triggerScenario.scenario ~= nil
                                and #aBot.triggerScenario.scenario == #triggerScenario --这个bot第一个执行，删掉其他人的触发，其他人执行的时候，这个触发已经全部删除了，大概
@@ -337,48 +339,6 @@ function C.GetScenario()
             scenarioTimeNeeded = 10,
             scenario = {
                 {
-                    speech = '我才不上当',
-                    all = true,
-                    interval = 8,
-                    botId = 'only'
-                },
-                {
-                    speech = {'哈哈哈', '你好菜哦'},
-                    all = true,
-                    interval = 2,
-                    botId = 'only'
-                }
-            },
-            state = false,
-            handling = 'reset',
-            triggerCD = 20
-        },
-        {
-            scenarioType = '死亡',
-            scenarioTimeNeeded = 17,
-            scenario = {
-                {
-                    speech = '是不是输不起',
-                    all = true,
-                    interval = 12,
-                    botId = 'only'
-                },
-                {
-                    speech = '有什么了不起的，有能耐来单挑',
-                    all = true,
-                    interval = 5,
-                    botId = 'only'
-                }
-            },
-            state = false,
-            handling = 'reset',
-            triggerCD = 20
-        },
-        {
-            scenarioType = '击杀',
-            scenarioTimeNeeded = 10,
-            scenario = {
-                {
                     speech = {'第一个死在我刀下的小伙伴', '第一滴血，哈哈哈'},
                     all = true,
                     interval = 2,
@@ -403,6 +363,48 @@ function C.GetScenario()
             handling = 'del'
         },
         {
+            scenarioType = '击杀',
+            scenarioTimeNeeded = 10,
+            scenario = {
+                {
+                    speech = '我才不上当',
+                    all = true,
+                    interval = 8,
+                    botId = 'only'
+                },
+                {
+                    speech = {'哈哈哈', '你好菜哦'},
+                    all = true,
+                    interval = 2,
+                    botId = 'only'
+                }
+            },
+            state = false,
+            handling = 'del',
+            triggerCD = 1 * 60
+        },
+        {
+            scenarioType = '死亡',
+            scenarioTimeNeeded = 17,
+            scenario = {
+                {
+                    speech = '是不是输不起',
+                    all = true,
+                    interval = 12,
+                    botId = 'only'
+                },
+                {
+                    speech = '有什么了不起的',
+                    all = true,
+                    interval = 5,
+                    botId = 'only'
+                }
+            },
+            state = false,
+            handling = 'del',
+            triggerCD = 1 * 60
+        },
+        {
             scenarioType = '逃脱',
             scenarioTimeNeeded = 5,
             scenario = {
@@ -415,7 +417,7 @@ function C.GetScenario()
             },
             state = false,
             handling = 'reset',
-            triggerCD = 60
+            triggerCD = 2 * 60
         }
     }
     --加载锦囊剧本

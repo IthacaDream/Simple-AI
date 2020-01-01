@@ -116,7 +116,7 @@ function GetDesire()
 			end);
 		elseif tChat.string == '取消上报' then
 			local postData = {
-				operation = '"delUUID"'
+				operation = 'delUUID'
 			}
 			Http.HttpPost('45.77.179.135:3010',
 			function (x, t)
@@ -124,7 +124,7 @@ function GetDesire()
 			end,'',true);
 		elseif not closeMessage then
 			local postData = {
-				operation = '"message"',
+				operation = 'message',
 				message = '"'..tChat.string..'"',
 			}
 			local allmes = not tChat.team_only

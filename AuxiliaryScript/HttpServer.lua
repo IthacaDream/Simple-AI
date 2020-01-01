@@ -41,22 +41,27 @@
 ]]
 
 local H = {}
+local json = require "game/dkjson"
 
 H.UUID = nil
 
-function H.LocalHttpPost(postData)
+function H.LocalHttpPost(postData, call, calldata)
 
     local httpData = jsonFormatting(postData)
 
-    local req = CreateHTTPRequest( "" )
+    local req = CreateHTTPRequest( '' )
+    local req = CreateRemoteHTTPRequest( url )
     req:SetHTTPRequestRawPostBody("application/json", httpData)
     req:Send( function( result )
-        --此处result为获取到的返回参数
-        print( "GET response:\n" )
         for k,v in pairs( result ) do
-            print( string.format( "%s : %s\n", k, v ) )
+            if type(v) == 'string'
+               and string.find(v, 'res:') ~= nil 
+            then 
+                local resdata = string.sub(v, 5);
+                call(resdata, calldata)
+            end
+            
         end 
-        print( "Done." )
     end )
 
 end
@@ -66,7 +71,7 @@ function H.HttpPost(postData, url, call, calldata, notUUID)
     if H.UUID ~= nil or notUUID then
 
         local httpData = jsonFormatting(postData)
-
+        print(httpData)
         local req = CreateRemoteHTTPRequest( url )
         req:SetHTTPRequestRawPostBody("application/json", httpData)
         req:Send( function( result )
@@ -89,7 +94,7 @@ end
 
 function H.GetUUID(url, call)
     local postData = {
-        operation = '"getuuid"'
+        operation = 'getuuid'
     }
     local httpData = jsonFormatting(postData)
     local req = CreateRemoteHTTPRequest( url )
@@ -112,48 +117,19 @@ function H.GetUUID(url, call)
 end
 
 function jsonFormatting(obj)
-    local json = '{"data":{'
-    local count = 1
-    for key, value in pairs(obj) do
-        if count > 1 then json = json..',' end
-        json = json .. '"' .. key .. '": ' .. value
-        --if type(value) == 'table' then 
-        --    json = json .. '"' .. key .. '": ['.. H.jsonFormattingDataProcessing(value) ..']'
-        --else
-        --    json = json .. '"' .. key .. '": ' .. value
-        --end
-        count = count + 1
-    end
-    json = json..'},"info":{'
+
+    local objtable = {}
+    objtable.data = obj
     local uuid = H.UUID
     if uuid == nil then uuid = 'local' end
-    local info = {
-        uuid = '"'..uuid..'"',
+    objtable.info = {
+        uuid = uuid,
         gameTime = DotaTime(),
-        script = '"Simple AI"',
+        script = 'Simple AI',
     }
-    count = 1
-    for key, value in pairs(info) do
-        if count > 1 then json = json..',' end
-        json = json .. '"' .. key .. '": ' .. value
-        count = count + 1
-    end
-    json = json..'}}'
-    return json
-end
-
-function H.jsonFormattingDataProcessing(obj)
-    local json = ''
-    local count = 1
-    for key, value in pairs(obj) do
-        if count > 1 then json = json..',' end
-        if type(value) == 'table' then 
-            json = json .. '"' .. key .. '": ['.. H.jsonFormattingDataProcessing(value) ..']'
-        else
-            json = json .. '"' .. key .. '": ' .. value
-        end
-    end
-    return json
+    local string = json.encode(objtable)
+    print('json:'..string)
+    return string
 end
 
 return H

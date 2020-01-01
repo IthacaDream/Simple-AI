@@ -26,9 +26,9 @@ api.post('/', function(req, res){
         startRequest(result.data.message, res)
     break;
     case 'gameEnd':
-        if (Array.isArray(result.data)) {
-            for (let i = 0; i < result.data.length; i++) {
-                installHeroData(result.data[i], result.info)
+        if (Array.isArray(result.data.gameData)) {
+            for (let i = 0; i < result.data.gameData.length; i++) {
+                installHeroData(JSON.parse(result.data.gameData[i]), result.info)
             }
         } else {
             installHeroData(result.data, result.info)
