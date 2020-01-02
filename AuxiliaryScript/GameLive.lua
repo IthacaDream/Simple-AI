@@ -205,6 +205,9 @@ function L.Update()
                     memberData['Item'..i] = '"none"'
                 end
             end
+            if member.kits ~= nil then
+                memberData.kits = json.encode(member.kits)
+            end
             table.insert(data.gameData,json.encode(memberData))
             L.GameEND = true
         end

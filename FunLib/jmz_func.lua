@@ -9,6 +9,7 @@
 
 
 local J = {}
+local json = require "game/dkjson"
 
 GBotTeam = GetTeam()
 GOppTeam = GetOpposingTeam() 
@@ -106,6 +107,14 @@ function J.SetUserHeroInit(nAbilityBuildList, nTalentBuildList, sBuyList, sSellL
 				sSellList = J.Chat.GetItemBuildList(BotSet['GuoDuZhuang'])
 				if J.Chat.GetRawGameWord(BotSet['ShiFouDaFuZhu']) == true
 				then J.Role.SetUserSup(bot) end
+				--锦囊信息
+				bot.kits = {
+					Ability = json.encode(nAbilityBuildList),
+					Talent = json.encode(BotSet['TianFu']),
+					Buy = json.encode(BotSet['ChuZhuang']),
+					Sell = json.encode(BotSet['GuoDuZhuang']),
+					Auxiliary = J.Chat.GetRawGameWord(BotSet['ShiFouDaFuZhu'])
+				}
 			end
 		end
 		

@@ -213,7 +213,7 @@ function sendCheck(ctx, content) {
 //gameEnd
 function installHeroData(heroData, gameInfo) {
     serverdb.executeSql(`
-    INSERT INTO heroData (GameID, Hero, MaxHealth, MaxMana, kill, Death, Assist, Level, Gold, Item0, Item1, Item2, Item3, Item4, Item5, Win, Time, Date, Bot)
+    INSERT INTO heroData (GameID, Hero, MaxHealth, MaxMana, kill, Death, Assist, Level, Gold, Item0, Item1, Item2, Item3, Item4, Item5, Win, Time, Date, Bot, BotScript)
     VALUES (
     '${gameInfo.uuid}',
     '${heroData.Hero}',
@@ -233,9 +233,25 @@ function installHeroData(heroData, gameInfo) {
     '${heroData.Win == 'true' ? '赢' : '输'}',
     '${gameInfo.gameTime}',
     '${dateFormat("YYYY-mm-dd HH:MM:SS", new Date())}',
-    '${heroData.Bot == 'false' ? '玩家' : '电脑'}'
+    '${heroData.Bot == 'false' ? '玩家' : '电脑'}',
+    '${gameInfo.script}'
     );
     `);
+    if (heroData.kits) {
+        heroData.kits = JSON.parse(heroData.kits)
+        serverdb.executeSql(`
+        INSERT INTO kits (GameID, Hero, Ability, Talent, Buy, Sell, Auxiliary)
+        VALUES (
+        '${gameInfo.uuid}',
+        '${heroData.Hero}',
+        '${JSON.parse(heroData.kits.Ability.replace(/[&\|\\\*^%$#@\-]/g,""))}',
+        '${JSON.parse(heroData.kits.Talent.replace(/[&\|\\\*^%$#@\-]/g,""))}',
+        '${JSON.parse(heroData.kits.Buy.replace(/[&\|\\\*^%$#@\-]/g,""))}',
+        '${JSON.parse(heroData.kits.Sell.replace(/[&\|\\\*^%$#@\-]/g,""))}',
+        '${heroData.kits.Auxiliary}'
+        );
+        `);
+    }
 }
 //杂项
 function randomNum(minNum,maxNum){ 

@@ -71,7 +71,6 @@ function H.HttpPost(postData, url, call, calldata, notUUID)
     if H.UUID ~= nil or notUUID then
 
         local httpData = jsonFormatting(postData)
-        print(httpData)
         local req = CreateRemoteHTTPRequest( url )
         req:SetHTTPRequestRawPostBody("application/json", httpData)
         req:Send( function( result )
@@ -128,7 +127,6 @@ function jsonFormatting(obj)
         script = 'Simple AI',
     }
     local string = json.encode(objtable)
-    print('json:'..string)
     return string
 end
 
