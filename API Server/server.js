@@ -45,16 +45,36 @@ api.post('/', function(req, res){
         })
     break;
     case 'getheat':
-        serverdb.queryData(`SELECT hero as 英雄, COUNT(hero) as 热度
-        FROM "heroData" where bot = '电脑' GROUP BY hero ORDER BY 热度`, (data) => {
+        serverdb.queryData(`SELECT * FROM (SELECT hero as 英雄, COUNT(hero) as 热度 FROM "heroData" where bot = '电脑' GROUP BY hero ORDER BY 热度) WHERE 热度 >= 50`, (data) => {
             if (data.length > 0) {
                 res.send(JSON.stringify(data));
             }
         })
     break;
     case 'getGameDataCount':
-        serverdb.queryData(`SELECT hero as "英雄" ,cast(avg(kill) as int) as "平均击杀",cast(avg(Death) as int) as "平均死亡", cast(avg(Assist) as int) as "平均助攻", cast(avg(Level) as int) as "平均等级",count(case when Win="赢" then 1 end) as "胜利场数",count(case when Win="输" then 1 end) as "失败场数"
-        FROM "heroData" WHERE Bot = "电脑" GROUP BY Hero ORDER BY 胜利场数 DESC, 失败场数 DESC`, (data) => {
+        serverdb.queryData(`SELECT hero as "英雄" ,cast(avg(kill) as int) as "平均击杀",cast(avg(Death) as int) as "平均死亡", cast(avg(Assist) as int) as "平均助攻", cast(avg(Level) as int) as "平均等级",count(case when Win="赢" then 1 end) as "胜利场数",count(case when Win="输" then 1 end) as "失败场数" , (count( CASE WHEN Win = '赢' THEN 1 END ) + 0.0)/(count( CASE WHEN Win = '输' THEN 1 END ) + 0.0) AS '胜率值' , Round((((count( CASE WHEN Win = '赢' THEN 1 END ) + 0.0)/(count( CASE WHEN Win = '输' THEN 1 END ) + 0.0)) * 100),2) || '%' AS '胜率'
+        FROM "heroData" WHERE Bot = "电脑" GROUP BY Hero HAVING COUNT(Hero) >= 50 ORDER BY 胜率值 DESC`, (data) => {
+            if (data.length > 0) {
+                res.send(JSON.stringify(data));
+            }
+        })
+    break;
+    case 'getItemsMatch':
+        serverdb.queryData(`SELECT hero AS 英雄, 装备,((次数 +0.0)/(总数 +0.0)) AS 比例 FROM (
+SELECT hero, 装备,Win,SUM(数量) 次数 FROM (
+SELECT hero,item0 AS 装备,Win,COUNT(item0) AS 数量 FROM "heroData" WHERE Bot='电脑' GROUP BY Win,hero,item0 UNION ALL
+SELECT hero,item1 AS 装备,Win,COUNT(item0) AS 数量 FROM "heroData" WHERE Bot='电脑' GROUP BY Win,hero,item0 UNION ALL
+SELECT hero,item2 AS 装备,Win,COUNT(item0) AS 数量 FROM "heroData" WHERE Bot='电脑' GROUP BY Win,hero,item0 UNION ALL
+SELECT hero,item3 AS 装备,Win,COUNT(item0) AS 数量 FROM "heroData" WHERE Bot='电脑' GROUP BY Win,hero,item0 UNION ALL
+SELECT hero,item4 AS 装备,Win,COUNT(item0) AS 数量 FROM "heroData" WHERE Bot='电脑' GROUP BY Win,hero,item0 UNION ALL
+SELECT hero,item5 AS 装备,Win,COUNT(item0) AS 数量 FROM "heroData" WHERE Bot='电脑' GROUP BY Win,hero,item0) GROUP BY Win,hero,装备 ORDER BY 装备,hero, 数量 DESC) AS ITEM LEFT OUTER JOIN (
+SELECT hero, 装备,SUM(数量) 总数 FROM (
+SELECT hero,item0 AS 装备,Win,COUNT(item0) AS 数量 FROM "heroData" WHERE Bot='电脑' GROUP BY Win,hero,item0 UNION ALL
+SELECT hero,item1 AS 装备,Win,COUNT(item0) AS 数量 FROM "heroData" WHERE Bot='电脑' GROUP BY Win,hero,item0 UNION ALL
+SELECT hero,item2 AS 装备,Win,COUNT(item0) AS 数量 FROM "heroData" WHERE Bot='电脑' GROUP BY Win,hero,item0 UNION ALL
+SELECT hero,item3 AS 装备,Win,COUNT(item0) AS 数量 FROM "heroData" WHERE Bot='电脑' GROUP BY Win,hero,item0 UNION ALL
+SELECT hero,item4 AS 装备,Win,COUNT(item0) AS 数量 FROM "heroData" WHERE Bot='电脑' GROUP BY Win,hero,item0 UNION ALL
+SELECT hero,item5 AS 装备,Win,COUNT(item0) AS 数量 FROM "heroData" WHERE Bot='电脑' GROUP BY Win,hero,item0) GROUP BY hero,装备 ORDER BY 装备,hero, 数量 DESC) AS COUN USING (Hero, 装备) WHERE Win='赢' AND 总数 > 100 AND 装备 <> 'none' AND 装备 <> '未知物品' ORDER BY 比例 DESC`, (data) => {
             if (data.length > 0) {
                 res.send(JSON.stringify(data));
             }

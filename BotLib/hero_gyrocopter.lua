@@ -1,5 +1,4 @@
 local X = {}
-local bDebugMode = ( 1 == 10 )
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
@@ -14,27 +13,23 @@ local tGroupedDataList = {
 --默认数据
 local tDefaultGroupedData = {
 	['Talent'] = {
-		['t25'] = {10, 0},
+		['t25'] = {0, 10},
 		['t20'] = {10, 0},
 		['t15'] = {0, 10},
 		['t10'] = {0, 10},
 	},
-	['Ability'] = {1,3,1,2,1,6,1,2,2,2,6,3,3,3,6},
+	['Ability'] = {1,3,1,3,1,6,1,3,3,2,6,2,2,2,6},
 	['Buy'] = {
-		"item_tango",
-    	"item_flask",
-    	"item_magic_stick",
-    	"item_double_branches",
-		"item_magic_wand",
-		"item_arcane_boots",
-		"item_vanguard",
-		"item_pipe",
-		"item_crimson_guard",
-		"item_black_king_bar",
-		"item_lotus_orb",
-		"item_shivas_guard",
-		"item_ultimate_scepter_2",
-		"item_octarine_core"
+		'item_tango',
+		'item_enchanted_mango',
+		'item_tranquil_boots',
+		'item_glimmer_cape',
+		'item_aether_lens',
+		'item_force_staff',
+		'item_ultimate_scepter',
+		'item_solar_crest',
+		'item_spirit_vessel',
+		'item_lotus_orb',
 	},
 	['Sell'] = {
 		"item_crimson_guard",
@@ -44,8 +39,6 @@ local tDefaultGroupedData = {
 
 --根据组数据生成技能、天赋、装备
 local nAbilityBuildList, nTalentBuildList;
-
-if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_priest' }, {} end
 
 nAbilityBuildList, nTalentBuildList, X['sBuyList'], X['sSellList'] = ConversionMode.Combination(tGroupedDataList, tDefaultGroupedData)
 
@@ -60,7 +53,10 @@ function X.MinionThink(hMinionUnit)
 
 	if Minion.IsValidUnit(hMinionUnit) 
 	then
-		Minion.IllusionThink(hMinionUnit)	
+		if hMinionUnit:IsIllusion() 
+		then 
+			Minion.IllusionThink(hMinionUnit)	
+		end
 	end
 
 end
@@ -70,15 +66,10 @@ function X.SkillsComplement()
 	--如果当前英雄无法使用技能或英雄处于隐形状态，则不做操作。
 	if J.CanNotUseAbility(bot) or bot:IsInvisible() then return end
 	--技能检查顺序
-	local order = {'R','Q','W'}
+	local order = {'R','Q','E','W'}
 	--委托技能处理函数接管
 	if ConversionMode.Skills(order) then return; end
 
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592。
-
-
-
-

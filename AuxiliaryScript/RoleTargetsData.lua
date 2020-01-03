@@ -10,60 +10,7 @@ local interestingSuccession = 1
 
 local X = {}
 
-X["allows_hero"] = allowsHeroData.hero--[[{
-    ----冥界亚龙
-	["npc_dota_hero_viper"] = {
-        ['hero_name'] = '冥界亚龙',
-		['proposal'] = { --推荐阵容
-            { --复仇之魂
-                ['hero'] = 'npc_dota_hero_vengefulspirit', --英雄
-                ['weight'] = 3, --权重
-            },
-            { --暗影萨满
-                ['hero'] = 'npc_dota_hero_shadow_shaman',
-                ['weight'] = 3,
-            },
-            { --水晶室女
-                ['hero'] = 'npc_dota_hero_crystal_maiden',
-                ['weight'] = 4,
-            },
-            { --食人魔魔法师
-                ['hero'] = 'npc_dota_hero_ogre_magi',
-                ['weight'] = 3,
-            },
-            { --天穹守望者
-                ['hero'] = 'npc_dota_hero_arc_warden',
-                ['weight'] = 4,
-            },
-        },
-		['counter'] = { --针对阵容
-            { --剑圣
-                ['hero'] = 'npc_dota_hero_juggernaut', --英雄
-                ['weight'] = 3, --权重
-            },
-            { --哈斯卡
-                ['hero'] = 'npc_dota_hero_huskar',
-                ['weight'] = 3,
-            },
-            { --裂魂人
-                ['hero'] = 'npc_dota_hero_spirit_breaker',
-                ['weight'] = 3,
-            },
-            { --痛苦女王
-                ['hero'] = 'npc_dota_hero_queenofpain',
-                ['weight'] = 3,
-            },
-        },
-        ['orientation'] = { --英雄定位
-            ['core'] = true, --核心
-            ['durable'] = true, --耐久
-        },
-        ['attribute'] = { --英雄属性
-            ['type'] = 'Agile', --类型 力量：Power 敏捷：Agile 智力：Intelligence
-        },
-        ['bot'] = true, --电脑可选
-    },
-}]]
+X["allows_hero"] = allowsHeroData.hero
 
 --当前英雄池
 --'npc_dota_hero_vengefulspirit',
@@ -77,7 +24,6 @@ X["allows_hero"] = allowsHeroData.hero--[[{
 --'npc_dota_hero_abaddon',
 --'npc_dota_hero_grimstroke',
 --'npc_dota_hero_puck',
---'npc_dota_hero_invoker',
 --'npc_dota_hero_centaur',
 --'npc_dota_hero_faceless_void',
 --'npc_dota_hero_obsidian_destroyer',
@@ -101,6 +47,7 @@ X["allows_hero"] = allowsHeroData.hero--[[{
 --'npc_dota_hero_bane',
 --'npc_dota_hero_bounty_hunter',
 --'npc_dota_hero_invoker',
+--'npc_dota_hero_gyrocopter',
 ----原脚本
 --'npc_dota_hero_antimage',
 --'npc_dota_hero_arc_warden',
@@ -140,6 +87,7 @@ X["test_hero"] = {
     --'npc_dota_hero_beastmaster',
     --'npc_dota_hero_brewmaster',
     --'npc_dota_hero_broodmother',
+    'npc_dota_hero_gyrocopter'
 }
 
 X["onlyCM_hero"] = {
@@ -154,7 +102,6 @@ X["onlyCM_hero"] = {
     --'npc_dota_hero_dazzle',
     --'npc_dota_hero_grimstroke',
     'npc_dota_hero_puck',
-    --'npc_dota_hero_invoker',
     'npc_dota_hero_centaur',
     'npc_dota_hero_faceless_void',
     'npc_dota_hero_obsidian_destroyer',
@@ -173,11 +120,12 @@ X["onlyCM_hero"] = {
     --'npc_dota_hero_treant',
     'npc_dota_hero_ursa',
     'npc_dota_hero_mars',
-    'npc_dota_hero_abyssal_underlord',
+    --'npc_dota_hero_abyssal_underlord',
     --'npc_dota_hero_ancient_apparition',
     'npc_dota_hero_bane',
     'npc_dota_hero_bounty_hunter',
     'npc_dota_hero_invoker',
+    'npc_dota_hero_gyrocopter',
 }
 
 function X.CounterWeightList(hero) --获取推荐阵容列表

@@ -167,6 +167,13 @@ local abilityNameList = {
     'mars_spear',
     'mars_gods_rebuke',
     'mars_arena_of_blood',
+    'abyssal_underlord_dark_rift',
+    'abyssal_underlord_pit_of_malice',
+    'abyssal_underlord_firestorm',
+    'gyrocopter_homing_missile',
+    'gyrocopter_rocket_barrage',
+    'gyrocopter_call_down',
+    'gyrocopter_flak_cannon',
 }
 
 --将英雄技能初始入变量

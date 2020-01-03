@@ -2130,7 +2130,7 @@ D.hero = {
               {["hero"] = "npc_dota_hero_phantom_assassin",["weight"] = 2.6,},
               {["hero"] = "npc_dota_hero_visage",["weight"] = 2.6,},
   },["orientation"] = { ["core"] = true, ["durable"] = true,},["attribute"] = { ["type"] = "Agile", },
-  ["evaluation"] = "", ["bot"] = false,},
+  ["evaluation"] = "", ["bot"] = true,},
 ["npc_dota_hero_lone_druid"] = {
   ["hero_name"] = "lone_druid",
   ["proposal"] = {
@@ -7263,7 +7263,7 @@ D.hero = {
               {["hero"] = "npc_dota_hero_phoenix",["weight"] = 3,},
               {["hero"] = "npc_dota_hero_omniknight",["weight"] = 3,},
     },["orientation"] = { ["core"] = true, ["durable"] = true,},["attribute"] = { ["type"] = "Agile", },
-    ["evaluation"] = "excellent", ["bot"] = false,},
+    ["evaluation"] = "excellent", ["bot"] = true,},
     ["npc_dota_hero_void_spirit"] = {
       ["hero_name"] = "void_spirit",
       ["proposal"] = {
@@ -7316,6 +7316,6 @@ D.hero = {
               {["hero"] = "npc_dota_hero_spectre",["weight"] = 2.6,},
               {["hero"] = "npc_dota_hero_phantom_lancer",["weight"] = 2.6,},
       },["orientation"] = { ["core"] = true, ["durable"] = true,},["attribute"] = { ["type"] = "Agile", },
-      ["evaluation"] = "excellent", ["bot"] = false,},
+      ["evaluation"] = "excellent", ["bot"] = true,},
 }
  return D

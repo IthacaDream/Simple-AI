@@ -19,6 +19,7 @@ end
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
 local C  = require(GetScriptDirectory()..'/AuxiliaryScript/BotChat')
+local H  = require(GetScriptDirectory()..'/AuxiliaryScript/HttpServer')
 local BotBuild = dofile(GetScriptDirectory().."/BotLib/"..string.gsub(bot:GetUnitName(), "npc_dota_", ""))
 
 if BotBuild == nil then return end
@@ -46,6 +47,27 @@ local function AbilityLevelUpComplement()
 		 return
 	end	
 		
+	if bot.cloudAbility == nil then
+		local data = {
+			operation = 'getcloudkits'
+			bot = J.Chat.GetNormName(bot)
+			kits = 'Ability'
+		}
+		H.HttpPost(data, '45.77.179.135:3010',
+		    function (res, par)
+				local Ability = dkjson.decode(res)
+				if type(Ability) == 'table' and #Ability == 15 then
+					par.cloudAbility = Ability
+				end
+		    end
+		, bot, true);
+		bot.cloudAbility == false
+	end
+	if type(bot.cloudAbility) == 'table' then
+		--sAbilityLevelUpList = bot.cloudAbility 
+		bot.cloudAbility = true
+	end
+
 	if DotaTime() < 15 then
 		bot.theRole = J.Role.GetCurrentSuitableRole(bot, bot:GetUnitName());	
 	end	
@@ -68,7 +90,9 @@ local function AbilityLevelUpComplement()
 	end	
 	
 	if bot:GetAbilityPoints() > 0 
-		and bot:GetLevel() <= 25
+		--and bot:GetLevel() <= 25
+		and sAbilityLevelUpList[1] ~= nil
+		--and (bot.cloudAbility or DotaTime() > -60)
 	then
 		local ability = bot:GetAbilityByName(sAbilityLevelUpList[1]);
 		if ability ~= nil 
