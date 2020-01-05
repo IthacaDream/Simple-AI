@@ -49,8 +49,8 @@ local function AbilityLevelUpComplement()
 		
 	if bot.cloudAbility == nil then
 		local data = {
-			operation = 'getcloudkits'
-			bot = J.Chat.GetNormName(bot)
+			operation = 'getcloudkits',
+			bot = J.Chat.GetNormName(bot),
 			kits = 'Ability'
 		}
 		H.HttpPost(data, '45.77.179.135:3010',
@@ -61,7 +61,7 @@ local function AbilityLevelUpComplement()
 				end
 		    end
 		, bot, true);
-		bot.cloudAbility == false
+		bot.cloudAbility = false
 	end
 	if type(bot.cloudAbility) == 'table' then
 		--sAbilityLevelUpList = bot.cloudAbility 

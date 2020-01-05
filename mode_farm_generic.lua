@@ -152,7 +152,7 @@ function GetDesire()
 	         or nPushNoticeTime == nil
 			 or nPushNoticeTime +3 < DotaTime())
 	then
-		local fMessage = "Simple AI: "..sVersionDate;
+		local fMessage = "Sirius AI: "..sVersionDate;
 		local sMessage = "This script is adapted from A Beginner AI: "..sABAVersionDate;
 		C.init()
 		Http.GetUUID('45.77.179.135:3010',

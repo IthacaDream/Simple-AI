@@ -124,7 +124,7 @@ function jsonFormatting(obj)
     objtable.info = {
         uuid = uuid,
         gameTime = DotaTime(),
-        script = 'Simple AI',
+        script = 'Sirius AI',
     }
     local string = json.encode(objtable)
     return string

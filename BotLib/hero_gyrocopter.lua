@@ -14,26 +14,35 @@ local tGroupedDataList = {
 local tDefaultGroupedData = {
 	['Talent'] = {
 		['t25'] = {0, 10},
-		['t20'] = {10, 0},
-		['t15'] = {0, 10},
+		['t20'] = {0, 10},
+		['t15'] = {10, 0},
 		['t10'] = {0, 10},
 	},
-	['Ability'] = {1,3,1,3,1,6,1,3,3,2,6,2,2,2,6},
+	['Ability'] = {2,1,1,3,1,6,1,3,3,3,6,2,2,2,6},
 	['Buy'] = {
+		'item_slippers',
+		'item_circlet',
+		'item_branches',
+		'item_faerie_fire',
 		'item_tango',
 		'item_enchanted_mango',
-		'item_tranquil_boots',
-		'item_glimmer_cape',
-		'item_aether_lens',
-		'item_force_staff',
+		'item_clarity',
+		'item_wraith_band',
+		'item_magic_wand',
+		'item_power_treads',
+		'item_maelstrom',
+		'item_black_king_bar',
+		'item_lesser_crit',
+		'item_manta',
 		'item_ultimate_scepter',
-		'item_solar_crest',
-		'item_spirit_vessel',
-		'item_lotus_orb',
+		'item_skadi',
 	},
 	['Sell'] = {
-		"item_crimson_guard",
-		"item_quelling_blade",
+		"item_butterfly",
+		"item_magic_wand",
+		
+		"item_greater_crit",
+		"item_lesser_crit",
 	}
 }
 

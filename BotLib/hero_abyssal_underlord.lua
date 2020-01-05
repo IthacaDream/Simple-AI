@@ -14,31 +14,39 @@ local tGroupedDataList = {
 --默认数据
 local tDefaultGroupedData = {
 	['Talent'] = {
-		['t25'] = {10, 0},
-		['t20'] = {10, 0},
-		['t15'] = {0, 10},
-		['t10'] = {0, 10},
+		['t25'] = {0, 10},
+		['t20'] = {0, 10},
+		['t15'] = {10, 0},
+		['t10'] = {10, 0},
 	},
-	['Ability'] = {1,3,1,2,1,6,1,2,2,2,6,3,3,3,6},
+	['Ability'] = {3,1,1,3,1,3,1,3,2,6,6,2,2,2,6},
 	['Buy'] = {
-		"item_tango",
-    	"item_flask",
-    	"item_magic_stick",
-    	"item_double_branches",
-		"item_magic_wand",
-		"item_arcane_boots",
+		"item_double_tango",
+    	"item_enchanted_mango",
+    	"item_quelling_blade",
+    	"item_double_enchanted_mango",
+		"item_flask",
+		"item_branches",
+		"item_soul_ring",
+		"item_phase_boots",
 		"item_vanguard",
-		"item_pipe",
-		"item_crimson_guard",
-		"item_black_king_bar",
-		"item_lotus_orb",
+		"item_blade_mail",
+		"item_hood_of_defiance",
+		"item_ultimate_scepter",
 		"item_shivas_guard",
-		"item_ultimate_scepter_2",
-		"item_octarine_core"
+		"item_lotus_orb",
+		"item_heart"
 	},
 	['Sell'] = {
-		"item_crimson_guard",
+		"item_heavens_halberd",
 		"item_quelling_blade",
+
+		"item_crimson_guard",
+		"item_vanguard",
+
+		"item_pipe",
+		"item_hood_of_defiance",
+		
 	}
 }
 
@@ -49,7 +57,7 @@ if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_priest' }, {} e
 
 nAbilityBuildList, nTalentBuildList, X['sBuyList'], X['sSellList'] = ConversionMode.Combination(tGroupedDataList, tDefaultGroupedData)
 
-nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
+nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'])
 
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 

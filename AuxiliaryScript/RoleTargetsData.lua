@@ -87,14 +87,17 @@ X["test_hero"] = {
     --'npc_dota_hero_beastmaster',
     --'npc_dota_hero_brewmaster',
     --'npc_dota_hero_broodmother',
-    'npc_dota_hero_gyrocopter'
+
+    'npc_dota_hero_bounty_hunter',
+    --'npc_dota_hero_ursa',
+    'npc_dota_hero_mars',
 }
 
 X["onlyCM_hero"] = {
     'npc_dota_hero_abaddon',
     'npc_dota_hero_vengefulspirit',
     --'npc_dota_hero_shadow_demon',
-    'npc_dota_hero_tidehunter',
+    --'npc_dota_hero_tidehunter',
     --'npc_dota_hero_disruptor',
     --'npc_dota_hero_axe',
     'npc_dota_hero_leshrac',
@@ -111,21 +114,21 @@ X["onlyCM_hero"] = {
     'npc_dota_hero_rubick',
     'npc_dota_hero_tiny',
     'npc_dota_hero_earthshaker',
-    'npc_dota_hero_dark_willow',
+    --'npc_dota_hero_dark_willow',
     --'npc_dota_hero_undying',
     'npc_dota_hero_snapfire',
     'npc_dota_hero_void_spirit',
     'npc_dota_hero_storm_spirit',
     --'npc_dota_hero_magnataur',
     --'npc_dota_hero_treant',
-    'npc_dota_hero_ursa',
-    'npc_dota_hero_mars',
+    --'npc_dota_hero_ursa',
+    --'npc_dota_hero_mars',
     --'npc_dota_hero_abyssal_underlord',
     --'npc_dota_hero_ancient_apparition',
     'npc_dota_hero_bane',
     'npc_dota_hero_bounty_hunter',
-    'npc_dota_hero_invoker',
-    'npc_dota_hero_gyrocopter',
+    --'npc_dota_hero_invoker',
+    --'npc_dota_hero_gyrocopter',
 }
 
 function X.CounterWeightList(hero) --获取推荐阵容列表

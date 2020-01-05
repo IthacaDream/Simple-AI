@@ -28,24 +28,8 @@ U.init(nLV, nMP, nHP, bot);
 --技能释放功能
 function X.Release(castTarget)
 
-    local EnemyLocation = nil
-	
-    if hEnemyHeroList ~= nil
-       and #hEnemyHeroList <= 2
-       and hEnemyHeroList[1] ~= nil
-    then 
-        EnemyLocation = hEnemyHeroList[1]:GetLocation() 
-    end
-
     X.Compensation() 
     bot:ActionQueue_UseAbility( ability ) --使用技能
-
-    if EnemyLocation ~= nil 
-       and nHP > 0.35
-       and bot:HasModifier('modifier_gyrocopter_rocket_barrage') 
-    then
-		bot:ActionQueue_MoveDirectly( EnemyLocation )
-    end
     
 end
 

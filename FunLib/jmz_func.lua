@@ -81,7 +81,7 @@ J.Chat  = require(GetScriptDirectory()..'/FunLib/jmz_chat')
 --]]------------------------------------
 if bDebugTeam
 then
-	print(GBotTeam..':Simple AI: Function Init Successful!')
+	print(GBotTeam..':Sirius AI: Function Init Successful!')
 end
 
 ------------------------------------
@@ -143,7 +143,7 @@ function J.PrintInitMessage(sFlag, sMessage)
 	
 	local botName = string.gsub(string.sub(bot:GetUnitName(), 15), '_', '');
 	
-	print('Simple AI '..string.sub(botName, 1, 4)..': '..string.sub(sFlag, 1, 5)..' with '..sMessage..' init successful!')
+	print('Sirius AI '..string.sub(botName, 1, 4)..': '..string.sub(sFlag, 1, 5)..' with '..sMessage..' init successful!')
 	
 end
 
