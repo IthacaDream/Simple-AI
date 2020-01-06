@@ -171,13 +171,13 @@ function GetDesire()
 			bot:ActionImmediate_Chat( sMessage, false);
 			bot:ActionImmediate_Chat("输入“关闭聊天”关闭电脑互动聊天功能，输入“取消上报”取消数据上报操作，QQ交流群:632117330",true);
 		elseif not J.Role.IsUserMode() and RandomInt(1,9) > 2
+		then
+			if RandomInt(1,9) > 5
 			then
-				if RandomInt(1,9) > 5
-				then				
-					bot:ActionImmediate_Chat("支持设置AI策略的功能,加群了解一下.",true);
-				else
-					bot:ActionImmediate_Chat("跟车队一起玩超疯狂AI,加群体验一下.",true);
-				end
+				bot:ActionImmediate_Chat("支持设置AI策略的功能,加群了解一下.",true);
+			else
+				bot:ActionImmediate_Chat("跟车队一起玩超疯狂AI,加群体验一下.",true);
+			end
 		end
 		bPushNoticeDone = true
 	end

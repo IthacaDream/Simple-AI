@@ -87,10 +87,6 @@ X["test_hero"] = {
     --'npc_dota_hero_beastmaster',
     --'npc_dota_hero_brewmaster',
     --'npc_dota_hero_broodmother',
-
-    'npc_dota_hero_bounty_hunter',
-    --'npc_dota_hero_ursa',
-    'npc_dota_hero_mars',
 }
 
 X["onlyCM_hero"] = {
@@ -126,7 +122,7 @@ X["onlyCM_hero"] = {
     --'npc_dota_hero_abyssal_underlord',
     --'npc_dota_hero_ancient_apparition',
     'npc_dota_hero_bane',
-    'npc_dota_hero_bounty_hunter',
+    --'npc_dota_hero_bounty_hunter',
     --'npc_dota_hero_invoker',
     --'npc_dota_hero_gyrocopter',
 }

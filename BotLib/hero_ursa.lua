@@ -16,25 +16,30 @@ local tDefaultGroupedData = {
 		['t25'] = {10, 0},
 		['t20'] = {0, 10},
 		['t15'] = {0, 10},
-		['t10'] = {10, 0},
+		['t10'] = {0, 10},
 	},
-	['Ability'] = {3,2,3,2,3,6,3,2,2,1,6,1,1,1,6},
+	['Ability'] = {3,1,2,2,4,6,2,2,3,3,6,1,1,1,6},
 	['Buy'] = {
-		"item_magic_wand",
+		"item_tango",
+		"item_orb_of_venom",
+		"item_branches",
+		"item_faerie_fire",
+		"item_quelling_blade",
 		"item_phase_boots",
-		"item_ring_of_basilius",
 		"item_lifesteal",
-		"item_recipe_vladmir",
-		"item_vladmir",
-		"item_sange_and_yasha",
 		"item_blink",
-		"item_black_king_bar",
-		"item_abyssal_blade",
+		"item_sange",
+		"item_basher",
+		"item_sange_and_yasha",
 		"item_ultimate_scepter",
-		"item_ultimate_scepter_2",
-		"item_monkey_king_bar"
+		"item_abyssal_blade",
 	},
 	['Sell'] = {
+		"item_orb_of_venom",
+		"item_mjollnir",
+
+		"item_lifesteal",
+		"item_satanic",
 	}
 }
 

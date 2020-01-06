@@ -35,6 +35,7 @@ api.post('/', function(req, res){
         }
         serverdb.executeSql(`DELETE FROM UUID WHERE ip = '${ip}';`)
     break;
+    //原始数据
     case 'getGameData':
         let page = 0
         if (result.data.page) {page = result.data.page}
@@ -44,6 +45,7 @@ api.post('/', function(req, res){
             }
         })
     break;
+    //英雄热度
     case 'getheat':
         serverdb.queryData(`SELECT * FROM (SELECT hero as 英雄, COUNT(hero) as 热度 FROM "heroData" where bot = '电脑' GROUP BY hero ORDER BY 热度) WHERE 热度 >= 50`, (data) => {
             if (data.length > 0) {
@@ -51,16 +53,17 @@ api.post('/', function(req, res){
             }
         })
     break;
+    //英雄统计数据
     case 'getGameDataCount':
-        serverdb.queryData(`SELECT hero as "英雄" ,cast(avg(kill) as int) as "平均击杀",cast(avg(Death) as int) as "平均死亡", cast(avg(Assist) as int) as "平均助攻", cast(avg(Level) as int) as "平均等级",count(case when Win="赢" then 1 end) as "胜利场数",count(case when Win="输" then 1 end) as "失败场数" , (count( CASE WHEN Win = '赢' THEN 1 END ) + 0.0)/(count( CASE WHEN Win = '输' THEN 1 END ) + 0.0) AS '胜率值' , Round((((count( CASE WHEN Win = '赢' THEN 1 END ) + 0.0)/(count( CASE WHEN Win = '输' THEN 1 END ) + 0.0)) * 100),2) || '%' AS '胜率'
-        FROM "heroData" WHERE Bot = "电脑" GROUP BY Hero HAVING COUNT(Hero) >= 50 ORDER BY 胜率值 DESC`, (data) => {
+        serverdb.queryData(`SELECT hero AS '英雄',CAST (avg(kill) AS int) AS '平均击杀',CAST (avg(Death) AS int) AS '平均死亡',CAST (avg(Assist) AS int) AS '平均助攻',CAST (avg(Level) AS int) AS '平均等级',count(CASE WHEN Win='赢' THEN 1 END) AS '胜利场数',count(CASE WHEN Win='输' THEN 1 END) AS '失败场数',(count(CASE WHEN Win='赢' THEN 1 END)+0.0)/(count(hero)+0.0) AS '胜率值',Round((((count(CASE WHEN Win='赢' THEN 1 END)+0.0)/(count(hero)+0.0))*100),2) || '%' AS '胜率' FROM 'heroData' WHERE Bot='电脑' GROUP BY Hero HAVING COUNT(Hero)>=50 ORDER BY 胜率值 DESC;`, (data) => {
             if (data.length > 0) {
                 res.send(JSON.stringify(data));
             }
         })
     break;
+    //装备统计数据
     case 'getItemsMatch':
-        serverdb.queryData(`SELECT hero AS 英雄, 装备,((次数 +0.0)/(总数 +0.0)) AS 比例 FROM (
+        serverdb.queryData(`SELECT hero AS 英雄, 装备,((次数 +0.0)/(总数 +0.0)) AS 胜率值 ,Round((((次数 +0.0)/(总数 +0.0))*100),2) || '%' AS 胜率 FROM (
 SELECT hero, 装备,Win,SUM(数量) 次数 FROM (
 SELECT hero,item0 AS 装备,Win,COUNT(item0) AS 数量 FROM "heroData" WHERE Bot='电脑' GROUP BY Win,hero,item0 UNION ALL
 SELECT hero,item1 AS 装备,Win,COUNT(item0) AS 数量 FROM "heroData" WHERE Bot='电脑' GROUP BY Win,hero,item0 UNION ALL
@@ -74,7 +77,23 @@ SELECT hero,item1 AS 装备,Win,COUNT(item0) AS 数量 FROM "heroData" WHERE Bot
 SELECT hero,item2 AS 装备,Win,COUNT(item0) AS 数量 FROM "heroData" WHERE Bot='电脑' GROUP BY Win,hero,item0 UNION ALL
 SELECT hero,item3 AS 装备,Win,COUNT(item0) AS 数量 FROM "heroData" WHERE Bot='电脑' GROUP BY Win,hero,item0 UNION ALL
 SELECT hero,item4 AS 装备,Win,COUNT(item0) AS 数量 FROM "heroData" WHERE Bot='电脑' GROUP BY Win,hero,item0 UNION ALL
-SELECT hero,item5 AS 装备,Win,COUNT(item0) AS 数量 FROM "heroData" WHERE Bot='电脑' GROUP BY Win,hero,item0) GROUP BY hero,装备 ORDER BY 装备,hero, 数量 DESC) AS COUN USING (Hero, 装备) WHERE Win='赢' AND 总数 > 100 AND 装备 <> 'none' AND 装备 <> '未知物品' ORDER BY 比例 DESC`, (data) => {
+SELECT hero,item5 AS 装备,Win,COUNT(item0) AS 数量 FROM "heroData" WHERE Bot='电脑' GROUP BY Win,hero,item0) GROUP BY hero,装备 ORDER BY 装备,hero, 数量 DESC) AS COUN USING (Hero, 装备) WHERE Win='赢' AND 总数 > 100 AND 装备 <> 'none' AND 装备 <> '未知物品' ORDER BY 胜率值 DESC`, (data) => {
+            if (data.length > 0) {
+                res.send(JSON.stringify(data));
+            }
+        })
+    break;
+    //锦囊数据
+    case 'getKitsData':
+        serverdb.queryData(`SELECT heroData.GameID AS 游戏Id,heroData.Hero AS 英雄,kill AS 击杀,Death AS 死亡,Assist AS 助攻,Level AS 等级,Win AS 输赢,Ability AS 技能,Talent AS 天赋,Buy AS 购买清单,Sell AS 替换清单,Auxiliary AS 是否辅助装备 FROM heroData LEFT OUTER JOIN kits ON heroData.GameID=kits.GameId AND heroData.Hero=kits.Hero WHERE kits.GameId IS NOT NULL ORDER BY 英雄`, (data) => {
+            if (data.length > 0) {
+                res.send(JSON.stringify(data));
+            }
+        })
+    break;
+    //锦囊统计数据
+    case 'getKitsDataCount':
+        serverdb.queryData(`SELECT heroData.Hero AS 英雄,CAST (avg(kill) AS int) AS 平均击杀,CAST (avg(Death) AS int) AS 平均死亡,CAST (avg(Assist) AS int) AS 平均助攻,CAST (avg(Level) AS int) AS 平均等级,count(CASE WHEN Win='赢' THEN 1 END) AS '胜利场数',count(CASE WHEN Win='输' THEN 1 END) AS '失败场数',(count(CASE WHEN Win='赢' THEN 1 END)+0.0)/(count(heroData.Hero)+0.0) AS '胜率值',Round((((count(CASE WHEN Win='赢' THEN 1 END)+0.0)/(count(heroData.Hero)+0.0))*100),2) || '%' AS '胜率',Ability AS 技能,Talent AS 天赋,Buy AS 购买清单,Sell AS 替换清单,Auxiliary AS 是否辅助装备 ,Ability || Talent || Buy || Sell || Auxiliary AS 锦囊 FROM heroData LEFT OUTER JOIN kits ON heroData.GameID=kits.GameId AND heroData.Hero=kits.Hero WHERE kits.GameId IS NOT NULL GROUP BY 锦囊 ORDER BY 英雄, 胜率值 DESC`, (data) => {
             if (data.length > 0) {
                 res.send(JSON.stringify(data));
             }
