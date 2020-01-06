@@ -219,6 +219,12 @@ function GetDesire()
 			if cAbility:IsInAbilityPhase() or bot:IsChanneling() then
 				return BOT_MODE_DESIRE_ABSOLUTE;
 			end	
+	elseif botName == "npc_dota_hero_shadow_shaman"
+		then
+			if cAbility == nil then cAbility = bot:GetAbilityByName( "shadow_shaman_shackles" ) end;
+			if cAbility:IsInAbilityPhase() or bot:IsChanneling() then
+				return BOT_MODE_DESIRE_ABSOLUTE;
+			end	
 	end
 	
 	if beSpecialSupport
@@ -483,7 +489,7 @@ function X.SupportFindTarget( bot )
 	end
 	
 	
-	local enemyCourier = X.GetEnemyCourier(bot, nAttackRange +200);
+	local enemyCourier = X.GetEnemyCourier(bot, nAttackRange + botLV * 5 + 50);
 	if enemyCourier ~= nil
 	then
 		return enemyCourier,BOT_MODE_DESIRE_ABSOLUTE * 1.5; 
@@ -793,7 +799,7 @@ function X.CarryFindTarget( bot )
 	end
 	
 	
-	local enemyCourier = X.GetEnemyCourier(bot, nAttackRange +200);
+	local enemyCourier = X.GetEnemyCourier(bot, nAttackRange + botLV * 5 + 50);
 	if enemyCourier ~= nil
 	then
 		return enemyCourier,BOT_MODE_DESIRE_ABSOLUTE * 1.5; 
@@ -1398,7 +1404,7 @@ function X.GetNearbyLastHitCreep(ignorAlly, bEnemy, nDamage, nRadius, bot)
 	
 	for _,nCreep in pairs(nNearbyCreeps)
 	do
-		if X.CanBeAttacked(nCreep) and nCreep:GetHealth() < ( nDamage + 260 )
+		if X.CanBeAttacked(nCreep) and nCreep:GetHealth() < ( nDamage + 256 )
 		   and ( ignorAlly or not X.IsAllysTarget(nCreep) )
 		then
 		
@@ -1768,9 +1774,11 @@ function X.IsSpecialCarry(bot)
 		["npc_dota_hero_bloodseeker"] = true,
 		["npc_dota_hero_bristleback"] = true, 
 		["npc_dota_hero_chaos_knight"] = true, 
+		["npc_dota_hero_clinkz"] = true, 
 		["npc_dota_hero_dragon_knight"] = true,
 		["npc_dota_hero_drow_ranger"] = true,
 		["npc_dota_hero_huskar"] = true,
+		["npc_dota_hero_juggernaut"] = true,
 		["npc_dota_hero_kunkka"] = true,
 		["npc_dota_hero_luna"] = true,
 		["npc_dota_hero_medusa"] = true,
@@ -1780,10 +1788,12 @@ function X.IsSpecialCarry(bot)
 		["npc_dota_hero_phantom_assassin"] = true,
 		["npc_dota_hero_phantom_lancer"] = true,
 		["npc_dota_hero_razor"] = true,
+		["npc_dota_hero_sand_king"] = true,
 		["npc_dota_hero_skeleton_king"] = true,
 		["npc_dota_hero_sven"] = true,
 		["npc_dota_hero_sniper"] = true,
 		["npc_dota_hero_templar_assassin"] = true,
+		["npc_dota_hero_tidehunter"] = true,
 		["npc_dota_hero_viper"] = true,
 	}
 	
@@ -1798,16 +1808,20 @@ function X.IsSpecialSupport(bot)
 	
 	local tSpecialSupportList = {
 		["npc_dota_hero_crystal_maiden"] = true,
+		["npc_dota_hero_dazzle"] = true,
 		["npc_dota_hero_death_prophet"] = true, 		
 		["npc_dota_hero_jakiro"] = true,
 		["npc_dota_hero_lich"] = true,
 		["npc_dota_hero_lina"] = true,
+		["npc_dota_hero_lion"] = true,
 		["npc_dota_hero_necrolyte"] = true,
 		["npc_dota_hero_oracle"] = true,
 		["npc_dota_hero_pugna"] = true,
+		["npc_dota_hero_shadow_shaman"] = true,
 		["npc_dota_hero_silencer"] = true,
 		["npc_dota_hero_skywrath_mage"] = true,
 		["npc_dota_hero_warlock"] = true,		  
+		["npc_dota_hero_windrunner"] = true,		  
 		["npc_dota_hero_witch_doctor"] = true,		  
 		["npc_dota_hero_zuus"] = true, 
 		
@@ -1974,4 +1988,4 @@ function X.ShouldNotRetreat(bot)
 	
 	return false;
 end
--- dota2jmz@163.com QQ:2462331592..
+-- dota2jmz@163.com QQ:2462331592.

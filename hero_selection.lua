@@ -252,6 +252,7 @@ local sThirdList = {
 	"npc_dota_hero_phantom_assassin",
 	"npc_dota_hero_phantom_lancer",
 	"npc_dota_hero_huskar",
+	"npc_dota_hero_clinkz",
 	
 }
 
@@ -262,6 +263,7 @@ local sFourthList = {
 	"npc_dota_hero_skywrath_mage",
 	"npc_dota_hero_lina",
 	"npc_dota_hero_pugna",
+	"npc_dota_hero_shadow_shaman",
 }
 
 local sFifthList = {

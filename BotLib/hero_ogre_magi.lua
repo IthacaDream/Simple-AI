@@ -31,8 +31,6 @@ local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
-local sRandomItem = RandomInt(1,9) > 4 and "item_sheepstick" or "item_octarine_core";
-
 X['sBuyList'] = {
 				'item_ogre_magi_outfit',
 				"item_crimson_guard",
@@ -40,6 +38,8 @@ X['sBuyList'] = {
 				"item_sheepstick",
 				"item_octarine_core",
 				"item_assault",
+				"item_ultimate_scepter_2",
+				"item_shivas_guard",
 }
 
 X['sSellList'] = {
@@ -984,6 +984,6 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592..
+-- dota2jmz@163.com QQ:2462331592.
 
 

@@ -35,8 +35,8 @@ local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
 X['sBuyList'] = {
 				'item_priest_outfit',
-				"item_mekansm",
 				"item_urn_of_shadows",
+				"item_mekansm",
 				"item_glimmer_cape",
 				"item_guardian_greaves",	
 				"item_spirit_vessel",
@@ -502,10 +502,10 @@ function X.ConsiderW()
 	end
 	
 	if nLV <= 9 and nHP > 0.55 
-	   and ( not J.IsRunning(bot) or J.IsInRange(bot,botTarget,nAttackRange + 19) )
+	   and J.IsValidHero(npcTarget)
+	   and ( not J.IsRunning(bot) or J.IsInRange(bot,npcTarget,nAttackRange + 29) )
 	then
-		if  J.IsValidHero(npcTarget)
-			and not npcTarget:IsAttackImmune()
+		if  not npcTarget:IsAttackImmune()
 			and GetUnitToUnitDistance(bot,npcTarget) < nAttackRange + 99
 		then
 			nTargetUint = npcTarget;
@@ -541,7 +541,7 @@ function X.ConsiderW()
 	
 	
 	if  J.IsValidHero(npcTarget)
-		and GetUnitToUnitDistance(npcTarget,bot) >  nAttackRange + 200
+		and GetUnitToUnitDistance(npcTarget,bot) > nAttackRange + 200
 		and J.IsValidHero(nEnemysHerosInAttackRange[1])
 		and J.CanBeAttacked(nEnemysHerosInAttackRange[1])
 		and bot:GetActiveMode() ~= BOT_MODE_RETREAT
@@ -623,7 +623,7 @@ function X.ConsiderW()
 	end
 	
 	-- If we're going after someone
-	if J.IsGoingOnSomeone(bot) 
+	if J.IsGoingOnSomeone(bot) and not abilityW:GetAutoCastState()
 	then
 		if J.IsValidHero(npcTarget)
 			and not npcTarget:IsAttackImmune()
@@ -922,4 +922,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592..
+-- dota2jmz@163.com QQ:2462331592.

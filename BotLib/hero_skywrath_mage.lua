@@ -39,7 +39,7 @@ X['sBuyList'] = {
 				"item_pipe",
 				"item_glimmer_cape",
 				"item_veil_of_discord",
-				"item_ultimate_scepter",
+				"item_ultimate_scepter_2",
 				"item_sheepstick",
 }
 
@@ -562,4 +562,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592..
+-- dota2jmz@163.com QQ:2462331592.

@@ -90,9 +90,9 @@ local function AbilityLevelUpComplement()
 	end	
 	
 	if bot:GetAbilityPoints() > 0 
-		--and bot:GetLevel() <= 25
-		and sAbilityLevelUpList[1] ~= nil
-		--and (bot.cloudAbility or DotaTime() > -60)
+	   --and bot:GetLevel() <= 25
+	   and sAbilityLevelUpList[1] ~= nil
+	   --and (bot.cloudAbility or DotaTime() > -60)
 	then
 		local ability = bot:GetAbilityByName(sAbilityLevelUpList[1]);
 		if ability ~= nil 
@@ -140,9 +140,42 @@ function X.GetRemainingRespawnTime()
 	
 end
 
+local nJiDiCount = RandomInt(14,20);
+local nLastGold = 9999
+local nLastKillCount = 999
+function X.SetTalkMessage()
+
+	local nBotID = bot:GetPlayerID()
+	local nCurrentGold = bot:GetGold()	
+	if bot:IsAlive()
+		and nCurrentGold > nLastGold + 600
+		and GetHeroKills(nBotID) > nLastKillCount
+	then
+		local sTauntMark = "?"
+		if nCurrentGold > nLastGold + 750 then sTauntMark = "??" end
+		if nCurrentGold > nLastGold + 900 then sTauntMark = "???" end
+		bot:ActionImmediate_Chat( sTauntMark, true );
+	end
+	nLastKillCount = GetHeroKills(nBotID)
+	nLastGold = nCurrentGold
+
+	
+	if GetHeroKills(nBotID) == 0 
+		and GetHeroDeaths(nBotID) >= nJiDiCount
+		and J.Role.NotSayJiDi()
+	then
+		local sJiDi = RandomInt(1,9) >= 3 and "jidi,xiayiba" or "jidi,gkd"
+		bot:ActionImmediate_Chat( sJiDi, true );
+		J.Role['sayJiDi'] = true
+	end
+
+end
+
 
 local bArcWardenClone = false;
 local function BuybackUsageComplement() 
+	
+	X.SetTalkMessage()	
 	
 	if bot:GetLevel() <=  15
 	   or bArcWardenClone
@@ -399,7 +432,7 @@ function X.IsCourierTargetedByUnit(courier)
 		return true;
 	end;
 	
-	if courier:DistanceFromFountain() < 1600 then return false end
+	if courier:DistanceFromFountain() < 900 then return false end
 	
 	for i = 0, 10 
 	do
@@ -2388,6 +2421,7 @@ X.ConsiderItemDesire["item_medallion_of_courage"] = function(hItem)
 end
 
 --银月
+local moonSharedTime = nil --添加使用延迟避免吃得过快以为没出
 X.ConsiderItemDesire["item_moon_shard"] = function(hItem)
 
 	if bot:GetNetWorth() < 18000 
@@ -2404,14 +2438,20 @@ X.ConsiderItemDesire["item_moon_shard"] = function(hItem)
 	if bot:GetPrimaryAttribute() == ATTRIBUTE_AGILITY 
 		and not bot:HasModifier("modifier_item_moon_shard_consumed")
 	then
-		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH,hEffectTarget,sCastType,"moon_shard-self"
+		if moonSharedTime == nil
+		then
+			moonSharedTime = DotaTime()
+		elseif moonSharedTime < DotaTime() - 3.0
+		then	
+			hEffectTarget = bot
+			moonSharedTime = nil
+			return BOT_ACTION_DESIRE_HIGH,hEffectTarget,sCastType,"self"
+		end
 	end
 
-	local numPlayer = GetTeamPlayers(GetTeam());
 	local targetMember = nil;
 	local targetDamage = 0;
-	for i = 1, #numPlayer
+	for i = 1, 5
 	do
 	   local member = GetTeamMember(i);
 	   if member ~= nil and member:IsAlive()		   
@@ -2424,8 +2464,15 @@ X.ConsiderItemDesire["item_moon_shard"] = function(hItem)
 	end
 	if targetMember ~= nil
 	then
-		hEffectTarget = targetMember
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'ally'
+		if moonSharedTime == nil
+		then
+			moonSharedTime = DotaTime()
+		elseif moonSharedTime < DotaTime() - 4.0
+		then	
+			hEffectTarget = targetMember
+			moonSharedTime = nil
+			return BOT_ACTION_DESIRE_HIGH,hEffectTarget,sCastType,"ally"
+		end
 	end
 
 	
@@ -2641,7 +2688,7 @@ X.ConsiderItemDesire["item_power_treads"] = function(hItem)
 			or (bot:HasModifier("modifier_sniper_assassinate"))
 			or (bot:GetHealth()/bot:GetMaxHealth() < 0.2)
 			or (nPtStat == ATTRIBUTE_STRENGTH and bot:GetHealth()/bot:GetMaxHealth() < 0.25)
-			or (nMode ~= BOT_MODE_LANING and bot:GetLevel() <= 11 and J.IsEnemyFacingUnit(800,bot,30))
+			or (nMode ~= BOT_MODE_LANING and bot:GetLevel() <= 11 and J.IsEnemyFacingUnit(bot,800,30))
 		then
 			if nPtStat ~= ATTRIBUTE_STRENGTH
 			then
@@ -3596,7 +3643,7 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 		--第二种情况:有多个敌人但可以卡视野TP
 		local nAttackAllyList = bot:GetNearbyHeroes(999,false,BOT_MODE_ATTACK)
 		if botHP < ( 0.16 + 0.24 * nEnemyCount)
-			and (botHP < 0.2 or #nAttackAllyList == 0)
+			and #nAttackAllyList == 0
 			and bot:WasRecentlyDamagedByAnyHero(6.0)
 			and X.CanJuke() 
 			and nEnemyCount <= ( botHP < 0.4 and 2 or 3 )
@@ -3613,7 +3660,7 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 			   
 		--第三种情况:只有一个敌人直接T回家
 		if ( botHP < 0.34 or botHP + botMP < 0.43 )
-			and (botHP < 0.2 or #nAttackAllyList == 0)
+			and #nAttackAllyList == 0
 			and bot:GetLevel() >= 9
 			and X.CanJuke()
 			and nEnemyCount <= 1 and nAllyCount <= 2
@@ -3967,7 +4014,7 @@ X.ConsiderItemDesire["item_veil_of_discord"] = function(hItem)
 	
 	local LaneCreeps=bot:GetNearbyLaneCreeps(1500,true);		
 	if LaneCreeps ~= nil and #LaneCreeps >= 6 then
-		local nAOELocation = bot:FindAoELocation(true, false, bot:GetLocation(), nCastRange, 600 , 0, 0);
+		local nAOELocation = bot:FindAoELocation(true, false, bot:GetLocation(), nCastRange, 400 , 0, 0);
 		if nAOELocation.count >= 8
 		   and GetUnitToLocationDistance(bot,nAOELocation.targetloc) <= nCastRange
 		then
@@ -3982,6 +4029,7 @@ end
 
 
 --芒果树
+local mangoTreeTime = -1
 X.ConsiderItemDesire["item_mango_tree"] = function(hItem)
 
 	local oppositeID_1 = GetTeamPlayers(opTeam)[1]
@@ -3996,10 +4044,38 @@ X.ConsiderItemDesire["item_mango_tree"] = function(hItem)
 	local nLocation = bot:GetLocation() + RandomVector(100)
 	if IsLocationPassable(nLocation)
 	then
-		hEffectTarget = nLocation
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'tree'
+		if mangoTreeTime == -1 
+		then 
+			mangoTreeTime = DotaTime() 
+		elseif DotaTime() > mangoTreeTime + 3.0
+		then
+			hEffectTarget = nLocation
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'MangTree'
+		end
 	end	
 	
+	return BOT_ACTION_DESIRE_NONE
+	
+end
+
+
+--GG树
+local lastKACount = -1
+X.ConsiderItemDesire["item_ironwood_tree"] = function(hItem)
+
+	local nCastRange = 600
+	local sCastType = 'ground'	
+	local hEffectTarget = nil 
+	
+	if lastKACount == -1 then lastKACount = GetHeroKills(bot:GetPlayerID()) + GetHeroAssists(bot:GetPlayerID()) end
+	
+	if lastKACount < GetHeroKills(bot:GetPlayerID()) + GetHeroAssists(bot:GetPlayerID())
+	then
+		lastKACount = -1
+		hEffectTarget = J.GetFaceTowardDistanceLocation(bot,nCastRange)
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'GGTree'
+	end
+
 	return BOT_ACTION_DESIRE_NONE
 	
 end
@@ -4053,7 +4129,7 @@ X.ConsiderItemDesire["item_royal_jelly"] = function(hItem)
 			if royalJellyTime == nil
 			then
 				royalJellyTime = DotaTime()
-			elseif royalJellyTime < DotaTime() - 3.0
+			elseif royalJellyTime < DotaTime() - 2.0
 				then
 					royalJellyTime = nil
 					hEffectTarget = npcAlly
@@ -4623,4 +4699,4 @@ function AbilityLevelUpThink()
 	AbilityLevelUpComplement();
 
 end
--- dota2jmz@163.com QQ:2462331592..
+-- dota2jmz@163.com QQ:2462331592.

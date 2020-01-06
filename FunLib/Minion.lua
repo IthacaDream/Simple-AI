@@ -10,17 +10,15 @@
 
 local X = {};
 
---local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
-
 local bot = GetBot();
 
-local TeamAncient = GetAncient(GetTeam());
-local TeamAncientLoc = nil;
-if TeamAncient ~= nil then TeamAncientLoc = TeamAncient:GetLocation() end;
+local nTeamAncient = GetAncient(GetTeam());
+local vTeamAncientLoc = nil;
+if nTeamAncient ~= nil then vTeamAncientLoc = nTeamAncient:GetLocation() end;
 
-local EnemyAncient = GetAncient(GetOpposingTeam());
-local EnemyAncientLoc = nil
-if EnemyAncient ~= nil then EnemyAncientLoc = EnemyAncient:GetLocation() end;
+local nEnemyAncient = GetAncient(GetOpposingTeam());
+local vEnemyAncientLoc = nil
+if nEnemyAncient ~= nil then vEnemyAncientLoc = nEnemyAncient:GetLocation() end;
 local centre = Vector(0, 0, 0);
 
 local attackDesire = 0;
@@ -225,6 +223,11 @@ end
 
 function X.GetWeakestBarracks(radius, minion)
 	local barracks = minion:GetNearbyBarracks(radius, true);
+	if nEnemyAncient ~= nil 
+		and X.IsInRange(minion,nEnemyAncient,radius)
+	then
+		table.insert(barracks,nEnemyAncient)
+	end
 	return X.GetWeakest(barracks);
 end
 
@@ -273,11 +276,11 @@ function X.ConsiderIllusionMove(minion)
 	if X.CantMove(minion) then return BOT_MODE_DESIRE_NONE, nil; end
 	
 	if not bot:IsAlive() then
-		return BOT_MODE_DESIRE_HIGH, X.GetXUnitsTowardsLocation(minion, EnemyAncientLoc, 540);
+		return BOT_MODE_DESIRE_HIGH, X.GetXUnitsTowardsLocation(minion, vEnemyAncientLoc, 540);
 	end
 	
 	if bot:GetActiveMode() ~= BOT_MODE_RETREAT then
-		return BOT_MODE_DESIRE_HIGH, X.GetXUnitsTowardsLocation(bot, EnemyAncientLoc, 240);
+		return BOT_MODE_DESIRE_HIGH, X.GetXUnitsTowardsLocation(bot, vEnemyAncientLoc, 240);
 	end
 	
 	return BOT_MODE_DESIRE_NONE, nil;
@@ -297,21 +300,27 @@ function X.IllusionThink(minion)
 end
 
 -----------ATTACKING WARD LIKE UNIT
+local tAttackWardNameList = {
+	["npc_dota_shadow_shaman_ward_1"] = true,
+	["npc_dota_shadow_shaman_ward_2"] = true,
+	["npc_dota_shadow_shaman_ward_3"] = true,
+	["npc_dota_venomancer_plague_ward_1"] = true,
+	["npc_dota_venomancer_plague_ward_2"] = true,
+	["npc_dota_venomancer_plague_ward_3"] = true,
+	["npc_dota_venomancer_plague_ward_4"] = true,
+	["npc_dota_witch_doctor_death_ward"] = true,
+}
+
 function X.IsAttackingWard(unit_name)
-	return unit_name == "npc_dota_shadow_shaman_ward_1"
-		or unit_name == "npc_dota_shadow_shaman_ward_2"
-		or unit_name == "npc_dota_shadow_shaman_ward_3"
-		or unit_name == "npc_dota_venomancer_plague_ward_1"
-		or unit_name == "npc_dota_venomancer_plague_ward_2"
-		or unit_name == "npc_dota_venomancer_plague_ward_3"
-		or unit_name == "npc_dota_venomancer_plague_ward_4"
-		or unit_name == "npc_dota_witch_doctor_death_ward";
+	return tAttackWardNameList[unit_name] == true
 end
 
 function X.GetWardAttackTarget(minion)
-	local range = minion:GetAttackRange();
+	local range = minion:GetAttackRange()
 	local target = bot:GetAttackTarget();
-	if X.IsValidTarget(target) == false or (X.IsValidTarget(target) and GetUnitToUnitDistance(minion, target) > range) then
+	if	not X.IsValidTarget(target)
+		or (X.IsValidTarget(target) and GetUnitToUnitDistance(minion, target) > range) 
+	then
 		target = X.GetWeakestHero(range, minion);
 		if target == nil then target = X.GetWeakestCreep(range, minion); end
 		if target == nil then target = X.GetWeakestTower(range, minion); end
@@ -330,9 +339,58 @@ end
 
 function X.AttackingWardThink(minion)
 	minion.attackDesire, minion.target = X.ConsiderWardAttack(minion);
-	if minion.attackDesire > 0 then
+	if minion.attackDesire > 0 
+		--and minion:GetAnimActivity() ~= 1503
+	then
 		minion:Action_AttackUnit(minion.target, true);
 		return
+	end
+end
+
+function X.HealingWardThink(minion)
+
+	local nEnemyHeroes = minion:GetNearbyHeroes(800,true,BOT_MODE_DESIRE_NONE)
+	local targetLocation = nil
+	
+	if #nEnemyHeroes == 0
+	then
+		local nAoeHeroTable = minion:FindAoELocation( false, true, minion:GetLocation(), 700, 500 , 0, 0);
+		if nAoeHeroTable.count >= 2
+		then
+			targetLocation = nAoeHeroTable.targetloc
+		end
+	end
+	
+	if targetLocation == nil 
+		and bot:IsAlive() 
+		and GetUnitToUnitDistance(bot,minion) <= 1400
+	then
+		targetLocation = X.GetXUnitsTowardsLocation(bot,vTeamAncientLoc,460)
+	end
+	
+	if targetLocation == nil
+	then
+		local nAoeHeroTable = minion:FindAoELocation( false, true, minion:GetLocation(), 660, 490 , 0, 0);
+		if nAoeHeroTable.count >= 1
+		then
+			targetLocation = nAoeHeroTable.targetloc
+		end
+		
+		if targetLocation == nil
+		then
+			local nAoeCreepTable = minion:FindAoELocation( false, false, minion:GetLocation(), 600, 480 , 0, 0);
+			if nAoeCreepTable.count >= 1
+			then
+				targetLocation = nAoeCreepTable.targetloc
+			end
+		end
+	end
+	
+	if targetLocation ~= nil
+	then
+		minion:Action_MoveToLocation(targetLocation)
+	else
+		minion:Action_MoveToLocation(vTeamAncientLoc)
 	end
 end
 
@@ -556,4 +614,4 @@ function X.MinionThink(  hMinionUnit )
 end	
 
 return X;
--- dota2jmz@163.com QQ:2462331592..
+-- dota2jmz@163.com QQ:2462331592.

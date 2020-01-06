@@ -586,4 +586,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592..
+-- dota2jmz@163.com QQ:2462331592.

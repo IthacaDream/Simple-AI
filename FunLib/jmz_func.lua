@@ -17,17 +17,17 @@ if gTime == nil then gTime = 0 end
 
 
 local sDota2Version= '7.23e'
-local sDebugVersion= '20191225ver1.5h'
-local nDebugTime   = 99999
-local bDebugMode   = ( 1 == 10 )
-local bDebugTeam   = (GBotTeam == TEAM_RADIANT)
-local sDebugHero   = 'npc_dota_hero_luna'
-local tAllyIDList  = GetTeamPlayers(GBotTeam)
+local sDebugVersion= '20200106ver1.6a'
+local nDebugTime = 99999
+local bDebugMode = ( 1 == 10 )
+local bDebugTeam = (GBotTeam == TEAM_RADIANT)
+local sDebugHero = 'npc_dota_hero_luna'
+local tAllyIDList = GetTeamPlayers(GBotTeam)
 local tAllyHeroList = {}
-local tAllyHumanList  = {}
+local tAllyHumanList = {}
 local nAllyTotalKill = 0
 local nAllyAverageLevel = 1
-local tEnemyIDList    = GetTeamPlayers(GOppTeam)
+local tEnemyIDList = GetTeamPlayers(GOppTeam)
 local tEnemyHeroList = {}
 local tEnemyHumanList = {}
 local nEnemyTotalKill = 0
@@ -51,14 +51,7 @@ do
 	if hHero ~= nil
 	then
 		if bHuman then table.insert(tAllyHumanList, hHero) end
-		table.insert(tAllyHeroList, hHero)
-	
-		hHero.continueKillCount = 0
-		hHero.continueDeathCount = 0
-		
-		hHero.sLastRepeatItem = nil	
-	
-	
+		table.insert(tAllyHeroList, hHero)	
 	end
 end 
 
@@ -1308,14 +1301,15 @@ function J.GetAttackProDelayTime(bot, nCreep)
 	local botProSpeed    = bot:GetAttackProjectileSpeed()
 	local botMoveSpeed   = bot:GetCurrentMovementSpeed()
 	local botAttackPointTime = botAttackPoint / botAttackSpeed
+	local botAttackIdleTime = bot:GetSecondsPerAttack() - botAttackPointTime
 	local nLastAttackRemainIdleTime = 0
 	
-	if GameTime() - bot:GetLastAttackTime() < bot:GetSecondsPerAttack() - botAttackPointTime
+	if GameTime() - bot:GetLastAttackTime() < botAttackIdleTime
 	then
-		nLastAttackRemainIdleTime = GameTime() - bot:GetLastAttackTime() 
+		nLastAttackRemainIdleTime = botAttackIdleTime - ( GameTime() - bot:GetLastAttackTime() )
 	end
 	
-	local nAttackDamageDelayTime = botAttackPointTime + nLastAttackRemainIdleTime * 0.93 
+	local nAttackDamageDelayTime = botAttackPointTime + nLastAttackRemainIdleTime * 0.98 
 	local nDist = GetUnitToUnitDistance(bot, nCreep)
 	
 	if bot:GetAttackTarget() == nCreep
@@ -1325,11 +1319,11 @@ function J.GetAttackProDelayTime(bot, nCreep)
 		nAttackDamageDelayTime = 0.9 * (botAttackPoint - bot:GetAnimCycle())/ botAttackSpeed;
 	end
 	
-	if botAttackRange > 326 or botName == "npc_dota_hero_templar_assassin"
+	if botAttackRange > 320 or botName == "npc_dota_hero_templar_assassin"
 	then		
 		
-		local ignoreDist = 49
-		if bot:GetPrimaryAttribute() == ATTRIBUTE_INTELLECT then ignoreDist = 69 end
+		local ignoreDist = 39
+		if bot:GetPrimaryAttribute() == ATTRIBUTE_INTELLECT then ignoreDist = 59 end
 		
 		local projectMoveDist = nDist - ignoreDist
 		
@@ -1341,7 +1335,7 @@ function J.GetAttackProDelayTime(bot, nCreep)
 		
 		if nDist > botAttackRange + ignoreDist/1.2 and botName ~= "npc_dota_hero_sniper"
 		then
-			nAttackDamageDelayTime = nAttackDamageDelayTime + (nDist - botAttackRange - ignoreDist/1.2 )/botMoveSpeed;
+			nAttackDamageDelayTime = nAttackDamageDelayTime + ( nDist - botAttackRange - ignoreDist/1.2 )/ botMoveSpeed;
 		end
 		
 	end
@@ -1382,7 +1376,7 @@ function J.GetCreepAttackActivityWillRealDamage(nUnit, nTime)
 			
 			if  J.IsKeyWordUnit( 'melee', creep )
 				and animCycle < attackPoint
-				and (attackPoint - animCycle) * attackPerTime  < nTime * ( 0.98 - botLV/210 )
+				and (attackPoint - animCycle) * attackPerTime  < nTime * ( 0.99 - botLV/300 )
 			then
 				nDamage = nDamage + creep:GetAttackDamage() * creep:GetAttackCombatProficiency(nUnit);
 			end	
@@ -1393,14 +1387,14 @@ function J.GetCreepAttackActivityWillRealDamage(nUnit, nTime)
 				local nDist = GetUnitToUnitDistance(creep, nUnit) - 22
 				local nProjectSpeed = creep:GetAttackProjectileSpeed()
 				local nProjectTime = nDist/(nProjectSpeed + 1)
-				if (attackPoint - animCycle) * attackPerTime + nProjectTime < nTime * ( 0.9 - botLV/180 )
+				if (attackPoint - animCycle) * attackPerTime + nProjectTime < nTime * ( 0.98 - botLV/200 )
 				then				
 					nDamage = nDamage + creep:GetAttackDamage() * creep:GetAttackCombatProficiency(nUnit);
 				end
 			end	
 			
 			if  J.IsKeyWordUnit( 'siege', creep )
-				and animCycle < 0.292
+				and animCycle < 0.292 --0.285
 			then
 				local nDist = GetUnitToUnitDistance(creep, nUnit) - 28
 				local nProjectSpeed = creep:GetAttackProjectileSpeed()
@@ -1429,8 +1423,8 @@ function J.GetCreepAttackProjectileWillRealDamage(nUnit, nTime)
 		   and p.caster ~= nil
 		then
 			local nProjectSpeed = p.caster:GetAttackProjectileSpeed();
-			if p.caster:IsTower() then nProjectSpeed = nProjectSpeed * 0.93 end;
-			local nProjectDist  = nProjectSpeed * nTime * 0.95;
+			if p.caster:IsTower() then nProjectSpeed = nProjectSpeed * 0.94 end;
+			local nProjectDist  = nProjectSpeed * nTime * 0.96;
 			local nDistance     = GetUnitToLocationDistance(nUnit, p.location);
 			if nProjectDist > nDistance * 1.02
 			then
@@ -1771,11 +1765,11 @@ end
 
 function J.SetReportMotive(bDebugFile, sMotive)
 	
-	if bDebugMode and bDebugTeam and bDebugFile and sMotive ~= nil
+	if bDebugMode and bDebugFile and sMotive ~= nil
 	then
 		local nTime = J.GetOne(DotaTime()/10)*10;
 		local sTime = (J.GetOne(nTime/600)*10)..":"..(nTime%60)
-		GetBot():ActionImmediate_Chat(sTime.."_"..sMotive, true);
+		if bDebugTeam then GetBot():ActionImmediate_Chat(sTime.."_"..sMotive, true) end
 		print(sTime.."  "..J.Chat.GetNormName(GetBot()).."  "..sMotive)
 	end
 
@@ -2471,14 +2465,14 @@ function J.GetNearbyLocationToTp(nLoc)
 	end
 	
 	local targetTower = nil;
-	local minDist     = 99999
+	local minDist = 99999
 	for i=0, 10, 1 do
 		local tower = GetTower(nTeam, i);
 		if tower ~= nil 
 		   and GetUnitToLocationDistance(tower, nLoc) < minDist
 		then
 			 targetTower = tower;
-			 minDist     = GetUnitToLocationDistance(tower, nLoc);
+			 minDist = GetUnitToLocationDistance(tower, nLoc);
 		end
 	end
 	
@@ -2490,10 +2484,11 @@ function J.GetNearbyLocationToTp(nLoc)
 		local shrine = GetShrine(GetTeam(), s);
 		if  shrine ~= nil and shrine:IsAlive()
 		    and GetUnitToLocationDistance(shrine, nLoc) < minDist
-			and not J.IsEnemyHeroAroundLocation(shrine:GetLocation(), 900)
+			and ( not J.IsEnemyHeroAroundLocation(shrine:GetLocation(), 900)
+					or J.IsAllyHeroAroundLocation(shrine:GetLocation(), 900) )
 		then
 			 targetTower = shrine;
-			 minDist     = GetUnitToLocationDistance(shrine, nLoc);
+			 minDist = GetUnitToLocationDistance(shrine, nLoc);
 		end	
 	end	
 	
@@ -2503,7 +2498,8 @@ function J.GetNearbyLocationToTp(nLoc)
 		if  watchTower ~= nil 
 			and watchTower:GetTeam() == nTeam
 		    and GetUnitToLocationDistance(watchTower, nLoc) < minDist - 900
-			and not J.IsEnemyHeroAroundLocation(watchTower:GetLocation(), 900)
+			and ( not J.IsEnemyHeroAroundLocation(watchTower:GetLocation(), 600)
+					or J.IsAllyHeroAroundLocation(watchTower:GetLocation(), 600) )
 		then
 			 targetTower = watchTower
 			 minDist = GetUnitToLocationDistance(watchTower, nLoc) + 900
@@ -2519,7 +2515,7 @@ function J.GetNearbyLocationToTp(nLoc)
 end
 
 
-function J.IsEnemyFacingUnit(nRange, bot, nDegrees)
+function J.IsEnemyFacingUnit(bot, nRange, nDegrees)
 	
 	local nLoc = bot:GetLocation();
 	
@@ -2538,7 +2534,7 @@ function J.IsEnemyFacingUnit(nRange, bot, nDegrees)
 end
 
 
-function J.IsAllyFacingUnit(nRange, bot, nDegrees)
+function J.IsAllyFacingUnit(bot, nRange, nDegrees)
 	
 	local nLoc = bot:GetLocation();
 	local numPlayer = GetTeamPlayers(GetTeam());
@@ -2558,7 +2554,7 @@ function J.IsAllyFacingUnit(nRange, bot, nDegrees)
 end
 
 
-function J.IsEnemyTargetUnit(nRange, nUnit)
+function J.IsEnemyTargetUnit(nUnit, nRange)
 	
 	if nRange > 1600 then nRange = 1600; end
 	local nEnemyHeroes = GetBot():GetNearbyHeroes( nRange, true, BOT_MODE_NONE );
@@ -2618,6 +2614,22 @@ function J.IsInEnemyArea(bot)
    return false;
 end
 
+function J.IsAllyHeroAroundLocation(vLoc, nRadius)
+
+	for i = 1, 5
+	do
+		local npcAlly = GetTeamMember(i)
+		if npcAlly ~= nil
+			and npcAlly:IsAlive()
+			and GetUnitToLocationDistance(npcAlly,vLoc) <= nRadius
+		then
+			return true
+		end
+	end
+	
+	return false
+
+end
 
 function J.IsEnemyHeroAroundLocation(vLoc, nRadius)
 	for i,id in pairs(GetTeamPlayers(GetOpposingTeam())) 
@@ -3674,9 +3686,9 @@ J.ConsiderTarget()
 J.IsHaveAegis(bot)
 J.IsLocHaveTower(nRange, bEnemy, nLoc)
 J.GetNearbyLocationToTp(nLoc)
-J.IsEnemyFacingUnit(nRange, bot, nDegrees)
-J.IsAllyFacingUnit(nRange, bot, nDegrees)
-J.IsEnemyTargetUnit(nRange, nUnit)
+J.IsEnemyFacingUnit(bot, nRange, nDegrees)
+J.IsAllyFacingUnit(bot, nRange, nDegrees)
+J.IsEnemyTargetUnit(nUnit, nRange)
 J.IsCastingUltimateAbility(bot)
 J.IsInAllyArea(bot)
 J.IsInEnemyArea(bot)
@@ -3694,4 +3706,4 @@ J.GetMagicToPhysicalDamage(bot, nUnit, nMagicDamage)
 
 
 --]]
--- dota2jmz@163.com QQ:2462331592..
+-- dota2jmz@163.com QQ:2462331592.

@@ -40,7 +40,9 @@ do
 	bot.itemToBuy[i] = sPurchaseList[#sPurchaseList - i + 1];
 end
  
-
+--bot.itemToBuy = {};  
+ 
+ 
 local sell_time = -90;
 local check_time = -90;
 
@@ -359,7 +361,7 @@ function ItemPurchaseThink()
 	   and botGold >= 150 
 	   and botGold < ( 150 + botWorth/40 )
 	   and botHP < 0.08	   
-	   and botLevel < 29
+	   and botLevel <= 28
 	   and GetGameMode() ~= 23
 	   and bot:WasRecentlyDamagedByAnyHero(3.1)
 	   and GetItemStockCount( "item_tome_of_knowledge" ) >= 1
@@ -817,4 +819,4 @@ function ItemPurchaseThink()
 	end
 
 end
--- dota2jmz@163.com QQ:2462331592..
+-- dota2jmz@163.com QQ:2462331592.

@@ -41,7 +41,8 @@ X['sBuyList'] = {
 				"item_manta",
 				"item_skadi",
 				"item_sphere",
-				"item_sheepstick",	
+				"item_sheepstick",
+				"item_ultimate_scepter_2",
 }
 
 X['sSellList'] = {
@@ -406,4 +407,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592..
+-- dota2jmz@163.com QQ:2462331592.

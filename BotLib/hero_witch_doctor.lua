@@ -33,14 +33,16 @@ local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
 X['sBuyList'] = {
 				'item_priest_outfit',
-				"item_mekansm",
 				"item_urn_of_shadows",
+				"item_mekansm",
 				"item_glimmer_cape",
 				"item_guardian_greaves",
 				"item_spirit_vessel",
 				"item_rod_of_atos",
 				"item_ultimate_scepter",
 				"item_shivas_guard",
+				"item_ultimate_scepter_2",
+				"item_sheepstick",
 }
 
 X['sSellList'] = {
@@ -453,7 +455,7 @@ function X.ConsiderE()
 		if nAoeLoc ~= nil
 		then
 			return BOT_ACTION_DESIRE_HIGH, nAoeLoc, 'E-Fight'
-		end		
+		end
 	end
 	
 	
@@ -548,5 +550,5 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592..
+-- dota2jmz@163.com QQ:2462331592.
 

@@ -95,7 +95,7 @@ function GetDesire()
 	then
 		if X.IsSuitableToPickItem()
 		then
-			return BOT_MODE_DESIRE_VERYHIGH + 0.01
+			return BOT_MODE_DESIRE_VERYHIGH - 0.03
 		end
 	end
 	
@@ -107,7 +107,7 @@ function GetDesire()
 			pickItem = Item.GetInGroundItem(bot)
 		end
 		
-		if DotaTime() > lastDropCheckTime + 0.61
+		if DotaTime() > lastDropCheckTime + 0.91
 		then
 			lastDropCheckTime = DotaTime()
 			dropItem, dropItemTarget = Item.GetNeedDropNeutralItem(bot)
@@ -239,7 +239,11 @@ function Think()
 			
 			local tempRadians = bot:GetFacing() * math.pi / 180;
 			local tempVector = Vector(math.cos(tempRadians), math.sin(tempRadians));
-			bot:Action_DropItem(dropItem, bot:GetLocation() + 118 * tempVector + RandomVector(24) )
+			local dropLocation = bot:GetLocation() + 118 * tempVector + RandomVector(24)
+			if IsLocationPassable(dropLocation)
+			then
+				bot:Action_DropItem(dropItem, bot:GetLocation() + 118 * tempVector + RandomVector(24) )
+			end
 			return
 		end
 	end
@@ -282,7 +286,7 @@ function Think()
 			if nAttactRange > 1400 then nAttactRange = 1400 end
 			local nEnemys = bot:GetNearbyHeroes(nAttactRange,true,BOT_MODE_NONE)
 			if nEnemys[1] ~= nil and nEnemys[1]:IsAlive() and nEnemys[1]:CanBeSeen()
-				and not Role.CanBeSupport(bot:GetUnitName())
+				and 1.5 * bot:GetEstimatedDamageToTarget(true, bot, 4.0, DAMAGE_TYPE_ALL) > nEnemys[1]:GetEstimatedDamageToTarget(true, bot, 4.0, DAMAGE_TYPE_ALL)
 				and bot:GetHealth() > 500
 			then
 				bot:Action_AttackUnit(nEnemys[1], true)
@@ -294,7 +298,9 @@ function Think()
 				and bot:GetPrimaryAttribute() == ATTRIBUTE_AGILITY
 			then
 				local nCreeps = bot:GetNearbyCreeps(nAttactRange +90,true)
-				if nCreeps[1] ~= nil and nCreeps[1]:IsAlive()
+				if nCreeps[1] ~= nil 
+					and nCreeps[1]:IsAlive()
+					and nCreeps[1]:GetHealth() < 1400
 				then
 					bot:Action_AttackUnit(nCreeps[1], true)
 					return
@@ -692,4 +698,4 @@ function X.GetWaitRuneLocation(nRune)
 	return vNearestLoc
 
 end
--- dota2jmz@163.com QQ:2462331592..
+-- dota2jmz@163.com QQ:2462331592.

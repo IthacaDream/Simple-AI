@@ -38,9 +38,10 @@ X['sBuyList'] = {
 				"item_manta",
 				"item_maelstrom",
 				"item_skadi",
-				"item_satanic",
-				"item_black_king_bar",				
+				"item_satanic",			
 				"item_mjollnir",
+				"item_black_king_bar",
+				"item_ultimate_scepter_2",
 }
 
 X['sSellList'] = {
@@ -153,22 +154,13 @@ function X.SkillsComplement()
 	end
 	
 	
-	castRDesire, blinkLocation  = X.ConsiderR();
+	castRDesire  = X.ConsiderR();
 	if ( castRDesire > 0 ) 
 	then
 	
 		J.SetQueuePtToINT(bot, true)
-
-		if blinkLocation ~= nil then
-			local blink = J.IsItemAvailable("item_blink");
-			if blink ~= nil and blink:IsFullyCastable() then
-				bot:Action_UseAbilityOnLocation(blink, blinkLocation);
-				bot:ActionQueue_UseAbility( abilityR )
-			end
-		else
-			bot:ActionQueue_UseAbility( abilityR )
-		end
 	
+		bot:ActionQueue_UseAbility( abilityR )
 		return;
 	
 	end
@@ -204,7 +196,7 @@ function X.ConsiderW()
 
 	-- Make sure it's castable
 	if not abilityW:IsFullyCastable() then return 0 end
-
+	
 	-- Get some of its values
 	local nCastRange = abilityW:GetCastRange() +20
 	local nDamage    = abilityW:GetSpecialValueInt('snake_damage') * 2
@@ -345,13 +337,13 @@ function X.ConsiderR()
 		end
 		
 		local nEnemysHerosInSkillRange = bot:GetNearbyHeroes(800,true,BOT_MODE_NONE);
-		if #nEnemysHerosInSkillRange >= 2
+		if #nEnemysHerosInSkillRange >= 3
 		then
 			return BOT_ACTION_DESIRE_HIGH;
 		end		
 		
 		local nAoe = bot:FindAoELocation( true, true, bot:GetLocation(), 10, 700, 1.0, 0 );
-		if nAoe.count >= 2
+		if nAoe.count >= 3
 		then
 			return BOT_ACTION_DESIRE_HIGH;
 		end	
@@ -366,36 +358,6 @@ function X.ConsiderR()
 			and npcTarget:IsFacingLocation(bot:GetLocation(),30)
 		then
 			return BOT_ACTION_DESIRE_HIGH;
-		end
-
-		--跳刀
-		local blink = J.IsItemAvailable("item_blink");
-		if blink ~= nil and blink:IsFullyCastable() then
-			local locationAoE = bot:FindAoELocation( true, true, bot:GetLocation(), nAttackRange, 1600, 0, 0 );
-			if ( locationAoE.count >= 2 ) 
-			then
-				local nInvUnit = J.GetInvUnitInLocCount(bot, nAttackRange+1400, 400, locationAoE.targetloc, true);
-				if nInvUnit >= locationAoE.count then
-					return BOT_ACTION_DESIRE_MODERATE, locationAoE.targetloc;
-				end
-			end
-			
-			local nAoe = bot:FindAoELocation( true, true, bot:GetLocation(), 1400, 700, 1.0, 0 );
-			if nAoe.count >= 2
-			then
-				return BOT_ACTION_DESIRE_HIGH, nAoe.targetloc;
-			end	
-			
-			local npcTarget = J.GetProperTarget(bot);		
-			if J.IsValidHero(npcTarget) 
-				and J.CanCastOnNonMagicImmune(npcTarget) 
-				and not J.IsDisabled(true, npcTarget)
-				and GetUnitToUnitDistance(npcTarget,bot) <= bot:GetAttackRange() + 1400
-				and npcTarget:GetHealth() > 600
-				and npcTarget:GetPrimaryAttribute() ~= ATTRIBUTE_INTELLECT
-			then
-				return BOT_ACTION_DESIRE_HIGH, npcTarget:GetLocation();
-			end
 		end
 		
 	end

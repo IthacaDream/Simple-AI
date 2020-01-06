@@ -11,7 +11,7 @@ local X = {}
 
 local sBotVersion = "New";
 local sVersionDate = " 1.3.3"
-local sABAVersionDate = sBotVersion.." 7.23,2019/12/25"
+local sABAVersionDate = sBotVersion.." 7.23,2020/01/06"
 
 function X.GetBotVersion()
 	return sBotVersion,sVersionDate,sABAVersionDate;
@@ -1585,7 +1585,7 @@ X['off'] = {
 	'npc_dota_hero_tidehunter',
 	'npc_dota_hero_tusk',
 	'npc_dota_hero_venomancer',
-	'npc_dota_hero_windrunner'
+	'npc_dota_hero_windrunner',
 }
 
 X['mid'] = {
@@ -1696,6 +1696,8 @@ X['supp'] = {
 	'npc_dota_hero_zuus',
 	'npc_dota_hero_pugna',
 	'npc_dota_hero_death_prophet',
+	'npc_dota_hero_windrunner',
+	'npc_dota_hero_venomancer',
 	
 }
 
@@ -1853,6 +1855,11 @@ end
 X['sayRate'] = false;
 function X.NotSayRate()
 	return X['sayRate'] == false;
+end
+
+X['sayJiDi'] = false
+function X.NotSayJiDi()
+	return X['sayJiDi'] == false
 end
 
 X['aegisHero'] = nil;
@@ -2059,4 +2066,4 @@ end
 
 
 return X
--- aaxxxxop@163.com QQ:2462331592..
+-- aaxxxxop@163.com QQ:2462331592.

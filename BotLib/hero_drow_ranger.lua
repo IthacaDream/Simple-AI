@@ -41,6 +41,8 @@ X['sBuyList'] = {
 				"item_hurricane_pike",	
 				"item_satanic",
 				"item_butterfly",
+				"item_ultimate_scepter_2",
+				"item_black_king_bar",
 }
 
 X['sSellList'] = {
@@ -248,7 +250,7 @@ function X.ConsiderWM()
 	
 	if J.IsGoingOnSomeone(bot)
 	   and #nEnemysHeroesNearBy == 0
-	   and not J.IsEnemyTargetUnit(1600,bot)
+	   and not J.IsEnemyTargetUnit(bot, 1600)
 	   and J.GetAllyCount(bot,1000) >= 3
 	then
 		
@@ -489,10 +491,10 @@ function X.ConsiderQ()
 	end	
 	
 	if nLV <= 9 and nHP > 0.55 
-	   and ( not J.IsRunning(bot) or J.IsInRange(bot,botTarget,nAttackRange + 19) )
+	   and J.IsValidHero(npcTarget)
+	   and ( not J.IsRunning(bot) or J.IsInRange(bot,npcTarget,nAttackRange + 19) )
 	then
-		if  J.IsValidHero(npcTarget)
-			and not npcTarget:IsAttackImmune()
+		if not npcTarget:IsAttackImmune()
 			and GetUnitToUnitDistance(bot,npcTarget) < nAttackRange + 99
 		then
 			nTargetUint = npcTarget;
@@ -549,7 +551,7 @@ function X.ConsiderQ()
 	
 	if npcTarget ~= nil
 		and npcTarget:IsHero()
-		and GetUnitToUnitDistance(npcTarget,bot) >  nAttackRange + 160
+		and GetUnitToUnitDistance(npcTarget,bot) > nAttackRange + 160
 		and J.IsValid(nInAttackRangeWeakestEnemyHero)
 		and not nInAttackRangeWeakestEnemyHero:IsAttackImmune()
 	then
@@ -644,4 +646,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592..
+-- dota2jmz@163.com QQ:2462331592.

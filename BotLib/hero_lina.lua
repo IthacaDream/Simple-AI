@@ -38,6 +38,7 @@ X['sBuyList'] = {
 				"item_veil_of_discord",
 				"item_cyclone",
 				"item_sheepstick",
+				"item_ultimate_scepter_2",
 }
 
 X['sSellList'] = {
@@ -703,5 +704,5 @@ function X.CanCastAbilityROnTarget(nTarget)
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592..
+-- dota2jmz@163.com QQ:2462331592.
 

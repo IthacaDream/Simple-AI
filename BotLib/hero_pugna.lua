@@ -221,7 +221,7 @@ function X.ConsiderQ()
 	
 
 	--消耗
-	local nCanHurtEnemyAoE = bot:FindAoELocation( true, true, bot:GetLocation(), nCastRange, nRadius +20, 0, 0 );
+	local nCanHurtEnemyAoE = bot:FindAoELocation( true, true, bot:GetLocation(), nCastRange + 50, nRadius + 20, 0, 0 );
 	if nCanHurtEnemyAoE.count >= 3
 	then
 		nTargetLocation = nCanHurtEnemyAoE.targetloc
@@ -318,7 +318,7 @@ function X.ConsiderQ()
 		   and ( botTarget:GetMagicResist() < 0.4 or nMP > 0.9 ) 
 		then
 			local nShouldHurtCount = nMP > 0.6 and 2 or 3 ;
-			local locationAoE = bot:FindAoELocation( true, false, bot:GetLocation(), nCastRange, nRadius, 0, 0 );
+			local locationAoE = bot:FindAoELocation( true, false, bot:GetLocation(), nCastRange + 220, nRadius, 0, 0 );
 			if ( locationAoE.count >= nShouldHurtCount ) 
 			then
 				nTargetLocation = locationAoE.targetloc
@@ -338,14 +338,14 @@ function X.ConsiderQ()
 		   and J.IsValid(laneCreepList[1])
 		   and not laneCreepList[1]:HasModifier("modifier_fountain_glyph")
 		then
-			local locationAoEKill = bot:FindAoELocation( true, false, bot:GetLocation(), nCastRange, nRadius, nCastPoint, nDamage );
+			local locationAoEKill = bot:FindAoELocation( true, false, bot:GetLocation(), nCastRange + 220, nRadius, nCastPoint, nDamage );
 			if locationAoEKill.count >= 3 
 			then
 				nTargetLocation = locationAoEKill.targetloc;
 				return BOT_ACTION_DESIRE_HIGH, nTargetLocation,"Q带线补刀"..locationAoEKill.count
 			end
 			
-			local locationAoEHurt = bot:FindAoELocation( true, false, bot:GetLocation(), nCastRange, nRadius +50, 0.8, 0 );
+			local locationAoEHurt = bot:FindAoELocation( true, false, bot:GetLocation(), nCastRange + 220, nRadius +50, 0.8, 0 );
 			if locationAoEHurt.count >= 4 
 			then
 				nTargetLocation = locationAoEHurt.targetloc;
@@ -632,7 +632,7 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592..
+-- dota2jmz@163.com QQ:2462331592.
 
 
 

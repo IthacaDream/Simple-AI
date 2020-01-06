@@ -40,6 +40,8 @@ X['sBuyList'] = {
 				"item_cyclone",
 				"item_ultimate_scepter",
 				"item_sheepstick",
+				"item_ultimate_scepter_2",
+				"item_octarine_core",
 }
 
 X['sSellList'] = {
@@ -62,6 +64,7 @@ X['bDeafaultItem'] = true
 function X.MinionThink(hMinionUnit)
 
 	if Minion.IsValidUnit(hMinionUnit) 
+		and hMinionUnit:GetUnitName() ~= 'npc_dota_zeus_cloud'
 	then
 		Minion.IllusionThink(hMinionUnit)
 	end
@@ -221,12 +224,12 @@ function X.ConsiderQ()
 	--对线期的使用
 	if bot:GetActiveMode() == BOT_MODE_LANING 
 	then
-		local hLaneCreepList = bot:GetNearbyLaneCreeps(nCastRange +50,true);
+		local hLaneCreepList = bot:GetNearbyLaneCreeps(nCastRange + 50,true);
 		for _,creep in pairs(hLaneCreepList)
 		do
 			if J.IsValid(creep)
 				and not creep:HasModifier("modifier_fountain_glyph")
-		        and J.IsEnemyTargetUnit(1400,creep)
+		        and J.IsEnemyTargetUnit(creep,1400)
 				and J.WillKillTarget(creep,nDamage,DAMAGE_TYPE_MAGICAL,nCastPoint)
 			then
 				return BOT_ACTION_DESIRE_HIGH, creep;
@@ -368,7 +371,6 @@ function X.ConsiderW2()
 	end
 	
 	if  bot:GetActiveMode() == BOT_MODE_RETREAT 
-	    and not bot:IsInvisible() 
 		and (bot:WasRecentlyDamagedByAnyHero(2.0) or #nAllies >= 3)
 	then
 		local nCanHurtHeroLocationAoENearby = bot:FindAoELocation( true, true, bot:GetLocation(), nCastRange -200, nRadius -20, 0.8, 0);
@@ -380,7 +382,6 @@ function X.ConsiderW2()
 	
 	
 	if bot:GetActiveMode() ~= BOT_MODE_RETREAT 
-	   and not bot:IsInvisible()
 	then
 		local npcEnemy = J.GetProperTarget(bot)
 		if  J.IsValidHero(npcEnemy)
@@ -589,4 +590,4 @@ function X.GetRanged(bot,nRadius)
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592..
+-- dota2jmz@163.com QQ:2462331592.

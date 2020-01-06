@@ -39,6 +39,7 @@ X['sBuyList'] = {
 				"item_heavens_halberd",
 				"item_assault",
 				"item_heart",
+				"item_ultimate_scepter_2",
 				"item_black_king_bar",
 }
 
@@ -470,4 +471,4 @@ function X.ConsiderR()
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592..
+-- dota2jmz@163.com QQ:2462331592.

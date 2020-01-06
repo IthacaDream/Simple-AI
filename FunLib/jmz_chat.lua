@@ -3229,7 +3229,7 @@ Chat['tHeroNameList'] = {
 
 	--044
 	['npc_dota_hero_clinkz'] = {
-		['sNormName'] = '小骷髅',
+		['sNormName'] = '骨弓',
 		['sShortName'] = 'bone',
 		['sCnName'] = '克林克兹',
 		['sEnName'] = 0,

@@ -2960,7 +2960,7 @@ D.hero = {
               {["hero"] = "npc_dota_hero_legion_commander",["weight"] = 2,},
               {["hero"] = "npc_dota_hero_chaos_knight",["weight"] = 2,},
   },["orientation"] = { ["core"] = true, ["durable"] = true,},["attribute"] = { ["type"] = "Agile", },
-  ["evaluation"] = "", ["bot"] = false,},
+  ["evaluation"] = "", ["bot"] = true,},
 ["npc_dota_hero_tinker"] = {
   ["hero_name"] = "tinker",
   ["proposal"] = {
@@ -5374,7 +5374,7 @@ D.hero = {
               {["hero"] = "npc_dota_hero_phantom_assassin",["weight"] = 2,},
               {["hero"] = "npc_dota_hero_crystal_maiden",["weight"] = 2,},
   },["orientation"] = { ["core"] = true, ["durable"] = true,},["attribute"] = { ["type"] = "Agile", },
-  ["evaluation"] = "", ["bot"] = false,},
+  ["evaluation"] = "", ["bot"] = true,},
 ["npc_dota_hero_broodmother"] = {
   ["hero_name"] = "broodmother",
   ["proposal"] = {

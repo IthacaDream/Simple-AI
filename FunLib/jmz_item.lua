@@ -869,9 +869,9 @@ Item['item_necrolyte_outfit']			= { 'item_tango', 'item_flask', 'item_magic_stic
 -----------------------------------------------------------------------------
 
 
-Item['item_mage_outfit']				= { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_branches', 'item_arcane_boots', 'item_recipe_magic_wand' }
+Item['item_mage_outfit']				= { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_null_talisman', 'item_arcane_boots', 'item_recipe_magic_wand' }
 
-Item['item_crystal_maiden_outfit']		= { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_branches', 'item_power_treads_int', 'item_recipe_magic_wand' }
+Item['item_crystal_maiden_outfit']		= { 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_null_talisman', 'item_power_treads_int', 'item_recipe_magic_wand' }
 
 
 -----------------------------------------------------------------------------
@@ -894,6 +894,8 @@ Item['PvN_mid']			= { 'item_tango', 'item_flask', 'item_wraith_band', 'item_wrai
 Item['PvN_antimage']	= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_broken_bfury', 'item_manta', 'item_abyssal_blade', 'item_skadi', 'item_travel_boots'}
 
 Item['PvN_huskar']		= { 'item_tango', 'item_flask', 'item_bracer', 'item_bracer', 'item_bracer', 'item_power_treads_agi', 'item_dragon_lance', 'item_invis_sword', 'item_heavens_halberd', 'item_broken_hurricane_pike', 'item_satanic', 'item_broken_silver_edge', 'item_travel_boots'}
+
+Item['PvN_clinkz']		= { 'item_tango', 'item_flask', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_dragon_lance', 'item_desolator', 'item_solar_crest', 'item_broken_hurricane_pike', 'item_bloodthorn', 'item_travel_boots'}
 
 Item['PvN_TA']			= { 'item_tango', 'item_flask', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_dragon_lance', 'item_desolator', 'item_invis_sword', 'item_broken_hurricane_pike', 'item_bloodthorn', 'item_broken_silver_edge', 'item_travel_boots'}
 
@@ -1061,10 +1063,9 @@ function Item.GetNeedDropNeutralItem(bot)
 		local nTargetMember = nil
 		if bot:DistanceFromFountain() > 1800
 		then
-			local nTeamPlayers = GetTeamPlayers(GetTeam())
-			for k,v in pairs(nTeamPlayers)
+			for i = 1,5
 			do
-				local member = GetTeamMember(k)
+				local member = GetTeamMember(i)
 				if member ~= nil 
 					and member:IsAlive()
 					and member ~= bot
@@ -1429,4 +1430,4 @@ end
 
 
 return Item;
--- dota2jmz@163.com QQ:2462331592..
+-- dota2jmz@163.com QQ:2462331592.

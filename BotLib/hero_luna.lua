@@ -33,18 +33,18 @@ local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
 X['sBuyList'] = {
 				'item_ranged_carry_outfit',
-				'item_pers', 
 				'item_dragon_lance', 
 				'item_manta',
-				'item_sphere',
+				"item_skadi",
 				'item_hurricane_pike',
 				'item_black_king_bar',
 				'item_lesser_crit',
 				'item_bloodthorn',
+				"item_ultimate_scepter_2",
 }
 
 X['sSellList'] = {
-	"item_sphere",
+	"item_hurricane_pike",
 	"item_magic_wand",
 }
 
@@ -441,4 +441,4 @@ function X.ConsiderR()
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592..
+-- dota2jmz@163.com QQ:2462331592.

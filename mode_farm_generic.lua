@@ -360,6 +360,7 @@ function GetDesire()
 				bot:ActionImmediate_Chat("We estimate the probability of winning to above 90%.",true);
 			end
 		end
+	
 	end
 	if allyKills > enemyKills + 20 and aliveAllyCount >= 4
 	then return BOT_MODE_DESIRE_NONE; end
@@ -1328,11 +1329,14 @@ function X.IsNormalFarmer(bot)
 	 return botName == "npc_dota_hero_chaos_knight" 
 		 or botName == "npc_dota_hero_dragon_knight"
 		 or botName == "npc_dota_hero_ogre_magi"
+		 or botName == "npc_dota_hero_omniknight"
 		 or botName == "npc_dota_hero_bristleback" 
+		 or botName == "npc_dota_hero_sand_king" 
 		 or botName == "npc_dota_hero_skeleton_king"
 		 or botName == "npc_dota_hero_kunkka"
 		 or botName == "npc_dota_hero_sniper"
 		 or botName == "npc_dota_hero_viper" 
+		 or botName == "npc_dota_hero_clinkz" 
 		 or botName == "npc_dota_hero_disruptor"
 		 or botName == "npc_dota_hero_shadow_demon"
 		 or botName == "npc_dota_hero_vengefulspirit"
@@ -1358,6 +1362,7 @@ function X.IsHighFarmer(bot)
 		or botName == "npc_dota_hero_medusa"
 		or botName == "npc_dota_hero_razor"
 		or botName == "npc_dota_hero_huskar"
+		or botName == "npc_dota_hero_juggernaut"
 		or botName == "npc_dota_hero_grimstroke"
 		or botName == "npc_dota_hero_dazzle"
 		or botName == "npc_dota_hero_batrider"

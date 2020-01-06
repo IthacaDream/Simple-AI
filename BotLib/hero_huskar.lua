@@ -39,7 +39,8 @@ X['sBuyList'] = {
 				"item_black_king_bar",
 				"item_hurricane_pike",
 				'item_satanic',
-				"item_heart",				
+				"item_heart",
+				"item_ultimate_scepter_2",
 }
 
 X['sSellList'] = {
@@ -454,7 +455,7 @@ function X.ConsiderW()
 					and creep:GetHealth() < nAttackDamage *2.8
 					and not J.IsAllysTarget(creep)
 				then
-					local nAttackProDelayTime = J.GetAttackProDelayTime(bot,nCreep) *1.1
+					local nAttackProDelayTime = J.GetAttackProDelayTime(bot,nCreep) * 1.12 + 0.05
 					local nAD = nAttackDamage * bot:GetAttackCombatProficiency(creep);
 					if J.WillKillTarget(creep,nAD,DAMAGE_TYPE_PHYSICAL,nAttackProDelayTime)
 					then
@@ -510,7 +511,7 @@ function X.ConsiderW()
 	end
 	
 	--打钱
-	if J.IsFarming(bot) and nLV >= 7
+	if J.IsFarming(bot) and nLV >= 7 and not abilityW:GetAutoCastState()
 	then
 		local nCreepList = bot:GetNearbyNeutralCreeps(nCastRange +80);
 		local hMostHPCreep = J.GetMostHpUnit(nCreepList);
@@ -543,7 +544,7 @@ function X.ConsiderW()
 	
 	--带线
 	if ( J.IsPushing(bot) or J.IsDefending(bot) or J.IsFarming(bot) )
-	    and nLV > 9 and #hEnemyList <= 1
+	    and nLV > 9 and #hEnemyList <= 1 and not abilityW:GetAutoCastState()
 	then
 		local nEnemyLaneCreeps = bot:GetNearbyLaneCreeps(nCastRange +80,true);
 		local nAllyLaneCreeps = bot:GetNearbyLaneCreeps(1200,false);
@@ -643,7 +644,7 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592..
+-- dota2jmz@163.com QQ:2462331592.
 
 
 

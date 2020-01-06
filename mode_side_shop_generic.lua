@@ -1,7 +1,7 @@
 ----------------------------------------------------------------------------------------------------
---- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
---- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
---- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
+--- The Creation Come From: Simple AI 1.2.6
+--- Author: Halcyonの玲莺 2019.12.20
+--- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1801131815
 --- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
@@ -13,7 +13,7 @@ end
 local bot = GetBot()
 local X = {}
 local targetWatchTower = nil
-local activeWatchTowerCD = 12.0
+local activeWatchTowerCD = 9.0
 local lastActiveWatchTowerTime = 0
 local nWatchTower_1 = nil
 local nWatchTower_2 = nil
@@ -123,12 +123,14 @@ function X.IsSuitableToActiveWatchTower()
 	local nEnemies = bot:GetNearbyHeroes(1400, true, BOT_MODE_NONE)
 	local nAttackAllies = bot:GetNearbyHeroes(1200,false,BOT_MODE_ATTACK)
 	local nRetreatAllies = bot:GetNearbyHeroes(1200,false,BOT_MODE_RETREAT)
+	local nWatchtTowerAllies = bot:GetNearbyHeroes(1200,false,BOT_MODE_SIDE_SHOP)
 	
 	if ( mode == BOT_MODE_RETREAT and bot:GetActiveModeDesire() > BOT_MODE_DESIRE_HIGH )
 		or ( mode == BOT_MODE_RETREAT and bot:WasRecentlyDamagedByAnyHero(2.0) )
 		or ( #nAttackAllies >= 1 )
 		or ( #nEnemies >= 1 and ( X.IsEnemyTargetBot(nEnemies) or #nEnemies >= 2 ) )	
 		or ( #nRetreatAllies >= 2 and nRetreatAllies[2]:GetActiveModeDesire() > BOT_MODE_DESIRE_HIGH )
+		or ( #nWatchtTowerAllies >= 2 and mode ~= BOT_MODE_SIDE_SHOP)
 	then
 		return false
 	end
@@ -141,11 +143,11 @@ function X.IsEnemyTargetBot(units)
 	for _,u in pairs(units) 
 	do
 		if u:GetAttackTarget() == bot 
-		   or u:IsFacingLocation(bot:GetLocation(),16)
+		   or u:IsFacingLocation(bot:GetLocation(),10)
 		then
 			return true
 		end
 	end
 	return false
 end
--- dota2jmz@163.com QQ:2462331592..
+-- dota2jmz@163.com QQ:2462331592.

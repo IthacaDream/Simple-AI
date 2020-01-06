@@ -236,7 +236,8 @@ function X.ConsiderQ()
 	local nCanHurtCreepsLocationAoE = bot:FindAoELocation( true, false, bot:GetLocation(),nCastRange + nRadius, nRadius, 0.5, 0);
 	
 	if nCanHurtCreepsLocationAoE == nil
-       or  J.GetInLocLaneCreepCount(bot, 1600, nRadius, nCanHurtCreepsLocationAoE.targetloc) <= 2        
+	   or nCanHurtCreepsLocationAoE.targetloc == nil
+       or J.GetInLocLaneCreepCount(bot, 1600, nRadius, nCanHurtCreepsLocationAoE.targetloc) <= 2        
 	then
 	    nCanHurtCreepsLocationAoE.count = 0
 	end
@@ -888,4 +889,4 @@ function X.cm_GetStrongestUnit( nEnemyUnits )
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592..
+-- dota2jmz@163.com QQ:2462331592.
