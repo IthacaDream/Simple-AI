@@ -10,6 +10,19 @@
     7、根据场上状态获取3路危险程度、双方野区危险程度
 ]]
 
+--作弊检查标准
+--[[
+    聊天输入作弊指令
+    金钱突然增加超过1000
+        在检查周期内未发生死亡事件
+        背包内物品数量总价值未减少（增加金额的50%）
+    背包内物品价格突然增加超过5000
+        玩家金币未减少（增加物品价值的70%）
+    英雄的技能cd超过10秒突然清空且背包内刷新球没进入cd（或没有刷新球）
+    英雄是否在死亡读秒时突然复活且买活未进入cd
+    英雄技能是否均无冷却
+]]
+
 local L = {}
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
 local H  = require(GetScriptDirectory()..'/AuxiliaryScript/HttpServer')

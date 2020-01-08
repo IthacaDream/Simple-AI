@@ -90,7 +90,7 @@ function X.Consider()
 			if ( bot:WasRecentlyDamagedByHero( npcEnemy, 1.0 ) )
 			then
 				local loc = J.GetEscapeLoc();
-				return BOT_ACTION_DESIRE_HIGH, J.Site.GetXUnitsTowardsLocation(bot, loc, nCastRange-(#tableNearbyEnemyHeroes*100));
+				return BOT_ACTION_DESIRE_HIGH, J.Site.GetXUnitsTowardsLocation(bot, loc, nCastRange-(#tableNearbyEnemyHeroes*50));
 			end
 		end
 	end

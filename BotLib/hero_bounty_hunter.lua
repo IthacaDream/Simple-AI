@@ -11,6 +11,7 @@ local bDebugMode = ( 1 == 10 )
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
+local ConversionMode = dofile( GetScriptDirectory()..'/AuxiliaryScript/BotlibConversion') --引入技能文件
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
@@ -75,7 +76,7 @@ function X.SkillsComplement()
 
 	--如果当前英雄无法使用技能或英雄处于隐形状态，则不做操作。
 	if J.CanNotUseAbility(bot) 
-	   or npcBot:HasModifier('modifier_bounty_hunter_wind_walk') 
+	   or bot:HasModifier('modifier_bounty_hunter_wind_walk') 
 	   or bot:IsInvisible() 
 	then 
 		return 
