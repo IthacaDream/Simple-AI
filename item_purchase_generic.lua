@@ -8,6 +8,7 @@
 ----------------------------------------------------------------------------------------------------
 local Item = require( GetScriptDirectory()..'/FunLib/jmz_item')
 local Role = require( GetScriptDirectory()..'/FunLib/jmz_role')
+local Chat = require( GetScriptDirectory()..'/FunLib/jmz_chat')
 
 local bot = GetBot();
 
@@ -223,6 +224,27 @@ function ItemPurchaseThink()
 	
 	if ( GetGameState() ~= GAME_STATE_PRE_GAME and GetGameState() ~= GAME_STATE_GAME_IN_PROGRESS )
 	then
+		return;
+	end
+
+	if DotaTime() < -65
+	   and (
+		not bot.cloudBuy and
+		not bot.cloudSell
+	   ) 
+	then
+		if bot.cloudBuy then
+			local cloudBuyList = Chat.GetItemBuildList(bot.cloudBuy)
+			for i=1,#cloudBuyList
+			do
+				bot.itemToBuy[i] = cloudBuyList[#cloudBuyList - i + 1];
+			end
+		end
+		if bot.cloudSell then
+			local cloudSellList = Chat.GetItemBuildList(bot.cloudSell)
+			sItemSellList = cloudSellList
+		end
+		
 		return;
 	end
 	

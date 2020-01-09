@@ -526,7 +526,9 @@ function C.CheckTrigger(bot, script, id)
         if bot.inEscape == nil then
             bot.inEscape = false
         end
-        if not bot:WasRecentlyDamagedByAnyHero(6) --6秒内没受到任何人的攻击
+        if (not bot:WasRecentlyDamagedByAnyHero(6) --6秒内没受到任何人的攻击
+            or bot:DistanceFromFountain() < 800 --在泉水中
+           )
            and bot:GetHealth()/bot:GetMaxHealth() < 0.1 --生命低于10%
            and bot:IsAlive()
         then

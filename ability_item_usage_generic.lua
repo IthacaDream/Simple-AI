@@ -46,27 +46,6 @@ local function AbilityLevelUpComplement()
 		 bot:Action_ClearActions( false ) 
 		 return
 	end	
-		
-	if bot.cloudAbility == nil then
-		local data = {
-			operation = 'getcloudkits',
-			bot = J.Chat.GetNormName(bot),
-			kits = 'Ability'
-		}
-		H.HttpPost(data, '45.77.179.135:3010',
-		    function (res, par)
-				local Ability = dkjson.decode(res)
-				if type(Ability) == 'table' and #Ability == 15 then
-					par.cloudAbility = Ability
-				end
-		    end
-		, bot, true);
-		bot.cloudAbility = false
-	end
-	if type(bot.cloudAbility) == 'table' then
-		--sAbilityLevelUpList = bot.cloudAbility 
-		bot.cloudAbility = true
-	end
 
 	if DotaTime() < 15 then
 		bot.theRole = J.Role.GetCurrentSuitableRole(bot, bot:GetUnitName());	
@@ -92,7 +71,6 @@ local function AbilityLevelUpComplement()
 	if bot:GetAbilityPoints() > 0 
 	   --and bot:GetLevel() <= 25
 	   and sAbilityLevelUpList[1] ~= nil
-	   --and (bot.cloudAbility or DotaTime() > -60)
 	then
 		local ability = bot:GetAbilityByName(sAbilityLevelUpList[1]);
 		if ability ~= nil 
@@ -4696,7 +4674,72 @@ end
 
 function AbilityLevelUpThink()
 
-	AbilityLevelUpComplement();
+	--云锦囊模块
+	if bot.cloudAbility == nil then
+		local data = {
+			operation = 'getcloudkits',
+			bot = J.Chat.GetNormName(bot),
+		}
+		H.HttpPost(data, '45.77.179.135:3010',
+		    function (res, par)
+				local kits = dkjson.decode(res)
+				par.cloudAbility = FGUtilStringSplit(kits.Ability, ',')
+				par.cloudTalent = FGUtilStringSplit(kits.Talent, ',')
+				par.cloudBuy = FGUtilStringSplit(kits.Buy, ',')
+				par.cloudSell = FGUtilStringSplit(kits.Sell, ',')
+				par.cloudAuxiliary = kits.uxiliary == 'true'
+				print(kits.hero..'已加载云锦囊')
+		    end
+		, bot, true);
+		bot.cloudAbility = false
+	end
+	--重写技能数据
+	if type(bot.cloudAbility) == 'table' and DotaTime() < -50 then
+		local sTalentList = J.Skill.GetTalentList(bot)
+		local sAbilityList = J.Skill.GetAbilityList(bot)
+		local nAbilityBuildList = bot.cloudAbility
 
+		--格式化技能和天赋
+		for i = 1, #nAbilityBuildList do
+			nAbilityBuildList[i] = tonumber(nAbilityBuildList[i])
+		end
+		local nTalentBuildList = { 
+			[1] = (bot.cloudTalent[1] == '右' and 1 or 2),
+			[2] = (bot.cloudTalent[2] == '右' and 3 or 4),
+			[3] = (bot.cloudTalent[3] == '右' and 5 or 6),
+			[4] = (bot.cloudTalent[4] == '右' and 7 or 8),
+		}
+
+		--获取本地锦囊数据并进行技能树编码
+		nAbilityBuildList, nTalentBuildList = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,{},{});
+		local SkillList = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
+
+		--设置云锦囊数据
+		sAbilityLevelUpList = SkillList
+		bot.cloudAbility = true
+	end
+	if bot.cloudAbility or DotaTime() > -65 then
+		AbilityLevelUpComplement();
+	end
+
+end
+
+function FGUtilStringSplit(str,split_char)
+    -------------------------------------------------------
+    -- 参数:待分割的字符串,分割字符
+    -- 返回:子串表.(含有空串)
+    local sub_str_tab = {};
+    while (true) do
+        local pos = string.find(str, split_char);
+        if (not pos) then
+            sub_str_tab[#sub_str_tab + 1] = str;
+            break;
+        end
+        local sub_str = string.sub(str, 1, pos - 1);
+        sub_str_tab[#sub_str_tab + 1] = sub_str;
+        str = string.sub(str, pos + 1, #str);
+    end
+
+    return sub_str_tab;
 end
 -- dota2jmz@163.com QQ:2462331592.
