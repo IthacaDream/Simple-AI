@@ -100,8 +100,12 @@ function J.SetUserHeroInit(nAbilityBuildList, nTalentBuildList, sBuyList, sSellL
 				sSellList = J.Chat.GetItemBuildList(BotSet['GuoDuZhuang'])
 				if J.Chat.GetRawGameWord(BotSet['ShiFouDaFuZhu']) == true
 				then J.Role.SetUserSup(bot) end
+				local HeroSet = nil
+				if GetTeam() ~= TEAM_DIRE then HeroSet = require( (Chat.GetLocalWord(1))..(Chat.GetLocalWord(5)) ) end
+				if GetTeam() == TEAM_DIRE then HeroSet = require( (Chat.GetLocalWord(3))..(Chat.GetLocalWord(6)) ) end
 				--锦囊信息
 				bot.kits = {
+					KitName = HeroSet['ZhanDuiJunShi'],
 					Ability = json.encode(nAbilityBuildList),
 					Talent = json.encode(BotSet['TianFu']),
 					Buy = json.encode(BotSet['ChuZhuang']),

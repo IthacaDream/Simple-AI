@@ -281,6 +281,7 @@ function installHeroData(heroData, gameInfo) {
     '${heroData.Item3}',
     '${heroData.Item4}',
     '${heroData.Item5}',
+    '${heroData.Team}',
     '${heroData.Win == 'true' ? '赢' : '输'}',
     '${gameInfo.gameTime}',
     '${dateFormat("YYYY-mm-dd HH:MM:SS", new Date())}',
@@ -295,6 +296,7 @@ function installHeroData(heroData, gameInfo) {
         VALUES (
         '${gameInfo.uuid}',
         '${heroData.Hero}',
+        '${heroData.kits.KitName}',
         '${JSON.parse(heroData.kits.Ability.replace(/[&\|\\\*^%$#@\-]/g,""))}',
         '${JSON.parse(heroData.kits.Talent.replace(/[&\|\\\*^%$#@\-]/g,""))}',
         '${JSON.parse(heroData.kits.Buy.replace(/[&\|\\\*^%$#@\-]/g,""))}',

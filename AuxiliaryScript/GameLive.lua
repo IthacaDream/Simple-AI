@@ -200,7 +200,8 @@ function L.Update()
             if win ~= GetTeam() then winTeam = 'false' end
             local isBot = 'false'
             if IsPlayerBot(aTeam) then isBot = 'true' end
-            memberData.Win        = winTeam                   --胜利方
+            memberData.Team       = GetTeam() == TEAM_DIRE and '夜魇' or '天辉'  --阵营
+            memberData.Win        = winTeam                   --是否胜利
             memberData.Hero       = J.Chat.GetNormName(member)--英雄
             memberData.Level      = member:GetLevel()                   --等级
             memberData.MaxHealth  = member:GetMaxHealth()               --最大生命值
