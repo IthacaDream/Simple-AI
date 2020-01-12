@@ -264,7 +264,7 @@ function sendCheck(ctx, content) {
 //gameEnd
 function installHeroData(heroData, gameInfo) {
     serverdb.executeSql(`
-    INSERT INTO heroData (GameID, Hero, MaxHealth, MaxMana, kill, Death, Assist, Level, Gold, Item0, Item1, Item2, Item3, Item4, Item5, Win, Time, Date, Bot, BotScript)
+    INSERT INTO heroData (GameID, Hero, MaxHealth, MaxMana, kill, Death, Assist, Level, Gold, Item0, Item1, Item2, Item3, Item4, Item5, Team, Win, Time, Date, Bot, BotScript)
     VALUES (
     '${gameInfo.uuid}',
     '${heroData.Hero}',
