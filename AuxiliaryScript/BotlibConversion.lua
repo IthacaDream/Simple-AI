@@ -174,6 +174,12 @@ local abilityNameList = {
     'gyrocopter_rocket_barrage',
     'gyrocopter_call_down',
     'gyrocopter_flak_cannon',
+    'juggernaut_blade_fury',
+    'juggernaut_healing_ward',
+    'juggernaut_omni_slash',
+    'pangolier_gyroshell',
+    'pangolier_shield_crash',
+    'pangolier_swashbuckle',
 }
 
 --将英雄技能初始入变量

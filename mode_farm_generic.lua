@@ -106,7 +106,7 @@ function GetDesire()
 				all = false
 			}
 		elseif tChat.string == '上报数据' then
-			Http.GetUUID('45.77.179.135:3010',
+			Http.GetUUID('39.106.150.173:3010',
 			function (x, t)
 				message = {
 					mes = '当前游戏编号为：'..x..',游戏数据将在游戏结束后上报。',
@@ -118,7 +118,7 @@ function GetDesire()
 			local postData = {
 				operation = 'delUUID'
 			}
-			Http.HttpPost('45.77.179.135:3010',
+			Http.HttpPost('39.106.150.173:3010',
 			function (x, t)
 				C.DataUpload = false
 			end,'',true);
@@ -128,7 +128,7 @@ function GetDesire()
 				message = '"'..tChat.string..'"',
 			}
 			local allmes = not tChat.team_only
-			Http.HttpPost(postData, '45.77.179.135:3010',
+			Http.HttpPost(postData, '39.106.150.173:3010',
 			function (x, t)
 				message = {
 					mes = x,
@@ -155,7 +155,7 @@ function GetDesire()
 		local fMessage = "Sirius AI: "..sVersionDate;
 		local sMessage = "This script is adapted from A Beginner AI: "..sABAVersionDate;
 		C.init()
-		Http.GetUUID('45.77.179.135:3010',
+		Http.GetUUID('39.106.150.173:3010',
 		function (x, t)
 			message = {
 				mes = '当前游戏编号为：'..x..',游戏数据将在游戏结束后上报。',

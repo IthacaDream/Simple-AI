@@ -48,6 +48,8 @@ X["allows_hero"] = allowsHeroData.hero
 --'npc_dota_hero_bounty_hunter',
 --'npc_dota_hero_invoker',
 --'npc_dota_hero_gyrocopter',
+--'npc_dota_hero_pangolier',
+--'npc_dota_hero_juggernaut'
 ----原脚本
 --'npc_dota_hero_antimage',
 --'npc_dota_hero_arc_warden',
@@ -81,7 +83,8 @@ X["allows_hero"] = allowsHeroData.hero
 --'npc_dota_hero_oracle',
 --'npc_dota_hero_lich',
 --'npc_dota_hero_witch_doctor',
-
+--'npc_dota_hero_clinkz',
+--'npc_dota_hero_shadow_shaman'
 X["test_hero"] = {
     --'npc_dota_hero_alchemist',
     --'npc_dota_hero_beastmaster',
@@ -110,21 +113,23 @@ X["onlyCM_hero"] = {
     'npc_dota_hero_rubick',
     'npc_dota_hero_tiny',
     'npc_dota_hero_earthshaker',
-    --'npc_dota_hero_dark_willow',
+    'npc_dota_hero_dark_willow',
     --'npc_dota_hero_undying',
     'npc_dota_hero_snapfire',
     'npc_dota_hero_void_spirit',
     'npc_dota_hero_storm_spirit',
     --'npc_dota_hero_magnataur',
     --'npc_dota_hero_treant',
-    --'npc_dota_hero_ursa',
+    'npc_dota_hero_ursa',
     --'npc_dota_hero_mars',
     --'npc_dota_hero_abyssal_underlord',
-    --'npc_dota_hero_ancient_apparition',
+    'npc_dota_hero_ancient_apparition',
     'npc_dota_hero_bane',
     --'npc_dota_hero_bounty_hunter',
     --'npc_dota_hero_invoker',
     --'npc_dota_hero_gyrocopter',
+    --'npc_dota_hero_pangolier',
+    --'npc_dota_hero_juggernaut'
 }
 
 function X.CounterWeightList(hero) --获取推荐阵容列表

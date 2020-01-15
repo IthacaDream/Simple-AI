@@ -101,13 +101,59 @@ SELECT hero,item5 AS 装备,Win,COUNT(item0) AS 数量 FROM "heroData" WHERE Bot
     break;
     //云锦囊模块
     case 'getcloudkits':
-        serverdb.queryData(`SELECT 锦囊信息.英雄 AS hero, 锦囊信息.胜率 AS odds, 锦囊信息.技能 AS Ability, 锦囊信息.天赋 AS Talent, 锦囊信息.购买清单 AS Buy, 锦囊信息.替换清单 AS Sell, 锦囊信息.是否辅助装备 AS Auxiliary FROM (
-SELECT heroData.Hero AS 英雄,count(CASE WHEN Win='赢' THEN 1 END) AS '胜利场数',count(CASE WHEN Win='输' THEN 1 END) AS '失败场数',(count(CASE WHEN Win='赢' THEN 1 END)+0.0)/(count(heroData.Hero)+0.0) AS '胜率值',Round((((count(CASE WHEN Win='赢' THEN 1 END)+0.0)/(count(heroData.Hero)+0.0))*100),2) || '%' AS '胜率',Ability AS 技能,Talent AS 天赋,Buy AS 购买清单,Sell AS 替换清单,Auxiliary AS 是否辅助装备 ,Ability || Talent || Buy || Sell || Auxiliary AS 锦囊 FROM heroData LEFT OUTER JOIN kits ON heroData.GameID=kits.GameId AND heroData.Hero=kits.Hero WHERE kits.GameId IS NOT NULL AND heroData.Bot='电脑' GROUP BY 锦囊 HAVING--	COUNT( Win ) >= 10 --AND 
-英雄
-='${result.data.bot}' ORDER BY 胜率值 DESC) AS 锦囊信息 LEFT OUTER JOIN (
-SELECT hero AS '英雄',(count(CASE WHEN Win='赢' THEN 1 END)+0.0)/(count(CASE WHEN Win='输' THEN 1 END)+0.0) AS '胜率值' FROM 'heroData' WHERE Bot='电脑' GROUP BY Hero HAVING COUNT(Hero)>=50) AS 英雄胜率 ON 锦囊信息.英雄= 英雄胜率.英雄 WHERE 锦囊信息.胜率值> 英雄胜率.胜率值`, (data) => {
+        serverdb.queryData(`
+SELECT
+	锦囊信息.英雄, 锦囊信息.胜利场数, 锦囊信息.失败场数, 锦囊信息.胜率, 锦囊信息.技能, 锦囊信息.天赋, 锦囊信息.购买清单, 锦囊信息.替换清单, 锦囊信息.是否辅助装备 
+FROM
+	(
+	SELECT
+		heroData.Hero AS 英雄,
+		count( CASE WHEN Win = '赢' THEN 1 END ) AS '胜利场数',
+		count( CASE WHEN Win = '输' THEN 1 END ) AS '失败场数',
+	( count( CASE WHEN Win = '赢' THEN 1 END ) + 0.0 ) / ( count( heroData.Hero ) + 0.0 ) AS '胜率值',
+	Round(
+		(
+		( ( count( CASE WHEN Win = '赢' THEN 1 END ) + 0.0 ) / ( count( heroData.Hero ) + 0.0 ) ) * 100 
+	),
+	2 
+	) || '%' AS '胜率',
+	Ability AS 技能,
+	Talent AS 天赋,
+	Buy AS 购买清单,
+	Sell AS 替换清单,
+	Auxiliary AS 是否辅助装备 ,
+	Ability || Talent || Buy || Sell || Auxiliary AS 锦囊 
+FROM
+	heroData
+	LEFT OUTER JOIN kits ON heroData.GameID = kits.GameId 
+	AND heroData.Hero = kits.Hero 
+WHERE
+	kits.GameId IS NOT NULL 
+	AND heroData.Bot = '电脑' 
+GROUP BY
+	锦囊 
+HAVING
+	COUNT( Win ) >= 4 
+	AND 英雄 = '${result.data.bot}' 
+ORDER BY
+	cast(( 胜利场数/ 10 ) as int) DESC, 胜率值 DESC 
+	) AS 锦囊信息
+	LEFT OUTER JOIN (
+	SELECT
+		hero AS '英雄',
+	( count( CASE WHEN Win = '赢' THEN 1 END ) + 0.0 ) / ( count( Hero ) + 0.0 ) AS '胜率值' 
+FROM
+	'heroData' 
+WHERE
+	Bot = '电脑' 
+GROUP BY
+	Hero 
+	) AS 英雄胜率 ON 锦囊信息.英雄 = 英雄胜率.英雄 
+WHERE
+	锦囊信息.胜率值 > 英雄胜率.胜率值
+`, (data) => {
             if (data.length > 0) {
-                res.send(`res:${JSON.stringify(data[0])}`);
+                res.send(`res:${JSON.stringify(data[randomNum(0, Math.ceil(data.length - 1) / 3)])}`);
             }
         })
     break;

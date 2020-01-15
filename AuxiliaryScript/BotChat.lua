@@ -428,7 +428,7 @@ function C.GetScenario()
     C.JoinScenario(bot, scenario)
     
 
-    --H.HttpPost(data, '45.77.179.135:3010',
+    --H.HttpPost(data, '39.106.150.173:3010',
     --    function (res, par)
     --        local scenario = dkjson.decode(res)
     --        C.JoinScenario(par, scenario)

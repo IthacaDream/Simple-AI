@@ -61,7 +61,7 @@ function L.init()
     --local postData = {
     --    operation = '"init"',
     --}
-    --H.HttpPost(postData, '45.77.179.135:3001')
+    --H.HttpPost(postData, '39.106.150.173:3001')
 
     for i,aData in pairs(nArreysTeam)
     do
@@ -226,7 +226,7 @@ function L.Update()
             L.GameEND = true
         end
 
-        H.HttpPost(data, '45.77.179.135:3010',
+        H.HttpPost(data, '39.106.150.173:3010',
             function (res, par)
                 print(par..'数据已上报')
             end
@@ -240,7 +240,7 @@ function L.Update()
     --    local postData = {
     --        operation = '"heartbeat"',
     --    }
-    --    H.HttpPost(postData, '45.77.179.135:3001')
+    --    H.HttpPost(postData, '39.106.150.173:3001')
     --end
 
     for i,data in pairs(nArreysData)
@@ -266,7 +266,7 @@ function L.Update()
             --    operation = '"kill"',
             --    hero = '"'..J.Chat.GetNormName(data['hero'])..'"',
             --}
-            --H.HttpPost(postData, '45.77.179.135:3001')
+            --H.HttpPost(postData, '39.106.150.173:3001')
             L.Chatwheel(true, data)
             --bug了
             --for _,eData in pairs(nEnemysData) do
@@ -278,7 +278,7 @@ function L.Update()
             --            hero = '"'..J.Chat.GetNormName(data['hero'])..'"',
             --            kill = '"'..J.Chat.GetNormName(eData['hero'])..'"',
             --        }
-            --        H.HttpPost(postData, '45.77.179.135:3002')
+            --        H.HttpPost(postData, '39.106.150.173:3002')
             --        print(J.Chat.GetNormName(data['hero'])..'击杀了'..J.Chat.GetNormName(eData['hero']))
             --        L.Chatwheel(true, nArreysData[i])
             --    end
@@ -300,7 +300,7 @@ function L.Update()
             --    operation = '"death"',
             --    hero = '"'..J.Chat.GetNormName(data['hero'])..'"',
             --}
-            --H.HttpPost(postData, '45.77.179.135:3001')
+            --H.HttpPost(postData, '39.106.150.173:3001')
             --同样bug了
             --被击杀后检查双方装备差距
             --local situation = L.Situation()
