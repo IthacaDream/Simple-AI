@@ -266,7 +266,21 @@ function C.GetScenario()
     local scenario = {}
     scenario.sequential = {
         {
-            speech = {'哼，看我这把打爆你','看你这把能不能超鬼(‾◡◝)'},
+            speech = {'拖的太久了，快推吧'},
+            all = false,
+            interval = 600,
+            botId = 'only',
+            team = TEAM_RADIANT
+        },
+        {
+            speech = {'继续拖下去会不会崩盘啊'},
+            all = false,
+            interval = 600,
+            botId = 'only',
+            team = TEAM_DIRE
+        },
+        {
+            speech = {'哼，看我这把打爆你','看你这把能不能超鬼┗|｀O′|┛'},
             all = true,
             interval = 10,
             botId = 'only',
@@ -293,19 +307,19 @@ function C.GetScenario()
             scenarioTimeNeeded = 15,
             scenario = {
                 {
-                    speech = '能不能好好打',
-                    all = false,
-                    interval = 3,
-                    botId = 'only'
-                },
-                {
-                    speech = '简直没法打',
+                    speech = {'简直没法打', '都是队友太菜', '这锅我不背'},
                     all = true,
                     interval = 10,
                     botId = 'only'
                 },
                 {
-                    speech = '你们太狠了',
+                    speech = {'能不能好好打', '谁背锅？'},
+                    all = false,
+                    interval = 3,
+                    botId = 'only'
+                },
+                {
+                    speech = {'你们太狠了', '等我复活干翻你们', '哎~带不动，带不动'},
                     all = true,
                     interval = 2,
                     botId = 'only'
@@ -319,13 +333,13 @@ function C.GetScenario()
             scenarioTimeNeeded = 8,
             scenario = {
                 {
-                    speech = '漂亮',
+                    speech = {'漂亮', '对面太菜了'},
                     all = false,
                     interval = 3,
                     botId = 'only'
                 },
                 {
-                    speech = '是你们太菜了',
+                    speech = {'是你们太菜了', '哈哈哈，你们死也死在一起', '欢迎复仇'},
                     all = true,
                     interval = 5,
                     botId = 'all'
@@ -367,12 +381,6 @@ function C.GetScenario()
             scenarioTimeNeeded = 10,
             scenario = {
                 {
-                    speech = '我才不上当',
-                    all = true,
-                    interval = 8,
-                    botId = 'only'
-                },
-                {
                     speech = {'哈哈哈', '你好菜哦'},
                     all = true,
                     interval = 2,
@@ -405,11 +413,41 @@ function C.GetScenario()
             triggerCD = 1 * 60
         },
         {
+            scenarioType = '击杀',
+            scenarioTimeNeeded = 10,
+            scenario = {
+                {
+                    speech = '(╯‵□′)╯炸弹！•••*～●',
+                    all = true,
+                    interval = 2,
+                    botId = 'only'
+                }
+            },
+            state = false,
+            handling = 'del',
+            triggerCD = 1 * 60
+        },
+        {
+            scenarioType = '死亡',
+            scenarioTimeNeeded = 17,
+            scenario = {
+                {
+                    speech = {'你等着','该电脑由于言语过激，已被屏蔽','我会回来复仇的','技不如人，甘拜下风'},
+                    all = true,
+                    interval = 5,
+                    botId = 'only'
+                }
+            },
+            state = false,
+            handling = 'reset',
+            triggerCD = 1 * 60
+        },
+        {
             scenarioType = '逃脱',
             scenarioTimeNeeded = 5,
             scenario = {
                 {
-                    speech = {'来啊来啊，来追我啊', '好险好险'},
+                    speech = {'来啊来啊，来追我啊', '好险好险', '溜了溜了'},
                     all = true,
                     interval = 5,
                     botId = 'only'

@@ -4273,7 +4273,7 @@ D.hero = {
               {["hero"] = "npc_dota_hero_phoenix",["weight"] = 2.4,},
               {["hero"] = "npc_dota_hero_ursa",["weight"] = 2,},
   },["orientation"] = { ["core"] = true, ["durable"] = true,},["attribute"] = { ["type"] = "Agile", },
-  ["evaluation"] = "", ["bot"] = false,},
+  ["evaluation"] = "", ["bot"] = true,},
 ["npc_dota_hero_doom_bringer"] = {
   ["hero_name"] = "doom_bringer",
   ["proposal"] = {
@@ -6319,7 +6319,7 @@ D.hero = {
               {["hero"] = "npc_dota_hero_meepo",["weight"] = 2.6,},
               {["hero"] = "npc_dota_hero_pangolier",["weight"] = 2,},
   },["orientation"] = { ["core"] = true, ["durable"] = true,},["attribute"] = { ["type"] = "Agile", },
-  ["evaluation"] = "", ["bot"] = false,},
+  ["evaluation"] = "", ["bot"] = true,},
 ["npc_dota_hero_necrolyte"] = {
   ["hero_name"] = "necrolyte",
   ["proposal"] = {
@@ -7228,7 +7228,7 @@ D.hero = {
                     {["hero"] = "npc_dota_hero_phantom_lancer",["weight"] = 2.6,},
                     {["hero"] = "npc_dota_hero_skeleton_king",["weight"] = 2.6,},
         },["orientation"] = { ["core"] = true, ["durable"] = true,},["attribute"] = { ["type"] = "Agile", },
-        ["evaluation"] = "", ["bot"] = false,},
+        ["evaluation"] = "", ["bot"] = true,},
         ["npc_dota_hero_visage"] = {
           ["hero_name"] = "visage",
           ["proposal"] = {

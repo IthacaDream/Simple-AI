@@ -15,8 +15,19 @@ local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
 local wardUtils = require( GetScriptDirectory()..'/AuxiliaryScript/WardUtility')
 local bot = GetBot();
 local X = {}
+local AvailableObsSpots = {};
+local AvailableSentrySpots = {};
 local AvailableSpots = {};
 local nWardCastRange = 500;
+
+local wt = nil;
+local observerWard = nil;
+local sentryWard = nil;
+local wardSentryCastTime = -90;
+local swapTime = -90;
+local swapSentryTime = -90;
+local enemyPids = nil;
+
 local itemWard = nil;
 local targetLoc = nil;
 local wardCastTime = -90;
@@ -25,6 +36,9 @@ local firstCreep = true;
 
 
 bot.lastSwapWardTime = -90;
+bot.wardObs = false;
+bot.wardSentry = false;
+bot.steal = false;
 bot.ward = false;
 
 
@@ -152,6 +166,32 @@ function GetDesire()
 end
 
 function OnStart()
+	if observerWard ~= nil and X.IsHumanPlayerInTeam() then
+		local wardSlot = bot:FindItemSlot(observerWard:GetName());
+		if bot:GetItemSlotType(wardSlot) == ITEM_SLOT_TYPE_BACKPACK then
+			local leastCostItem = X.FindLeastItemSlot();
+			if leastCostItem ~= -1 then
+				swapTime = DotaTime();
+				bot:ActionImmediate_SwapItems( wardSlot, leastCostItem );
+				return
+			end
+			local active = bot:GetItemInSlot(leastCostItem);
+			print(tostring(active:IsFullyCastable()));
+		end
+	end
+	if sentryWard ~= nil and X.IsHumanPlayerInTeam() then
+		local wardSlot = bot:FindItemSlot(sentryWard:GetName());
+		if bot:GetItemSlotType(wardSlot) == ITEM_SLOT_TYPE_BACKPACK then
+			local leastCostItem = X.FindLeastItemSlot();
+			if leastCostItem ~= -1 then
+				swapSentryTime = DotaTime();
+				bot:ActionImmediate_SwapItems( wardSlot, leastCostItem );
+				return
+			end
+			local active = bot:GetItemInSlot(leastCostItem);
+			print(tostring(active:IsFullyCastable()));
+		end
+	end
 	if itemWard ~= nil and not walkMode then
 		local wardSlot = bot:FindItemSlot(itemWard:GetName());
 		if bot:GetItemSlotType(wardSlot) == ITEM_SLOT_TYPE_BACKPACK then
@@ -172,6 +212,11 @@ function OnEnd()
 	itemWard = nil;
 	walkMode = false;
 	blockBreep = nil;
+	AvailableObsSpots = {};
+	AvailableSentrySpots = {};
+	observerWard = nil;
+	sentryWard = nil;
+	wt = nil;
 end
 
 function Think()
@@ -297,6 +342,60 @@ function Think()
 		end
 	end
 
+	if bot.wardObs then
+		if targetDist <= nWardCastRange then
+			--bot:ActionImmediate_Chat( "targetDist = "..targetDist..", nWardCastRange = "..nWardCastRange, true );
+			if  DotaTime() > swapTime + 7.0 then
+				bot:Action_UseAbilityOnLocation(observerWard, targetLoc+RandomVector(50)); -- kriz
+				wardCastTime = DotaTime();	
+				return
+			else
+				if targetLoc.x == Vector(-2948.000000, 769.000000, 0.000000) then
+					bot:Action_MoveToLocation(vNonStuck+RandomVector(300));
+					return
+				else	
+					bot:Action_MoveToLocation(targetLoc+RandomVector(300));
+					return
+				end
+			end
+		else
+			if targetLoc == Vector(-2948.000000, 769.000000, 0.000000) then
+				bot:Action_MoveToLocation(vNonStuck);
+				return
+			else	
+				bot:Action_MoveToLocation(targetLoc);
+				return
+			end
+		end
+	end
+
+	if bot.wardSentry then
+		--bot:ActionImmediate_Chat( "wardSentry = true", true );
+		if targetDist <= nWardCastRange then
+			--bot:ActionImmediate_Chat( "targetDist = "..targetDist..", nWardCastRange = "..nWardCastRange, true );
+			if  DotaTime() > swapSentryTime + 7.0 then
+				bot:Action_UseAbilityOnLocation(sentryWard, targetLoc+RandomVector(10));
+				wardSentryCastTime = DotaTime();	
+				return
+			else
+				if targetLoc.x == Vector(-2948.000000, 769.000000, 0.000000) then
+					bot:Action_MoveToLocation(vNonStuck+RandomVector(300));
+					return
+				else	
+					bot:Action_MoveToLocation(targetLoc+RandomVector(300));
+					return
+				end
+			end
+		else
+			if targetLoc == Vector(-2948.000000, 769.000000, 0.000000) then
+				bot:Action_MoveToLocation(vNonStuck);
+				return
+			else	
+				bot:Action_MoveToLocation(targetLoc);
+				return
+			end
+		end
+	end
 	
 	if bot.ward then
 		if targetDist <= nWardCastRange then
@@ -483,4 +582,4 @@ function X.IsHumanPlayerInTeam()
 	
 	return false;
 end
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592..

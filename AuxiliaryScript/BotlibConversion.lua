@@ -180,6 +180,17 @@ local abilityNameList = {
     'pangolier_gyroshell',
     'pangolier_shield_crash',
     'pangolier_swashbuckle',
+    'night_stalker_void',
+    'night_stalker_darkness',
+    'night_stalker_crippling_fear',
+    'enigma_malefice',
+    'enigma_midnight_pulse',
+    'enigma_demonic_conversion',
+    'enigma_black_hole',
+    'winter_wyvern_cold_embrace',
+    'winter_wyvern_splinter_blast',
+    'winter_wyvern_arctic_burn',
+    'winter_wyvern_winters_curse',
 }
 
 --将英雄技能初始入变量

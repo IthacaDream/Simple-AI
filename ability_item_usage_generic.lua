@@ -4688,7 +4688,9 @@ function AbilityLevelUpThink()
 				par.cloudBuy = FGUtilStringSplit(kits.Buy, ',')
 				par.cloudSell = FGUtilStringSplit(kits.Sell, ',')
 				par.cloudAuxiliary = kits.uxiliary == 'true'
-				print(kits.hero..'已加载云锦囊')
+				if kits.hero ~= nil then
+					print(kits.hero..'已加载云锦囊')
+				end
 		    end
 		, bot, true);
 		bot.cloudAbility = false

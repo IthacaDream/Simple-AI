@@ -55,6 +55,41 @@ local tGroupedDataList = {
 			"item_silver_edge",
 			"item_aeon_disk"
 		},
+	},
+	{
+		--组合说明，不影响游戏
+		['info'] = 'By Halcyon',
+		--天赋树
+		['Talent'] = {
+			['t25'] = {0, 10},
+			['t20'] = {10, 0},
+			['t15'] = {10, 0},
+			['t10'] = {0, 10},
+		},
+		--技能
+		['Ability'] = { 1, 2, 2, 3, 3, 6, 3, 3, 2, 2, 6, 1, 1, 1, 6 },
+		--装备
+		['Buy'] = {
+			"item_tango",
+			"item_enchanted_mango",
+			"item_wind_lace",
+			"item_magic_wand",
+			"item_tranquil_boots",
+			"item_urn_of_shadows",
+			"item_medallion_of_courage",
+			"item_vladmir",
+			"item_force_staff",
+			"item_yasha",
+			"item_solar_crest",
+			"item_glimmer_cape",
+			"item_sange_and_yasha",
+			"item_assault",
+		},
+		--出售
+		['Sell'] = {
+			"item_ultimate_scepter",
+			"item_magic_wand",
+		},
 	}
 }
 --默认数据

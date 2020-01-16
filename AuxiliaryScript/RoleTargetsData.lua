@@ -50,6 +50,9 @@ X["allows_hero"] = allowsHeroData.hero
 --'npc_dota_hero_gyrocopter',
 --'npc_dota_hero_pangolier',
 --'npc_dota_hero_juggernaut'
+--'npc_dota_hero_enigma',
+--'npc_dota_hero_winter_wyvern',
+--'npc_dota_hero_night_stalker',
 ----原脚本
 --'npc_dota_hero_antimage',
 --'npc_dota_hero_arc_warden',
@@ -86,15 +89,14 @@ X["allows_hero"] = allowsHeroData.hero
 --'npc_dota_hero_clinkz',
 --'npc_dota_hero_shadow_shaman'
 X["test_hero"] = {
-    --'npc_dota_hero_alchemist',
-    --'npc_dota_hero_beastmaster',
-    --'npc_dota_hero_brewmaster',
-    --'npc_dota_hero_broodmother',
+    --'npc_dota_hero_enigma',
+    --'npc_dota_hero_winter_wyvern',
+    --'npc_dota_hero_night_stalker',
 }
 
 X["onlyCM_hero"] = {
     'npc_dota_hero_abaddon',
-    'npc_dota_hero_vengefulspirit',
+    --'npc_dota_hero_vengefulspirit',
     --'npc_dota_hero_shadow_demon',
     --'npc_dota_hero_tidehunter',
     --'npc_dota_hero_disruptor',
@@ -130,6 +132,9 @@ X["onlyCM_hero"] = {
     --'npc_dota_hero_gyrocopter',
     --'npc_dota_hero_pangolier',
     --'npc_dota_hero_juggernaut'
+    --'npc_dota_hero_enigma',
+    --'npc_dota_hero_winter_wyvern',
+    --'npc_dota_hero_night_stalker',
 }
 
 function X.CounterWeightList(hero) --获取推荐阵容列表
