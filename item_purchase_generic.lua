@@ -228,10 +228,6 @@ function ItemPurchaseThink()
 	end
 
 	if DotaTime() < -65
-	   and (
-		not bot.cloudBuy and
-		not bot.cloudSell
-	   ) 
 	then
 		if bot.cloudBuy then
 			local cloudBuyList = Chat.GetItemBuildList(bot.cloudBuy)

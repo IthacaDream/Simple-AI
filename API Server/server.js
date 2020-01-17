@@ -103,7 +103,7 @@ SELECT hero,item5 AS 装备,Win,COUNT(item0) AS 数量 FROM "heroData" WHERE Bot
     case 'getcloudkits':
         serverdb.queryData(`
 SELECT
-	锦囊信息.英雄, 锦囊信息.胜利场数, 锦囊信息.失败场数, 锦囊信息.胜率, 锦囊信息.技能, 锦囊信息.天赋, 锦囊信息.购买清单, 锦囊信息.替换清单, 锦囊信息.是否辅助装备 
+    锦囊信息.英雄 AS hero, 锦囊信息.胜率 AS odds, 锦囊信息.技能 AS Ability, 锦囊信息.天赋 AS Talent, 锦囊信息.购买清单 AS Buy, 锦囊信息.替换清单 AS Sell, 锦囊信息.是否辅助装备 AS Auxiliary
 FROM
 	(
 	SELECT
