@@ -56,7 +56,7 @@ X['sSellList'] = {
 	"item_echo_sabre",
 	"item_quelling_blade",
 	
-	"item_heavens_halberd",
+	"item_assault",
 	"item_magic_wand",
 	
 	"item_heart",

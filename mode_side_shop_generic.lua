@@ -1,8 +1,8 @@
 ----------------------------------------------------------------------------------------------------
---- The Creation Come From: Simple AI 1.2.6
---- Author: Halcyonの玲莺 2019.12.20
---- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1801131815
---- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
+--- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
+--- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
+--- Refactoring: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -13,14 +13,17 @@ end
 local bot = GetBot()
 local X = {}
 local targetWatchTower = nil
-local activeWatchTowerCD = 9.0
+local activeWatchTowerCD = 50.0
 local lastActiveWatchTowerTime = 0
 local nWatchTower_1 = nil
 local nWatchTower_2 = nil
+local ignoreDistance = 0
 
 function GetDesire()
 
-	if DotaTime() < 9 * 60 + 55 
+	local currentTime = DotaTime()
+
+	if currentTime < 8 * 60 + 55 
 		or bot:HasModifier("modifier_arc_warden_tempest_double") 
 		or bot:GetCurrentActionType() == BOT_ACTION_TYPE_IDLE 
 	then
@@ -28,22 +31,34 @@ function GetDesire()
 	end
 
 	if targetWatchTower ~= nil
-		and GetUnitToUnitDistance(bot,targetWatchTower) <= 3300
+		and GetUnitToUnitDistance(bot,targetWatchTower) <= 4300 - ignoreDistance
 		and targetWatchTower:GetTeam() ~= bot:GetTeam()
-		and lastActiveWatchTowerTime + activeWatchTowerCD < DotaTime()
 		and X.IsSuitableToActiveWatchTower()
+		and ( lastActiveWatchTowerTime + activeWatchTowerCD < currentTime
+				or currentTime % 600 > 540 )
 	then
 		local nBonusDesire = -0.05
 		
-		if DotaTime() % 600 > 540 then nBonusDesire = 0.03 end
+		if currentTime % 600 > 540 then nBonusDesire = 0.03 end
 		
 		if GetUnitToUnitDistance(bot,targetWatchTower) <= 600 
 		then nBonusDesire = nBonusDesire + 0.02 end
 		
 		if bot:IsChanneling() and bot:GetActiveMode() == BOT_MODE_SIDE_SHOP 
-		then nBonusDesire = nBonusDesire + 0.1 end
+		then 
+			nBonusDesire = nBonusDesire + 0.1 
+			local nEnemies = bot:GetNearbyHeroes(1600,true,BOT_MODE_NONE)
+			if #nEnemies == 0 then nBonusDesire = nBonusDesire + 0.1 end
+		end
 	
 		return BOT_MODE_DESIRE_HIGH + nBonusDesire
+	end
+	
+	if currentTime % 600 > 0 and currentTime % 600 < 500 
+	then 
+		ignoreDistance = 1000
+	else
+		ignoreDistance = 0
 	end
 	
 	targetWatchTower = X.GetNearestWatchTower(bot)	
@@ -114,7 +129,6 @@ function X.GetNearestWatchTower(bot)
 		return nWatchTower_2		
 	end
 	
-	return nil
 end
 
 function X.IsSuitableToActiveWatchTower()
@@ -123,7 +137,7 @@ function X.IsSuitableToActiveWatchTower()
 	local nEnemies = bot:GetNearbyHeroes(1400, true, BOT_MODE_NONE)
 	local nAttackAllies = bot:GetNearbyHeroes(1200,false,BOT_MODE_ATTACK)
 	local nRetreatAllies = bot:GetNearbyHeroes(1200,false,BOT_MODE_RETREAT)
-	local nWatchtTowerAllies = bot:GetNearbyHeroes(1200,false,BOT_MODE_SIDE_SHOP)
+	local nWatchtTowerAllies = bot:GetNearbyHeroes(1600,false,BOT_MODE_SIDE_SHOP)
 	
 	if ( mode == BOT_MODE_RETREAT and bot:GetActiveModeDesire() > BOT_MODE_DESIRE_HIGH )
 		or ( mode == BOT_MODE_RETREAT and bot:WasRecentlyDamagedByAnyHero(2.0) )

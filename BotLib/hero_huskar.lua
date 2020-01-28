@@ -48,10 +48,10 @@ X['sSellList'] = {
 	"item_heavens_halberd",
 	"item_bracer",
 	
-	'item_black_king_bar',
+	'item_hurricane_pike',
 	'item_magic_wand',
 	
-	'item_hurricane_pike',
+	'item_satanic',
 	'item_armlet',
 
 }

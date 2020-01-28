@@ -71,10 +71,10 @@ end
 
 
 X['sSellList'] = {
-	"item_mask_of_madness",
+	"item_hurricane_pike",
 	"item_urn_of_shadows",
 	
-	'item_maelstrom',
+	'item_mjollnir',
 	'item_magic_wand',
 		
 	'item_hand_of_midas',

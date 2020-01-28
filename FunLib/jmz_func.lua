@@ -15,9 +15,8 @@ GBotTeam = GetTeam()
 GOppTeam = GetOpposingTeam() 
 if gTime == nil then gTime = 0 end
 
-
-local sDota2Version= '7.23e'
-local sDebugVersion= '20200106ver1.6a'
+local sDota2Version= '7.24a'
+local sDebugVersion= '20200128ver1.6c'
 local nDebugTime = 99999
 local bDebugMode = ( 1 == 10 )
 local bDebugTeam = (GBotTeam == TEAM_RADIANT)
@@ -34,9 +33,9 @@ local nEnemyTotalKill = 0
 local nEnemyAverageLevel = 1
 
 
-local RB = Vector(-7174.000000, -6671.00000, 0.000000)
-local DB = Vector(7023.000000, 6450.000000, 0.000000)
-local fSpamThreshold = 0.35;
+local RB = Vector(-7174.000000, -6671.00000, 0.000000) -- Vector(-7143,-6580,520)
+local DB = Vector(7023.000000, 6450.000000, 0.000000) -- Vector(7009,6355,516)
+local sKeepManaPercent = 0.35;
 
 
 --[[------------------------------------
@@ -612,7 +611,6 @@ function J.IsSuspiciousIllusion(npcTarget)
 		then
 			return true;
 		end
-
 		
 		local tID = npcTarget:GetPlayerID();
 		
@@ -692,7 +690,7 @@ function J.CanCastOnTargetAdvanced( npcTarget )
 			if not npcTarget:HasModifier("modifier_item_sphere_target")
 			   and not npcTarget:HasModifier("modifier_item_lotus_orb_active")
 			   and not npcTarget:HasModifier("modifier_item_aeon_disk_buff")
-			   and not ( npcTarget:HasModifier("modifier_dazzle_shallow_grave") and npcTarget:GetHealth() < 200 )
+			   and ( not npcTarget:HasModifier("modifier_dazzle_shallow_grave") or npcTarget:GetHealth() > 300 )
 			then
 				return true
 			end
@@ -705,7 +703,7 @@ function J.CanCastOnTargetAdvanced( npcTarget )
 			and not npcTarget:HasModifier( "modifier_antimage_spell_shield" )
 			and not npcTarget:HasModifier("modifier_item_lotus_orb_active")
 			and not npcTarget:HasModifier("modifier_item_aeon_disk_buff")
-			and not ( npcTarget:HasModifier("modifier_dazzle_shallow_grave") and npcTarget:GetHealth() < 200 )
+			and ( not npcTarget:HasModifier("modifier_dazzle_shallow_grave") or npcTarget:GetHealth() > 300 )
 			
 end
 
@@ -713,10 +711,10 @@ end
 --加入时间后的进阶函数
 function J.CanCastUnitSpellOnTarget( npcTarget, nDelay )
 	
-	for _,mod in pairs(J.Buff["hero_has_spell_shield"])
+	for _,modifier in pairs(J.Buff["hero_has_spell_shield"])
 	do
-		if npcTarget:HasModifier(mod) 
-		   and J.GetModifierTime(npcTarget, mod) >= nDelay
+		if npcTarget:HasModifier(modifier) 
+		   and J.GetModifierTime(npcTarget, modifier) >= nDelay
 		then
 			return false;
 		end	
@@ -739,7 +737,7 @@ function J.WillKillTarget(npcTarget, dmg, dmgType, nDelay)
 	
 	local nTotalDamage = npcTarget:GetActualIncomingDamage( dmg, dmgType ) + nRealBonus;
 
-	return nTotalDamage > targetHealth and nRealBonus < targetHealth - 1  ; 
+	return nTotalDamage > targetHealth and nRealBonus < targetHealth - 1 
 end
 
 
@@ -768,7 +766,7 @@ function J.WillMagicKillTarget(bot, npcTarget, dmg, nDelay)
 	if npcTarget:GetUnitName() == "npc_dota_hero_bristleback" 
 		and not npcTarget:IsFacingLocation(bot:GetLocation(), 120)
 	then 
-		EstDamage = EstDamage * 0.68; 
+		EstDamage = EstDamage * 0.7; 
 	end 
 	
 	if npcTarget:HasModifier("modifier_kunkka_ghost_ship_damage_delay")
@@ -811,9 +809,9 @@ function J.HasForbiddenModifier(npcTarget)
 			end
 		end
 		
-		if npcTarget:GetItemInSlot(9) ~= nil		
+		if npcTarget:GetItemInSlot(8) ~= nil		
 		then
-			local keyItem = npcTarget:GetItemInSlot(9);
+			local keyItem = npcTarget:GetItemInSlot(8);
 			if keyItem:GetName() == "item_orb_of_venom"
 			then
 				return true;
@@ -833,7 +831,8 @@ end
 
 function J.ShouldEscape(bot)
 	
-	local tableNearbyAttackAllies = bot:GetNearbyHeroes( 660, false, BOT_MODE_ATTACK );
+	local tableNearbyAttackAllies = bot:GetNearbyHeroes( 800, false, BOT_MODE_ATTACK );
+	
 	if #tableNearbyAttackAllies > 0 and J.GetHPR(bot) > 0.16 then return false end
 
 	local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( 1000, true, BOT_MODE_NONE );
@@ -1055,9 +1054,11 @@ end
 
 
 function J.IsAllowedToSpam(bot, nManaCost)
+	
 	if bot:HasModifier("modifier_silencer_curse_of_the_silent") then return false end;
 
-	return ( bot:GetMana() - nManaCost ) / bot:GetMaxMana() >= fSpamThreshold;
+	return ( bot:GetMana() - nManaCost ) / bot:GetMaxMana() >= sKeepManaPercent;
+	
 end
 
 
@@ -1157,6 +1158,7 @@ function J.IsWillBeCastUnitTargetSpell(bot, nRange)
 
 	return false;
 end
+
 
 function J.IsWillBeCastUnitTargetAndLocationSpell(bot, nRange)
 	
@@ -1298,12 +1300,12 @@ end
 --以下可少算但不可多算
 function J.GetAttackProDelayTime(bot, nCreep)
 
-	local botName        = bot:GetUnitName()
+	local botName = bot:GetUnitName()
 	local botAttackRange = bot:GetAttackRange()
 	local botAttackPoint = bot:GetAttackPoint()
 	local botAttackSpeed = bot:GetAttackSpeed()
-	local botProSpeed    = bot:GetAttackProjectileSpeed()
-	local botMoveSpeed   = bot:GetCurrentMovementSpeed()
+	local botProSpeed = bot:GetAttackProjectileSpeed()
+	local botMoveSpeed = bot:GetCurrentMovementSpeed()
 	local botAttackPointTime = botAttackPoint / botAttackSpeed
 	local botAttackIdleTime = bot:GetSecondsPerAttack() - botAttackPointTime
 	local nLastAttackRemainIdleTime = 0
@@ -1427,8 +1429,8 @@ function J.GetCreepAttackProjectileWillRealDamage(nUnit, nTime)
 		   and p.caster ~= nil
 		then
 			local nProjectSpeed = p.caster:GetAttackProjectileSpeed();
-			if p.caster:IsTower() then nProjectSpeed = nProjectSpeed * 0.94 end;
-			local nProjectDist  = nProjectSpeed * nTime * 0.96;
+			if p.caster:IsTower() then nProjectSpeed = nProjectSpeed * 0.93 end;
+			local nProjectDist  = nProjectSpeed * nTime * 0.95;
 			local nDistance     = GetUnitToLocationDistance(nUnit, p.location);
 			if nProjectDist > nDistance * 1.02
 			then
@@ -1995,17 +1997,17 @@ end
 
 
 function J.IsValid(nTarget)
-	return nTarget ~= nil and not nTarget:IsNull() and nTarget:IsAlive() and not nTarget:IsBuilding() --and nTarget:CanBeSeen()
+	return nTarget ~= nil and not nTarget:IsNull() and nTarget:IsAlive() and not nTarget:IsBuilding() 
 end
 
 
 function J.IsValidHero(nTarget)
-	return nTarget ~= nil and not nTarget:IsNull() and nTarget:IsAlive() and nTarget:IsHero() --and nTarget:CanBeSeen(); 
+	return nTarget ~= nil and not nTarget:IsNull() and nTarget:IsAlive() and nTarget:IsHero() 
 end
 
 
 function J.IsValidBuilding(nTarget)
-	return nTarget ~= nil and not nTarget:IsNull() and nTarget:IsAlive() and nTarget:IsBuilding() --and nTarget:CanBeSeen() 
+	return nTarget ~= nil and not nTarget:IsNull() and nTarget:IsAlive() and nTarget:IsBuilding() 
 end
 
 
@@ -2054,6 +2056,27 @@ function J.IsAttacking(bot)
 	end	
 
 	return false;
+end
+
+
+function J.IsRealInvisible(bot)
+
+	local nEnemyTowers = bot:GetNearbyTowers(880,true)
+	
+	if bot:IsInvisible()
+		and not bot:HasModifier('modifier_item_dustofappearance')
+		and not bot:HasModifier('modifier_bloodseeker_thirst_vision')
+		and not bot:HasModifier('modifier_slardar_amplify_damage')
+		and not bot:HasModifier('modifier_sniper_assassinate')
+		and not bot:HasModifier('modifier_bounty_hunter_track')
+		and #nEnemyTowers == 0
+	then
+		return true
+	end
+
+
+	return false
+	
 end
 
 
@@ -2372,7 +2395,6 @@ function J.GetEnemyList(bot, nRange)
 	do
 		if enemy ~= nil and enemy:IsAlive()
 			and not J.IsSuspiciousIllusion(enemy)
-			--and not J.IsExistInTable(enemy, nRealEnemyList) --是否多余
 		then
 			table.insert(nRealEnemyList, enemy);
 		end
@@ -3642,7 +3664,6 @@ J.GetLocationTowardDistanceLocation(bot, towardLocation, nDistance)
 J.GetFaceTowardDistanceLocation(bot, nDistance)
 J.PrintMessage(nMessage, nNumber, n, nIntevel)
 J.PrintAndReport(nMessage, nNumber)
-J.SetReport(nMessage, nNumber)
 J.SetPingLocation(bot, vLoc)
 J.SetReportAndPingLocation(vLoc, nMessage, nNumber)
 J.SetReportMotive(bDebugFile, sMotive)
@@ -3666,7 +3687,8 @@ J.IsRoshan(nTarget)
 J.IsMoving(bot)
 J.IsRunning(bot)
 J.IsAttacking(bot)
-J.GetModifierTime(bot, nMoName)
+J.IsRealInvisible(bot)
+J.GetModifierTime(bot, sModifierName)
 J.GetRemainStunTime(bot)
 J.IsTeamActivityCount(bot, nCount)
 J.GetSpecialModeAllies(nMode, nDistance, bot)

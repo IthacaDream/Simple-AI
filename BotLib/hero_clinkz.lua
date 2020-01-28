@@ -43,9 +43,10 @@ X['sBuyList'] = {
 				"item_satanic",
 }
 
+
 X['sSellList'] = {
 
-	"item_desolator",
+	"item_bloodthorn",
 	"item_magic_wand",
 
 }
@@ -190,13 +191,13 @@ function X.ConsiderQ()
 	local nMaxCreepLV = abilityQ:GetSpecialValueInt('neutral_level')
 	local nDamageType = DAMAGE_TYPE_MAGICAL
 	
-	if #hEnemyList == 0 then nCastRange = nCastRange + 300 end
+	if #hEnemyList == 0 then nCastRange = 1600 end
 	
 	local nEnemyCreepList = bot:GetNearbyCreeps(nCastRange,true)
-	if #nEnemyCreepList == 0
-	then
-		nEnemyCreepList = bot:GetNearbyCreeps(900,false)
-	end
+	-- if #nEnemyCreepList == 0
+	-- then
+		-- nEnemyCreepList = bot:GetNearbyCreeps(900,false)
+	-- end
 	local nBestEnemyCreep = nil
 	
 	local targetCreepBountyGoldMax = 1
@@ -205,7 +206,7 @@ function X.ConsiderQ()
 		if J.IsValid(nCreep)
 			and not nCreep:IsAncientCreep()
 			and not nCreep:IsMagicImmune()
-			and (nCreep:GetTeam() ~= bot:GetTeam() or nCreep:GetUnitName() == 'npc_dota_clinkz_skeleton_archer')
+			--and (nCreep:GetTeam() ~= bot:GetTeam() or nCreep:GetUnitName() == 'npc_dota_clinkz_skeleton_archer')
 			and nCreep:GetLevel() <= nMaxCreepLV
 			and nCreep:GetBountyGoldMax() * 10000 + nCreep:GetHealth() > targetCreepBountyGoldMax
 		then
@@ -478,8 +479,8 @@ function X.ConsiderE()
 				end	
 			end
 			
-			if	nSkillLV >= 3
-				and J.IsInRange(bot,botTarget,bot:GetAttackRange() + 350)
+			if	nSkillLV >= 2
+				and J.IsInRange(bot,botTarget,bot:GetAttackRange() + 750)
 			then
 				return BOT_ACTION_DESIRE_HIGH, 'E-AddAttackSpeed:'..J.Chat.GetNormName(botTarget)		
 			end
@@ -507,7 +508,7 @@ end
 function X.ConsiderR()
 
 
-	if not abilityR:IsFullyCastable() then return 0 end
+	if not abilityR:IsFullyCastable() or true then return 0 end
 	
 	local nSkillLV    = abilityR:GetLevel(); 
 	local nCastRange  = abilityR:GetCastRange();

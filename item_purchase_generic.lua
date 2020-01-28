@@ -8,7 +8,6 @@
 ----------------------------------------------------------------------------------------------------
 local Item = require( GetScriptDirectory()..'/FunLib/jmz_item')
 local Role = require( GetScriptDirectory()..'/FunLib/jmz_role')
-local Chat = require( GetScriptDirectory()..'/FunLib/jmz_chat')
 
 local bot = GetBot();
 
@@ -192,7 +191,7 @@ local function TurboModeGeneralPurchase()
 			bot.currListItemToBuy[#bot.currListItemToBuy] = nil; 
 			return
 		else
-			print("[item_purchase_generic] "..bot:GetUnitName().." failed to BotBuild "..bot.currentComponentToBuy.." : "..tostring(bot:ActionImmediate_PurchaseItem( bot.currentComponentToBuy )))	
+			print("[item_purchase_generic] "..bot:GetUnitName().." failed to buy "..bot.currentComponentToBuy.." : "..tostring(bot:ActionImmediate_PurchaseItem( bot.currentComponentToBuy )))	
 		end
 	end
 end
@@ -212,35 +211,16 @@ local buyWardTime = -999
 local hasSelltEarlyBoots = false
 local addTB2toBuy     = false
 local addTravelBoots  = false
-local hasBuyFallenSky = false
-local hasBuyIronwoodTree = false
-local hasBuyTrident = false
-local hasBuyVambrace = false
+
 
 local buyTPtime = 0;
+local buyBookTime = 0
 
 
 function ItemPurchaseThink()  
 	
 	if ( GetGameState() ~= GAME_STATE_PRE_GAME and GetGameState() ~= GAME_STATE_GAME_IN_PROGRESS )
 	then
-		return;
-	end
-
-	if DotaTime() < -65
-	then
-		if bot.cloudBuy then
-			local cloudBuyList = Chat.GetItemBuildList(bot.cloudBuy)
-			for i=1,#cloudBuyList
-			do
-				bot.itemToBuy[i] = cloudBuyList[#cloudBuyList - i + 1];
-			end
-		end
-		if bot.cloudSell then
-			local cloudSellList = Chat.GetItemBuildList(bot.cloudSell)
-			sItemSellList = cloudSellList
-		end
-		
 		return;
 	end
 	
@@ -259,6 +239,18 @@ function ItemPurchaseThink()
 	local botHP    = bot:GetHealth()/bot:GetMaxHealth();
 	--------*******----------------*******----------------*******--------
 	
+	--buy midlaner ward
+	if currentTime < 0 
+		and bot.theRole == "midlaner" 
+		and Item.GetEmptyInventoryAmount(bot) <= 8
+		and Role["bBuyMidWardDone"] == false
+		and not Item.HasItem(bot,"item_ward_observer")
+		and GetItemStockCount( "item_ward_observer" ) >= 1 
+	then
+		Role["bBuyMidWardDone"] = true
+		bot:ActionImmediate_PurchaseItem("item_ward_observer"); 
+		return
+	end
 	
 	--buy another tango for midlaner
 	if currentTime > 60 and currentTime < 4 *60 
@@ -384,8 +376,10 @@ function ItemPurchaseThink()
 	   and bot:WasRecentlyDamagedByAnyHero(3.1)
 	   and GetItemStockCount( "item_tome_of_knowledge" ) >= 1
 	   and Item.GetItemCharges(bot, 'item_tome_of_knowledge') <= 0
+	   and buyBookTime < currentTime - 30.0
 	then
 		bot:ActionImmediate_PurchaseItem("item_tome_of_knowledge"); 
+		buyBookTime = currentTime
 		return;
 	end
 	
@@ -422,7 +416,7 @@ function ItemPurchaseThink()
 		   and bot.lastSwapWardTime < currentTime - 11
 		   and currentTime > 3 * 60
 		then
-			local mostCostItem = Item.GetTheItemSolt(bot, 6, 9, true)
+			local mostCostItem = Item.GetTheItemSolt(bot, 6, 8, true)
 			if mostCostItem ~= -1 then
 				bot:ActionImmediate_SwapItems( wardSlot, mostCostItem );
 				return;
@@ -434,26 +428,25 @@ function ItemPurchaseThink()
 		if tango_single >= 0 and tango_single <= 5 
 		   and Item.GetItemCountInSolt(bot, "item_tango_single", 0, 5) >= 2 
 		then
-			local mostCostItem = Item.GetTheItemSolt(bot, 6, 9, true)
+			local mostCostItem = Item.GetTheItemSolt(bot, 6, 8, true)
 			if mostCostItem ~= -1 then
 				bot:ActionImmediate_SwapItems( tango_single, mostCostItem );
 				return;
 			end
 		end
-		
+				
 		--获取副背包中最高级中立物品格子与等级
-		--获取主背包中最低级中立物品格子与等级
-		--如果主的等级小于副的等级就交换
+		--如果中立的等级小于副的等级就交换
+		--获取中立背包物品格子和等级
 		local nNeutralBackpackSolt = -1
 		local nNeutralBackpackLevel = -1
-		for i =6,9
+		for i =6,8
 		do
 			local inSoltItem = bot:GetItemInSlot(i)
 			if inSoltItem ~= nil
 			then
 				local inSoltItemName = inSoltItem:GetName()
 				if Item.IsNeutralItem(inSoltItemName)
-					and not Item.IsNeutralItemRecipe(inSoltItemName)
 					and Item.GetNeutralItemLevel(inSoltItemName) > nNeutralBackpackLevel
 				then
 					nNeutralBackpackSolt = i
@@ -463,109 +456,23 @@ function ItemPurchaseThink()
 		end
 		if nNeutralBackpackSolt > 5
 		then
-			local nNeutralMainSolt = -1
+			local nNeutralMainSolt = 16
 			local nNeutralMainLevel = 999
-			for i =0,5
-			do
-				local inSoltItem = bot:GetItemInSlot(i)
-				if inSoltItem == nil
-				then
-					nNeutralMainSolt = i
-					nNeutralMainLevel = 0
-					break;
-				elseif inSoltItem ~= nil
-					then
-						local inSoltItemName = inSoltItem:GetName()
-						if Item.IsNeutralItem(inSoltItemName)
-							and not Item.IsNeutralCostItem(inSoltItemName)
-							and Item.GetNeutralItemLevel(inSoltItemName) < nNeutralMainLevel
-						then
-							nNeutralMainSolt = i
-							nNeutralMainLevel = Item.GetNeutralItemLevel(inSoltItemName)
-						end				
-				end		
-			end	
+			local inSoltItem = bot:GetItemInSlot(16)
+			if inSoltItem == nil
+			then
+				nNeutralMainLevel = 0
+			else
+				local inSoltItemName = inSoltItem:GetName()
+				nNeutralMainLevel = Item.GetNeutralItemLevel(inSoltItemName)		
+			end			
 			
 			if nNeutralBackpackLevel > nNeutralMainLevel 
 			then
 				bot:ActionImmediate_SwapItems( nNeutralBackpackSolt, nNeutralMainSolt );
-				--print(bot:GetUnitName().."SwapItem:"..nNeutralBackpackSolt..":"..nNeutralMainSolt)
 				return;
 			end			
-		end
-		
-		
-		--如果捡到了中立卷轴则添加配件购买
-		--铁树之木
-		local recipeIronwoodTree = bot:FindItemSlot('item_recipe_ironwood_tree');
-		if recipeIronwoodTree >= 0
-			and not hasBuyIronwoodTree
-		then
-			hasBuyIronwoodTree = true
-			bot.currentComponentToBuy = nil;
-			bot.currListItemToBuy[#bot.currListItemToBuy+1] = 'item_branches';
-			bot.currListItemToBuy[#bot.currListItemToBuy+1] = 'item_branches';
-			bot.currListItemToBuy[#bot.currListItemToBuy+1] = 'item_branches';
-			return;
-		end
-		
-		--臂甲
-		local recipeVambrace = bot:FindItemSlot('item_recipe_vambrace');
-		if recipeVambrace >= 0
-			and not hasBuyVambrace
-		then
-			hasBuyVambrace = true
-			local sVambraceComponent, sVambraceComponent_1, sVambraceComponent_2 = Item.GetVambraceComponent(bot);
-			if bot:FindItemSlot(sVambraceComponent) >= 0
-			then
-				bot.currentComponentToBuy = nil;
-				bot.currListItemToBuy[#bot.currListItemToBuy+1] = sVambraceComponent_2;
-				bot.currListItemToBuy[#bot.currListItemToBuy+1] = 'item_circlet';
-				bot.currListItemToBuy[#bot.currListItemToBuy+1] = sVambraceComponent_1;
-				return;
-			else
-				bot.currentComponentToBuy = nil;
-				bot.currListItemToBuy[#bot.currListItemToBuy+1] = sVambraceComponent_2;
-				bot.currListItemToBuy[#bot.currListItemToBuy+1] = 'item_circlet';
-				bot.currListItemToBuy[#bot.currListItemToBuy+1] = sVambraceComponent_1;
-				bot.currListItemToBuy[#bot.currListItemToBuy+1] = sVambraceComponent_2;
-				bot.currListItemToBuy[#bot.currListItemToBuy+1] = 'item_circlet';
-				bot.currListItemToBuy[#bot.currListItemToBuy+1] = sVambraceComponent_1;
-				return;
-			end
-		end
-		
-		--堕天斧
-		local recipeFallenSky = bot:FindItemSlot('item_recipe_fallen_sky');
-		if recipeFallenSky >= 0
-			and not hasBuyFallenSky
-		then
-			hasBuyFallenSky = true
-			if #bot.itemToBuy >= 1 
-			then
-				table.insert(bot.itemToBuy,#bot.itemToBuy,'item_fallen_sky')
-			else
-				bot.itemToBuy = { 'item_fallen_sky' }
-			end
-			return;
-		end		
-		
-		--三叉戟
-		local recipeTrident = bot:FindItemSlot('item_recipe_trident');
-		if recipeTrident >= 0
-			and not hasBuyTrident
-		then
-			hasBuyTrident = true
-			local sTridentNameToBuy = Item.GetTridentNameToBuy(bot)
-			if #bot.itemToBuy >= 1 
-			then
-				table.insert(bot.itemToBuy,#bot.itemToBuy,sTridentNameToBuy)
-			else
-				bot.itemToBuy = { sTridentNameToBuy }
-			end
-			return;
-		end
-		
+		end	
 		
 	end
 	
@@ -579,29 +486,22 @@ function ItemPurchaseThink()
 		local slotToSell = nil;
 		
 		local preEmpty = 2;
-		if botLevel < 15 then preEmpty = 1; end
+		if botLevel < 18 then preEmpty = 1; end
 		if emptySlot < preEmpty then
 			for i=1,#Item['tEarlyItem'] 
 			do
 				local item = Item['tEarlyItem'][i];
 				local itemSlot = bot:FindItemSlot(item);
-				if itemSlot >= 0 and itemSlot <= 9 
+				if itemSlot >= 0 and itemSlot <= 8
 				then
 					if item == "item_magic_wand" or item == "item_magic_stick" 
 					then
-						if 	( emptySlot == 0 and botWorth > 8000) 
-						    or botWorth > 12000
+						if 	( emptySlot == 0 and botWorth > 10000) 
+						    or botWorth > 14000
 						then
 							slotToSell = itemSlot;
 							break;
 						end
-					elseif ( item == "item_bracer" or item == "item_wraith_band" or item == "item_null_talisman" )
-						then
-							if not Item.HasItem(bot,"item_recipe_vambrace")
-							then
-								slotToSell = itemSlot;
-								break;
-							end
 					else
 						slotToSell = itemSlot;
 						break;
@@ -611,7 +511,7 @@ function ItemPurchaseThink()
 		end	
 		
 		--for wand and neutral item
-		if botWorth > 4200 
+		if botWorth > 8800 
 		then
 			local wand = bot:FindItemSlot("item_magic_wand");
 			local assitItem =  bot:FindItemSlot("item_infused_raindrop");
@@ -619,9 +519,8 @@ function ItemPurchaseThink()
 			if assitItem < 0 then assitItem =  bot:FindItemSlot("item_null_talisman"); end
 			if assitItem < 0 then assitItem =  bot:FindItemSlot("item_wraith_band"); end		
 			if	assitItem >= 0 
-				and not Item.HasItem(bot,"item_recipe_vambrace")
-				and (	( wand >= 6 and wand <= 9 ) 
-						or Item.GetEmptyInventoryAmount(bot) <= 2 )
+				and wand >= 6 
+				and wand <= 8 
 			then
 				slotToSell = assitItem;
 			end	
@@ -642,21 +541,19 @@ function ItemPurchaseThink()
 	then
 		sell_time = currentTime;
 		
-		if not Item.HasItem(bot,"item_recipe_vambrace") 
-			or ( not Item.HasItem(bot,"item_recipe_vambrace") and not Item.HasItem(bot,"item_recipe_vambrace") and not Item.HasItem(bot,"item_recipe_vambrace") )
-		then		
-			for i = 2 ,#sItemSellList, 2
-			do
-				local nNewSlot = bot:FindItemSlot(sItemSellList[i -1]);
-				local nOldSlot = bot:FindItemSlot(sItemSellList[i]);
-				if nNewSlot >= 0 and nOldSlot >= 0
-				then
-					--print(sItemSellList[i -1]..sItemSellList[i]);
-					bot:ActionImmediate_SellItem(bot:GetItemInSlot(nOldSlot));
-					return;
-				end
+			
+		for i = 2 ,#sItemSellList, 2
+		do
+			local nNewSlot = bot:FindItemSlot(sItemSellList[i -1]);
+			local nOldSlot = bot:FindItemSlot(sItemSellList[i]);
+			if nNewSlot >= 0 and nOldSlot >= 0
+			then
+				--print(sItemSellList[i -1]..sItemSellList[i]);
+				bot:ActionImmediate_SellItem(bot:GetItemInSlot(nOldSlot));
+				return;
 			end
 		end
+	
 		
 		--Sell non travel_boot when have travel_boot
 		if currentTime > 30 *60 and not hasSelltEarlyBoots 
@@ -692,6 +589,14 @@ function ItemPurchaseThink()
 			buyTPtime = currentTime;
 			bot.currentComponentToBuy = nil;	
 			bot.currListItemToBuy[#bot.currListItemToBuy+1] = 'item_tpscroll';
+			if #bot.itemToBuy == 0 
+			then 
+				bot.itemToBuy = { 'item_tpscroll' } 
+				if bot.currentItemToBuy == nil 
+				then
+					bot.currentItemToBuy = 'item_tpscroll'
+				end
+			end
 			return;
 		end
 		
@@ -702,12 +607,20 @@ function ItemPurchaseThink()
 			bot.currentComponentToBuy = nil;	
 			bot.currListItemToBuy[#bot.currListItemToBuy+1] = 'item_tpscroll';
 			bot.currListItemToBuy[#bot.currListItemToBuy+1] = 'item_tpscroll';
+			if #bot.itemToBuy == 0 
+			then 
+				bot.itemToBuy = { 'item_tpscroll' } 
+				if bot.currentItemToBuy == nil 
+				then
+					bot.currentItemToBuy = 'item_tpscroll'
+				end
+			end
 			return;
 		end
 	end
 	
 	--Change the flag to buy tp scroll to false when it already has it in inventory so the bot can insert tp scroll to list item to buy whenever they don't have any tp scroll
-	if buyTP == true and buyTPtime < currentTime - 70
+	if buyTP == true and buyTPtime < currentTime - 50
 	then
 		buyTP = false;
 	end
@@ -771,11 +684,10 @@ function ItemPurchaseThink()
 		and ( not Item.HasItem(bot, 'item_refresher_shard') and not Item.HasItem(bot, 'item_cheese') and not Item.HasItem(bot, "item_aegis") )
 		and ( not Item.HasItem(bot, 'item_dust') and not Item.HasItem(bot, "item_ward_observer") )
 		and ( not Item.HasItem(bot, 'item_moon_shard') and not Item.HasItem(bot, "item_hyperstone") )
-		and ( not Item.HasItem(bot, 'item_recipe_trident') and not Item.HasItem(bot, "item_recipe_fallen_sky") )
 	then
 		local itemToSell = nil;
 		local itemToSellValue = 99999;
-		for i = 0, 9
+		for i = 0, 8
 		do
 			local tempItem = bot:GetItemInSlot(i);
 			if tempItem ~= nil 			   

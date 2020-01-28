@@ -26,7 +26,7 @@ function GetDesire()
 	
 	local invFull = true;
 	
-	for i=0,9 do 
+	for i=0,8 do 
 		if bot:GetItemInSlot(i) == nil then
 			invFull = false;
 		end	

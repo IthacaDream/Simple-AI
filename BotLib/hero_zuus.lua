@@ -48,7 +48,7 @@ X['sSellList'] = {
 	"item_ultimate_scepter",
 	"item_arcane_boots",
 	
-	'item_cyclone',
+	'item_ultimate_scepter',
 	'item_magic_wand',
 }
 

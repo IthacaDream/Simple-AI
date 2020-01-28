@@ -354,8 +354,6 @@ local sConsumableList = {
 	'item_royal_jelly',
 	'item_greater_faerie_fire',
 	"item_repair_kit",
-	'item_fusion_rune',
-	'item_phoenix_ash',	
 	
 	'item_cheese',
 	'item_refresher_shard',
@@ -424,9 +422,8 @@ local tNeutralItemLevelList = {
 	['item_mango_tree'] = 95,
 	['item_ocean_heart'] = 43,
 	['item_poor_mans_shield'] = 34,
-	['item_royal_jelly'] = 96,
+	['item_royal_jelly'] = 96, 
 	['item_trusty_shovel'] = 32,
-	['item_recipe_ironwood_tree'] = 1,
 	['item_ironwood_tree'] = 44,
 
 	['item_dragon_scale'] = 38,	-- 炎龙之鳞
@@ -440,7 +437,6 @@ local tNeutralItemLevelList = {
 	['item_vampire_fangs'] = 48, -- 吸血鬼獠牙
 	['item_clumsy_net'] = 45,
 	['item_vambrace'] = 52,
-	['item_recipe_vambrace'] = 2,
 	
 	['item_spy_gadget'] = 36, -- 望远镜
 	['item_craggy_coat'] = 47, -- 崎岖外衣
@@ -472,39 +468,15 @@ local tNeutralItemLevelList = {
 	['item_demonicon'] = 73,
 	['item_desolator_2'] = 75,
 	['item_ex_machina'] = 71,
-	['item_recipe_fallen_sky'] = 5,
 	['item_fallen_sky'] = 80,
 	['item_force_boots'] = 66,
 	['item_fusion_rune'] = 88,
 	['item_mirror_shield'] = 77,
-	['item_phoenix_ash'] = 89,
 	['item_pirate_hat'] = 74,
 	['item_seer_stone'] = 40,
 	['item_recipe_trident'] = 5,
 	['item_trident'] = 79,
 	['item_woodland_striders'] = 70,
-
-}
-
-local tNeutralRecipeList = {
-
-	['item_recipe_trident'] = true,
-	['item_recipe_fallen_sky'] = true,
-	['item_recipe_vambrace'] = true,
-	['item_recipe_ironwood_tree'] = true,
-
-}
-
-local tNeutralItemCostList = {
-
-	['item_recipe_trident'] = 1,
-	['item_recipe_vambrace'] = 1,
-	['item_recipe_fallen_sky'] = 1,
-	['item_recipe_ironwood_tree'] = 1,
-	['item_ironwood_tree'] = 151,
-	['item_iron_talon'] = 301,
-	['item_vambrace'] = 1021,
-	['item_fallen_sky'] = 4751,
 
 }
 
@@ -516,8 +488,6 @@ local tSmallItemList = {
 	['item_enchanted_mango'] = 1,	
 
 }
-
-
 
 
 if true then
@@ -579,8 +549,6 @@ Item['item_echo_sabre']					= { 'item_ogre_axe', 'item_oblivion_staff' }
 Item['item_ethereal_blade']				= { 'item_ghost', 'item_eagle' }
 
 Item['item_force_staff']				= { 'item_staff_of_wizardry', 'item_ring_of_regen', 'item_recipe_force_staff' }
-
-Item['item_fallen_sky']					= { 'item_meteor_hammer', 'item_blink', 'item_recipe_fallen_sky' }
 
 Item['item_glimmer_cape']				= { 'item_shadow_amulet', 'item_cloak' }
 
@@ -703,8 +671,6 @@ Item['item_tranquil_boots']				= { 'item_wind_lace', 'item_boots', 'item_ring_of
 Item['item_travel_boots']				= { 'item_boots', 'item_recipe_travel_boots' }
 
 Item['item_travel_boots_2']				= { 'item_travel_boots', 'item_recipe_travel_boots' }
-
-Item['item_trident']					= { 'item_yasha', 'item_sange', 'item_kaya', 'item_recipe_trident'}
 
 Item['item_trident_sange']				= { 'item_yasha_and_kaya', 'item_sange', 'item_recipe_trident'}
 
@@ -830,9 +796,9 @@ Item['item_new_bfury']				= { 'item_quelling_blade',  'item_ring_of_health', 'it
 ------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------
 
-Item['item_mid_outfit']					= { "item_ward_observer", 'item_tango', 'item_faerie_fire', 'item_double_branches', 'item_wraith_band', 'item_circlet', 'item_flask', 'item_magic_stick', 'item_recipe_magic_wand', 'item_power_treads_agi', 'item_broken_urn', }
+Item['item_mid_outfit']					= { 'item_tango', 'item_faerie_fire', 'item_double_branches', 'item_wraith_band', 'item_circlet', 'item_flask', 'item_magic_stick', 'item_recipe_magic_wand', 'item_power_treads_agi', 'item_broken_urn', }
 
-Item['item_templar_assassin_outfit']	= { "item_ward_observer", 'item_tango', 'item_faerie_fire', 'item_double_branches', 'item_wraith_band', 'item_circlet', 'item_flask', 'item_magic_stick', 'item_recipe_magic_wand', 'item_power_treads_agi', 'item_broken_urn', 'item_blight_stone', }
+Item['item_templar_assassin_outfit']	= { 'item_tango', 'item_faerie_fire', 'item_double_branches', 'item_wraith_band', 'item_circlet', 'item_flask', 'item_magic_stick', 'item_recipe_magic_wand', 'item_power_treads_agi', 'item_broken_urn', 'item_blight_stone', }
 
 
 
@@ -938,18 +904,6 @@ function Item.IsNeutralItem(sItemName)
 
 end
 
-function Item.IsNeutralItemRecipe(sItemName)
-
-	return tNeutralRecipeList[sItemName] == true
-
-end
-
-function Item.IsNeutralCostItem(sItemName)
-
-	return tNeutralItemCostList[sItemName] ~= nil
-
-end
-
 function Item.GetNeutralItemLevel(sItemName)
 
 	if tNeutralItemLevelList[sItemName] == nil then return 0 end
@@ -961,11 +915,12 @@ end
 --捡中立物品
 function Item.GetInGroundItem(bot)
 	
-	local botEmptyInventoryCount = Item.GetEmptyInventoryAmount(bot)
+	local botEmptyInventoryCount = Item.GetEmptyNeutralBackpackAmount(bot)
 	
 	if botEmptyInventoryCount == 0 then return nil end	
 	
-	if botEmptyInventoryCount == 1 
+	if botEmptyInventoryCount <= 2 
+		and bot:GetItemInSlot(16) ~= nil
 	then
 		for i=1,5
 		do
@@ -973,15 +928,16 @@ function Item.GetInGroundItem(bot)
 			if nAlly ~= nil
 				and nAlly ~= bot
 				and nAlly:IsAlive()
-				and GetUnitToUnitDistance(bot,nAlly) <= 600
-				and Item.GetEmptyInventoryAmount(nAlly) >= 2
+				and GetUnitToUnitDistance(bot,nAlly) <= 700
+				and ( Item.GetEmptyNeutralBackpackAmount(nAlly) > botEmptyInventoryCount
+					  or nAlly:GetItemInSlot(16) == nil )
 			then
 				return nil
 			end
 		end
 	end
 	
-	if ( bot:DistanceFromFountain() < 1800 and botEmptyInventoryCount >= 4 )
+	if ( bot:DistanceFromFountain() < 1800 and botEmptyInventoryCount >= 3 )
 		or ( bot:DistanceFromFountain() > 1800 and botEmptyInventoryCount >= 1 )
 	then
 		local tDropList = GetDroppedItemList()
@@ -995,7 +951,7 @@ function Item.GetInGroundItem(bot)
 			then
 				local sDropName = tDropItem.item:GetName()
 				local nDropOwner = tDropItem.owner
-				if 	( nDropOwner ~= bot or botEmptyInventoryCount >= 5 )
+				if 	nDropOwner ~= bot
 					and Item.IsNeutralItem(sDropName)
 					and Item.GetNeutralItemLevel(sDropName) > nMaxLevel
 				then
@@ -1019,23 +975,21 @@ end
 --丢物品的逻辑
 function Item.GetNeedDropNeutralItem(bot)
 
-	local botEmptyInventoryCount = Item.GetEmptyInventoryAmount(bot)
+	local botEmptyInventoryCount = Item.GetEmptyNeutralBackpackAmount(bot)
 	local botNeutralItemCount = Item.GetNeutralItemCount(bot)
 	
-	if botEmptyInventoryCount >= 4 or botNeutralItemCount <= 1 then return nil end	
-	
-	if botEmptyInventoryCount == 3 and bot:FindItemSlot('item_ward_observer') >= 0 then return nil end
+	if botNeutralItemCount <= 1 then return nil end	
 
 	local hNeedDropItem = nil
 	local nMinItemLevel = 99
-	for i = 0,9
+	local nSlotList = {6,7,8,16}
+	for _,i in pairs(nSlotList)
 	do
 		local inSoltItem = bot:GetItemInSlot(i)
 		if inSoltItem ~= nil
 		then
 			local inSoltItemName = inSoltItem:GetName()
 			if Item.IsNeutralItem(inSoltItemName)
-				and not Item.IsNeutralItemRecipe(inSoltItemName)
 				and Item.GetNeutralItemLevel(inSoltItemName) < nMinItemLevel
 			then
 				hNeedDropItem = inSoltItem
@@ -1046,11 +1000,10 @@ function Item.GetNeedDropNeutralItem(bot)
 	
 	if hNeedDropItem ~= nil
 	then
-		--泉水丢装备
+		--基地丢装备
 		if bot:DistanceFromFountain() < 1800
 		then
-			if botEmptyInventoryCount <= 2	--空余背包过少
-				or ( botNeutralItemCount >= 2 and botEmptyInventoryCount <= 3 ) --中立物品过多
+			if botNeutralItemCount >= 3 --中立物品过多
 			then
 				--print(bot:GetUnitName().." 1dropping item:"..hNeedDropItem:GetName())
 				return hNeedDropItem, bot
@@ -1059,9 +1012,9 @@ function Item.GetNeedDropNeutralItem(bot)
 		end
 		
 		
-		--非泉水丢装备
+		--非基地丢装备
 		local nTargetMember = nil
-		if bot:DistanceFromFountain() > 1800
+		if bot:DistanceFromFountain() > 2600
 		then
 			for i = 1,5
 			do
@@ -1071,9 +1024,10 @@ function Item.GetNeedDropNeutralItem(bot)
 					and member ~= bot
 					and GetUnitToUnitDistance(bot,member) <= 1200
 				then
-					local memberEmptyInventoryCount = Item.GetEmptyInventoryAmount(member)
-					if memberEmptyInventoryCount >= botEmptyInventoryCount + 2
-						and memberEmptyInventoryCount >= 3
+					local memberEmptyInventoryCount = Item.GetEmptyNeutralBackpackAmount(member)
+					if ( memberEmptyInventoryCount >= botEmptyInventoryCount + 2
+						 and memberEmptyInventoryCount >= 3 )
+						or member:GetItemInSlot(16) == nil
 					then
 						nTargetMember = member;
 						break;
@@ -1082,7 +1036,7 @@ function Item.GetNeedDropNeutralItem(bot)
 			end		
 		end
 		if nTargetMember ~= nil
-			and botEmptyInventoryCount <= 2
+			--and botEmptyInventoryCount <= 2
 		then
 			--print(bot:GetUnitName().." 2dropping item:"..hNeedDropItem:GetName())
 			return hNeedDropItem, nTargetMember
@@ -1092,39 +1046,6 @@ function Item.GetNeedDropNeutralItem(bot)
 		
 	return nil
 		
-end
-
-function Item.GetVambraceComponent(bot)
-
-	local botAttribute = bot:GetPrimaryAttribute()
-
-	if botAttribute == ATTRIBUTE_INTELLECT
-	then
-		return "item_null_talisman", "item_mantle", "item_recipe_null_talisman"
-	elseif botAttribute == ATTRIBUTE_AGILITY
-		then
-			return "item_wraith_band", 'item_slippers', "item_recipe_wraith_band"
-	else
-		return "item_bracer", 'item_gauntlets', "item_recipe_bracer"
-	end
-
-end
-
-function Item.GetTridentNameToBuy(bot)
-
-	if bot:FindItemSlot('item_sange_and_yasha') >= 0
-	then
-		return 'item_trident_kaya'
-	elseif bot:FindItemSlot('item_yasha_and_kaya') >= 0
-		then
-			return 'item_trident_sange'
-	elseif bot:FindItemSlot('item_kaya_and_sange') >= 0
-		then
-			return 'item_trident_yasha'
-	else
-		return 'item_trident'
-	end
-
 end
 
 function Item.IsNotSellItem(sItemName)
@@ -1185,7 +1106,7 @@ function Item.IsItemInHero(sItemName)
 	
 	local nItemSolt = bot:FindItemSlot(sItemName)
 	
-	return nItemSolt >= 0 and ( nItemSolt <= 9 or Item.IsTopItem(sItemName) )
+	return nItemSolt >= 0 and ( nItemSolt <= 8 or Item.IsTopItem(sItemName) )
 
 end
 
@@ -1295,14 +1216,14 @@ end
 function Item.GetNeutralItemCount(bot)
 
 	local amount = 0
-	for i= 0,9
+	local nSlotList = {6,7,8,16}
+	for _,i in pairs(nSlotList)
 	do	
 		local item = bot:GetItemInSlot(i);
 		if item ~= nil
 		then
 			local itemName = item:GetName()
 			if Item.IsNeutralItem(itemName)
-				and not Item.IsNeutralItemRecipe(itemName)
 				and not Item.IsConsumableItem(itemName)
 			then
 				amount = amount +1;
@@ -1316,7 +1237,7 @@ end
 function Item.GetEmptyInventoryAmount(bot)
 	
 	local amount = 0;
-	for i= 0,9
+	for i= 0,8
 	do	
 		local item = bot:GetItemInSlot(i);
 		if item == nil 
@@ -1324,6 +1245,23 @@ function Item.GetEmptyInventoryAmount(bot)
 			amount = amount +1;
 		end
 	end
+	return amount;
+	
+end
+
+function Item.GetEmptyNeutralBackpackAmount(bot)
+	
+	local amount = ( bot:GetItemInSlot(16) == nil and 1 or 0 );
+	
+	for i= 6,8
+	do	
+		local item = bot:GetItemInSlot(i);
+		if item == nil 
+		then
+			amount = amount +1;
+		end
+	end
+	
 	return amount;
 	
 end

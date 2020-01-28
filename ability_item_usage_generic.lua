@@ -46,7 +46,7 @@ local function AbilityLevelUpComplement()
 		 bot:Action_ClearActions( false ) 
 		 return
 	end	
-
+		
 	if DotaTime() < 15 then
 		bot.theRole = J.Role.GetCurrentSuitableRole(bot, bot:GetUnitName());	
 	end	
@@ -119,33 +119,76 @@ function X.GetRemainingRespawnTime()
 end
 
 local nJiDiCount = RandomInt(14,20);
+local nTalkDelay = RandomFloat(2.8,4.6)
+local nDeathReplyTime = -999
 local nLastGold = 9999
 local nLastKillCount = 999
+local nLastDeathCount = 0
+local nContinueKillCount = 0
 function X.SetTalkMessage()
 
 	local nBotID = bot:GetPlayerID()
 	local nCurrentGold = bot:GetGold()	
-	if bot:IsAlive()
-		and nCurrentGold > nLastGold + 600
-		and GetHeroKills(nBotID) > nLastKillCount
+	local nCurrentKills = GetHeroKills(nBotID)
+	local nCurrentDeaths = GetHeroDeaths(nBotID)
+	local nRate = GetGameMode() == 23 and 2.0 or 1.0
+	
+	--Say "?"
+	if	bot:IsAlive()
+		and nCurrentGold > nLastGold + 600 * nRate
+		and nCurrentKills > nLastKillCount
+		and RandomInt(1,9) > 3
 	then
 		local sTauntMark = "?"
-		if nCurrentGold > nLastGold + 750 then sTauntMark = "??" end
-		if nCurrentGold > nLastGold + 900 then sTauntMark = "???" end
+		if nCurrentGold > nLastGold + 800 * nRate then sTauntMark = "??" end
+		if nCurrentGold > nLastGold + 1000 * nRate then sTauntMark = "???" end
+		if nCurrentGold > nLastGold + 1500 * nRate then sTauntMark = "??????" end
 		bot:ActionImmediate_Chat( sTauntMark, true );
 	end
-	nLastKillCount = GetHeroKills(nBotID)
-	nLastGold = nCurrentGold
-
 	
-	if GetHeroKills(nBotID) == 0 
-		and GetHeroDeaths(nBotID) >= nJiDiCount
+	--Say "..."
+	if	not bot:IsAlive()
+	then
+		if  nContinueKillCount >= 8
+			and nDeathReplyTime == -999
+		then
+			nDeathReplyTime = DotaTime()
+			nContinueKillCount = 0
+		end
+		
+		if nDeathReplyTime ~= -999
+			and nDeathReplyTime < DotaTime() - nTalkDelay
+		then
+			bot:ActionImmediate_Chat( "...", true );
+			nDeathReplyTime = -999
+			nTalkDelay = RandomFloat(2.8,4.6)
+		end
+	end
+	
+	--Say "jidi"
+	if	nCurrentKills == 0 
+		and nCurrentDeaths >= nJiDiCount
 		and J.Role.NotSayJiDi()
 	then
 		local sJiDi = RandomInt(1,9) >= 3 and "jidi,xiayiba" or "jidi,gkd"
 		bot:ActionImmediate_Chat( sJiDi, true );
 		J.Role['sayJiDi'] = true
 	end
+	
+	--Calculate Continue Kill Count
+	if nLastDeathCount == nCurrentDeaths
+	then
+		if nCurrentKills >= nLastKillCount + 1
+		then
+			nContinueKillCount = nContinueKillCount + 1
+		end
+	else
+		nContinueKillCount = 0
+	end
+	
+	nLastKillCount = GetHeroKills(nBotID)
+	nLastDeathCount = GetHeroDeaths(nBotID)
+	nLastGold = bot:GetGold()
 
 end
 
@@ -380,7 +423,7 @@ end
 
 function X.GetCourierEmptySlot(courier)
 	local amount = 0;
-	for i=0, 9 do
+	for i=0, 8 do
 		if courier:GetItemInSlot(i) == nil then
 			amount = amount + 1;
 		end
@@ -391,7 +434,7 @@ end
 
 function X.GetNumStashItem(unit)
 	local amount = 0;
-	for i=10, 15 do
+	for i=9, 14 do
 		if unit:GetItemInSlot(i) ~= nil 
 		then
 			amount = amount + 1;
@@ -512,7 +555,7 @@ end
 
 
 function X.IsInvFull(bot)
-	for i = 0, 9 
+	for i = 0, 8 
 	do
 		if bot:GetItemInSlot(i) == nil 
 		then
@@ -584,7 +627,7 @@ local function ItemUsageComplement()
 	local aether = J.IsItemAvailable("item_aether_lens");
 	if aether ~= nil then aetherRange = 250 else aetherRange = 0 end
 	
-	local nItemSlot = {5,4,3,2,1,0,16};
+	local nItemSlot = {5,4,3,2,1,0,15,16};
 	
 	for _,nSlot in pairs(nItemSlot)
 	do
@@ -660,7 +703,7 @@ function X.SetStashItemTimeUpdate()
 
 	local currentTime = DotaTime()
 
-	for i = 6,9
+	for i = 6,8
 	do
 		local hItem = bot:GetItemInSlot(i);
 		if hItem ~= nil
@@ -1828,7 +1871,7 @@ end
 X.ConsiderItemDesire["item_heavens_halberd"] = function(hItem)
 
 	local nCastRange = 700 + aetherRange
-	local sCastType = 'unit'	
+	local sCastType = 'unit'
 	local hEffectTarget = nil 
 	local nInRangeEnmyList = bot:GetNearbyHeroes(nCastRange,true,BOT_MODE_NONE)
 	
@@ -3131,6 +3174,7 @@ X.ConsiderItemDesire["item_spirit_vessel"] = function(hItem)
 	
 end
 
+
 --吃树
 X.ConsiderItemDesire["item_tango"] = function(hItem)
 
@@ -3294,7 +3338,6 @@ X.ConsiderItemDesire["item_tome_of_knowledge"] = function(hItem)
 	local sCastType = 'none'	
 	local hEffectTarget = nil 
 	local nInRangeEnmyList = bot:GetNearbyHeroes(nCastRange,true,BOT_MODE_NONE)
-	
 	
 	if hItem:IsFullyCastable()
 	then
@@ -3619,13 +3662,15 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 		
 		
 		--第二种情况:有多个敌人但可以卡视野TP
-		local nAttackAllyList = bot:GetNearbyHeroes(999,false,BOT_MODE_ATTACK)
-		if botHP < ( 0.16 + 0.24 * nEnemyCount)
+		local nAttackAllyList = bot:GetNearbyHeroes(1500,false,BOT_MODE_ATTACK)
+		if botHP < ( 0.15 + 0.24 * nEnemyCount)
 			and #nAttackAllyList == 0
 			and bot:WasRecentlyDamagedByAnyHero(6.0)
 			and X.CanJuke() 
 			and nEnemyCount <= ( botHP < 0.4 and 2 or 3 )
+			and nAllyCount <= 2
 			and itemFlask == nil
+			and not bot:HasModifier("modifier_tango_heal")
 			and not bot:HasModifier("modifier_flask_healing")
 			and not bot:HasModifier("modifier_item_urn_heal")
 			and not bot:HasModifier("modifier_item_spirit_vessel_heal")
@@ -4526,7 +4571,7 @@ X.ConsiderItemDesire["item_ex_machina"] = function(hItem)
 				end
 			end
 		
-			if nRemainTime >= 20
+			if nRemainTime >= 30
 			then
 				hEffectTarget = botTarget
 				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Attack'

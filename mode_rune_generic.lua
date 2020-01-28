@@ -24,8 +24,8 @@ local teamPlayers = nil
 local pingTimeGap = 10
 local bottle = nil
 
-local vRadiantDropLocation = Vector(-7143,-6580,520)
-local vDireDropLocation = Vector(7009,6355,516)
+local vRadiantDropLocation = Vector(-6416,-5966,384)
+local vDireDropLocation = Vector(6333,5738,384)
 
 local dropItem = nil
 local dropItemTarget = nil
@@ -86,11 +86,11 @@ function GetDesire()
 	if ( pickItem ~= nil 
 			and pickItem.item ~= nil 
 			and pickItem.location ~= nil
-			and ( tLastDropItemList[pickItem.item:GetName()] == nil or Item.GetEmptyInventoryAmount(bot) >= 5 )
-			and GetUnitToLocationDistance(bot,pickItem.location) < 1200 )
+			and tLastDropItemList[pickItem.item:GetName()] == nil
+			and GetUnitToLocationDistance(bot,pickItem.location) < 1300 )
 		or ( dropItem ~= nil 
 				and dropItemTarget:IsAlive() 
-				and GetUnitToLocationDistance(bot,dropItemTarget:GetLocation()) < 1200 
+				and GetUnitToLocationDistance(bot,dropItemTarget:GetLocation()) < 1300 
 				and GetUnitToUnitDistance(bot, GetAncient(GetOpposingTeam())) > 1800 )
 	then
 		if X.IsSuitableToPickItem()
@@ -101,13 +101,13 @@ function GetDesire()
 	
 	if not ( bot:IsChanneling() or bot:IsCastingAbility() or bot:IsUsingAbility() or bot:NumQueuedActions() > 0 ) 
 	then
-		if DotaTime() > lastPickCheckTime + 0.31
+		if DotaTime() > lastPickCheckTime + 0.3
 		then
 			lastPickCheckTime = DotaTime()
 			pickItem = Item.GetInGroundItem(bot)
 		end
 		
-		if DotaTime() > lastDropCheckTime + 0.91
+		if DotaTime() > lastDropCheckTime + 0.9
 		then
 			lastDropCheckTime = DotaTime()
 			dropItem, dropItemTarget = Item.GetNeedDropNeutralItem(bot)
@@ -239,10 +239,17 @@ function Think()
 			
 			local tempRadians = bot:GetFacing() * math.pi / 180;
 			local tempVector = Vector(math.cos(tempRadians), math.sin(tempRadians));
-			local dropLocation = bot:GetLocation() + 118 * tempVector + RandomVector(24)
+			local dropLocation = bot:GetLocation() + 60 * tempVector + RandomVector(30)
+			local vFountain = ( GetTeam() == TEAM_RADIANT ) and vRadiantDropLocation or vDireDropLocation
+			
+			if X.GetDistance(dropLocation,vFountain) <= 1500
+			then
+				dropLocation = vFountain + RandomVector(110)
+			end
+			
 			if IsLocationPassable(dropLocation)
 			then
-				bot:Action_DropItem(dropItem, bot:GetLocation() + 118 * tempVector + RandomVector(24) )
+				bot:Action_DropItem( dropItem, dropLocation )
 			end
 			return
 		end
@@ -252,18 +259,18 @@ function Think()
 		
 		if GetTeam() == TEAM_RADIANT then
 			if bot:GetAssignedLane() == LANE_BOT then 
-				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_2) + RandomVector(80))
+				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_3) + RandomVector(80))
 				return
 			else
-				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_1) + RandomVector(81))
+				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_4) + RandomVector(81))
 				return
 			end
 		elseif GetTeam() == TEAM_DIRE then
 			if bot:GetAssignedLane() == LANE_TOP then 
-				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_4) + RandomVector(82))
+				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_1) + RandomVector(82))
 				return
 			else
-				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_3) + RandomVector(83))
+				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_2) + RandomVector(83))
 				return
 			end
 		end
@@ -323,7 +330,7 @@ function Think()
 		if nEnemys[1] ~= nil 
 		   and nEnemys[1]:IsAlive() 
 		   and nEnemys[1]:CanBeSeen()
-		   and bot:GetPrimaryAttribute() ~= ATTRIBUTE_INTELLECT
+		   and 1.6 * bot:GetEstimatedDamageToTarget(true, bot, 4.0, DAMAGE_TYPE_ALL) > nEnemys[1]:GetEstimatedDamageToTarget(true, bot, 4.0, DAMAGE_TYPE_ALL)
 		   and bot:GetHealth() > 500
 		then
 			bot:Action_AttackUnit(nEnemys[1], true)
@@ -662,13 +669,13 @@ function X.IsEnemyPickRune(bot,nRune)
 	
 	local nEnemys = bot:GetNearbyHeroes(1600,true,BOT_MODE_NONE)
 	local runeLocation = GetRuneSpawnLocation( nRune )
-	if GetUnitToLocationDistance(bot,runeLocation) < 600 then return false end
+	if GetUnitToLocationDistance(bot,runeLocation) < 500 then return false end
 	
 	for _,enemy in pairs(nEnemys)
 	do
 		if  enemy ~= nil and enemy:IsAlive()
-			and ( enemy:IsFacingLocation(runeLocation,20) or enemy:IsFacingLocation(bot:GetLocation(),20) )
-			and GetUnitToLocationDistance(enemy,runeLocation) - 300 < GetUnitToLocationDistance(bot,runeLocation)
+			and ( enemy:IsFacingLocation(runeLocation,40) or enemy:IsFacingLocation(bot:GetLocation(),40) )
+			and GetUnitToLocationDistance(enemy,runeLocation) < GetUnitToLocationDistance(bot,runeLocation) + 300
 		then
 			return true
 		end
@@ -681,7 +688,7 @@ function X.GetWaitRuneLocation(nRune)
 
 	local vLocation = GetRuneSpawnLocation(nRune)
 
-	if DotaTime() > -nStopWaitTime then return vLocation end
+	if DotaTime() > -nStopWaitTime or true then return vLocation end
 	
 	local vNearestLoc = nil
 	local nDist = 99999

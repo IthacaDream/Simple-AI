@@ -183,29 +183,6 @@ function GetDesire()
 	end
 	
 	if beTechies then return 2.0 end
-		
-	local manaP = bot:GetMana() / bot:GetMaxMana();
-	local healthP = bot:GetHealth() / bot:GetMaxHealth();
-	
-	if ( healthP < 0.38 ) 
-	   or ( manaP < 0.18 and healthP < 0.68 )  --可优化加入距离因素 守护队友时的目标
-	   or ( manaP < 0.08 and bot:GetAttackTarget() == nil )
-	   or ( X.IsAllyHealing(bot) and ( manaP < 0.5 or healthP < 0.75 ) and bot:GetAttackTarget() == nil) 
-    then
-		targetShrine = X.GetClosestShrine();
-		if targetShrine ~= nil 
-		   and bot:GetActiveMode() ~= BOT_MODE_RUNE
-		   and botName ~= 'npc_dota_hero_huskar'
-		   and not bot:HasModifier("modifier_arc_warden_tempest_double") 
-		then
-			local enemies = bot:GetNearbyHeroes(700, true, BOT_MODE_NONE);
-			if bot:HasModifier("modifier_filler_heal") and #enemies > 1 then
-				return BOT_MODE_DESIRE_NONE;
-			else
-				return BOT_MODE_DESIRE_ABSOLUTE *0.98;
-			end
-		end		
-	end
 	
 	if botName == "npc_dota_hero_pugna" 
 	then
@@ -318,76 +295,6 @@ function Think()
 			return
 		end
 	end
-
-	if targetShrine ~= nil then
-		if bot:IsChanneling() or bot:IsUsingAbility() or bot:IsCastingAbility() then
-			return;
-		elseif GetUnitToUnitDistance(bot, targetShrine) > 500 or bot:HasModifier("modifier_filler_heal") then
-			
-			local nEnemy = bot:GetNearbyHeroes(600,true,BOT_MODE_NONE);
-			if bot:HasModifier("modifier_filler_heal") 
-				and J.IsValid(nEnemy[1])
-				and J.CanBeAttacked(nEnemy[1])
-			then
-				bot:Action_AttackUnit(nEnemy[1], true);
-				return;
-			end
-			
-			local nCreeps = bot:GetNearbyCreeps(1600,true);
-			if J.IsValid(nCreeps[1])
-				and bot:HasModifier("modifier_filler_heal")
-				and bot:GetLevel() > 6
-				and ( bot:GetPrimaryAttribute() ~= ATTRIBUTE_INTELLECT or bot:GetAttackDamage() >= 150 )
-				and GetUnitToUnitDistance(bot,nCreeps[1]) <= bot:GetAttackRange() + 400
-				and J.CanBeAttacked(nCreeps[1])
-			then
-				bot:Action_AttackUnit(nCreeps[1], true);
-				return;
-			end
-			
-			bot:Action_MoveToLocation(targetShrine:GetLocation() + RandomVector(50));
-			return;
-		else
-			
-			local shouldWaitAlly = false;
-			local nLoc = targetShrine:GetLocation();
-			local numPlayer = GetTeamPlayers(GetTeam());
-			for i = 1, #numPlayer
-			do
-				local member = GetTeamMember(i);
-				if J.IsValid(member) 
-					and member ~= bot
-					and member:IsFacingLocation(nLoc,60)
-					and J.GetHPR(member) + J.GetMPR(member) < 1.6
-					and GetUnitToLocationDistance(member,nLoc) > 500
-					and GetUnitToLocationDistance(member,nLoc) < distance
-					and GetUnitToLocationDistance(member,nLoc) > GetUnitToLocationDistance(bot,nLoc)
-				then
-					shouldWaitAlly = true;
-					break;
-				end
-			end
-			if shouldWaitAlly and GetShrineCooldown(targetShrine) == 0 and not bot:WasRecentlyDamagedByAnyHero(3.0)
-			then
-				bot:Action_MoveToLocation(targetShrine:GetLocation() + RandomVector(300));
-				return;
-			end
-				
-			if GetShrineCooldown(targetShrine) == 0 
-			then
-				bot:Action_UseShrine(targetShrine);
-				return;
-			end
-			
-			if GetShrineCooldown(targetShrine) < 294 
-			then
-				targetShrine = nil;
-			end
-			
-			bot:ActionQueue_MoveToLocation(bot:GetLocation() + RandomVector(350));
-			return;
-		end
-	end
 	
 	if (beSpecialCarry or beSpecialSupport)
 		and targetUnit ~= nil and not targetUnit:IsNull() and targetUnit:IsAlive()
@@ -396,38 +303,6 @@ function Think()
 		return;	
 	end
 	
-end
-
-
-function X.GetClosestShrine()
-	local closest = nil;
-	local minDist = 100000;
-	local enemies = bot:GetNearbyHeroes(1600, true, BOT_MODE_NONE);
-	for i=3,4 do	
-		local shrine = GetShrine(GetTeam(), i);
-		if shrine ~= nil and shrine:IsAlive() and ( GetShrineCooldown(shrine) == 0 or IsShrineHealing(shrine) ) then 
-			local dist =  GetUnitToUnitDistance(bot, shrine);
-			if dist < distance and dist < minDist then
-				closest = shrine;
-				minDist = dist;
-			end
-		end
-	end
-	return closest;
-end 
-
-
-function X.IsAllyHealing(bot)
-	local nAllies = bot:GetNearbyHeroes(1600,false,BOT_MODE_NONE);
-	for _,ally in pairs(nAllies)
-	do
-		if J.IsValid(ally)
-			and ally:HasModifier("modifier_filler_heal")
-		then
-			return true;
-		end
-	end
-	return false;
 end
 
 
@@ -1398,6 +1273,19 @@ function X.GetNearbyLastHitCreep(ignorAlly, bEnemy, nDamage, nRadius, bot)
 		then
 			local bonusDamage = cAbility:GetSpecialValueInt( 'damage_bonus' );
 			nDamage = nDamage + bonusDamage;
+		end
+	end
+	
+	if  bEnemy
+		and botName == "npc_dota_hero_clinkz"
+	then
+		local cAbility = bot:GetAbilityByName( "clinkz_searing_arrows" );
+		if cAbility:IsTrained() and cAbility:GetAutoCastState()
+		then
+			local bonusDamage = cAbility:GetSpecialValueInt( 'damage_bonus' );
+			local bonusTalent = bot:GetAbilityByName( "special_bonus_unique_clinkz_1" )
+			local talentDamage = bonusTalent:IsTrained() and bonusTalent:GetSpecialValueInt( 'value' ) or 0
+			nDamage = nDamage + bonusDamage + talentDamage
 		end
 	end
 	

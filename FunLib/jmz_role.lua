@@ -10,8 +10,8 @@
 local X = {}
 
 local sBotVersion = "New";
-local sVersionDate = " 1.3.5"
-local sABAVersionDate = sBotVersion.." 7.23,2020/01/06"
+local sVersionDate = " 1.3.6"
+local sABAVersionDate = sBotVersion.." 7.23,2020/01/28"
 
 function X.GetBotVersion()
 	return sBotVersion,sVersionDate,sABAVersionDate;
@@ -1432,7 +1432,32 @@ X["hero_roles"] = {
 		['nuker'] = 3,
 		['support'] = 0,
 		['pusher'] = 0
-	}
+	},
+	
+	["npc_dota_hero_void_spirit"] = {
+		['carry'] = 2,
+		['disabler'] = 1,
+		['durable'] = 0,
+		['escape'] = 3,
+		['initiator'] = 1,
+		['jungler'] = 0,
+		['nuker'] = 1,
+		['support'] = 0,
+		['pusher'] = 0
+	},
+	
+	["npc_dota_hero_snapfire"] = {
+		['carry'] = 0,
+		['disabler'] = 2,
+		['durable'] = 0,
+		['escape'] = 1,
+		['initiator'] = 0,
+		['jungler'] = 0,
+		['nuker'] = 3,
+		['support'] = 3,
+		['pusher'] = 0
+	},
+	
 }
 
 X["bottle"] = {
@@ -1827,6 +1852,8 @@ function X.IsTheLowestLevel(bot)
 	return bot:GetPlayerID() == lowestID;
 end
 
+X["bBuyMidWardDone"] = false
+
 X['supportExist'] = nil;
 function X.UpdateSupportStatus(bot)
 	
@@ -2048,7 +2075,6 @@ function X.IsAllShadow()
 	return nShadowNumber <= 5
 
 end
-
 
 function X.GetHighestValueRoles(bot)
 	local maxVal = -1;

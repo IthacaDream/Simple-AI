@@ -46,10 +46,10 @@ X['sBuyList'] = {
 }
 
 X['sSellList'] = {
-	"item_manta",
+	"item_skadi",
 	"item_urn_of_shadows",
 	
-	"item_skadi",
+	"item_sphere",
 	"item_magic_wand",
 }
 
