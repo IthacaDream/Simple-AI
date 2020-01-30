@@ -41,8 +41,8 @@ X['sBuyList'] = {
 				"item_hurricane_pike",	
 				"item_satanic",
 				"item_butterfly",
-				"item_ultimate_scepter_2",
 				"item_black_king_bar",
+				"item_ultimate_scepter_2",
 }
 
 X['sSellList'] = {

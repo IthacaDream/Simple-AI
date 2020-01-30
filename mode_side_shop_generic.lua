@@ -31,7 +31,7 @@ function GetDesire()
 	end
 
 	if targetWatchTower ~= nil
-		and GetUnitToUnitDistance(bot,targetWatchTower) <= 4300 - ignoreDistance
+		and GetUnitToUnitDistance(bot,targetWatchTower) <= 3800 - ignoreDistance
 		and targetWatchTower:GetTeam() ~= bot:GetTeam()
 		and X.IsSuitableToActiveWatchTower()
 		and ( lastActiveWatchTowerTime + activeWatchTowerCD < currentTime
@@ -109,7 +109,8 @@ function X.GetNearestWatchTower(bot)
 		local allUnitList = GetUnitList(UNIT_LIST_ALL)
 		for _,v in pairs(allUnitList)
 		do
-			if v:GetUnitName() == 'npc_dota_watch_tower'
+			if v:GetUnitName() == '#DOTA_OutpostName_North' 
+				or v:GetUnitName() == '#DOTA_OutpostName_South' 
 			then
 				if nWatchTower_1 == nil
 				then

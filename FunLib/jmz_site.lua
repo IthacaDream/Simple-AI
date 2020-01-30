@@ -96,21 +96,16 @@ local RADIANT_T3TOPFALL = Vector(-6600.000000, -3072.000000, 0.000000); --高地
 local RADIANT_T3MIDFALL = Vector(-4314.000000, -3887.000000, 0.000000);
 local RADIANT_T3BOTFALL = Vector(-3586.000000, -6131.000000, 0.000000);
 
-local RADIANT_T2TOPFALL = Vector(-4355, -1011, 0);  --二塔野区高台
-local RADIANT_T2MIDFALL = Vector(-1791, -4870, 0); --天辉下路野区高台
-local RADIANT_T2BOTFALL = Vector(1024, -4118, 0);  --下路野区内高台
+local RADIANT_T2TOPFALL = Vector(-4349, -1016, 663);  --二塔野区高台
+local RADIANT_T2MIDFALL = Vector(-1794, -4860, 655); --天辉下路野区高台
+local RADIANT_T2BOTFALL = Vector(1033, -4099, 655);  --下路野区内高台
 
-local RADIANT_T1TOPFALL = Vector(-5369, 2313, 0);  --天辉上路野区高台
-local RADIANT_T1MIDFALL = Vector(778, -2305, 0);  --中路野区高台
+local RADIANT_T1TOPFALL = Vector(-5366, 2313, 535);  --天辉上路野区高台
+local RADIANT_T1MIDFALL = Vector(771, -2287, 655);  --中路野区高台
 local RADIANT_T1BOTFALL = Vector(3458, -5185, 0); --下路野区十字路口
 
 local RADIANT_MANDATE1 = Vector(-1250, -250, 0);   ---天辉中路河道眼        
 local RADIANT_MANDATE2 = RADIANT_RUNE_WARD  ---天辉看符眼
-
-local RADIANT_AGGRESSIVETOP  = Vector(1026, 4865, 0); --敌方上路野区高台
-local RADIANT_AGGRESSIVEMID1 = Vector(-247, 2056, 0); --敌方中路高台
-local RADIANT_AGGRESSIVEMID2 = Vector(2044, -772, 0); --敌方中路河道高台
-local RADIANT_AGGRESSIVEBOT  = Vector(5118, 759, 0);  --敌方下路高台
 
 ---DIRE WARDING SPOT
 local DIRE_RUNE_WARD = Vector(2510, -2007, 0)
@@ -119,21 +114,26 @@ local DIRE_T3TOPFALL = Vector(3087.000000, 5690.000000, 0.000000);
 local DIRE_T3MIDFALL = Vector(4024.000000, 3445.000000, 0.000000);
 local DIRE_T3BOTFALL = Vector(6354.000000, 2606.000000, 0.000000);
 
-local DIRE_T2TOPFALL = Vector(1026, 4865, 0);    --夜魇上路野区高台
-local DIRE_T2MIDFALL = Vector(2044, -772, 0);    --夜魇中路河道野区入口
-local DIRE_T2BOTFALL = Vector(5118, 759, 0); --夜魇下路高台
+local DIRE_T2TOPFALL = Vector(1021, 4873, 655);    --夜魇上路野区高台
+local DIRE_T2MIDFALL = Vector(2049, -758, 655);  --夜魇中路河道野区入口
+local DIRE_T2BOTFALL = Vector(5127, 775, 655); --夜魇下路高台
 
-local DIRE_T1TOPFALL = Vector(-2056, 4863, 0);   --夜魇上路一塔野区高台
-local DIRE_T1MIDFALL = Vector(-247, 2056, 0);    --夜魇中路一塔野区入口高台
-local DIRE_T1BOTFALL = Vector(4866, -2312, 0);   --夜魇下路一塔高台
+local DIRE_T1TOPFALL = Vector(-3251, 5176, 256);   --夜魇上路野区十字路口
+local DIRE_T1MIDFALL = Vector(-260, 2060, 655);    --夜魇中路一塔野区入口高台
+local DIRE_T1BOTFALL = Vector(4877, -2282, 527);   --夜魇下路一塔高台
 
 local DIRE_MANDATE1 =  DIRE_RUNE_WARD       --夜魇看符眼       
 local DIRE_MANDATE2 =  Vector(-470, 360, 0);   --夜魇中路河道眼       
 
-local DIRE_AGGRESSIVETOP  = Vector(-5369, 2313, 0);   --敌方一塔高台眼
-local DIRE_AGGRESSIVEMID1 = Vector(-4355, -1011, 0);   --上路高台
-local DIRE_AGGRESSIVEMID2 = Vector(-1791, -4870, 0);  --中下路高台
-local DIRE_AGGRESSIVEBOT  = Vector(1024, -4118, 0);  --敌方下路野区内高台眼
+local RADIANT_AGGRESSIVETOP  = DIRE_T2TOPFALL; --夜魇上路野区高台
+local RADIANT_AGGRESSIVEMID1 = DIRE_T1MIDFALL; --夜魇中路一塔野区入口高台
+local RADIANT_AGGRESSIVEMID2 = DIRE_T2MIDFALL; --夜魇中路河道野区入口
+local RADIANT_AGGRESSIVEBOT  = DIRE_T2BOTFALL; --夜魇下路高台
+
+local DIRE_AGGRESSIVETOP  = RADIANT_T1TOPFALL; --天辉上路野区高台
+local DIRE_AGGRESSIVEMID1 = RADIANT_T2TOPFALL; --天辉二塔野区高台
+local DIRE_AGGRESSIVEMID2 = RADIANT_T2MIDFALL; --天辉下路野区高台
+local DIRE_AGGRESSIVEBOT  = RADIANT_T2BOTFALL; --天辉下路野区内高台
 
 
 local WardSpotTowerFallRadiant = {

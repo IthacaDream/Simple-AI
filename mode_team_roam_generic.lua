@@ -19,7 +19,6 @@ local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
 
 local botName = bot:GetUnitName();
 local cAbility = nil;
-local distance = 2500; --吃锅距离
 local targetShrine = nil;
 
 local targetUnit = nil;
@@ -55,7 +54,6 @@ function GetDesire()
 	end
 	
 	if not bot:IsAlive() or bot:GetCurrentActionType() == BOT_ACTION_TYPE_DELAY then
-		targetShrine = nil;
 		return BOT_MODE_DESIRE_NONE;
 	end
 	
@@ -259,7 +257,6 @@ end
 
 function OnEnd()
 
-	targetShrine = nil;
 	pickedItem = nil;
 	towerTime = 0;
 	towerCreepMode = false;

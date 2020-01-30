@@ -107,7 +107,7 @@ function GetDesire()
 			pickItem = Item.GetInGroundItem(bot)
 		end
 		
-		if DotaTime() > lastDropCheckTime + 0.9
+		if DotaTime() > lastDropCheckTime + 1.9
 		then
 			lastDropCheckTime = DotaTime()
 			dropItem, dropItemTarget = Item.GetNeedDropNeutralItem(bot)
@@ -267,10 +267,10 @@ function Think()
 			end
 		elseif GetTeam() == TEAM_DIRE then
 			if bot:GetAssignedLane() == LANE_TOP then 
-				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_1) + RandomVector(82))
+				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_2) + RandomVector(82))
 				return
 			else
-				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_2) + RandomVector(83))
+				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_1) + RandomVector(83))
 				return
 			end
 		end
@@ -431,9 +431,9 @@ end
 
 function X.IsTeamMustSaveRune(rune)
 	if GetTeam() == TEAM_DIRE then
-		return rune == RUNE_BOUNTY_3 or rune == RUNE_BOUNTY_4 or rune == RUNE_POWERUP_1 or rune == RUNE_POWERUP_2 or DotaTime() > 4 * 60 + 55
+		return rune == RUNE_BOUNTY_1 or rune == RUNE_BOUNTY_2 or rune == RUNE_POWERUP_1 or rune == RUNE_POWERUP_2 or DotaTime() > 14 * 60 + 55
 	else
-		return rune == RUNE_BOUNTY_1 or rune == RUNE_BOUNTY_2 or rune == RUNE_POWERUP_1 or rune == RUNE_POWERUP_2 or DotaTime() > 4 * 60 + 55
+		return rune == RUNE_BOUNTY_3 or rune == RUNE_BOUNTY_4 or rune == RUNE_POWERUP_1 or rune == RUNE_POWERUP_2 or DotaTime() > 14 * 60 + 55
 	end
 end
 

@@ -40,8 +40,9 @@ X['sBuyList'] = {
 				"item_black_king_bar",
 				"item_broken_satanic",	
 				"item_monkey_king_bar",
+				'item_invis_sword',	
 				"item_ultimate_scepter_2",
-				"item_sheepstick",
+				"item_silver_edge",
 				
 }
 
