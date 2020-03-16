@@ -1,111 +1,59 @@
+----------------------------------------------------------------------------------------------------
+--- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
+--- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
+--- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
+--- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
+----------------------------------------------------------------------------------------------------
 local X = {}
-local bot = GetBot() --获取当前电脑
+local bDebugMode = ( 1 == 10 )
+local bot = GetBot()
 
-local J = require( GetScriptDirectory()..'/FunLib/jmz_func') --引入jmz_func文件
-local ConversionMode = dofile( GetScriptDirectory()..'/AuxiliaryScript/BotlibConversion') --引入技能文件
-local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion') --引入Minion文件
-local sTalentList = J.Skill.GetTalentList(bot) --获取当前英雄（当前电脑选择的英雄，一下省略为当前英雄）的天赋列表
-local sAbilityList = J.Skill.GetAbilityList(bot) --获取当前英雄的技能列表
+local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
+local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
+local sTalentList = J.Skill.GetTalentList(bot)
+local sAbilityList = J.Skill.GetAbilityList(bot)
 
---编组技能、天赋、装备
-local tGroupedDataList = {
-	{
-		--组合说明，不影响游戏
-		['info'] = 'By Misunderstand',
-		--天赋树
-		['Talent'] = {
-			['t25'] = {10, 0},
-			['t20'] = {10, 0},
-			['t15'] = {10, 0},
-			['t10'] = {0, 10},
-		},
-		--技能
-		['Ability'] = { 1, 3, 1, 2, 1, 6, 2, 2, 3, 3, 6, 3, 3, 2, 6},
-		--装备
-		['Buy'] = {
-			"item_tango",
-			"item_double_enchanted_mango",
-			"item_magic_stick",
-			"item_soul_ring",
-			"item_magic_wand",
-			"item_bracer",
-			"item_phase_boots",
-			"item_ancient_janggo",
-			"item_vanguard",
-			"item_vladmir", 
-			"item_pipe",
-			"item_sange_and_yasha",
-			"item_solar_crest",
-			"item_crimson_guard",
-			"item_ultimate_scepter_2",
-			"item_lotus_orb",
-			"item_black_king_bar",
-			"item_travel_boots_2",
-			"item_moon_shard"
-		},
-		--出售
-		['Sell'] = {
-			"item_vladmir",
-			"item_bracer",
-
-			"item_pipe",     
-			"item_soul_ring",
-
-			"item_sange_and_yasha",     
-			"item_magic_wand",
-					
-			"item_solar_crest",  
-			"item_ancient_janggo",
-
-			"item_lotus_orb",
-			"item_vladmir",
-
-			"item_black_king_bar",
-			"item_sange_and_yasha",
-
-			"item_travel_boots_2",
-			"item_phase_boots"
-		},
-	}
-}
---默认数据
-local tDefaultGroupedData = {
-	--天赋树
-	['Talent'] = {
-		['t25'] = {10, 0},
-		['t20'] = {0, 10},
-		['t15'] = {10, 0},
-		['t10'] = {0, 10},
-	},
-	--技能
-	['Ability'] = {1,2,2,1,2,6,2,1,1,3,3,3,3,6,6},
-	--装备
-	['Buy'] = {
-		"item_tango",
-		"item_flask",
-		"item_quelling_blade",
-		"item_soul_ring",
-		"item_phase_boots",
-		"item_hand_of_midas",
-		"item_aether_lens",
-		"item_hood_of_defiance",
-		"item_guardian_greaves",
-		"item_ultimate_scepter",
-	},
-	--出售
-	['Sell'] = {
-		"item_lotus_orb",
-		"item_magic_wand",
-		
-		"item_crimson_guard",
-		"item_quelling_blade",
-	},
+local tTalentTreeList = {
+						['t25'] = {0, 10},
+						['t20'] = {10, 0},
+						['t15'] = {0, 10},
+						['t10'] = {0, 10},
 }
 
---根据组数据生成技能、天赋、装备
-local nAbilityBuildList, nTalentBuildList;
+local tAllAbilityBuildList = {
+						{1,2,1,3,1,6,1,2,2,2,6,3,3,3,6},
+						{1,2,1,2,1,6,1,2,2,3,6,3,3,3,6},
+}
 
-nAbilityBuildList, nTalentBuildList, X['sBuyList'], X['sSellList'] = ConversionMode.Combination(tGroupedDataList, tDefaultGroupedData)
+local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
+
+local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
+
+X['sBuyList'] = {
+				'item_tank_outfit',
+				"item_crimson_guard",
+				"item_echo_sabre",
+				"item_heavens_halberd",
+				"item_assault",
+				"item_heart",
+}
+
+X['sSellList'] = {
+
+	"item_crimson_guard",
+	"item_quelling_blade",
+	
+	"item_assault",
+	"item_echo_sabre",
+	
+	"item_heavens_halberd",
+	"item_magic_wand",
+
+}
+
+if J.Role.IsPvNMode() or J.Role.IsAllShadow() then X['sBuyList'],X['sSellList'] = { 'PvN_tank' }, {"item_invis_sword",'item_quelling_blade'} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
@@ -118,23 +66,147 @@ function X.MinionThink(hMinionUnit)
 
 	if Minion.IsValidUnit(hMinionUnit) 
 	then
-		if hMinionUnit:IsIllusion() 
-		then 
-			Minion.IllusionThink(hMinionUnit)	
-		end
+		Minion.IllusionThink(hMinionUnit)	
 	end
 
 end
 
+--[[
+
+npc_dota_hero_omniknight
+
+--]]
+
+local abilityQ = bot:GetAbilityByName( sAbilityList[1] )
+local abilityW = bot:GetAbilityByName( sAbilityList[2] )
+local abilityE = bot:GetAbilityByName( sAbilityList[3] )
+local abilityR = bot:GetAbilityByName( sAbilityList[6] )
+local talent2 = bot:GetAbilityByName( sTalentList[2] )
+local talent7 = bot:GetAbilityByName( sTalentList[7] )
+
+local castQDesire, castQTarget
+local castWDesire, castWTarget
+local castRDesire
+
+
+local nKeepMana,nMP,nHP,nLV,hEnemyList,hAllyList,botTarget,sMotive
+local aetherRange = 0
+local talent7Damage = 0
+
 function X.SkillsComplement()
 
-	--如果当前英雄无法使用技能或英雄处于隐形状态，则不做操作。
 	if J.CanNotUseAbility(bot) or bot:IsInvisible() then return end
-	--技能检查顺序
-	local order = {'Q','W','R'}
-	--委托技能处理函数接管
-	if ConversionMode.Skills(order) then return; end
+
+	nKeepMana = 400
+	aetherRange = 0
+	talent7Damage = 0
+	nLV = bot:GetLevel();
+	nMP = bot:GetMana()/bot:GetMaxMana();
+	nHP = bot:GetHealth()/bot:GetMaxHealth();
+	botTarget = J.GetProperTarget(bot);
+	hEnemyList = bot:GetNearbyHeroes(1600, true, BOT_MODE_NONE);
+	hAllyList = J.GetAlliesNearLoc(bot:GetLocation(), 1600);
+	
+	local aether = J.IsItemAvailable("item_aether_lens");
+	if aether ~= nil then aetherRange = 250 end	
+	if talent7:IsTrained() then talent7Damage = talent7:GetSpecialValueInt("value") end
+	
+	castQDesire, castQTarget, sMotive = X.ConsiderQ();
+	if ( castQDesire > 0 ) 
+	then
+		J.SetReportMotive(bDebugMode,sMotive);		
+	
+		J.SetQueuePtToINT(bot, true)
+	
+		bot:ActionQueue_UseAbilityOnEntity( abilityQ, castQTarget )
+		return;
+	end
+	
+	castWDesire, castWTarget, sMotive = X.ConsiderW();
+	if ( castWDesire > 0 ) 
+	then
+		J.SetReportMotive(bDebugMode,sMotive);
+	
+		J.SetQueuePtToINT(bot, true)
+	
+		bot:ActionQueue_UseAbilityOnE( abilityW, castWTarget )
+		return;
+	end
+	
+	
+	castRDesire, sMotive = X.ConsiderR()
+	if ( castRDesire > 0 ) 
+	then
+		J.SetReportMotive(bDebugMode,sMotive);
+	
+		J.SetQueuePtToINT(bot, true)
+	
+		bot:ActionQueue_UseAbility( abilityR )
+		return;
+	
+	end
 
 end
 
+
+function X.ConsiderQ()
+
+
+	if not abilityQ:IsFullyCastable() then return 0 end
+	
+	local nSkillLV    = abilityQ:GetLevel(); 
+	local nCastRange  = abilityQ:GetCastRange()
+	local nCastPoint  = abilityQ:GetCastPoint()
+	local nManaCost   = abilityQ:GetManaCost()
+	local nDamage     = abilityQ:GetAbilityDamage()
+	local nDamageType = DAMAGE_TYPE_MAGICAL
+	local nInRangeEnemyList = bot:GetNearbyHeroes(nCastRange, true, BOT_MODE_NONE);
+	
+	
+	return BOT_ACTION_DESIRE_NONE;
+	
+	
+end
+
+function X.ConsiderW()
+
+
+	if not abilityW:IsFullyCastable() then return 0 end
+	
+	local nSkillLV    = abilityW:GetLevel(); 
+	local nCastRange  = abilityW:GetCastRange()
+	local nCastPoint  = abilityW:GetCastPoint()
+	local nManaCost   = abilityW:GetManaCost()
+	local nDamage     = abilityW:GetAbilityDamage()
+	local nDamageType = DAMAGE_TYPE_MAGICAL
+	local nInRangeEnemyList = bot:GetNearbyHeroes(nCastRange, true, BOT_MODE_NONE)
+	
+	
+	return BOT_ACTION_DESIRE_NONE;
+	
+	
+end
+
+
+function X.ConsiderR()
+
+
+	if not abilityR:IsFullyCastable() then return 0 end
+	
+	local nSkillLV    = abilityR:GetLevel(); 
+	local nCastRange  = abilityR:GetCastRange();
+	local nCastPoint  = abilityR:GetCastPoint();
+	local nManaCost   = abilityR:GetManaCost();
+	local nDamage     = abilityR:GetAbilityDamage()
+	local nDamageType = DAMAGE_TYPE_MAGICAL
+	local nInRangeEnemyList = bot:GetNearbyHeroes(nCastRange, true, BOT_MODE_NONE);
+	
+	
+	return BOT_ACTION_DESIRE_NONE;
+	
+	
+end
+
+
 return X
+-- dota2jmz@163.com QQ:2462331592。

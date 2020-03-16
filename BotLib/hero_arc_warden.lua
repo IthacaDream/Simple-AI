@@ -14,7 +14,7 @@ local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-
+local sOutfitType = J.Item.GetOutfitType(bot)
 
 local tTalentTreeList = {
 						['t25'] = {10, 0},
@@ -31,19 +31,32 @@ local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
+local tOutFitList = {}
 
-X['sBuyList'] = {
-				'item_ranged_carry_outfit',
-				"item_hand_of_midas",
-				"item_maelstrom",
-				"item_diffusal_blade",
-				"item_manta",
-				"item_sheepstick",
-				"item_mjollnir",
-				"item_orchid",
-				"item_bloodthorn",
-				"item_black_king_bar",	
+tOutFitList['outfit_carry'] = {
+	
+	"item_ranged_carry_outfit",
+	"item_hand_of_midas",
+	"item_maelstrom",
+	"item_diffusal_blade",
+	"item_manta",
+	"item_sheepstick",
+	"item_mjollnir",
+	"item_orchid",
+	"item_bloodthorn",
+	"item_black_king_bar",	
+				
 }
+
+tOutFitList['outfit_mid'] = tOutFitList['outfit_carry']
+
+tOutFitList['outfit_priest'] = tOutFitList['outfit_carry']
+
+tOutFitList['outfit_mage'] = tOutFitList['outfit_carry']
+
+tOutFitList['outfit_tank'] = tOutFitList['outfit_carry']
+
+X['sBuyList'] = tOutFitList[sOutfitType]
 
 X['sSellList'] = {
 			
@@ -189,7 +202,7 @@ function X.ConsiderE()
 	local nRadius = abilityE:GetSpecialValueInt( "radius" );
 	local nCastRange = abilityE:GetCastRange();
 	local nDamage = abilityE:GetSpecialValueInt("spark_damage");
-	local nDelay = abilityE:GetSpecialValueInt("activation_delay");
+	local nDelay = abilityE:GetSpecialValueInt("activation_delay") + 0.1;
 
 	
 	-- If a mode has set a target, and we can kill them, do it
@@ -200,7 +213,7 @@ function X.ConsiderE()
 		if J.CanKillTarget(npcTarget, nDamage, DAMAGE_TYPE_MAGICAL) 
 		   and J.IsInRange(npcTarget, bot, nCastRange) 
 		then
-			return BOT_ACTION_DESIRE_MODERATE, npcTarget:GetExtrapolatedLocation( nDelay - 0.3 )
+			return BOT_ACTION_DESIRE_MODERATE, npcTarget:GetExtrapolatedLocation( nDelay )
 		end
 	end
 
@@ -234,7 +247,7 @@ function X.ConsiderE()
 		   and J.CanCastOnNonMagicImmune(npcTarget) 
 		   and J.IsInRange(npcTarget, bot, nCastRange)
 		then
-			return BOT_ACTION_DESIRE_MODERATE, npcTarget:GetExtrapolatedLocation( nDelay - 0.3 );
+			return BOT_ACTION_DESIRE_MODERATE, npcTarget:GetExtrapolatedLocation( nDelay );
 		end
 		
 		local locationAoE = bot:FindAoELocation( true, true, bot:GetLocation(), 1400, nRadius, 2.0, 0 );
@@ -711,4 +724,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592。

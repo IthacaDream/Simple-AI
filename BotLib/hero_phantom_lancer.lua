@@ -14,7 +14,7 @@ local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-
+local sOutfitType = J.Item.GetOutfitType(bot)
 
 local tTalentTreeList = {
 						['t25'] = {0, 10},
@@ -33,21 +33,35 @@ local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
-X['sBuyList'] = {
-				'item_melee_carry_outfit',
-				"item_diffusal_blade",
-				"item_manta",
-				"item_skadi",
-				"item_abyssal_blade",
-				"item_heart",
+local tOutFitList = {}
+
+tOutFitList['outfit_carry'] = {
+	
+	"item_melee_carry_outfit",
+	"item_diffusal_blade",
+	"item_manta",
+	"item_skadi",
+	"item_abyssal_blade",
+	"item_heart",
+	
 }
+
+tOutFitList['outfit_mid'] = tOutFitList['outfit_carry']
+
+tOutFitList['outfit_priest'] = tOutFitList['outfit_carry']
+
+tOutFitList['outfit_mage'] = tOutFitList['outfit_carry']
+
+tOutFitList['outfit_tank'] = tOutFitList['outfit_carry']
+
+X['sBuyList'] = tOutFitList[sOutfitType]
 
 X['sSellList'] = {
 	
 	"item_manta",
 	"item_quelling_blade",
 	
-	"item_skadi",
+	"item_abyssal_blade",
 	"item_magic_wand",
 
 }
@@ -436,7 +450,7 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592。
 
 
 

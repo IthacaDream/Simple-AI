@@ -82,7 +82,7 @@ function Think()
 		return
 	end
 	
-	if GetUnitToUnitDistance(bot,targetWatchTower) > 600
+	if GetUnitToUnitDistance(bot,targetWatchTower) > 300
 	then
 		bot:Action_MoveToLocation(targetWatchTower:GetLocation())
 	else
@@ -145,7 +145,7 @@ function X.IsSuitableToActiveWatchTower()
 		or ( #nAttackAllies >= 1 )
 		or ( #nEnemies >= 1 and ( X.IsEnemyTargetBot(nEnemies) or #nEnemies >= 2 ) )	
 		or ( #nRetreatAllies >= 2 and nRetreatAllies[2]:GetActiveModeDesire() > BOT_MODE_DESIRE_HIGH )
-		or ( #nWatchtTowerAllies >= 2 and mode ~= BOT_MODE_SIDE_SHOP)
+		or ( #nWatchtTowerAllies >= 2 and mode ~= BOT_MODE_SIDE_SHOP )
 	then
 		return false
 	end
@@ -154,15 +154,16 @@ function X.IsSuitableToActiveWatchTower()
 	
 end
 
-function X.IsEnemyTargetBot(units)
-	for _,u in pairs(units) 
+function X.IsEnemyTargetBot(nEnemies)
+	for _,u in pairs(nEnemies) 
 	do
 		if u:GetAttackTarget() == bot 
 		   or u:IsFacingLocation(bot:GetLocation(),10)
+		   or ( targetWatchTower ~= nil and GetUnitToUnitDistance(u,targetWatchTower) < 500 )
 		then
 			return true
 		end
 	end
 	return false
 end
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592。

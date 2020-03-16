@@ -241,9 +241,9 @@ function ItemPurchaseThink()
 	
 	--buy midlaner ward
 	if currentTime < 0 
-		and bot.theRole == "midlaner" 
 		and Item.GetEmptyInventoryAmount(bot) <= 8
 		and Role["bBuyMidWardDone"] == false
+		and bot:GetAssignedLane() == LANE_MID
 		and not Item.HasItem(bot,"item_ward_observer")
 		and GetItemStockCount( "item_ward_observer" ) >= 1 
 	then
@@ -471,7 +471,8 @@ function ItemPurchaseThink()
 			then
 				bot:ActionImmediate_SwapItems( nNeutralBackpackSolt, nNeutralMainSolt );
 				return;
-			end			
+			end
+			
 		end	
 		
 	end
@@ -486,18 +487,18 @@ function ItemPurchaseThink()
 		local slotToSell = nil;
 		
 		local preEmpty = 2;
-		if botLevel < 18 then preEmpty = 1; end
+		if botLevel < 20 then preEmpty = 1; end
 		if emptySlot < preEmpty then
 			for i=1,#Item['tEarlyItem'] 
 			do
-				local item = Item['tEarlyItem'][i];
-				local itemSlot = bot:FindItemSlot(item);
+				local itemName = Item['tEarlyItem'][i];
+				local itemSlot = bot:FindItemSlot(itemName);
 				if itemSlot >= 0 and itemSlot <= 8
 				then
-					if item == "item_magic_wand" or item == "item_magic_stick" 
+					if itemName == "item_magic_wand" or itemName == "item_magic_stick" 
 					then
-						if 	( emptySlot == 0 and botWorth > 10000) 
-						    or botWorth > 14000
+						if 	( emptySlot == 0 and botWorth > 12000) 
+						    or botWorth > 16000
 						then
 							slotToSell = itemSlot;
 							break;
@@ -510,8 +511,8 @@ function ItemPurchaseThink()
 			end
 		end	
 		
-		--for wand and neutral item
-		if botWorth > 8800 
+		--for wand
+		if botWorth > 9999
 		then
 			local wand = bot:FindItemSlot("item_magic_wand");
 			local assitItem =  bot:FindItemSlot("item_infused_raindrop");
@@ -540,7 +541,6 @@ function ItemPurchaseThink()
 	   and ( bot:DistanceFromFountain() <= 100 or bot:DistanceFromSecretShop() <= 100 ) 
 	then
 		sell_time = currentTime;
-		
 			
 		for i = 2 ,#sItemSellList, 2
 		do
@@ -556,7 +556,7 @@ function ItemPurchaseThink()
 	
 		
 		--Sell non travel_boot when have travel_boot
-		if currentTime > 30 *60 and not hasSelltEarlyBoots 
+		if currentTime > 30 * 60 and not hasSelltEarlyBoots 
 		   and  ( Item.HasItem( bot, "item_travel_boots") or Item.HasItem( bot, "item_travel_boots_2")) 
 		then	
 			for i=1,#Item['tEarlyBoots']
@@ -574,14 +574,14 @@ function ItemPurchaseThink()
 	
 	
 	--Insert tp scroll to list item to buy and then change the buyTP flag so the bots don't reapeatedly add the tp scroll to list item to buy 
-	if	currentTime > 4 *60 
+	if	currentTime > 4 * 60 
 	    and buyTP == false 
 		and bot:GetCourierValue() == 0 
-		and (bot:FindItemSlot('item_tpscroll') == -1 
-		      or (botLevel >= 12 and Item.GetItemCharges(bot, 'item_tpscroll') <= 1)) 
+		and ( bot:FindItemSlot('item_tpscroll') == -1 
+		      or ( botLevel >= 12 and Item.GetItemCharges(bot, 'item_tpscroll') <= 1 )) 
 		and botGold >= 50
 	then
-		local tCharges = Item.GetItemCharges(bot, 'item_tpscroll');
+		local tCharges = Item.GetItemCharges( bot, 'item_tpscroll' );
 		
 		if botLevel < 12 or (botLevel >= 12 and tCharges == 1)
 		then
@@ -687,7 +687,7 @@ function ItemPurchaseThink()
 	then
 		local itemToSell = nil;
 		local itemToSellValue = 99999;
-		for i = 0, 8
+		for i = 6, 8
 		do
 			local tempItem = bot:GetItemInSlot(i);
 			if tempItem ~= nil 			   
@@ -749,4 +749,4 @@ function ItemPurchaseThink()
 	end
 
 end
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592。

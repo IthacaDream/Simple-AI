@@ -4,8 +4,8 @@
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ---------------------------------------------------------------------------
---	When the bot is thinking, the creator is laughing.
---	机器人一思考,造物者就发笑.
+--	When the bot is thinking, the player is laughing.
+--  But when the player no longer thinking, the bot still thinking.
 ------------------------------------------------------2019.11
 local targetdata = require(GetScriptDirectory() .. "/AuxiliaryScript/RoleTargetsData")
 local otherGameMod = require(GetScriptDirectory() .. "/AuxiliaryScript/OtherGameMod");
@@ -19,6 +19,7 @@ local nHumanCount = 0;
 local sBanList = {}; 
 local sSelectList = {};
 local tSelectPoolList = {};
+local tRecommendSelectPoolList = {};
 local tLaneAssignList = {};
 local bInitLineUpDone = false;
 
@@ -155,7 +156,7 @@ local sUserKeyDir = Chat.GetUserKeyDir()
 'npc_dota_hero_zuus',
 --]]
 
-local tAllLineUpList = {	
+local tRecommendLineUpList = {	
 				[1]={	"npc_dota_hero_viper",
 						"npc_dota_hero_chaos_knight",
 						"npc_dota_hero_drow_ranger",
@@ -397,13 +398,105 @@ local sFifthList = {
 	"npc_dota_hero_death_prophet",
 }				
 
+---------------------------------------------------------
+---------------------------------------------------------
+
+local sMidList = {
+	"npc_dota_hero_antimage",
+	"npc_dota_hero_arc_warden",
+	"npc_dota_hero_bloodseeker",
+	"npc_dota_hero_bristleback",
+	"npc_dota_hero_chaos_knight",
+	"npc_dota_hero_medusa",	
+	"npc_dota_hero_nevermore",
+	"npc_dota_hero_phantom_assassin",
+	"npc_dota_hero_razor",
+	"npc_dota_hero_sniper",
+	"npc_dota_hero_sniper",
+	"npc_dota_hero_templar_assassin",
+	"npc_dota_hero_viper",
+	"npc_dota_hero_viper",
+}
+
+local sTankList = {
+	"npc_dota_hero_bristleback",
+	"npc_dota_hero_chaos_knight",
+	"npc_dota_hero_dragon_knight",
+	"npc_dota_hero_kunkka",
+	"npc_dota_hero_ogre_magi",
+	"npc_dota_hero_skeleton_king",
+}
+
+local sCarryList = {
+	"npc_dota_hero_antimage",
+	"npc_dota_hero_arc_warden",
+	"npc_dota_hero_bloodseeker",
+	"npc_dota_hero_bristleback",
+	"npc_dota_hero_chaos_knight",
+	"npc_dota_hero_clinkz",
+	"npc_dota_hero_drow_ranger",
+	"npc_dota_hero_huskar",
+	"npc_dota_hero_kunkka",
+	"npc_dota_hero_luna",
+	"npc_dota_hero_medusa",
+	"npc_dota_hero_nevermore",
+	"npc_dota_hero_phantom_assassin",
+	"npc_dota_hero_phantom_lancer",
+	"npc_dota_hero_razor",
+	"npc_dota_hero_skeleton_king",
+	"npc_dota_hero_sniper",
+	"npc_dota_hero_sven",
+	"npc_dota_hero_templar_assassin",
+	"npc_dota_hero_viper",
+}
+
+local sMageList = {
+	"npc_dota_hero_crystal_maiden",
+	"npc_dota_hero_death_prophet",
+	"npc_dota_hero_jakiro",
+	"npc_dota_hero_lich",
+	"npc_dota_hero_lina",
+	"npc_dota_hero_necrolyte",
+	"npc_dota_hero_oracle",
+	"npc_dota_hero_pugna",
+	"npc_dota_hero_shadow_shaman",
+	"npc_dota_hero_silencer",
+	"npc_dota_hero_skywrath_mage",
+	"npc_dota_hero_warlock",
+	"npc_dota_hero_witch_doctor",
+	"npc_dota_hero_zuus",
+}
+
+local sPriestList = {
+	"npc_dota_hero_death_prophet",
+	"npc_dota_hero_jakiro",
+	"npc_dota_hero_lich",
+	"npc_dota_hero_lina",
+	"npc_dota_hero_necrolyte",
+	"npc_dota_hero_oracle",
+	"npc_dota_hero_pugna",
+	"npc_dota_hero_shadow_shaman",
+	"npc_dota_hero_silencer",
+	"npc_dota_hero_skywrath_mage",
+	"npc_dota_hero_warlock",
+	"npc_dota_hero_witch_doctor",
+	"npc_dota_hero_zuus",
+}
 
 tSelectPoolList = {
-	[1] = sFirstList,
-	[2] = sSecondList,
+	[1] = sMidList,
+	[2] = sTankList,
+	[3] = sCarryList,
+	[4] = sMageList,
+	[5] = sPriestList,
+}
+
+tRecommendSelectPoolList = {
+	[1] = sFifthList,
+	[2] = sFourthList,
 	[3] = sThirdList,
-	[4] = sFourthList,
-	[5] = sFifthList,
+	[4] = sSecondList,
+	[5] = sFirstList,
 }
 
 
@@ -455,13 +548,13 @@ end
 
 
 --For Random LineUp-------------
-nRand = RandomInt(1,(#tAllLineUpList) *2.3 ); 
-if nRand <= #tAllLineUpList and not bDebugMode
+nRand = RandomInt( 1, 128 ); 
+if nRand <= #tRecommendLineUpList and not bDebugMode
 then 
 	local sTempList = sSelectList;
-	sSelectList = tAllLineUpList[nRand];
-	print(tostring(GetTeam())..tostring(nRand/100));
-	for i=1,5
+	sSelectList = tRecommendLineUpList[nRand];
+	print("RandomLineUp:"..tostring(GetTeam())..tostring(nRand/100));
+	for i = 1, 5
 	do
 		if RandomInt(1,3) < 2
 		then
@@ -534,7 +627,8 @@ function X.SetLineUpInit()
 	if bLaneAssignActive then tLaneAssignList = Chat.GetLaneAssignList(HeroSet['FenLu']) end
 		
 	local IDs = GetTeamPlayers(GetTeam())
-	for i,id in pairs(IDs) do
+	for i,id in pairs(IDs) 
+	do
 		if not IsPlayerBot(id) 
 		then
 			nHumanCount = nHumanCount + 1
@@ -558,6 +652,18 @@ function X.GetMoveTable(nTable)
 	table.insert(nTable, 1, temp);
 	
 	return nTable;
+	
+end
+
+
+function X.IsExistInTable(sString, sStringList)
+	
+	for _,sTemp in pairs(sStringList) 
+	do
+		if sString == sTemp then return true end
+	end
+	
+	return false
 	
 end
 
@@ -779,23 +885,19 @@ local sDiStarsList =
 --"地藏星",
 }
 
-if RandomInt(1,999) > 9
+if RandomInt(1,987) < 65
 then
 sDiStarsList = {
-"冠状病毒",
-"冠状病毒B",
-"冠状病毒C",
-"冠状病毒D",
-"新冠状病毒",
-"艾滋病毒",
-"黄热病毒",
-"天花病毒",
-"非典病毒",
-"霍乱病毒",
-"黑死病毒",
-"流感病毒",
-"肺炎病毒",
-"制杖病毒",
+"冠状细菌",
+"杆状细菌",
+"螺旋细菌",
+"锥型细菌",
+"扫帚细菌",
+"扇形细菌",
+"制杖细菌",
+"瑙蚕细菌",
+"变异细菌",
+"无名细菌",
 }
 end
 
@@ -890,11 +992,14 @@ function AllPickLogic()
 		if IsPlayerBot(id) and GetSelectedHeroName(id) == ""
 		then
 			--原版英雄选择策略
-			--if not X.IsRepeatHero(sSelectList[i])
+			--if X.IsRepeatHero(sSelectList[i])
+			--	or ( nHumanCount == 0 
+			--		 and RandomInt(1,99) < 30
+			--		 and not X.IsExistInTable( sSelectList[i],tRecommendSelectPoolList[i] ))
 			--then
-			--	sSelectHero = sSelectList[i];
-			--else
 			--	sSelectHero = X.GetNotRepeatHero(tSelectPoolList[i]);
+			--else
+			--	sSelectHero = sSelectList[i];
 			--end
 			--新版英雄选择策略
 			sSelectHero = targetdata.getApHero();
@@ -941,4 +1046,4 @@ function UpdateLaneAssignments()
 end
 
 end
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592。

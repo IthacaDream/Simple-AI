@@ -24,20 +24,21 @@ local teamPlayers = nil
 local pingTimeGap = 10
 local bottle = nil
 
-local vRadiantDropLocation = Vector(-6416,-5966,384)
-local vDireDropLocation = Vector(6333,5738,384)
+local vRadiantDropLocation = Vector(-7143,-6580,520)
+local vDireDropLocation = Vector(7009,6355,516)
 
 local dropItem = nil
 local dropItemTarget = nil
 local tLastDropItemList = {}
 local lastDropCheckTime = 8 * 60
+
+
 local pickItem = nil
 local lastPickCheckTime = 7 * 60
 
 local runeLocation = nil
 
 local nStopWaitTime = Role.GetRuneActionTime()
-
 
 local ListRune = {
 	RUNE_BOUNTY_1,
@@ -62,9 +63,9 @@ function GetDesire()
 
 	
 	if GetGameMode() == GAMEMODE_1V1MID 
-		or (GetGameMode() == GAMEMODE_MO and DotaTime() <= 0)
-		or bot:HasModifier("modifier_arc_warden_tempest_double") 
-		or bot:GetCurrentActionType() == BOT_ACTION_TYPE_IDLE 
+		or ( GetGameMode() == GAMEMODE_MO and DotaTime() <= 0 )
+		or ( bot:HasModifier("modifier_arc_warden_tempest_double") )
+		or ( bot:GetCurrentActionType() == BOT_ACTION_TYPE_IDLE )
 	then
 		return BOT_MODE_DESIRE_NONE
 	end
@@ -99,15 +100,16 @@ function GetDesire()
 		end
 	end
 	
-	if not ( bot:IsChanneling() or bot:IsCastingAbility() or bot:IsUsingAbility() or bot:NumQueuedActions() > 0 ) 
+	if DotaTime() > 7 * 60 
+		and not ( bot:IsChanneling() or bot:IsCastingAbility() or bot:IsUsingAbility() or bot:NumQueuedActions() > 0 ) 
 	then
-		if DotaTime() > lastPickCheckTime + 0.3
+		if DotaTime() > lastPickCheckTime + 0.2
 		then
 			lastPickCheckTime = DotaTime()
 			pickItem = Item.GetInGroundItem(bot)
 		end
 		
-		if DotaTime() > lastDropCheckTime + 1.9
+		if DotaTime() > lastDropCheckTime + 2.0
 		then
 			lastDropCheckTime = DotaTime()
 			dropItem, dropItemTarget = Item.GetNeedDropNeutralItem(bot)
@@ -119,11 +121,12 @@ function GetDesire()
 		return BOT_MODE_DESIRE_NONE
 	end	
 	
-	if DotaTime() < 0 and not bot:WasRecentlyDamagedByAnyHero(12.0) then 
+	if DotaTime() < 0 and not bot:WasRecentlyDamagedByAnyHero(12.0) 
+	then 
 		return BOT_MODE_DESIRE_MODERATE
 	end	
 	
-	if DotaTime() > 26 * 30 
+	if DotaTime() > 26 * 60 
 		and X.IsUnitAroundLocation(GetAncient(GetTeam()):GetLocation(), 2800) 
 	then
 		ProxDist = 900
@@ -142,7 +145,7 @@ function GetDesire()
 			runeStatus = GetRuneStatus( closestRune )
 			
 			if runeStatus == RUNE_STATUS_AVAILABLE 
-			then				
+			then
 				if X.IsEnemyPickRune(bot,closestRune) then return BOT_MODE_DESIRE_NONE end				
 				return X.CountDesire(BOT_MODE_DESIRE_HIGH, closestDist, 3500)
 			elseif runeStatus == RUNE_STATUS_UNKNOWN 
@@ -204,7 +207,7 @@ end
 
 function Think()
 	
-	if  bot:IsChanneling() 
+	if bot:IsChanneling() 
 		or bot:NumQueuedActions() > 0
 		or bot:IsCastingAbility()
 		or bot:IsUsingAbility()
@@ -229,6 +232,7 @@ function Think()
 
 	if dropItem ~= nil and dropItemTarget ~= nil
 	then
+		
 		if GetUnitToLocationDistance(bot,dropItemTarget:GetLocation()) > 240
 		then
 			bot:Action_MoveToLocation(dropItemTarget:GetLocation())
@@ -242,7 +246,7 @@ function Think()
 			local dropLocation = bot:GetLocation() + 60 * tempVector + RandomVector(30)
 			local vFountain = ( GetTeam() == TEAM_RADIANT ) and vRadiantDropLocation or vDireDropLocation
 			
-			if X.GetDistance(dropLocation,vFountain) <= 1500
+			if bot:DistanceFromFountain() < 1200
 			then
 				dropLocation = vFountain + RandomVector(110)
 			end
@@ -259,18 +263,18 @@ function Think()
 		
 		if GetTeam() == TEAM_RADIANT then
 			if bot:GetAssignedLane() == LANE_BOT then 
-				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_3) + RandomVector(80))
+				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_3) + RandomVector(180))
 				return
 			else
-				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_4) + RandomVector(81))
+				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_4) + RandomVector(181))
 				return
 			end
 		elseif GetTeam() == TEAM_DIRE then
 			if bot:GetAssignedLane() == LANE_TOP then 
-				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_2) + RandomVector(82))
+				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_2) + RandomVector(182))
 				return
 			else
-				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_1) + RandomVector(83))
+				bot:Action_MoveToLocation( X.GetWaitRuneLocation(RUNE_BOUNTY_1) + RandomVector(183))
 				return
 			end
 		end
@@ -444,10 +448,11 @@ function X.IsHumanPlayerNearby(runeLoc)
 	for k,v in pairs(teamPlayers)
 	do
 		local member = GetTeamMember(k)
-		if member ~= nil and not member:IsIllusion() and not IsPlayerBot(v) and member:IsAlive() then
+		if member ~= nil and not IsPlayerBot(v) and member:IsAlive() 
+		then
 			local humanDist = GetUnitToLocationDistance(member, runeLoc)
 			local selfDist = GetUnitToLocationDistance(bot, runeLoc)
-			if ( selfDist > 800 and humanDist < 1600 )
+			if ( selfDist > 800 and humanDist < 1800 )
 				or humanDist < 1200
 			then
 				return true
@@ -674,7 +679,7 @@ function X.IsEnemyPickRune(bot,nRune)
 	for _,enemy in pairs(nEnemys)
 	do
 		if  enemy ~= nil and enemy:IsAlive()
-			and ( enemy:IsFacingLocation(runeLocation,40) or enemy:IsFacingLocation(bot:GetLocation(),40) )
+			and ( enemy:IsFacingLocation(runeLocation,30) or enemy:IsFacingLocation(bot:GetLocation(),30) or GetUnitToLocationDistance(enemy,runeLocation) < 500 )
 			and GetUnitToLocationDistance(enemy,runeLocation) < GetUnitToLocationDistance(bot,runeLocation) + 300
 		then
 			return true
@@ -705,4 +710,6 @@ function X.GetWaitRuneLocation(nRune)
 	return vNearestLoc
 
 end
--- dota2jmz@163.com QQ:2462331592.
+
+
+-- dota2jmz@163.com QQ:2462331592。

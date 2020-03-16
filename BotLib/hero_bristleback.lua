@@ -14,7 +14,7 @@ local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-
+local sOutfitType = J.Item.GetOutfitType(bot)
 
 local tTalentTreeList = {
 						['t25'] = {0, 10},
@@ -31,16 +31,41 @@ local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
+local tOutFitList = {}
 
-X['sBuyList'] = {
-				'item_tank_outfit',
-				"item_crimson_guard",
-				"item_heavens_halberd",
-				"item_lotus_orb",
-				"item_assault", 
-				"item_heart",
-				"item_ultimate_scepter_2",
+tOutFitList['outfit_carry'] = {
+
+	"item_bristleback_outfit",
+	"item_ultimate_scepter",
+	"item_lotus_orb",
+	"item_heavens_halberd", 
+	"item_black_king_bar",
+	"item_abyssal_blade",
+	"item_soul_booster",
+	"item_ultimate_scepter_2",
+	"item_octarine_core",
+				
 }
+
+tOutFitList['outfit_mid'] = tOutFitList['outfit_carry']
+
+tOutFitList['outfit_priest'] = tOutFitList['outfit_carry']
+
+tOutFitList['outfit_mage'] = tOutFitList['outfit_carry']
+
+tOutFitList['outfit_tank'] = {
+
+	"item_tank_outfit",
+	"item_crimson_guard",
+	"item_heavens_halberd",
+	"item_lotus_orb",
+	"item_assault", 
+	"item_heart",
+	"item_ultimate_scepter_2",
+	
+}
+
+X['sBuyList'] = tOutFitList[sOutfitType]
 
 X['sSellList'] = {
 	
@@ -170,7 +195,7 @@ function X.ConsiderQ()
 	local nEnemyHeroes = bot:GetNearbyHeroes( 800, true, BOT_MODE_NONE );
 	
 	-- If we're seriously retreating, see if we can land a stun on someone who's damaged us recently
-	if J.IsRetreating(bot) and nHP > 0.3
+	if J.IsRetreating(bot) and nHP > 0.2
 	then
 		local npcEnemy = tableNearbyEnemyHeroes[1];
 		if J.IsValid(npcEnemy) 
@@ -215,7 +240,8 @@ function X.ConsiderQ()
 			return BOT_ACTION_DESIRE_HIGH, npcTarget;
 		end
 		
-		if J.IsValid(npcTarget) and #hEnemyHeroList == 0
+		if J.IsValid(npcTarget) 
+		   and #hEnemyHeroList == 0
 		   and J.IsAllowedToSpam(bot, nManaCost) 
 		   and J.CanCastOnNonMagicImmune(npcTarget) 
 		   and J.CanCastOnTargetAdvanced(npcTarget)
@@ -350,4 +376,4 @@ function X.ConsiderW()
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592。

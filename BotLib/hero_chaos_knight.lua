@@ -14,7 +14,7 @@ local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-
+local sOutfitType = J.Item.GetOutfitType(bot)
 
 local tTalentTreeList = {
 						['t25'] = {0, 10},
@@ -32,26 +32,54 @@ local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
+local tOutFitList = {}
 
-X['sBuyList'] = {
-				'item_tank_outfit',
-				"item_crimson_guard",
-				"item_echo_sabre",
-				"item_heavens_halberd",
-				"item_manta",
-				"item_assault",
-				"item_heart",
+tOutFitList['outfit_carry'] = {
+
+	"item_sven_outfit",
+	"item_echo_sabre",
+	"item_manta",
+	"item_heart",
+	"item_abyssal_blade",
+	"item_assault",
+	"item_black_king_bar",
+
+				
 }
 
+tOutFitList['outfit_mid'] = tOutFitList['outfit_carry']
+
+tOutFitList['outfit_priest'] = tOutFitList['outfit_carry']
+
+tOutFitList['outfit_mage'] = tOutFitList['outfit_carry']
+
+tOutFitList['outfit_tank'] = {
+
+	"item_tank_outfit",
+	"item_crimson_guard",
+	"item_echo_sabre",
+	"item_heavens_halberd",
+	"item_manta",
+	"item_assault",
+	"item_heart",
+				
+}
+
+X['sBuyList'] = tOutFitList[sOutfitType]
+
 X['sSellList'] = {
+	
 	"iitem_heavens_halberd",
 	"item_quelling_blade",
 	
 	"item_assault",
 	"item_echo_sabre",
 	
-	"item_manta",
+	"item_assault",
 	"item_magic_wand",
+	
+	"item_manta",
+	"item_quelling_blade",
 }
 
 if J.Role.IsPvNMode() or J.Role.IsAllShadow() then X['sBuyList'],X['sSellList'] = { 'PvN_tank' }, {"item_heavens_halberd",'item_quelling_blade'} end
@@ -528,4 +556,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592。

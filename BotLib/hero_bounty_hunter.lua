@@ -11,57 +11,53 @@ local bDebugMode = ( 1 == 10 )
 local bot = GetBot()
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
-local ConversionMode = dofile( GetScriptDirectory()..'/AuxiliaryScript/BotlibConversion') --引入技能文件
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
+local sOutfit = J.Skill.GetOutfitName(bot)
 
---编组技能、天赋、装备
-local tGroupedDataList = {}
---默认数据
-local tDefaultGroupedData = {
-	['Talent'] = {
-		['t25'] = {10, 0},
-		['t20'] = {10, 0},
-		['t15'] = {10, 0},
-		['t10'] = {0, 10},
-	},
-	['Ability'] = {3,2,2,1,2,6,2,1,1,1,6,3,3,3,6},
-	['Buy'] = {
-		"item_tango",
-		"item_flask",
-		"item_magic_stick",
-		"item_double_branches",
-		"item_magic_wand",
-		"item_phase_boots",
-		"item_medallion_of_courage",
-		"item_desolator",
-		"item_solar_crest",
-		"item_orchid",
-		"item_black_king_bar",
-		"item_bloodthorn",
-		"item_dagon_5",
-		"item_ultimate_scepter_2"
-	},
-	['Sell'] = {
-		"item_shivas_guard",
-		"item_magic_wand",
-	}
+local tTalentTreeList = {
+						['t25'] = {0, 10},
+						['t20'] = {0, 10},
+						['t15'] = {10, 0},
+						['t10'] = {10, 0},
 }
 
---根据组数据生成技能、天赋、装备
-local nAbilityBuildList, nTalentBuildList;
+local tAllAbilityBuildList = {
+						{1,2,3,1,1,6,1,2,2,2,6,3,3,3,6},
+}
 
-nAbilityBuildList, nTalentBuildList, X['sBuyList'], X['sSellList'] = ConversionMode.Combination(tGroupedDataList, tDefaultGroupedData)
+local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
+
+local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
+
+X['sBuyList'] = {
+				'item_melee_carry_outfit',
+				"item_sange_and_yasha",
+				"item_solar_crest",
+				"item_black_king_bar",
+				"item_abyssal_blade", 
+				"item_satanic",
+}
+
+X['sSellList'] = {
+
+	"item_sange_and_yasha",
+	"item_quelling_blade",
+	
+	"item_abyssal_blade",
+	"item_magic_wand",
+
+}
+
+if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_melee_carry' }, {"item_abyssal_blade",'item_quelling_blade'} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
-X['bDeafaultAbility'] = false
+X['bDeafaultAbility'] = true
 X['bDeafaultItem'] = true
-
-if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_priest' }, {} end
 
 function X.MinionThink(hMinionUnit)
 
@@ -72,25 +68,140 @@ function X.MinionThink(hMinionUnit)
 
 end
 
+--[[
+
+
+--]]
+
+local abilityQ = bot:GetAbilityByName( sAbilityList[1] )
+local abilityW = bot:GetAbilityByName( sAbilityList[2] )
+local abilityE = bot:GetAbilityByName( sAbilityList[3] )
+local abilityR = bot:GetAbilityByName( sAbilityList[6] )
+local talent5 = bot:GetAbilityByName( sTalentList[5] )
+
+local castQDesire, castQTarget
+local castEDesire
+local castRDesire, castRTarget
+
+local nKeepMana,nMP,nHP,nLV,hEnemyList,hAllyList,botTarget,sMotive;
+local aetherRange = 0
+local talent5Damage = 0
+
 function X.SkillsComplement()
 
-	--如果当前英雄无法使用技能或英雄处于隐形状态，则不做操作。
-	if J.CanNotUseAbility(bot) 
-	   or bot:HasModifier('modifier_bounty_hunter_wind_walk') 
-	   or bot:IsInvisible() 
-	then 
-		return 
+	if J.CanNotUseAbility(bot) then return end
+	
+	nKeepMana = 400
+	aetherRange = 0
+	talent5Damage = 0
+	nLV = bot:GetLevel();
+	nMP = bot:GetMana()/bot:GetMaxMana();
+	nHP = bot:GetHealth()/bot:GetMaxHealth();
+	botTarget = J.GetProperTarget(bot);
+	hEnemyList = bot:GetNearbyHeroes(1600, true, BOT_MODE_NONE);
+	hAllyList = J.GetAlliesNearLoc(bot:GetLocation(), 1600);
+	
+	local aether = J.IsItemAvailable("item_aether_lens");
+	if aether ~= nil then aetherRange = 250 end	
+	if talent5:IsTrained() then talent5Damage = talent5:GetSpecialValueInt("value") end
+	
+	
+	castQDesire, castQTarget, sMotive = X.ConsiderQ();
+	if ( castQDesire > 0 ) 
+	then
+		J.SetReportMotive(bDebugMode,sMotive);		
+	
+		J.SetQueuePtToINT(bot, true)
+	
+		bot:ActionQueue_UseAbilityOnEntity( abilityQ, castQTarget )
+		return;
 	end
-	--技能检查顺序
-	local order = {'R','Q','E'}
-	--委托技能处理函数接管
-	if ConversionMode.Skills(order) then return; end
+	
+	
+	
+	castEDesire, sMotive = X.ConsiderE();
+	if ( castEDesire > 0 ) 
+	then
+		J.SetReportMotive(bDebugMode,sMotive);
+	
+		J.SetQueuePtToINT(bot, false)
+	
+		bot:ActionQueue_UseAbility( abilityE )
+		return;
+	end
+	
+	castRDesire, castRTarget, sMotive = X.ConsiderR();
+	if ( castRDesire > 0 ) 
+	then
+		J.SetReportMotive(bDebugMode,sMotive);
+	
+		J.SetQueuePtToINT(bot, true)
+	
+		bot:ActionQueue_UseAbilityOnEntity( abilityR, castRTarget )
+		return;	
+	end
+
+end
+
+
+function X.ConsiderQ()
+
+
+	if not abilityQ:IsFullyCastable() then return 0 end
+	
+	local nSkillLV    = abilityQ:GetLevel(); 
+	local nCastRange  = abilityQ:GetCastRange()
+	local nCastPoint  = abilityQ:GetCastPoint()
+	local nManaCost   = abilityQ:GetManaCost()
+	local nDamage     = abilityQ:GetAbilityDamage()
+	local nDamageType = DAMAGE_TYPE_MAGICAL
+	local nInRangeEnemyList = bot:GetNearbyHeroes(nCastRange, true, BOT_MODE_NONE);
+	
+	
+	return BOT_ACTION_DESIRE_NONE;
+	
 	
 end
 
+
+function X.ConsiderE()
+
+
+	if not abilityE:IsFullyCastable() then return 0 end
+	
+	local nSkillLV    = abilityE:GetLevel(); 
+	local nCastRange  = abilityE:GetCastRange();
+	local nCastPoint  = abilityE:GetCastPoint();
+	local nManaCost   = abilityE:GetManaCost();
+	local nDamage     = abilityE:GetAbilityDamage()
+	local nDamageType = DAMAGE_TYPE_MAGICAL
+	local nInRangeEnemyList = bot:GetNearbyHeroes(nCastRange, true, BOT_MODE_NONE);
+	
+	
+	return BOT_ACTION_DESIRE_NONE;
+	
+	
+end
+
+function X.ConsiderR()
+
+
+	if not abilityR:IsFullyCastable() then return 0 end
+	
+	local nSkillLV    = abilityR:GetLevel(); 
+	local nCastRange  = abilityR:GetCastRange();
+	local nCastPoint  = abilityR:GetCastPoint();
+	local nManaCost   = abilityR:GetManaCost();
+	local nDamage     = abilityR:GetAbilityDamage()
+	local nDamageType = DAMAGE_TYPE_MAGICAL
+	local nInRangeEnemyList = bot:GetNearbyHeroes(nCastRange, true, BOT_MODE_NONE);
+	
+	
+	return BOT_ACTION_DESIRE_NONE;
+	
+	
+end
+
+
 return X
 -- dota2jmz@163.com QQ:2462331592。
-
-
-
-

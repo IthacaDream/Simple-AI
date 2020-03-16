@@ -14,7 +14,7 @@ local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-
+local sOutfitType = J.Item.GetOutfitType(bot)
 
 local tTalentTreeList = {
 						['t25'] = {10, 0},
@@ -32,22 +32,53 @@ local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
-X['sBuyList'] = {
-				'item_ranged_carry_outfit',
-				'item_dragon_lance', 
-				'item_yasha', 
-				"item_ultimate_scepter",
-				"item_manta",
-				"item_hurricane_pike",	
-				"item_satanic",
-				"item_butterfly",
-				"item_black_king_bar",
-				"item_ultimate_scepter_2",
+local tOutFitList = {}
+
+tOutFitList['outfit_carry'] = {
+
+	"item_ranged_carry_outfit",
+	"item_dragon_lance", 
+	"item_yasha", 
+	"item_ultimate_scepter",
+	"item_manta",
+	"item_hurricane_pike",	
+	"item_satanic",
+	"item_butterfly",
+	"item_black_king_bar",
+	"item_ultimate_scepter_2",
+				
 }
+
+tOutFitList['outfit_mid'] = {
+
+	"item_mid_outfit",
+	"item_dragon_lance", 
+	"item_yasha", 
+	"item_ultimate_scepter",
+	"item_manta",
+	"item_hurricane_pike",	
+	"item_satanic",
+	"item_butterfly",
+	"item_black_king_bar",
+	"item_ultimate_scepter_2",
+
+				
+}
+
+tOutFitList['outfit_priest'] = tOutFitList['outfit_carry']
+
+tOutFitList['outfit_mage'] = tOutFitList['outfit_carry']
+
+tOutFitList['outfit_tank'] = tOutFitList['outfit_carry']
+
+X['sBuyList'] = tOutFitList[sOutfitType]
 
 X['sSellList'] = {
 	"item_satanic",
 	"item_magic_wand",
+	
+	"item_hurricane_pike",
+	"item_urn_of_shadows",
 }
 
 if J.Role.IsPvNMode() or J.Role.IsAllShadow() then X['sBuyList'],X['sSellList'] = { 'PvN_ranged_carry' }, {} end
@@ -57,7 +88,7 @@ nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroI
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
 X['bDeafaultAbility'] = false
-X['bDeafaultItem'] = false
+X['bDeafaultItem'] = true
 
 function X.MinionThink(hMinionUnit)
 
@@ -646,4 +677,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592。

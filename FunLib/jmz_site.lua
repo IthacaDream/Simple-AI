@@ -43,7 +43,8 @@ local nWatchTower_2 = nil
 local allUnitList = GetUnitList(UNIT_LIST_ALL)
 for _,v in pairs(allUnitList)
 do
-	if v:GetUnitName() == 'npc_dota_watch_tower'
+	if v:GetUnitName() == '#DOTA_OutpostName_North' 
+		or v:GetUnitName() == '#DOTA_OutpostName_South' 
 	then
 		if nWatchTower_1 == nil
 		then
@@ -203,13 +204,34 @@ end
 function Site.GetMandatorySpot()
 	local MandatorySpotRadiant = {
 		RADIANT_MANDATE1,
-		RADIANT_MANDATE2
+		RADIANT_MANDATE2,
 	}
 
 	local MandatorySpotDire = {
 		DIRE_MANDATE1,
 		DIRE_MANDATE2
 	}
+	
+	if DotaTime() > 15 * 60
+	then
+		MandatorySpotRadiant = {
+			RADIANT_MANDATE1,
+			RADIANT_MANDATE2,
+			RADIANT_T1TOPFALL,
+			RADIANT_T1MIDFALL,
+			RADIANT_T1BOTFALL,
+		}
+		
+		MandatorySpotDire = {
+			DIRE_MANDATE1,
+			DIRE_MANDATE2,
+			DIRE_T1TOPFALL,
+			DIRE_T1MIDFALL,
+			DIRE_T1BOTFALL,
+		}
+	end
+	
+	
 	if GetTeam() == TEAM_RADIANT then
 		return MandatorySpotRadiant;
 	else
@@ -272,7 +294,7 @@ function Site.GetAvailableSpot(bot)
 	local temp = {};
 	
 	--先算必插眼位
-	if DotaTime() < 35 * 60
+	if DotaTime() < 38 * 60
 	then
 		for _,s in pairs(Site.GetMandatorySpot()) do
 			if not Site.CloseToAvailableWard(s) then
@@ -289,7 +311,7 @@ function Site.GetAvailableSpot(bot)
 	end
 	
 	--10分钟后计算进攻眼位
-	if DotaTime() > 10 *60 then
+	if DotaTime() > 10 * 60 then
 		for _,s in pairs(Site.GetAggressiveSpot()) do
 			if GetUnitToLocationDistance(bot, s) <= 1200 and not Site.CloseToAvailableWard(s) then
 				table.insert(temp, s);
@@ -981,13 +1003,13 @@ Site.ConsiderIsTimeToFarm["npc_dota_hero_bristleback"] = function()
 	local botKills = GetHeroKills(bot:GetPlayerID());
 	local botDeaths = GetHeroDeaths(bot:GetPlayerID());
 	local allies = bot:GetNearbyHeroes(1300,false,BOT_MODE_NONE);
-	if botKills >=  botDeaths + 3
+	if botKills >= botDeaths + 3
 	   and botDeaths <= 3
 	then
 		return false;
 	end
 
-	if bot:GetLevel() > 12
+	if bot:GetLevel() > 9
 		and #allies <= 2
 		and botNetWorth < 15000
 	then 
@@ -1225,7 +1247,7 @@ Site.ConsiderIsTimeToFarm["npc_dota_hero_nevermore"] = function()
 	local bot = GetBot()
 	local botNetWorth = bot:GetNetWorth()
 	
-	if DotaTime() > 10 *60
+	if DotaTime() > 10 * 60
 		and ( bot:GetLevel() < 25 or botNetWorth < 20000 )
 	then
 		return true;
@@ -1385,6 +1407,78 @@ Site.ConsiderIsTimeToFarm["npc_dota_hero_sand_king"] = function()
 	local botNetWorth = bot:GetNetWorth()
 	
 	return Site.ConsiderIsTimeToFarm["npc_dota_hero_bristleback"]()
+	
+end
+
+Site.ConsiderIsTimeToFarm["npc_dota_hero_legion_commander"] = function()
+
+	local bot = GetBot()
+	local botNetWorth = bot:GetNetWorth()
+	
+	if DotaTime() > 7 *60
+	   and ( bot:GetLevel() < 25 or botNetWorth < 20000 )
+	then
+		return true;
+	end
+	
+	if not Site.IsHaveItem(bot,"item_echo_sabre")
+		and botNetWorth < 12000
+	then
+		return true;
+	end
+	
+	if not Site.IsHaveItem(bot,"item_heart")
+		and botNetWorth < 21000
+	then
+		local allies = bot:GetNearbyHeroes(1300,false,BOT_MODE_NONE);
+		if #allies < 2
+		then
+			return true;
+		end
+	end	
+	
+	return false
+	
+end
+
+Site.ConsiderIsTimeToFarm["npc_dota_hero_slark"] = function()
+
+	local bot = GetBot()
+	local botNetWorth = bot:GetNetWorth()
+	
+	if DotaTime() > 9 * 60
+		and ( bot:GetLevel() < 25 or botNetWorth < 20000 )
+	then
+		return true;
+	end
+	
+	if not Site.IsHaveItem(bot,"item_invis_sword")
+		and botNetWorth < 18000
+	then
+		return true;
+	end
+			
+	if not Site.IsHaveItem(bot,"item_silver_edge")
+		and botNetWorth < 21000
+	then
+		local allies = bot:GetNearbyHeroes(1000,false,BOT_MODE_NONE);
+		if #allies < 3
+		then
+			return true;
+		end
+	end
+	
+	if not Site.IsHaveItem(bot,"item_abyssal_blade") 
+		and botNetWorth < 25000
+	then
+		local allies = bot:GetNearbyHeroes(1300,false,BOT_MODE_NONE);
+		if #allies < 2
+		then
+			return true;
+		end
+	end			
+
+	return false
 	
 end
 
@@ -1598,4 +1692,4 @@ function Site.IsHaveItem(bot,item_name)
 end
 
 return Site;
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592。

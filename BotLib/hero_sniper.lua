@@ -14,7 +14,7 @@ local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-
+local sOutfitType = J.Item.GetOutfitType(bot)
 
 local tTalentTreeList = {
 						['t25'] = {10,10},
@@ -39,33 +39,57 @@ local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
+local tOutFitList = {}
 
+tOutFitList['outfit_carry'] = {
 
-X['sBuyList'] = {
-				'item_mid_outfit',
-				"item_dragon_lance",
-				'item_mask_of_madness',
-				"item_maelstrom",
-				"item_hurricane_pike",
-				"item_skadi",
-				"item_mjollnir",
-				"item_broken_satanic",	
-				"item_monkey_king_bar",
+	"item_ranged_carry_outfit",
+	"item_dragon_lance",
+	"item_mask_of_madness",
+	"item_maelstrom",
+	"item_hurricane_pike",
+	"item_skadi",
+	"item_mjollnir",
+	"item_broken_satanic",	
+	"item_monkey_king_bar",
+				
 }
+
+tOutFitList['outfit_mid'] = {
+	
+	"item_mid_outfit",
+	"item_dragon_lance",
+	"item_mask_of_madness",
+	"item_maelstrom",
+	"item_hurricane_pike",
+	"item_skadi",
+	"item_mjollnir",
+	"item_broken_satanic",	
+	"item_monkey_king_bar",
+				
+}
+
+tOutFitList['outfit_priest'] = tOutFitList['outfit_carry']
+
+tOutFitList['outfit_mage'] = tOutFitList['outfit_carry']
+
+tOutFitList['outfit_tank'] = tOutFitList['outfit_carry']
+
+X['sBuyList'] = tOutFitList[sOutfitType]
 
 if RandomInt(1,99) >= 88
 then
 	X['sBuyList'] = {
-					'item_mid_outfit',
+					"item_mid_outfit",
 					"item_dragon_lance",
-					'item_hand_of_midas',
+					"item_hand_of_midas",
 					"item_maelstrom",
 					"item_hurricane_pike",
 					"item_mjollnir",
 					"item_skadi",
 					"item_greater_crit",
 					"item_monkey_king_bar",
-					'item_ultimate_scepter_2',
+					"item_ultimate_scepter_2",
 	}
 end
 
@@ -74,14 +98,14 @@ X['sSellList'] = {
 	"item_hurricane_pike",
 	"item_urn_of_shadows",
 	
-	'item_mjollnir',
-	'item_magic_wand',
+	"item_mjollnir",
+	"item_magic_wand",
 		
-	'item_hand_of_midas',
+	"item_hand_of_midas",
 	"item_urn_of_shadows",
 	
 	"item_greater_crit",	
-	'item_hand_of_midas',
+	"item_hand_of_midas",
 }
 
 if J.Role.IsPvNMode() or J.Role.IsAllShadow() then X['sBuyList'],X['sSellList'] = { 'PvN_mid' }, {} end
@@ -586,4 +610,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592。

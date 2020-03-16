@@ -17,14 +17,15 @@ local sAbilityList = J.Skill.GetAbilityList(bot)
 local sOutfit = J.Skill.GetOutfitName(bot)
 
 local tTalentTreeList = {
-						['t25'] = {0, 10},
+						['t25'] = {10, 0},
 						['t20'] = {0, 10},
 						['t15'] = {0, 10},
-						['t10'] = {0, 10},
+						['t10'] = {10, 0},
 }
 
 local tAllAbilityBuildList = {
-						{3,1,2,1,1,6,1,2,2,2,6,3,3,3,6},
+						{1,2,3,2,2,6,2,1,1,1,6,3,3,3,6},
+						{1,2,3,1,1,6,1,2,2,2,6,3,3,3,6},
 }
 
 local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
@@ -32,30 +33,29 @@ local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
 X['sBuyList'] = {
-				'item_dragon_knight_outfit',
-				"item_crimson_guard",
-				"item_heavens_halberd",
-				"item_assault",
-				"item_heart",
+				'item_priest_outfit',
+				"item_mekansm",
+				"item_urn_of_shadows",
+				"item_glimmer_cape",
+				"item_guardian_greaves",
+				"item_spirit_vessel",
+				"item_rod_of_atos",
+				"item_shivas_guard",
+				"item_sheepstick",
 }
 
 X['sSellList'] = {
-	
-	"item_crimson_guard",
-	"item_quelling_blade",
-	
-	"item_assault",
+	"item_spirit_vessel",
 	"item_magic_wand",
-
 }
 
-if J.Role.IsPvNMode() then X['sBuyList'],X['sSellList'] = { 'PvN_tank' }, {"item_invis_sword",'item_quelling_blade'} end
+if J.Role.IsPvNMode() or J.Role.IsAllShadow() then X['sBuyList'],X['sSellList'] = { 'PvN_priest' }, {} end
 
 nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroInit(nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList']);
 
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
-X['bDeafaultAbility'] = false
+X['bDeafaultAbility'] = true
 X['bDeafaultItem'] = true
 
 function X.MinionThink(hMinionUnit)
@@ -69,31 +69,29 @@ end
 
 --[[
 
-npc_dota_hero_tiny
+npc_dota_hero_windrunner
 
-"Ability1"		"tiny_avalanche"
-"Ability2"		"tiny_toss"
-"Ability3"		"tiny_craggy_exterior"
-"Ability4"		"tiny_tree_channel"
+"Ability1"		"windrunner_shackleshot"
+"Ability2"		"windrunner_powershot"
+"Ability3"		"windrunner_windrun"
+"Ability4"		"generic_hidden"
 "Ability5"		"generic_hidden"
-"Ability6"		"tiny_grow"
-"Ability7"		"tiny_toss_tree"
-"Ability10"		"special_bonus_movement_speed_20"
-"Ability11"		"special_bonus_attack_damage_30"
-"Ability12"		"special_bonus_hp_400"
-"Ability13"		"special_bonus_unique_tiny"
-"Ability14"		"special_bonus_unique_tiny_4"
-"Ability15"		"special_bonus_unique_tiny_5"
-"Ability16"		"special_bonus_unique_tiny_3"
-"Ability17"		"special_bonus_unique_tiny_2"
+"Ability6"		"windrunner_focusfire"
+"Ability10"		"special_bonus_mp_regen_3"
+"Ability11"		"special_bonus_unique_windranger_9"
+"Ability12"		"special_bonus_unique_windranger_3"
+"Ability13"		"special_bonus_attack_range_125"
+"Ability14"		"special_bonus_unique_windranger_6"
+"Ability15"		"special_bonus_unique_windranger"
+"Ability16"		"special_bonus_unique_windranger_8"
+"Ability17"		"special_bonus_cooldown_reduction_30"
 
-modifier_tiny_avalanche_stun
-modifier_tiny_avalanche
-modifier_tiny_toss_charge_counter
-modifier_tiny_toss
-modifier_tiny_craggy_exterior
-modifier_tiny_toss_tree_bonus
-modifier_tiny_grow
+modifier_windrunner_shackle_shot
+modifier_windrunner_windrun_invis
+modifier_windrunner_windrun
+modifier_windrunner_windrun_slow
+modifier_windrunner_focusfire
+
 
 --]]
 
@@ -101,24 +99,27 @@ local abilityQ = bot:GetAbilityByName( sAbilityList[1] )
 local abilityW = bot:GetAbilityByName( sAbilityList[2] )
 local abilityE = bot:GetAbilityByName( sAbilityList[3] )
 local abilityR = bot:GetAbilityByName( sAbilityList[6] )
-local talent4 = bot:GetAbilityByName( sTalentList[4] )
+local talent3 = bot:GetAbilityByName( sTalentList[3] )
 
-local castQDesire, castQLocation
-local castWDesire, castWTarget
-local castEDesire, castETarget
+local castQDesire, castQTarget
+local castWDesire, castWLocation
+local castEDesire
+local castRDesire, castRTarget
+
 
 local nKeepMana,nMP,nHP,nLV,hEnemyList,hAllyList,botTarget,sMotive;
 local aetherRange = 0
-local talent4Damage = 0
+local talent3Damage = 0
 
 
 function X.SkillsComplement()
 
 	if J.CanNotUseAbility(bot) or bot:IsInvisible() then return end
 	
+	
 	nKeepMana = 400
 	aetherRange = 0
-	talent4Damage = 0
+	talent3Damage = 0
 	nLV = bot:GetLevel();
 	nMP = bot:GetMana()/bot:GetMaxMana();
 	nHP = bot:GetHealth()/bot:GetMaxHealth();
@@ -126,43 +127,57 @@ function X.SkillsComplement()
 	hEnemyList = bot:GetNearbyHeroes(1600, true, BOT_MODE_NONE);
 	hAllyList = J.GetAlliesNearLoc(bot:GetLocation(), 1600);
 	
+
 	local aether = J.IsItemAvailable("item_aether_lens");
 	if aether ~= nil then aetherRange = 250 end	
-	if talent4:IsTrained() then talent4Damage = talent4:GetSpecialValueInt("value") end
+	if talent3:IsTrained() then talent3Damage = talent3:GetSpecialValueInt("value") end
 	
-	castQDesire, castQLocation, sMotive = X.ConsiderQ();
+	
+	castQDesire, castQTarget, sMotive = X.ConsiderQ();
 	if ( castQDesire > 0 ) 
 	then
 		J.SetReportMotive(bDebugMode,sMotive);		
 	
 		J.SetQueuePtToINT(bot, true)
 	
-		bot:ActionQueue_UseAbilityOnLocation( abilityQ, castQLocation )
+		bot:ActionQueue_UseAbilityOnEntity( abilityQ, castQTarget )
 		return;
 	end
 	
-	castWDesire, castWTarget, sMotive = X.ConsiderW();
+	castWDesire, castWLocation, sMotive = X.ConsiderW();
 	if ( castWDesire > 0 ) 
 	then
 		J.SetReportMotive(bDebugMode,sMotive);
 	
 		J.SetQueuePtToINT(bot, true)
 	
-		bot:ActionQueue_UseAbilityOnEntity( abilityW, castWTarget )
+		bot:ActionQueue_UseAbilityOnLocation( abilityW, castWLocation )
 		return;
 	end
 	
-	castEDesire, castETarget, sMotive = X.ConsiderE();
+	castEDesire, sMotive = X.ConsiderE();
 	if ( castEDesire > 0 ) 
 	then
 		J.SetReportMotive(bDebugMode,sMotive);
 	
 		J.SetQueuePtToINT(bot, true)
 	
-		bot:ActionQueue_UseAbilityOnEntity( abilityE, castETarget )
+		bot:ActionQueue_UseAbility( abilityE )
 		return;
 	end
 	
+	castRDesire, castRTarget, sMotive = X.ConsiderR();
+	if ( castRDesire > 0 ) 
+	then
+		J.SetReportMotive(bDebugMode,sMotive);
+	
+		J.SetQueuePtToINT(bot, true)
+	
+		bot:ActionQueue_UseAbilityOnEntity( abilityR, castRTarget )
+		return;
+	
+	end
+
 end
 
 
@@ -196,7 +211,7 @@ function X.ConsiderW()
 	local nManaCost   = abilityW:GetManaCost()
 	local nDamage     = abilityW:GetAbilityDamage()
 	local nDamageType = DAMAGE_TYPE_MAGICAL
-	local nInRangeEnemyList = bot:GetNearbyHeroes(nCastRange, true, BOT_MODE_NONE)
+	local nInRangeEnemyList = bot:GetNearbyHeroes(1600, true, BOT_MODE_NONE)
 	
 	
 	return BOT_ACTION_DESIRE_NONE;
@@ -222,6 +237,26 @@ function X.ConsiderE()
 	
 	
 end
+
+function X.ConsiderR()
+
+
+	if not abilityR:IsFullyCastable() then return 0 end
+	
+	local nSkillLV    = abilityR:GetLevel(); 
+	local nCastRange  = abilityR:GetCastRange();
+	local nCastPoint  = abilityR:GetCastPoint();
+	local nManaCost   = abilityR:GetManaCost();
+	local nDamage     = abilityR:GetAbilityDamage()
+	local nDamageType = DAMAGE_TYPE_MAGICAL
+	local nInRangeEnemyList = bot:GetNearbyHeroes(nCastRange, true, BOT_MODE_NONE);
+	
+	
+	return BOT_ACTION_DESIRE_NONE;
+	
+	
+end
+
 
 return X
 -- dota2jmz@163.com QQ:2462331592。

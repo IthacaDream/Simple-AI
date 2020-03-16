@@ -28,7 +28,6 @@ local sNeedDebugItemList =
 	"item_havoc_hammer",
 	"item_minotaur_horn",
 	"item_force_boots",
-	"item_fusion_rune",
 	"item_woodland_striders",
 	"item_fallen_sky",
 	"item_ex_machina",
@@ -68,8 +67,8 @@ local sNeedDebugItemList =
 	"item_hurricane_pike",
 	"item_invis_sword",
 	"item_lotus_orb",
-	-- "item_magic_stick",
-	-- "item_magic_wand",
+--	"item_magic_stick",
+--	"item_magic_wand",
 	"item_manta",
 	"item_mask_of_madness",
 	"item_medallion_of_courage",
@@ -82,16 +81,16 @@ local sNeedDebugItemList =
 	"item_necronomicon_3",
 	"item_nullifier",
 	"item_orchid",
-	-- "item_phase_boots",
+--	"item_phase_boots",
 	"item_pipe",
-	-- "item_power_treads",
+--	"item_power_treads",
 	"item_quelling_blade",
 	"item_refresher",
 	"item_refresher_shard",
-	-- "item_ring_of_basilius",
+--	"item_ring_of_basilius",
 	"item_rod_of_atos",
 	"item_satanic",
-	-- "item_shadow_amulet",
+--	"item_shadow_amulet",
 	"item_sheepstick",
 	"item_shivas_guard",
 	"item_silver_edge",
@@ -305,7 +304,7 @@ end
 Item['tEarlyItem'] = {
 	 'item_clarity',
 	 'item_faerie_fire',
-	 'item_tango',  
+	 'item_tango',
 	 'item_flask', 
 	 'item_infused_raindrop',
 	 'item_magic_stick',
@@ -313,8 +312,8 @@ Item['tEarlyItem'] = {
 	 'item_bracer',
 	 'item_wraith_band',
 	 'item_null_talisman',
-	 'item_bottle',  
-	 'item_soul_ring',  
+	 'item_bottle',
+	 'item_soul_ring',
 	 'item_magic_wand',
 	 'item_ancient_janggo',
 	 'item_refresher_shard',
@@ -322,6 +321,7 @@ Item['tEarlyItem'] = {
 }
 
 Item['tEarlyBoots'] = {  
+	'item_boots',
 	'item_phase_boots', 
 	'item_power_treads', 
 	'item_tranquil_boots', 
@@ -343,6 +343,7 @@ end
 
 
 local sConsumableList = {
+	
 	'item_clarity',
 	'item_tango',
 	'item_flask',
@@ -385,7 +386,7 @@ local sNotSellItemList = {
 	'item_heart',
 	'item_heavens_halberd',
 	'item_hyperstone',
-	--'item_manta',
+	'item_manta',
 	'item_hurricane_pike',
 	'item_mjollnir',
 	'item_nullifier',
@@ -454,7 +455,7 @@ local tNeutralItemLevelList = {
 	['item_havoc_hammer'] = 63,	-- 浩劫巨锤
 	['item_illusionsts_cape'] = 64,
 	['item_panic_button'] = 57,	-- 魔力明灯
-	['item_minotaur_horn'] = 65, -- 灵犀角
+	['item_minotaur_horn'] = 65, -- 恶牛角
 	['item_ninja_gear'] = 58, -- 忍者用具
 	['item_princes_knife'] = 62, -- 亲王短刀
 	['item_spell_prism'] = 69, -- 法术棱镜
@@ -622,7 +623,7 @@ Item['item_pers']						= { 'item_ring_of_health', 'item_void_stone' }
 
 Item['item_phase_boots']				= { 'item_boots', 'item_blades_of_attack', 'item_chainmail' }
 
-Item['item_pipe']						= { 'item_hood_of_defiance', 'item_headdress', 'item_recipe_pipe' }
+Item['item_pipe']						= { 'item_headdress', 'item_hood_of_defiance', 'item_recipe_pipe' }
 
 Item['item_power_treads_agi']			= { 'item_boots', 'item_boots_of_elves', 'item_gloves' }
 
@@ -733,6 +734,7 @@ local tDefineItemRealName = {
 ['item_phantom_assassin_outfit'] = "item_power_treads",
 ['item_huskar_outfit'] = "item_phase_boots",
 ['item_sven_outfit'] = "item_phase_boots",
+['item_bristleback_outfit'] = "item_power_treads",
 
 ['item_tank_outfit'] = "item_crimson_guard",
 ['item_dragon_knight_outfit'] = "item_crimson_guard",
@@ -805,7 +807,7 @@ Item['item_templar_assassin_outfit']	= { 'item_tango', 'item_faerie_fire', 'item
 ----------------------------------------------------------------------
 
 
-Item['item_ranged_carry_outfit']		= { 'item_tango', 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_wraith_band', 'item_recipe_magic_wand', 'item_power_treads_agi' } 
+Item['item_ranged_carry_outfit']		= { 'item_tango', 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_wraith_band', 'item_power_treads_agi', 'item_recipe_magic_wand', 'item_infused_raindrop' } 
 
 Item['item_melee_carry_outfit']			= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_magic_stick', 'item_double_branches', 'item_wraith_band', 'item_recipe_magic_wand', 'item_power_treads_agi' }
 
@@ -814,6 +816,8 @@ Item['item_phantom_assassin_outfit']	= { 'item_tango', 'item_flask', 'item_quell
 Item['item_huskar_outfit']				= { 'item_tango', 'item_tango', 'item_flask', 'item_magic_stick', 'item_double_branches', 'item_bracer', 'item_boots', 'item_bracer', 'item_recipe_magic_wand', 'item_blades_of_attack', 'item_chainmail' }
 
 Item['item_sven_outfit']				= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_magic_stick', 'item_double_branches', 'item_bracer', 'item_recipe_magic_wand', 'item_phase_boots' }
+
+Item['item_bristleback_outfit']			= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_magic_stick', 'item_double_branches', 'item_bracer', 'item_recipe_magic_wand', 'item_power_treads_str' }
 
 
 ----------------------------------------------------------------------
@@ -843,33 +847,33 @@ Item['item_crystal_maiden_outfit']		= { 'item_tango', 'item_flask', 'item_magic_
 -----------------------------------------------------------------------------
 
 
-Item['PvN_priest']		= { 'item_tango', 'item_flask', 'item_bracer', 'item_power_treads_int', 'item_bracer', 'item_glimmer_cape', 'item_cyclone', 'item_rod_of_atos', 'item_sheepstick', 'item_travel_boots'}
+Item['PvN_priest']		= { 'item_tango', 'item_flask', 'item_bracer', 'item_power_treads_int', 'item_bracer', 'item_glimmer_cape', 'item_aeon_disk', 'item_cyclone', 'item_rod_of_atos', 'item_sheepstick', 'item_travel_boots'}
 
-Item['PvN_mage']		= { 'item_tango', 'item_flask', 'item_bracer', 'item_power_treads_int', 'item_bracer', 'item_glimmer_cape', 'item_lotus_orb', 'item_cyclone', 'item_sheepstick', 'item_travel_boots'}
+Item['PvN_mage']		= { 'item_tango', 'item_flask', 'item_bracer', 'item_power_treads_int', 'item_bracer', 'item_glimmer_cape', 'item_aeon_disk', 'item_lotus_orb', 'item_cyclone', 'item_sheepstick', 'item_travel_boots'}
 
-Item['PvN_melee_carry']	= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_diffusal_blade', 'item_invis_sword', 'item_skadi', 'item_abyssal_blade', 'item_broken_silver_edge', 'item_travel_boots'}
+Item['PvN_melee_carry']	= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_diffusal_blade', 'item_invis_sword', 'item_aeon_disk', 'item_skadi', 'item_abyssal_blade', 'item_broken_silver_edge', 'item_travel_boots'}
 
-Item['PvN_str_carry']	= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_bracer', 'item_bracer', 'item_power_treads_str', 'item_echo_sabre', 'item_invis_sword', 'item_blade_mail', 'item_abyssal_blade', 'item_broken_silver_edge', 'item_travel_boots'}
+Item['PvN_str_carry']	= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_bracer', 'item_bracer', 'item_power_treads_str', 'item_echo_sabre', 'item_invis_sword', 'item_aeon_disk', 'item_blade_mail', 'item_abyssal_blade', 'item_broken_silver_edge', 'item_travel_boots'}
 
-Item['PvN_ranged_carry']= { 'item_tango', 'item_tango', 'item_flask', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_wraith_band', 'item_dragon_lance', 'item_invis_sword', 'item_manta', 'item_broken_hurricane_pike', 'item_bloodthorn', 'item_broken_silver_edge', 'item_travel_boots'}
+Item['PvN_ranged_carry']= { 'item_tango', 'item_tango', 'item_flask', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_wraith_band', 'item_dragon_lance', 'item_invis_sword', 'item_aeon_disk', 'item_manta', 'item_broken_hurricane_pike', 'item_bloodthorn', 'item_broken_silver_edge', 'item_travel_boots'}
 
-Item['PvN_tank']		= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_bracer', 'item_bracer', 'item_power_treads_str', 'item_echo_sabre', 'item_heavens_halberd', 'item_invis_sword', 'item_assault', 'item_broken_silver_edge', 'item_travel_boots'}
+Item['PvN_tank']		= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_bracer', 'item_bracer', 'item_power_treads_str', 'item_echo_sabre', 'item_heavens_halberd', 'item_invis_sword', 'item_aeon_disk', 'item_assault', 'item_broken_silver_edge', 'item_travel_boots'}
 
-Item['PvN_mid']			= { 'item_tango', 'item_flask', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_dragon_lance', 'item_invis_sword', 'item_skadi', 'item_broken_hurricane_pike', 'item_bloodthorn', 'item_broken_silver_edge', 'item_travel_boots'}
+Item['PvN_mid']			= { 'item_tango', 'item_flask', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_dragon_lance', 'item_invis_sword', 'item_aeon_disk', 'item_skadi', 'item_broken_hurricane_pike', 'item_bloodthorn', 'item_broken_silver_edge', 'item_travel_boots'}
 
-Item['PvN_antimage']	= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_broken_bfury', 'item_manta', 'item_abyssal_blade', 'item_skadi', 'item_travel_boots'}
+Item['PvN_antimage']	= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_broken_bfury', 'item_manta', 'item_aeon_disk', 'item_abyssal_blade', 'item_skadi', 'item_travel_boots'}
 
-Item['PvN_huskar']		= { 'item_tango', 'item_flask', 'item_bracer', 'item_bracer', 'item_bracer', 'item_power_treads_agi', 'item_dragon_lance', 'item_invis_sword', 'item_heavens_halberd', 'item_broken_hurricane_pike', 'item_satanic', 'item_broken_silver_edge', 'item_travel_boots'}
+Item['PvN_huskar']		= { 'item_tango', 'item_flask', 'item_bracer', 'item_bracer', 'item_bracer', 'item_power_treads_agi', 'item_dragon_lance', 'item_invis_sword', 'item_aeon_disk', 'item_heavens_halberd', 'item_broken_hurricane_pike', 'item_satanic', 'item_broken_silver_edge', 'item_travel_boots'}
 
-Item['PvN_clinkz']		= { 'item_tango', 'item_flask', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_dragon_lance', 'item_desolator', 'item_solar_crest', 'item_broken_hurricane_pike', 'item_bloodthorn', 'item_travel_boots'}
+Item['PvN_clinkz']		= { 'item_tango', 'item_flask', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_dragon_lance', 'item_desolator', 'item_aeon_disk', 'item_solar_crest', 'item_broken_hurricane_pike', 'item_bloodthorn', 'item_travel_boots'}
 
-Item['PvN_TA']			= { 'item_tango', 'item_flask', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_dragon_lance', 'item_desolator', 'item_invis_sword', 'item_broken_hurricane_pike', 'item_bloodthorn', 'item_broken_silver_edge', 'item_travel_boots'}
+Item['PvN_TA']			= { 'item_tango', 'item_flask', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_dragon_lance', 'item_desolator', 'item_invis_sword', 'item_aeon_disk', 'item_broken_hurricane_pike', 'item_bloodthorn', 'item_broken_silver_edge', 'item_travel_boots'}
 
-Item['PvN_PA']			= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_desolator', 'item_invis_sword', 'item_abyssal_blade', 'item_nullifier', 'item_broken_silver_edge', 'item_travel_boots'}
+Item['PvN_PA']			= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_desolator', 'item_invis_sword', 'item_aeon_disk', 'item_aeon_disk', 'item_abyssal_blade', 'item_nullifier', 'item_broken_silver_edge', 'item_travel_boots'}
 
-Item['PvN_PL']			= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_diffusal_blade', 'item_manta', 'item_invis_sword', 'item_abyssal_blade', 'item_broken_silver_edge', 'item_travel_boots'}
+Item['PvN_PL']			= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_wraith_band', 'item_wraith_band', 'item_power_treads_agi', 'item_diffusal_blade', 'item_manta', 'item_invis_sword', 'item_aeon_disk', 'item_abyssal_blade', 'item_broken_silver_edge', 'item_travel_boots'}
 
-Item['PvN_OM']			= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_bracer', 'item_bracer', 'item_power_treads_int', 'item_hand_of_midas', 'item_heavens_halberd', 'item_invis_sword', 'item_sheepstick', 'item_broken_silver_edge', 'item_travel_boots'}
+Item['PvN_OM']			= { 'item_tango', 'item_flask', 'item_quelling_blade', 'item_bracer', 'item_bracer', 'item_power_treads_int', 'item_hand_of_midas', 'item_heavens_halberd', 'item_invis_sword', 'item_aeon_disk', 'item_sheepstick', 'item_broken_silver_edge', 'item_travel_boots'}
 
 end
 ------------------------------------------------------------------------------------------------------
@@ -886,17 +890,20 @@ function Item.SetItemBuild(sItemList)
 	
 end
 
+
 function Item.IsConsumableItem(sItemName)
 
 	return tConsumableItemList[sItemName] == true
 
 end
 
+
 function Item.IsSmallItem(sItemName)
 
 	return tSmallItemList[sItemName] ~= nil
 
 end
+
 
 function Item.IsNeutralItem(sItemName)
 
@@ -912,6 +919,45 @@ function Item.GetNeutralItemLevel(sItemName)
 
 end
 
+function Item.GetMinTeamNeutralItemLevel()
+
+	local nMinItemLevel = 999
+	for i = 1, 5
+	do 
+		local member = GetTeamMember(i)
+		if	member ~= nil
+		then
+			local hNeutralItem = member:GetItemInSlot(16)
+			if hNeedDropItem ~= nil
+			then
+				local sNeutralItemName = hNeutralItem:GetName()
+				if Item.GetNeutralItemLevel(sNeutralItemName) < nMinItemLevel
+				then
+					nMinItemLevel = Item.GetNeutralItemLevel(sNeutralItemName)
+				end
+			else				
+				return 0
+			end			
+		end
+	end
+
+	return nMinItemLevel
+	
+end
+
+function Item.GetInUseNeutralItemLevel(bot)
+
+	local hNeutralItem = bot:GetItemInSlot(16)
+	if hNeutralItem ~= nil
+	then
+		local sNeutralItemName = hNeutralItem:GetName()
+		return Item.GetNeutralItemLevel(sNeutralItemName)
+	end
+	
+	return 0
+
+end
+
 --捡中立物品
 function Item.GetInGroundItem(bot)
 	
@@ -919,16 +965,15 @@ function Item.GetInGroundItem(bot)
 	
 	if botEmptyInventoryCount == 0 then return nil end	
 	
-	if botEmptyInventoryCount <= 2 
-		and bot:GetItemInSlot(16) ~= nil
+	if bot:GetItemInSlot(16) ~= nil
 	then
-		for i=1,5
+		for i = 1,5
 		do
 			local nAlly = GetTeamMember(i);
 			if nAlly ~= nil
 				and nAlly ~= bot
 				and nAlly:IsAlive()
-				and GetUnitToUnitDistance(bot,nAlly) <= 700
+				and GetUnitToUnitDistance(bot,nAlly) <= 800
 				and ( Item.GetEmptyNeutralBackpackAmount(nAlly) > botEmptyInventoryCount
 					  or nAlly:GetItemInSlot(16) == nil )
 			then
@@ -972,7 +1017,7 @@ function Item.GetInGroundItem(bot)
 
 end
 
---丢物品的逻辑
+--丢中立物品
 function Item.GetNeedDropNeutralItem(bot)
 
 	local botEmptyInventoryCount = Item.GetEmptyNeutralBackpackAmount(bot)
@@ -1001,9 +1046,14 @@ function Item.GetNeedDropNeutralItem(bot)
 	if hNeedDropItem ~= nil
 	then
 		--基地丢装备
-		if bot:DistanceFromFountain() < 1800
+		if bot:DistanceFromFountain() < 1200
 		then
-			if botNeutralItemCount >= 3 --中立物品过多
+			local sNeedDropItemName = hNeedDropItem:GetName()
+			local nNeedDropItemLevel = Item.GetNeutralItemLevel(sNeedDropItemName)
+			local nMinTeamNeutralItemLevel = Item.GetMinTeamNeutralItemLevel()
+			if nNeedDropItemLevel < nMinTeamNeutralItemLevel --中立物品等级过低
+				or ( botNeutralItemCount >= 3 and nMinTeamNeutralItemLevel > 0 ) --中立物品过多
+				or ( botNeutralItemCount >= 4 )
 			then
 				--print(bot:GetUnitName().." 1dropping item:"..hNeedDropItem:GetName())
 				return hNeedDropItem, bot
@@ -1014,20 +1064,21 @@ function Item.GetNeedDropNeutralItem(bot)
 		
 		--非基地丢装备
 		local nTargetMember = nil
-		if bot:DistanceFromFountain() > 2600
+		if bot:DistanceFromFountain() > 2000
 		then
 			for i = 1,5
 			do
 				local member = GetTeamMember(i)
 				if member ~= nil 
-					and member:IsAlive()
 					and member ~= bot
+					and member:IsAlive()
 					and GetUnitToUnitDistance(bot,member) <= 1200
+					and Item.GetEmptyNeutralBackpackAmount(member) >= 1
 				then
 					local memberEmptyInventoryCount = Item.GetEmptyNeutralBackpackAmount(member)
-					if ( memberEmptyInventoryCount >= botEmptyInventoryCount + 2
-						 and memberEmptyInventoryCount >= 3 )
-						or member:GetItemInSlot(16) == nil
+					if ( memberEmptyInventoryCount >= botEmptyInventoryCount + 2 )
+						or ( member:GetItemInSlot(16) == nil )
+						or ( Item.GetInUseNeutralItemLevel(member) + 3 < Item.GetNeutralItemLevel(hNeedDropItem:GetName()) )--队友正在用的等级远低于要丢的
 					then
 						nTargetMember = member;
 						break;
@@ -1035,8 +1086,8 @@ function Item.GetNeedDropNeutralItem(bot)
 				end
 			end		
 		end
+		
 		if nTargetMember ~= nil
-			--and botEmptyInventoryCount <= 2
 		then
 			--print(bot:GetUnitName().." 2dropping item:"..hNeedDropItem:GetName())
 			return hNeedDropItem, nTargetMember
@@ -1048,11 +1099,13 @@ function Item.GetNeedDropNeutralItem(bot)
 		
 end
 
+
 function Item.IsNotSellItem(sItemName)
 
 	return tNotSellItemList[sItemName] == true
 
 end
+
 
 function Item.IsCanNotSwitchItem(sItemName)
 
@@ -1060,11 +1113,13 @@ function Item.IsCanNotSwitchItem(sItemName)
 
 end
 
+
 function Item.IsDebugItem(sItemName)
 	
 	return tDebugItemList[sItemName] == true
 
 end
+
 
 function Item.IsTopItem(sItemName)
 	
@@ -1102,10 +1157,13 @@ function Item.IsItemInHero(sItemName)
 		
 	if string.find(sItemName, 'PvN_') ~= nil then return Item.IsItemInHero('item_travel_boots') end
 	
+	if sItemName == 'item_ultimate_scepter' and bot:HasModifier('modifier_item_ultimate_scepter_consumed') then return true end
+	
 	if sItemName == 'item_ultimate_scepter_2' then return bot:HasModifier('modifier_item_ultimate_scepter_consumed') end
 	
 	local nItemSolt = bot:FindItemSlot(sItemName)
 	
+	--add courier solt better
 	return nItemSolt >= 0 and ( nItemSolt <= 8 or Item.IsTopItem(sItemName) )
 
 end
@@ -1180,6 +1238,7 @@ function Item.GetBasicItemToBuyList(sItemList)
 	
 end
 
+
 function Item.GetMainInvLessValItemSlot(bot)
 	local minPrice = 10000;
 	local minSlot = -1;
@@ -1234,6 +1293,7 @@ function Item.GetNeutralItemCount(bot)
 
 end
 
+
 function Item.GetEmptyInventoryAmount(bot)
 	
 	local amount = 0;
@@ -1248,6 +1308,7 @@ function Item.GetEmptyInventoryAmount(bot)
 	return amount;
 	
 end
+
 
 function Item.GetEmptyNeutralBackpackAmount(bot)
 	
@@ -1367,5 +1428,33 @@ function Item.GetTheItemSolt(bot, nSlotMin, nSlotMax, bMaxCost)
 end
 
 
+function Item.GetOutfitType(bot)
+	
+	local nOutfitID = 0
+	local sOutfitTypeList = {
+		[1] = 'outfit_priest',
+		[2] = 'outfit_mage',
+		[3] = 'outfit_carry',
+		[4] = 'outfit_tank',
+		[5] = 'outfit_mid',
+	}
+	
+	local nTeamPlayerIDs = GetTeamPlayers(GetTeam())
+	for i = 1, 5
+	do 
+		local memberID = nTeamPlayerIDs[i]
+		if memberID ~= nil
+			and IsPlayerBot(memberID)
+		then
+			nOutfitID = nOutfitID + 1
+			if bot:GetPlayerID() == memberID
+			then
+				return sOutfitTypeList[nOutfitID];
+			end
+		end
+	end
+	
+end
+
 return Item;
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592。

@@ -14,7 +14,7 @@ local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-
+local sOutfitType = J.Item.GetOutfitType(bot)
 
 local tTalentTreeList = {
 						['t25'] = {10, 0},
@@ -31,21 +31,59 @@ local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
+local tOutFitList = {}
 
-X['sBuyList'] = {
-				'item_crystal_maiden_outfit',
-				'item_headdress',
-				'item_pipe',
-				'item_shadow_amulet',
-				'item_veil_of_discord',
-				'item_invis_sword',		
-				'item_cyclone', 
-				'item_sheepstick',
-				'item_silver_edge',
+tOutFitList['outfit_carry'] = {
+
+	"item_crystal_maiden_outfit",
+	"item_shadow_amulet",
+	"item_veil_of_discord",
+	"item_invis_sword",		
+	"item_cyclone", 
+	"item_sheepstick",
+	"item_silver_edge",
+	"item_bloodthorn",
+				
 }
+
+tOutFitList['outfit_mid'] = tOutFitList['outfit_carry']
+
+tOutFitList['outfit_priest'] = {
+	
+	"item_priest_outfit",
+	"item_urn_of_shadows",
+	"item_mekansm",
+	"item_glimmer_cape",
+	"item_guardian_greaves",	
+	"item_spirit_vessel",
+	"item_rod_of_atos",
+	"item_shivas_guard",
+	"item_sheepstick",
+	
+}
+
+tOutFitList['outfit_mage'] = {
+	
+	'item_crystal_maiden_outfit',
+	'item_pipe',
+	'item_shadow_amulet',
+	'item_veil_of_discord',
+	'item_invis_sword',		
+	'item_cyclone', 
+	'item_sheepstick',
+	'item_silver_edge',
+	
+}
+
+tOutFitList['outfit_tank'] = tOutFitList['outfit_carry']
+
+X['sBuyList'] = tOutFitList[sOutfitType]
 
 X['sSellList'] = {
 	'item_sheepstick',
+	'item_magic_wand',
+	
+	"item_shivas_guard",
 	'item_magic_wand',
 }
 
@@ -889,4 +927,4 @@ function X.cm_GetStrongestUnit( nEnemyUnits )
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592。

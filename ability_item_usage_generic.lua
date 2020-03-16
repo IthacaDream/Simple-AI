@@ -33,8 +33,6 @@ C.GetScenario()
 local bDeafaultAbilityHero = BotBuild['bDeafaultAbility'];
 local bDeafaultItemHero = BotBuild['bDeafaultItem'];
 local sAbilityLevelUpList = BotBuild['sSkillList'];
-
-
 local function AbilityLevelUpComplement()  
 
 	if GetGameState() ~= GAME_STATE_PRE_GAME and GetGameState() ~= GAME_STATE_GAME_IN_PROGRESS 
@@ -69,14 +67,13 @@ local function AbilityLevelUpComplement()
 	end	
 	
 	if bot:GetAbilityPoints() > 0 
-	   --and bot:GetLevel() <= 25
-	   and sAbilityLevelUpList[1] ~= nil
+		and #sAbilityLevelUpList >= 1
 	then
-		local ability = bot:GetAbilityByName(sAbilityLevelUpList[1]);
-		if ability ~= nil 
-		   and not ability:IsHidden()  --fix kunkka bug
-		   and ability:CanAbilityBeUpgraded() 
-		   and ability:GetLevel() < ability:GetMaxLevel() 
+		local abilityToLevelup = bot:GetAbilityByName(sAbilityLevelUpList[1]);
+		if abilityToLevelup ~= nil 
+		   and not abilityToLevelup:IsHidden()  --fix kunkka bug
+		   and abilityToLevelup:CanAbilityBeUpgraded() 
+		   and abilityToLevelup:GetLevel() < abilityToLevelup:GetMaxLevel() 
 		then
 			bot:ActionImmediate_LevelAbility(sAbilityLevelUpList[1]);
 			table.remove(sAbilityLevelUpList,1);
@@ -89,13 +86,14 @@ end
 
 function X.GetNumEnemyNearby(building)
 	local nearbynum = 0;
-	for i,id in pairs(GetTeamPlayers(GetOpposingTeam())) do
+	for i,id in pairs(GetTeamPlayers(GetOpposingTeam())) 
+	do
 		if IsHeroAlive(id) then
 			local info = GetHeroLastSeenInfo(id);
 			if info ~= nil then
 				local dInfo = info[1]; 
 				if dInfo ~= nil 
-				   and GetUnitToLocationDistance(building, dInfo.location) <= 2999 
+				   and GetUnitToLocationDistance(building, dInfo.location) <= 3000
 				   and dInfo.time_since_seen < 1.0 
 				then
 					nearbynum = nearbynum + 1;
@@ -110,7 +108,8 @@ end
 local fDeathTime = 0;
 function X.GetRemainingRespawnTime()
 	
-	if fDeathTime == 0 then
+	if fDeathTime == 0 
+	then
 		return 0;
 	else
 		return bot:GetRespawnTime() - ( DotaTime() - fDeathTime ) ;
@@ -119,12 +118,17 @@ function X.GetRemainingRespawnTime()
 end
 
 local nJiDiCount = RandomInt(14,20);
-local nTalkDelay = RandomFloat(2.8,4.6)
+local nTalkDelay = RandomFloat(1.9,5.6)
 local nDeathReplyTime = -999
 local nLastGold = 9999
 local nLastKillCount = 999
 local nLastDeathCount = 0
 local nContinueKillCount = 0
+local nReplyHumanCount = 0
+local nMaxReplyCount = RandomInt(3,7)
+local bInstallChatCallbackDone = false
+local nReplyHumanTime = nil
+local sHumanString = nil
 function X.SetTalkMessage()
 
 	local nBotID = bot:GetPlayerID()
@@ -132,6 +136,37 @@ function X.SetTalkMessage()
 	local nCurrentKills = GetHeroKills(nBotID)
 	local nCurrentDeaths = GetHeroDeaths(nBotID)
 	local nRate = GetGameMode() == 23 and 2.0 or 1.0
+	
+	--Reply Human Player's Word
+	if nBotID == J.Role.GetReplyMemberID()
+		and nReplyHumanCount <= nMaxReplyCount
+	then
+		if not bInstallChatCallbackDone
+		then
+			bInstallChatCallbackDone = true
+			InstallChatCallback(function( tChat ) X.SetReplyHumanTime( tChat ) end);
+		end
+		
+		if sHumanString ~= nil
+			and nReplyHumanTime ~= nil
+			and DotaTime() > nReplyHumanTime + nTalkDelay
+		then
+			local chatString = J.Chat.GetReplyString(sHumanString)
+			
+			--if nReplyHumanCount == nMaxReplyCount
+			--then chatString = J.Chat.GetStopReplyString() end
+			
+			--bot:ActionImmediate_Chat( chatString, false );
+			
+			nReplyHumanCount = nReplyHumanCount + 1
+			nTalkDelay = RandomFloat(2.3,6.2)
+			sHumanString = nil
+			nReplyHumanTime = nil
+			if nTalkDelay > 3.9 then nTalkDelay = RandomFloat(2.3,6.2) end
+		end		
+		
+	end
+	
 	
 	--Say "?"
 	if	bot:IsAlive()
@@ -161,7 +196,7 @@ function X.SetTalkMessage()
 		then
 			bot:ActionImmediate_Chat( "...", true );
 			nDeathReplyTime = -999
-			nTalkDelay = RandomFloat(2.8,4.6)
+			nTalkDelay = RandomFloat(3.6,4.9)
 		end
 	end
 	
@@ -171,7 +206,7 @@ function X.SetTalkMessage()
 		and J.Role.NotSayJiDi()
 	then
 		local sJiDi = RandomInt(1,9) >= 3 and "jidi,xiayiba" or "jidi,gkd"
-		bot:ActionImmediate_Chat( sJiDi, true );
+		bot:ActionImmediate_Chat( sJiDi, true )
 		J.Role['sayJiDi'] = true
 	end
 	
@@ -193,20 +228,38 @@ function X.SetTalkMessage()
 end
 
 
-local bArcWardenClone = false;
+function X.SetReplyHumanTime( tChat )
+
+	
+	if tChat.team_only == true
+		and not IsPlayerBot(tChat.player_id)
+		and J.Chat.IsShutUpString(tChat.string)
+	then
+		nReplyHumanCount = nMaxReplyCount + 1
+		return
+	end
+	
+	if IsTeamPlayer(tChat.player_id)
+		and not IsPlayerBot(tChat.player_id)
+		and tChat.team_only == true
+		and J.Chat.IsChineseString(tChat.string)
+		and J.Chat.GetReplyString(tChat.string) ~= tChat.string
+	then
+		sHumanString = tChat.string
+		nReplyHumanTime = DotaTime()
+	end
+	
+end
+
+
 local function BuybackUsageComplement() 
 	
 	X.SetTalkMessage()	
 	
-	if bot:GetLevel() <=  15
-	   or bArcWardenClone
+	if bot:GetLevel() <= 15
+	   or bot:HasModifier('modifier_arc_warden_tempest_double')
 	   or not J.Role.ShouldBuyBack()
 	then
-		return;
-	end
-	
-	if bot:HasModifier('modifier_arc_warden_tempest_double') then
-		bArcWardenClone = true 
 		return;
 	end
 	
@@ -342,6 +395,7 @@ local function CourierUsageComplement()
 		
 		--TAKE ITEM FROM STASH (AND COURIER WILL TRANSFER IT)
 		if botIsAlive 
+		   and not X.IsInvFull(bot)
 		   and ( cState == COURIER_STATE_AT_BASE
 				 or ( cState == COURIER_STATE_IDLE and npcCourier:DistanceFromFountain() < 900 ) )
 		then
@@ -361,8 +415,10 @@ local function CourierUsageComplement()
 		end
 		
 		--MAKE COURIER GOES TO SECRET SHOP
-		if  botIsAlive and bot.SecretShop and npcCourier:DistanceFromFountain() < 7000 
-			and X.GetCourierEmptySlot(npcCourier) >= 2
+		if  botIsAlive and bot.SecretShop 
+			and npcCourier:DistanceFromFountain() < 7000 
+			and J.Item.GetEmptyInventoryAmount(npcCourier) >= 2
+			and not X.IsEnemyHeroAroundSecretShop() -- 商店附近没有敌人
 		    and currentTime > courierTime + useCourierCD 
 		then
 			J.SetReportMotive(bDebugCourier,"MAKE COURIER GOES TO SECRET SHOP");
@@ -391,7 +447,7 @@ local function CourierUsageComplement()
 		    and ( cState == COURIER_STATE_AT_BASE 
 			      or (cState == COURIER_STATE_IDLE and npcCourier:DistanceFromFountain() < 800 ) )  
 			and bot:GetCourierValue() > 0 
-			and X.GetNumStashItem(bot) + 4 <= X.GetCourierEmptySlot(npcCourier)
+			and X.GetNumStashItem(bot) + 4 <= J.Item.GetEmptyInventoryAmount(npcCourier)
 			and currentTime > courierTime + useCourierCD
 		then
 			J.SetReportMotive(bDebugCourier,"RETURN STASH ITEM WHEN DEATH");
@@ -417,24 +473,12 @@ function X.GetBotCourier(bot)
 		end
 	end
 	
-	return nil
-end
-
-
-function X.GetCourierEmptySlot(courier)
-	local amount = 0;
-	for i=0, 8 do
-		if courier:GetItemInSlot(i) == nil then
-			amount = amount + 1;
-		end
-	end
-	return amount;
 end
 
 
 function X.GetNumStashItem(unit)
 	local amount = 0;
-	for i=9, 14 do
+	for i = 9, 14 do
 		if unit:GetItemInSlot(i) ~= nil 
 		then
 			amount = amount + 1;
@@ -566,6 +610,24 @@ function X.IsInvFull(bot)
 end
 
 
+function X.IsEnemyHeroAroundSecretShop()
+
+	local vRadiantShop = GetShopLocation(GetTeam(), SHOP_SECRET )
+	local vDireShop = GetShopLocation(GetTeam(), SHOP_SECRET2 )
+	local vTeamSecretShop = GetTeam() == TEAM_DIRE and vDireShop or vRadiantShop
+	
+	local vCenterLocation = ( vTeamSecretShop + GetAncient(GetTeam()):GetLocation() ) * 0.5
+	
+	if J.IsEnemyHeroAroundLocation(vCenterLocation,2000)
+	then
+		return true
+	end
+
+	return false
+
+end
+
+
 function X.GiveToMidLaner()
 	local teamPlayers = GetTeamPlayers(GetTeam())
 	local target = nil;
@@ -585,7 +647,6 @@ function X.GiveToMidLaner()
 			end
 		end
 	end
-	return nil;
 end
 
 
@@ -613,7 +674,7 @@ local function ItemUsageComplement()
 	   or bot:IsUsingAbility()
 	   or bot:IsCastingAbility()
 	   or bot:NumQueuedActions() > 0 
-	   or bot:HasModifier('modifier_teleporting')
+	   or bot:HasModifier('modifier_teleporting') --test
 	   or bot:HasModifier('modifier_doom_bringer_doom')
 	   or bot:HasModifier('modifier_phantom_lancer_phantom_edge_boost')
 	   or ( bot:IsInvisible() and not bot:HasModifier("modifier_phantom_assassin_blur_active") )
@@ -703,7 +764,7 @@ function X.SetStashItemTimeUpdate()
 
 	local currentTime = DotaTime()
 
-	for i = 6,8
+	for i = 6, 8
 	do
 		local hItem = bot:GetItemInSlot(i);
 		if hItem ~= nil
@@ -730,7 +791,7 @@ end
 function X.IsItemInStash(sItemName)
 
 	if fLastStashItemTimeList[sItemName] ~= nil
-		and DotaTime() < fLastStashItemTimeList[sItemName] + 6.01
+		and DotaTime() < fLastStashItemTimeList[sItemName] + 6.05
 	then
 		return true
 	end
@@ -782,7 +843,7 @@ X.ConsiderItemDesire["item_abyssal_blade"] = function(hItem)
 	then		
 		if  J.IsValidHero(botTarget)
 			and J.IsInRange(bot,botTarget,nCastRange + 50)
-			and J.CanCastOnNonMagicImmune(botTarget) 
+			and J.CanCastOnNonMagicImmune(botTarget) --bug
 			and X.IsWithoutSpellShield(botTarget)
 			and not J.IsDisabled(true,botTarget)			
 		then
@@ -876,7 +937,7 @@ end
 --BKB
 X.ConsiderItemDesire["item_black_king_bar"] = function(hItem)
 
-	local nCastRange = 1400
+	local nCastRange = 1300
 	local sCastType = 'none'	
 	local hEffectTarget = nil
 	local nInRangeEnmyList = bot:GetNearbyHeroes(nCastRange,true,BOT_MODE_NONE)
@@ -903,12 +964,12 @@ X.ConsiderItemDesire["item_black_king_bar"] = function(hItem)
 			return BOT_ACTION_DESIRE_HIGH, bot, sCastType, 'ProjectileIncoming'
 		end
 		
-		if J.IsWillBeCastUnitTargetSpell(bot,1200)
+		if J.IsWillBeCastUnitTargetSpell(bot,nCastRange)
 		then
 			return BOT_ACTION_DESIRE_HIGH, bot, sCastType, 'UnitTargetSpell'
 		end
 		
-		if J.IsWillBeCastPointSpell(bot,1200)
+		if J.IsWillBeCastPointSpell(bot,nCastRange)
 		then
 			return BOT_ACTION_DESIRE_HIGH, bot, sCastType, 'PointSpell'
 		end			
@@ -1047,7 +1108,7 @@ X.ConsiderItemDesire["item_cheese"] = function(hItem)
 		or ( nLostHealth > 2000 and nLostHealth + nLostMana > 3000)
 		or ( botHP < 0.4 and botMP < 0.4)
 		or ( botHP < 0.2 )
-		or ( botMP < 0.1 )
+		or ( botMP < 0.06 )
 	then	
 		if J.IsGoingOnSomeone(bot) 
 		then
@@ -2635,8 +2696,6 @@ X.ConsiderItemDesire["item_pipe"] = function(hItem)
 	local hEffectTarget = nil 
 	local nInRangeEnmyList = bot:GetNearbyHeroes(nCastRange,true,BOT_MODE_NONE)
 	local hNearbyAllyList = bot:GetNearbyHeroes(1200,false,BOT_MODE_NONE)
-	
-	
 		
 	for _,npcAlly in pairs(hNearbyAllyList) 
 	do
@@ -2682,14 +2741,14 @@ X.ConsiderItemDesire["item_power_treads"] = function(hItem)
 			nPtStat = ATTRIBUTE_INTELLECT
 	end
 
-	if (   bot:HasModifier("modifier_flask_healing")
-		   or  bot:HasModifier("modifier_clarity_potion")
-		   or  bot:HasModifier("modifier_item_urn_heal")
-		   or  bot:HasModifier("modifier_filler_heal")
-		   or  bot:HasModifier("modifier_item_spirit_vessel_heal")
-		   or  bot:HasModifier("modifier_bottle_regeneration") )
-		   and nMode ~= BOT_MODE_ATTACK 
-		   and nMode ~= BOT_MODE_RETREAT 
+	if ( bot:HasModifier("modifier_flask_healing")
+		 or  bot:HasModifier("modifier_clarity_potion")
+		 or  bot:HasModifier("modifier_item_urn_heal")
+		 or  bot:HasModifier("modifier_filler_heal")
+		 or  bot:HasModifier("modifier_item_spirit_vessel_heal")
+		 or  bot:HasModifier("modifier_bottle_regeneration") )
+		and nMode ~= BOT_MODE_ATTACK 
+		and nMode ~= BOT_MODE_RETREAT 
 	then
 		if nPtStat ~= ATTRIBUTE_AGILITY
 		then
@@ -2697,9 +2756,9 @@ X.ConsiderItemDesire["item_power_treads"] = function(hItem)
 			lastSwitchPtTime = DotaTime()
 			if nPtStat == ATTRIBUTE_STRENGTH
 			then
-				return BOT_ACTION_DESIRE_HIGH, bot, 'twice', 'power_treads-STRENGTH_to_AGILITY'
+				return BOT_ACTION_DESIRE_HIGH, bot, 'twice', 'STRENGTH_to_AGILITY'
 			else
-				return BOT_ACTION_DESIRE_HIGH, bot, sCastType, 'power_treads-INTELLECT_to_AGILITY'
+				return BOT_ACTION_DESIRE_HIGH, bot, sCastType, 'INTELLECT_to_AGILITY'
 			end
 			
 		end
@@ -2767,6 +2826,7 @@ X.ConsiderItemDesire["item_power_treads"] = function(hItem)
 end
 
 --补刀斧
+local lastQuellingBladeUseTime = 0
 X.ConsiderItemDesire["item_quelling_blade"] = function(hItem)
 
 	local nCastRange = 450 + aetherRange
@@ -2815,7 +2875,25 @@ X.ConsiderItemDesire["item_quelling_blade"] = function(hItem)
 	end
 	
 	--开视野
+	if DotaTime() > lastQuellingBladeUseTime + 0.15
+	then
+		lastQuellingBladeUseTime = DotaTime()
 	
+		local nBladeRange = 350;
+		local nTrees = bot:GetNearbyTrees(nBladeRange);
+		local nTreeCount = #nTrees
+		if nTreeCount >= 1
+		then
+			for treeID = 1, nTreeCount 
+			do
+				local tree = nTrees[treeID]
+				if bot:IsFacingLocation(GetTreeLocation(tree), 7) 
+				then
+					return BOT_ACTION_DESIRE_HIGH, tree, sCastType, 'blade_tree'	
+				end
+			end
+		end
+	end
 	
 	return BOT_ACTION_DESIRE_NONE
 	
@@ -3725,23 +3803,6 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 			end
 		end	
 		
-		if tpLoc == nil 
-		then
-			local shrineList = {
-				 SHRINE_JUNGLE_1,
-				 SHRINE_JUNGLE_2 
-			}
-			for _,s in pairs(shrineList) do
-				local shrine = GetShrine(GetTeam(), s);
-				if shrine ~= nil and shrine:IsAlive() 
-					and not shrine:WasRecentlyDamagedByAnyHero(4.0)
-				then
-					tpLoc = shrine:GetLocation();
-					break; 
-				end	
-			end	
-		end		
-		
 		if tpLoc ~= nil
 		then
 			hEffectTarget = tpLoc
@@ -3777,7 +3838,7 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 				local nNearAllyList = J.GetAlliesNearLoc(tpLoc, 1600);
 				if GetUnitToLocationDistance(bot,tpLoc) > nMinTPDistance - 600
 					and #nNearAllyList == 0
-				then					
+				then
 					J.Role['lastFarmTpTime'] = DotaTime();
 					return BOT_ACTION_DESIRE_HIGH, tpLoc, sCastType, 'TBOOT-Farm_Lane'
 				end
@@ -3798,7 +3859,7 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 	end
 	
 	--支援团战和守家
-	if	bot:GetLevel() > 10
+	if bot:GetLevel() > 10
 		and nMode ~= BOT_MODE_SECRET_SHOP
 		and nMode ~= BOT_MODE_ROSHAN
 		and nMode ~= BOT_MODE_ATTACK
@@ -3845,7 +3906,7 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 	end
 		
 	--回复状态
-	if  (botHP + botMP < 0.3 or botHP < 0.2 ) 
+	if ( botHP + botMP < 0.3 or botHP < 0.2 ) 
 		and bot:GetLevel() >= 6
 		and bot:GetUnitName() ~= 'npc_dota_hero_huskar'
 	then
@@ -4057,7 +4118,9 @@ X.ConsiderItemDesire["item_mango_tree"] = function(hItem)
 
 	local oppositeID_1 = GetTeamPlayers(opTeam)[1]
 	
-	if bot:DistanceFromFountain() > 2222 and not IsPlayerBot(oppositeID_1) then return BOT_ACTION_DESIRE_NONE end
+	if bot:DistanceFromFountain() > 2222 
+		and ( oppositeID_1 ~= nil and not IsPlayerBot(oppositeID_1) )
+	then return BOT_ACTION_DESIRE_NONE end
 	
 	local nCastRange = 200
 	local sCastType = 'ground'	
@@ -4444,28 +4507,6 @@ X.ConsiderItemDesire["item_force_boots"] = function(hItem)
 
 end
 
---聚合神符
-X.ConsiderItemDesire["item_fusion_rune"] = function(hItem)
-
-	local nCastRange = 800
-	local sCastType = 'unit'
-	local hEffectTarget = nil 
-	
-	
-	if J.IsInTeamFight(bot, 1400)
-	then
-		if J.IsValidHero(botTarget)
-			and J.CanCastOnMagicImmune(botTarget)
-		then
-			hEffectTarget = bot --可优化为对战力最高的队友使用
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'fusion_rune'
-		end	
-	end
-
-	return BOT_ACTION_DESIRE_NONE
-
-end
-
 --林地神行靴
 X.ConsiderItemDesire["item_woodland_striders"] = function(hItem)
 
@@ -4622,7 +4663,7 @@ local function UseGlyph()
 
 	if GetGlyphCooldown( ) > 0 
 		or DotaTime() < 60 
-		or bot:GetPlayerID() ~= GetTeamMember(1):GetPlayerID()
+		or bot ~= GetTeamMember(1)
 	then
 		return 
 	end	

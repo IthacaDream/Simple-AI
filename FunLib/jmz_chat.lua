@@ -4288,7 +4288,7 @@ function Chat.GetRawHeroName(sName)
 		end	
 	end
 	
-	return 'npc_dota_hero_crystal_maiden'  --默认的情况,返回冰女
+	return 'npc_dota_hero_techies'  --默认的情况,返回炸弹人
 	
 end
 
@@ -4431,6 +4431,76 @@ end
 function Chat.GetUserKeyDir()
 
 	return Chat['tSpWordList'][0]
+
+end
+
+
+function Chat.IsChineseString(sString)
+
+	if sString == nil then return false end
+
+	local nByte = string.byte(sString,1,1)
+	if nByte > 127
+	then
+		return true
+	end
+
+	return false
+
+end
+
+
+function Chat.IsShutUpString(sString)
+
+	return sString == "闭嘴"
+
+end
+
+
+function Chat.GetReplyString(sString)
+
+	if sString == "你好" or sString == "你好！" then return "你也好呀" end
+	
+	if sString == "你们" or sString == "你" or sString == "我" 
+		or sString == "吗？" or sString == "吗"
+		or sString == "吧" or sString == "？"
+	then return sString end
+	
+	if string.find(sString,"我是你") ~= nil
+	then return string.gsub(sString, "我是你", "我才是你") end
+	
+	local sMaReplyList = {"呀","哦","呀！","哦！","！",""}
+	local sMaReplyWord = sMaReplyList[RandomInt(1,#sMaReplyList)]
+	
+	sString = string.gsub(sString, "你们", "")
+	sString = string.gsub(sString, "你", "")
+	sString = string.gsub(sString, "吗？", sMaReplyWord)
+	sString = string.gsub(sString, "吗", sMaReplyWord)
+	sString = string.gsub(sString, "吧", "啊")
+	sString = string.gsub(sString, "？", "！")
+	sString = string.gsub(sString, "我", "你")
+
+	return sString
+
+end
+
+
+function Chat.GetStopReplyString()
+
+	local sStopStringList = {
+	"你别逗了，我已无话可说了。",
+	"我要专心打游戏了，以后再说吧。",
+	"别闹了，我要开始认真玩了。",
+	"我的心好累，不说了。",
+	"好了好了，别逗我玩了。",
+	"玩游戏的时候就不能严肃点嘛。",
+	"打游戏呢，先不和你聊了。",
+	"我不想再分心聊天了。",	
+	"要是能上观战里的创意工坊机器人频道就好了。",
+	"我们也想加入合作对抗列表,可是V社不给机会啊。",
+	}
+	
+	return sStopStringList[RandomInt(1,#sStopStringList)]
 
 end
 
@@ -4807,4 +4877,4 @@ item_pirate_hat
 item_ex_machina
 
 --]]
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592。

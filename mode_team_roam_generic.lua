@@ -1485,7 +1485,7 @@ function X.IsModeSuitToHitCreep(bot)
 	local botMode = bot:GetActiveMode();
 	local nEnemyHeroes = J.GetEnemyList(bot,750)
 	if #nEnemyHeroes >= 3 
-	   or (nEnemyHeroes[1] ~= nil and nEnemyHeroes[1]:GetLevel() >= 10 )
+	   or (nEnemyHeroes[1] ~= nil and nEnemyHeroes[1]:GetLevel() >= 7 )
 	then
 		return false;
 	end
@@ -1665,18 +1665,20 @@ function X.IsSpecialCarry(bot)
 		["npc_dota_hero_huskar"] = true,
 		["npc_dota_hero_juggernaut"] = true,
 		["npc_dota_hero_kunkka"] = true,
+		["npc_dota_hero_legion_commander"] = true,
 		["npc_dota_hero_luna"] = true,
 		["npc_dota_hero_medusa"] = true,
 		["npc_dota_hero_nevermore"] = true,
-		["npc_dota_hero_omniknight"] = true,
 		["npc_dota_hero_ogre_magi"] = true,
+		["npc_dota_hero_omniknight"] = true,
 		["npc_dota_hero_phantom_assassin"] = true,
 		["npc_dota_hero_phantom_lancer"] = true,
 		["npc_dota_hero_razor"] = true,
 		["npc_dota_hero_sand_king"] = true,
 		["npc_dota_hero_skeleton_king"] = true,
-		["npc_dota_hero_sven"] = true,
+		["npc_dota_hero_slark"] = true,
 		["npc_dota_hero_sniper"] = true,
+		["npc_dota_hero_sven"] = true,
 		["npc_dota_hero_templar_assassin"] = true,
 		["npc_dota_hero_tidehunter"] = true,
 		["npc_dota_hero_viper"] = true,
@@ -1873,4 +1875,4 @@ function X.ShouldNotRetreat(bot)
 	
 	return false;
 end
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592。

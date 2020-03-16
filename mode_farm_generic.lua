@@ -11,13 +11,13 @@ if GetBot():IsInvulnerable() or not GetBot():IsHero() or not string.find(GetBot(
 end
 
 local bot = GetBot();
-local bDebugMode = (bot:GetUnitName() == "npc_dota_hero_medusa")
+local bDebugMode = ( 1 == 10 )
 local X = {}
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
 local C = require( GetScriptDirectory() .. "/AuxiliaryScript/GameLive")
 local Cv  = require(GetScriptDirectory()..'/AuxiliaryScript/BotChat')
 local Http = require( GetScriptDirectory() .. "/AuxiliaryScript/HttpServer")
-local RB = Vector(-7174.000000, -6671.00000,  0.000000)
+local RB = Vector(-7174.000000, -6671.00000, 0.000000)
 local DB = Vector(7023.000000, 6450.000000, 0.000000)
 
 local botName = bot:GetUnitName();
@@ -29,11 +29,11 @@ local hLaneCreepList = {};
 local numCamp = 18;
 local farmState = 0;
 local teamPlayers = nil;
-local lanes = {LANE_TOP, LANE_MID, LANE_BOT};
-local cause = "";
+local nLaneList = {LANE_TOP, LANE_MID, LANE_BOT};
+local nTpSolt = 15
+local nNeutralItemSolt = 16
 
 local t3Destroyed = false;
-local shrineTarget = nil;
 
 
 local runTime = 0;
@@ -76,6 +76,22 @@ then
 	local nUserType = J.Role.GetUserType()
 	sVersionDate = J.Chat.GetLocalWord(nUserType)..J.Role.GetUserName()
 end
+
+local sNoticeList = {
+	
+	[1] = "使用AI锦囊包,体验特色军师锦囊模式.",
+	[2] = "重复上局的对抗阵容,交流群里有方法.",
+	[3] = "新分路版开局时会重新分路,而中路版不会.",
+	[4] = "想给敌我AI指定英雄的话,就来交流群里看看.",
+	[5] = "要使用本地主机创建房间,避免游戏时AI失效.",
+	[6] = "寻找AI玩家一起游戏,千人交流群等你进来.",
+	[7] = "注意不要通过主界面机器人训练赛开始游戏.",
+	[8] = "跟车队一起玩超疯狂AI,加群体验一下.",
+	[9] = "支持修改AI名字分路出装,加群了解一下.",
+	[10]= "每天都有游戏车队,加群感受不一样的车速.",
+	[11]= "我们正处于各种困境之中,请帮我们出谋划策.",
+	
+}
 
 
 function GetDesire()	
@@ -142,8 +158,7 @@ function GetDesire()
 	if message ~= nil then
 		bot:ActionImmediate_Chat(message.mes, message.all)
 		message = nil
-	end
-	--PushNotice
+	end	--PushNotice
 	if not bPushNoticeDone
 	   and DotaTime() < 0
 	   and bot:GetGold() < 300 
@@ -169,15 +184,11 @@ function GetDesire()
 		if bAllNotice
 		then
 			bot:ActionImmediate_Chat( sMessage, false);
-			bot:ActionImmediate_Chat("输入“关闭聊天”关闭电脑互动聊天功能，输入“取消上报”取消数据上报操作，QQ交流群:632117330",true);
-		elseif not J.Role.IsUserMode() and RandomInt(1,9) > 2
-		then
-			if RandomInt(1,9) > 5
+			bot:ActionImmediate_Chat("输入“取消上报”取消数据上报操作，QQ交流群:632117330",true);
+		elseif not J.Role.IsUserMode()
 			then
-				bot:ActionImmediate_Chat("支持设置AI策略的功能,加群了解一下.",true);
-			else
-				bot:ActionImmediate_Chat("跟车队一起玩超疯狂AI,加群体验一下.",true);
-			end
+				local sNoticeMessage = sNoticeList[RandomInt(1,#sNoticeList)]
+				bot:ActionImmediate_Chat(sNoticeMessage,true);
 		end
 		bPushNoticeDone = true
 	end
@@ -239,7 +250,7 @@ function GetDesire()
 		J.Role['hasRefreshDone'] = true;
 	end
 	
-	if J.Role.IsCampRefreshDone() and sec > 52 and DotaTime() > 30
+	if J.Role.IsCampRefreshDone() and sec > 52
 	then
 		J.Role['hasRefreshDone'] = false;
 	end
@@ -247,10 +258,10 @@ function GetDesire()
 	availableCamp = J.Role['availableCampTable'];
 	
 	local hEnemyHeroList = bot:GetNearbyHeroes(1600, true, BOT_MODE_NONE);
-	local hAllyHeroList  = bot:GetNearbyHeroes(1600, false,BOT_MODE_ATTACK);
+	local hNearbyAttackAllyHeroList  = bot:GetNearbyHeroes(1600, false,BOT_MODE_ATTACK);
 	
 	
-	if #hEnemyHeroList > 0 or #hAllyHeroList > 0
+	if #hEnemyHeroList > 0 or #hNearbyAttackAllyHeroList > 0
 	then
 		return BOT_MODE_DESIRE_NONE;
 	end	
@@ -277,7 +288,7 @@ function GetDesire()
 	end	
 	
 	if bot:GetActiveMode() == BOT_MODE_LANING then laningTime = DotaTime(); end
-	if DotaTime() - laningTime < 18.0 and GetHeroDeaths(bot:GetPlayerID()) < 3 then return BOT_MODE_DESIRE_NONE; end	
+	if DotaTime() - laningTime < 15.0 and GetHeroDeaths(bot:GetPlayerID()) <= 2 then return BOT_MODE_DESIRE_NONE; end	
 	
 	if bot:IsAlive() and bot:HasModifier('modifier_arc_warden_tempest_double') 
 	   and GetRoshanDesire() > 0.85
@@ -306,33 +317,7 @@ function GetDesire()
 	then
 		return BOT_MODE_DESIRE_NONE;
 	end
-	
-	if t3Destroyed == false then
-		t3Destroyed = X.IsThereT3Detroyed();
-	else
-		if bot:DistanceFromFountain() > 9000 then
-			shrineTarget = X.GetTargetShrine();
-			local mostFurtherAlly = bot
-			local TeamMember = GetTeamPlayers(GetTeam());
-			for i = 1, #TeamMember
-			do
-				local ally = GetTeamMember(i);
-				if ally:IsAlive() and ally:DistanceFromFountain() > mostFurtherAlly:DistanceFromFountain()
-				then
-					mostFurtherAlly =  ally;
-				end
-			end
-			if J.GetDistanceFromEnemyFountain(mostFurtherAlly) > 2100
-			then
-				local barracks = mostFurtherAlly:GetNearbyBarracks(800, true);
-				if shrineTarget ~= nil and ( barracks[1] == nil or #barracks == 0 ) and X.IsSuitableToDestroyShrine()  then
-					cause = "shrine";
-					return BOT_MODE_DESIRE_HIGH;
-				end
-			end
-		end
-	end
-	
+		
 	if DotaTime() > countTime + countCD
 	then
 		countTime  = DotaTime();
@@ -370,7 +355,6 @@ function GetDesire()
 	   or (bot:GetLevel() >= 23 and nAlliesCount >= 3)
 	   or GetRoshanDesire() > BOT_MODE_DESIRE_VERYHIGH
 	then
-		
 		local nNeutrals = bot:GetNearbyNeutralCreeps(bot:GetAttackRange() + 110); --sniper wil bug
 		if #nNeutrals == 0 
 		then 
@@ -415,7 +399,7 @@ function GetDesire()
 	   and ( J.Site.IsTimeToFarm(bot) or pushTime > DotaTime() - 8.0 )
 	   and ( not X.IsHumanPlayerInTeam() or enemyKills > allyKills + 16 ) 
 	   and ( bot:GetNextItemPurchaseValue() > 0 or not bot:HasModifier("modifier_item_moon_shard_consumed") )
-	   and ( DotaTime() > 11 *60 or bot:GetLevel() >= 8 or ( bot:GetAttackRange() < 220 and bot:GetLevel() > 6 ) )	   
+	   and ( DotaTime() > 9 * 60 or bot:GetLevel() >= 8 or ( bot:GetAttackRange() < 220 and bot:GetLevel() > 6 ) )	   
 	then
 		if J.GetDistanceFromEnemyFountain(bot) > 4000 
 		then
@@ -511,8 +495,6 @@ end
 function OnEnd()
 	preferedCamp = nil;
 	farmState = 0;
-	cause = "";
-	shrineTarget = nil;
 	hLaneCreepList  = {};
 	runMode = false;
 	runTime = 0;
@@ -522,7 +504,10 @@ end
 
 function Think()
 	
-	if J.CanNotUseAction(bot) then return end
+	if J.CanNotUseAction(bot)
+		or bot:GetCurrentActionType() == BOT_ACTION_TYPE_PICK_UP_ITEM
+		or bot:GetCurrentActionType() == BOT_ACTION_TYPE_DROP_ITEM
+	then return end
 	
 	if runMode then
 		if not bot:IsInvisible() and bot:GetLevel() > 14
@@ -579,22 +564,33 @@ function Think()
 		end
 	end
 	
-	if cause == "shrine" then
-		if GetUnitToUnitDistance(bot, shrineTarget) > 800 then
-			bot:Action_MoveToLocation(shrineTarget:GetLocation() +RandomVector(20))
-			return
-		else
-		
-			if shrineTarget == nil or shrineTarget:IsNull() or not shrineTarget:IsAlive()
+	if bot:GetItemInSlot(nNeutralItemSolt) == nil
+		and DotaTime() > 8 * 60
+	then
+		local pickItem = J.Item.GetInGroundItem(bot)
+		if pickItem ~= nil 
+			and pickItem.item ~= nil 
+			and pickItem.location ~= nil
+			and GetUnitToLocationDistance(bot,pickItem.location) < 1300 
+		then
+			if GetUnitToLocationDistance(bot,pickItem.location) > 400
 			then
-				cause = "";
-				return;
-			end
-			
-			bot:Action_AttackUnit(shrineTarget, true)
-			return
-		end
-	end	
+				bot:Action_MoveToLocation(pickItem.location)
+				return
+			else
+				bot:Action_PickUpItem(pickItem.item)
+				return
+			end	
+		end	
+	end
+	
+	local dropItem = J.Item.GetNeedDropNeutralItem(bot)
+	if dropItem ~= nil 
+		and GetUnitToUnitDistance(bot, GetAncient(GetOpposingTeam())) > 3800
+	then
+		bot:Action_DropItem( dropItem, bot:GetLocation() )
+		return
+	end
 	
 	if hLaneCreepList ~= nil and #hLaneCreepList > 0 then
 		local farmTarget = J.Site.GetFarmLaneTarget(hLaneCreepList);
@@ -706,7 +702,7 @@ function Think()
 					 and J.Role.ShouldTpToFarm() 
 				then
 					local mostFarmDesireLane,mostFarmDesire = J.GetMostFarmLaneDesire();
-					local tps = bot:GetItemInSlot(15);
+					local tps = bot:GetItemInSlot(nTpSolt);
 					local tpLoc = GetLaneFrontLocation(GetTeam(),mostFarmDesireLane,0);
 					local bestTpLoc = J.GetNearbyLocationToTp(tpLoc);
 					local nAllies = J.GetAlliesNearLoc(tpLoc, 1400);
@@ -844,43 +840,6 @@ function X.IsThereT3Detroyed()
 end
 
 
-function X.GetTargetShrine()
-	local shrines = {
-		 SHRINE_JUNGLE_1,
-		 SHRINE_JUNGLE_2 
-	}
-	for _,s in pairs(shrines) do
-		local shrine = GetShrine(GetOpposingTeam(), s);
-		if  shrine ~= nil and shrine:IsAlive() then
-			return shrine;
-		end	
-	end	
-	return nil;
-end
-
-
-function X.IsSuitableToDestroyShrine()
-	local mode = bot:GetActiveMode();
-	local nAllies = bot:GetNearbyHeroes(1600,false,BOT_MODE_NONE);
-	
-	if bot:WasRecentlyDamagedByTower(2.0) 
-	   or bot:WasRecentlyDamagedByAnyHero(3.0)
-	   or X.NumOfAliveHero(true)  <= 2
-	   or X.NumOfAliveHero(false) <= 2
-	   or #nAllies < 2
-	   or mode == BOT_MODE_DEFEND_TOWER_TOP
-	   or mode == BOT_MODE_DEFEND_TOWER_MID
-	   or mode == BOT_MODE_DEFEND_TOWER_BOT
-	   or mode == BOT_MODE_ATTACK
-	   or mode == BOT_MODE_DEFEND_ALLY
-	   or (mode == BOT_MODE_RETREAT and bot:GetActiveModeDesire() >= BOT_MODE_DESIRE_HIGH)
-	then
-		return false;
-	end
-	return true;
-end
-
-
 function X.NumOfAliveHero(bEnemy)
 	local numPlayers =  GetTeamPlayers(GetTeam());
 	if bEnemy then numPlayers =  GetTeamPlayers(GetOpposingTeam()); end
@@ -899,7 +858,7 @@ end
 
 function X.IsNearLaneFront( bot )
 	local testDist = 1600;
-	for _,lane in pairs(lanes)
+	for _,lane in pairs(nLaneList)
 	do
 		local tFLoc = GetLaneFrontLocation(GetTeam(), lane, 0);
 		if GetUnitToLocationDistance(bot,tFLoc) <= testDist
@@ -1000,7 +959,7 @@ function X.ShouldRun(bot)
 	   and aliveEnemyCount >= 3 
 	   and #hAllyHeroList < aliveEnemyCount + 2
 	   and not J.Role.IsPvNMode()
-	   and DotaTime() % 600 > 285 --处于夜间
+	   and ( DotaTime() % 600 > 285 or DotaTime() < 18 * 60 )--处于夜间或小于18分钟
 	then
 		--不冲高地
 		local allyLevel = J.GetAverageLevel(false);
@@ -1075,7 +1034,7 @@ function X.ShouldRun(bot)
 	
 	--低等级避免近塔
 	if  botLevel <= 10
-		and (#hEnemyHeroList > 0 or bot:GetHealth() < 500)
+		and (#hEnemyHeroList > 0 or bot:GetHealth() < 700)
 	then
 		local nLongEnemyTowers = bot:GetNearbyTowers(968, true);
 		if bot:GetAssignedLane() == LANE_MID 
@@ -1083,12 +1042,12 @@ function X.ShouldRun(bot)
 			 nLongEnemyTowers = bot:GetNearbyTowers(948, true); 
 			 nEnemyTowers     = bot:GetNearbyTowers(928, true); 
 		end
-		if botLevel <= 2
+		if ( botLevel <= 2 or DotaTime() < 2 * 60 )
 			and nLongEnemyTowers[1] ~= nil
 		then
 			return 1;
 		end	
-		if botLevel <= 4
+		if ( botLevel <= 4 or DotaTime() < 3 * 60 )
 			and nEnemyTowers[1] ~= nil
 		then
 			return 1;
@@ -1363,8 +1322,8 @@ function X.IsHighFarmer(bot)
 		or botName == "npc_dota_hero_razor"
 		or botName == "npc_dota_hero_huskar"
 		or botName == "npc_dota_hero_juggernaut"
-		or botName == "npc_dota_hero_grimstroke"
-		or botName == "npc_dota_hero_dazzle"
+		or botName == "npc_dota_hero_slark"
+		or botName == "npc_dota_hero_legion_commander"
 		or botName == "npc_dota_hero_batrider"
 		or botName == "npc_dota_hero_axe"
 		
@@ -1383,4 +1342,4 @@ function X.IsVeryHighFarmer(bot)
 		or botName == "npc_dota_hero_razor"
 		
 end
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592。

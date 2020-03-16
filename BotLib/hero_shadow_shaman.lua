@@ -14,6 +14,8 @@ local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
+local sOutfitType = J.Item.GetOutfitType(bot)
+
 
 local tTalentTreeList = {
 						['t25'] = {0, 10},
@@ -30,18 +32,60 @@ local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
-X['sBuyList'] = {
-				'item_mage_outfit',
-				"item_pipe",
-				"item_glimmer_cape",
-				"item_veil_of_discord",
-				"item_cyclone",
-				"item_sheepstick",
+local tOutFitList = {}
+
+tOutFitList['outfit_carry'] = {
+		
+		"item_mage_outfit",
+		"item_glimmer_cape",
+		"item_force_staff",
+		"item_cyclone",
+		"item_ultimate_scepter",
+		"item_sheepstick",
+		"item_ultimate_scepter_2",
+		"item_refresher",
+				
 }
+
+tOutFitList['outfit_priest'] = {
+	
+	"item_priest_outfit",
+	"item_urn_of_shadows",
+	"item_mekansm",
+	"item_glimmer_cape",
+	"item_guardian_greaves",
+	"item_spirit_vessel",
+	"item_rod_of_atos",
+	"item_ultimate_scepter",
+	"item_shivas_guard",
+	"item_ultimate_scepter_2",
+	"item_refresher",
+	
+}
+
+tOutFitList['outfit_mage'] = {
+	
+	"item_mage_outfit",
+	"item_pipe",
+	"item_glimmer_cape",
+	"item_veil_of_discord",
+	"item_cyclone",
+	"item_sheepstick",
+	
+}
+
+tOutFitList['outfit_mid'] = tOutFitList['outfit_carry']
+
+tOutFitList['outfit_tank'] = tOutFitList['outfit_carry']
+
+X['sBuyList'] = tOutFitList[sOutfitType]
 
 X['sSellList'] = {
 
 	"item_cyclone",
+	"item_magic_wand",
+	
+	"item_rod_of_atos",
 	"item_magic_wand",
 
 }
@@ -431,6 +475,7 @@ function X.ConsiderW()
 		do
 			if  J.IsValid(npcEnemy)
 				and J.CanCastOnNonMagicImmune(npcEnemy)
+				and J.CanCastOnTargetAdvanced(npcEnemy)
 				and not J.IsDisabled(true, npcEnemy)
 				and not J.IsTaunted(npcEnemy)
 				and not npcEnemy:IsDisarmed()
@@ -458,6 +503,7 @@ function X.ConsiderW()
 	then
 		if J.IsValidHero(botTarget)
 			and J.CanCastOnNonMagicImmune(botTarget)
+			and J.CanCastOnTargetAdvanced(botTarget)
 			and J.IsInRange(bot,botTarget,nCastRange +32)
 			and not J.IsDisabled(true, botTarget)
 			and not J.IsTaunted(botTarget)
@@ -477,6 +523,7 @@ function X.ConsiderW()
 		do
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
+				and J.CanCastOnTargetAdvanced(npcEnemy)
 				and not J.IsDisabled(true, npcEnemy)
 				and not J.IsTaunted(npcEnemy)
                 and not npcEnemy:IsDisarmed()				

@@ -13,10 +13,9 @@ local json = require "game/dkjson"
 
 GBotTeam = GetTeam()
 GOppTeam = GetOpposingTeam() 
-if gTime == nil then gTime = 0 end
 
-local sDota2Version= '7.24a'
-local sDebugVersion= '20200128ver1.6c'
+local sDota2Version= '7.24b'
+local sDebugVersion= '20200313ver1.6f'
 local nDebugTime = 99999
 local bDebugMode = ( 1 == 10 )
 local bDebugTeam = (GBotTeam == TEAM_RADIANT)
@@ -2167,7 +2166,7 @@ function J.GetTeamFightLocation(bot)
 		local member =  GetTeamMember(i);
 		if member ~= nil and member:IsAlive() 
 		   and J.IsInTeamFight(member, 1500)
-		   and J.GetEnemyCount(member, 1300) >= 2
+		   and J.GetEnemyCount(member, 1400) >= 2
 		then
 			local nAllies = J.GetSpecialModeAllies(BOT_MODE_ATTACK, 1400, member);
 			targetLocation = J.GetCenterOfUnits(nAllies);
@@ -2180,7 +2179,7 @@ end
 
 
 function J.GetTeamFightAlliesCount(bot)
-	local numPlayer =  GetTeamPlayers(GetTeam());
+	local numPlayer = GetTeamPlayers(GetTeam());
 	local nCount = 0;
 	for i = 1, #numPlayer
 	do
@@ -2501,22 +2500,6 @@ function J.GetNearbyLocationToTp(nLoc)
 			 minDist = GetUnitToLocationDistance(tower, nLoc);
 		end
 	end
-	
-	local shrines = {
-		 SHRINE_JUNGLE_1, 
-		 SHRINE_JUNGLE_2 
-	}
-	for _,s in pairs(shrines) do
-		local shrine = GetShrine(GetTeam(), s);
-		if  shrine ~= nil and shrine:IsAlive()
-		    and GetUnitToLocationDistance(shrine, nLoc) < minDist
-			and ( not J.IsEnemyHeroAroundLocation(shrine:GetLocation(), 900)
-					or J.IsAllyHeroAroundLocation(shrine:GetLocation(), 900) )
-		then
-			 targetTower = shrine;
-			 minDist = GetUnitToLocationDistance(shrine, nLoc);
-		end	
-	end	
 	
 	local watchTowerList = J.Site.GetAllWatchTower()
 	for _,watchTower in pairs(watchTowerList) 

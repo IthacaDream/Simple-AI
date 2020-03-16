@@ -33,7 +33,7 @@ function GetDesire()
 	end
 	
 	if invFull then
-		if bot:GetLevel() > 11 and bot:FindItemSlot("item_aegis") < 0 and bot:FindItemSlot("item_recipe_vambrace") < 0 then
+		if bot:GetLevel() > 11 and bot:FindItemSlot("item_aegis") < 0 then
 			have, itemSlot = X.HaveItemToSell();
 			if have then
 				preferedSS = X.GetPreferedSecretShop();
@@ -165,4 +165,4 @@ function X.IsStronger(bot, enemy)
 	local EPower = enemy:GetEstimatedDamageToTarget(true, bot, 4.0, DAMAGE_TYPE_ALL);
 	return EPower > BPower;
 end
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592。

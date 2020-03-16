@@ -14,7 +14,7 @@ local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-
+local sOutfitType = J.Item.GetOutfitType(bot)
 
 local tTalentTreeList = {
 						['t25'] = {0, 10},
@@ -31,17 +31,40 @@ local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
+local tOutFitList = {}
 
-X['sBuyList'] = {
-				'item_tank_outfit',
-				"item_crimson_guard",
-				"item_echo_sabre",
-				"item_heavens_halberd",
-				"item_assault",
-				"item_heart",
-				"item_bloodthorn",
-				"item_ultimate_scepter_2",
+tOutFitList['outfit_carry'] = {
+
+	"item_sven_outfit",
+	"item_echo_sabre",
+	"item_black_king_bar",
+	"item_bloodthorn",
+	"item_abyssal_blade",
+	"item_heart",
+	"item_ultimate_scepter_2",
+				
 }
+
+tOutFitList['outfit_mid'] = tOutFitList['outfit_carry']
+
+tOutFitList['outfit_priest'] = tOutFitList['outfit_carry']
+
+tOutFitList['outfit_mage'] = tOutFitList['outfit_carry']
+
+tOutFitList['outfit_tank'] = {
+
+	"item_tank_outfit",
+	"item_crimson_guard",
+	"item_echo_sabre",
+	"item_heavens_halberd",
+	"item_assault",
+	"item_heart",
+	"item_bloodthorn",
+	"item_ultimate_scepter_2",
+	
+}
+
+X['sBuyList'] = tOutFitList[sOutfitType]
 
 X['sSellList'] = {
 	
@@ -665,4 +688,4 @@ function X.GetNearbyUnit(bot, npcTarget)
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592。

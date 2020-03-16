@@ -10,8 +10,8 @@
 local X = {}
 
 local sBotVersion = "New";
-local sVersionDate = " 1.3.6"
-local sABAVersionDate = sBotVersion.." 7.23,2020/01/29"
+local sVersionDate = " 1.3.7"
+local sABAVersionDate = sBotVersion.." 7.24,2020/03/13"
 
 function X.GetBotVersion()
 	return sBotVersion,sVersionDate,sABAVersionDate;
@@ -1889,6 +1889,34 @@ function X.NotSayJiDi()
 	return X['sayJiDi'] == false
 end
 
+X['replyMemberID'] = nil
+function X.GetReplyMemberID()
+
+	if X['replyMemberID'] ~= nil then return X['replyMemberID'] end
+
+	local tMemberIDList = GetTeamPlayers(GetTeam())
+	if IsPlayerBot(tMemberIDList[1]) 
+	then 
+		X['replyMemberID'] = 999
+		return 999
+	end
+	
+	local nMemberCount = #tMemberIDList
+	local nHumanCount = 0
+	for i = 1, #tMemberIDList
+	do 
+		if IsPlayerBot(tMemberIDList[1]) 
+		then
+			nHumanCount = nHumanCount + 1
+		end
+	end
+	
+	X['replyMemberID'] = tMemberIDList[RandomInt(nHumanCount + 1,nMemberCount)]
+	
+	return X['replyMemberID']
+
+end
+
 X['aegisHero'] = nil;
 function X.IsAllyHaveAegis()
 	if X['aegisHero'] ~= nil 
@@ -2069,10 +2097,10 @@ function X.IsPvNMode()
 	
 end
 
-local nShadowNumber = RandomInt(1,5555)
+local nShadowNumber = RandomInt(1,6666)
 function X.IsAllShadow()
 
-	return nShadowNumber <= 5
+	return nShadowNumber <= 3
 
 end
 
@@ -2092,4 +2120,4 @@ end
 
 
 return X
--- aaxxxxop@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592。

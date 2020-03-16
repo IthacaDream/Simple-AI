@@ -14,7 +14,7 @@ local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-
+local sOutfitType = J.Item.GetOutfitType(bot)
 
 local tTalentTreeList = {
 						['t25'] = {10, 0},
@@ -31,16 +31,71 @@ local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
-X['sBuyList'] = {
-				'item_ogre_magi_outfit',
-				"item_crimson_guard",
-				"item_ultimate_scepter",
-				"item_sheepstick",
-				"item_octarine_core",
-				"item_assault",
-				"item_ultimate_scepter_2",
-				"item_shivas_guard",
+local tOutFitList = {}
+
+tOutFitList['outfit_carry'] = {
+
+	"item_quelling_blade",
+	"item_mage_outfit",
+	"item_hand_of_midas",
+	"item_glimmer_cape",
+	"item_ultimate_scepter",
+	"item_sheepstick",
+	"item_octarine_core",
+	"item_ultimate_scepter_2",
+	"item_shivas_guard",
+	"item_dagon_5",
+				
 }
+
+tOutFitList['outfit_mid'] = tOutFitList['outfit_carry']
+
+tOutFitList['outfit_priest'] = {
+	
+	"item_quelling_blade",
+	"item_priest_outfit",
+	"item_urn_of_shadows",
+	"item_hand_of_midas",
+	"item_mekansm",
+	"item_glimmer_cape",
+	"item_guardian_greaves",
+	"item_spirit_vessel",
+	"item_ultimate_scepter",
+	"item_octarine_core",
+	"item_shivas_guard",
+	"item_ultimate_scepter_2",
+	"item_sheepstick",
+	
+}
+
+tOutFitList['outfit_mage'] = {
+
+	"item_quelling_blade",
+	"item_mage_outfit",
+	"item_hand_of_midas",
+	"item_pipe",
+	"item_glimmer_cape",
+	"item_ultimate_scepter",
+	"item_veil_of_discord",
+	"item_ultimate_scepter_2",
+	"item_shivas_guard",
+	
+}
+
+tOutFitList['outfit_tank'] = {
+
+	"item_ogre_magi_outfit",
+	"item_crimson_guard",
+	"item_ultimate_scepter",
+	"item_sheepstick",
+	"item_octarine_core",
+	"item_assault",
+	"item_ultimate_scepter_2",
+	"item_shivas_guard",
+	
+}
+
+X['sBuyList'] = tOutFitList[sOutfitType]
 
 X['sSellList'] = {
 
@@ -52,6 +107,7 @@ X['sSellList'] = {
 	
 	"item_shivas_guard",
 	"item_hand_of_midas",
+	
 }
 
 if J.Role.IsPvNMode() or J.Role.IsAllShadow() then X['sBuyList'],X['sSellList'] = { 'PvN_OM' }, {"item_heavens_halberd",'item_quelling_blade'} end
@@ -984,6 +1040,6 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592。
 
 

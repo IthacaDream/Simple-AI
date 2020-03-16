@@ -14,17 +14,16 @@ local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-local sOutfit = J.Skill.GetOutfitName(bot)
 
 local tTalentTreeList = {
-						['t25'] = {0, 10},
-						['t20'] = {0, 10},
+						['t25'] = {10, 0},
+						['t20'] = {10, 0},
 						['t15'] = {0, 10},
-						['t10'] = {0, 10},
+						['t10'] = {10, 0},
 }
 
 local tAllAbilityBuildList = {
-						{3,1,2,1,1,6,1,2,2,2,6,3,3,3,6},
+						{1,2,3,2,1,6,2,2,1,3,6,1,3,3,6},
 }
 
 local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
@@ -32,19 +31,23 @@ local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
 X['sBuyList'] = {
-				'item_dragon_knight_outfit',
+				'item_tank_outfit',
 				"item_crimson_guard",
+				"item_echo_sabre",
 				"item_heavens_halberd",
 				"item_assault",
 				"item_heart",
 }
 
 X['sSellList'] = {
-	
+
 	"item_crimson_guard",
 	"item_quelling_blade",
 	
 	"item_assault",
+	"item_echo_sabre",
+	
+	"item_heavens_halberd",
 	"item_magic_wand",
 
 }
@@ -55,7 +58,7 @@ nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroI
 
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
-X['bDeafaultAbility'] = false
+X['bDeafaultAbility'] = true
 X['bDeafaultItem'] = true
 
 function X.MinionThink(hMinionUnit)
@@ -69,31 +72,6 @@ end
 
 --[[
 
-npc_dota_hero_tiny
-
-"Ability1"		"tiny_avalanche"
-"Ability2"		"tiny_toss"
-"Ability3"		"tiny_craggy_exterior"
-"Ability4"		"tiny_tree_channel"
-"Ability5"		"generic_hidden"
-"Ability6"		"tiny_grow"
-"Ability7"		"tiny_toss_tree"
-"Ability10"		"special_bonus_movement_speed_20"
-"Ability11"		"special_bonus_attack_damage_30"
-"Ability12"		"special_bonus_hp_400"
-"Ability13"		"special_bonus_unique_tiny"
-"Ability14"		"special_bonus_unique_tiny_4"
-"Ability15"		"special_bonus_unique_tiny_5"
-"Ability16"		"special_bonus_unique_tiny_3"
-"Ability17"		"special_bonus_unique_tiny_2"
-
-modifier_tiny_avalanche_stun
-modifier_tiny_avalanche
-modifier_tiny_toss_charge_counter
-modifier_tiny_toss
-modifier_tiny_craggy_exterior
-modifier_tiny_toss_tree_bonus
-modifier_tiny_grow
 
 --]]
 
@@ -101,15 +79,16 @@ local abilityQ = bot:GetAbilityByName( sAbilityList[1] )
 local abilityW = bot:GetAbilityByName( sAbilityList[2] )
 local abilityE = bot:GetAbilityByName( sAbilityList[3] )
 local abilityR = bot:GetAbilityByName( sAbilityList[6] )
-local talent4 = bot:GetAbilityByName( sTalentList[4] )
+
 
 local castQDesire, castQLocation
-local castWDesire, castWTarget
-local castEDesire, castETarget
+local castWDesire
+local castRDesire, castRTarget
+
 
 local nKeepMana,nMP,nHP,nLV,hEnemyList,hAllyList,botTarget,sMotive;
 local aetherRange = 0
-local talent4Damage = 0
+local talentDamage = 0
 
 
 function X.SkillsComplement()
@@ -118,7 +97,7 @@ function X.SkillsComplement()
 	
 	nKeepMana = 400
 	aetherRange = 0
-	talent4Damage = 0
+	talentDamage = 0
 	nLV = bot:GetLevel();
 	nMP = bot:GetMana()/bot:GetMaxMana();
 	nHP = bot:GetHealth()/bot:GetMaxHealth();
@@ -128,12 +107,12 @@ function X.SkillsComplement()
 	
 	local aether = J.IsItemAvailable("item_aether_lens");
 	if aether ~= nil then aetherRange = 250 end	
-	if talent4:IsTrained() then talent4Damage = talent4:GetSpecialValueInt("value") end
+	
 	
 	castQDesire, castQLocation, sMotive = X.ConsiderQ();
 	if ( castQDesire > 0 ) 
 	then
-		J.SetReportMotive(bDebugMode,sMotive);		
+		J.SetReportMotive(bDebugMode,sMotive)	
 	
 		J.SetQueuePtToINT(bot, true)
 	
@@ -141,28 +120,29 @@ function X.SkillsComplement()
 		return;
 	end
 	
-	castWDesire, castWTarget, sMotive = X.ConsiderW();
+	castWDesire, sMotive = X.ConsiderW();
 	if ( castWDesire > 0 ) 
 	then
 		J.SetReportMotive(bDebugMode,sMotive);
 	
-		J.SetQueuePtToINT(bot, true)
+		bot:Action_ClearActions(false)
 	
-		bot:ActionQueue_UseAbilityOnEntity( abilityW, castWTarget )
+		bot:ActionQueue_UseAbility( abilityW )
 		return;
 	end
-	
-	castEDesire, castETarget, sMotive = X.ConsiderE();
-	if ( castEDesire > 0 ) 
+		
+	castRDesire, castRTarget, sMotive = X.ConsiderR();
+	if ( castRDesire > 0 ) 
 	then
 		J.SetReportMotive(bDebugMode,sMotive);
 	
 		J.SetQueuePtToINT(bot, true)
 	
-		bot:ActionQueue_UseAbilityOnEntity( abilityE, castETarget )
+		bot:ActionQueue_UseAbilityOnEntity( abilityR, castRTarget )
 		return;
-	end
 	
+	end
+
 end
 
 
@@ -185,6 +165,7 @@ function X.ConsiderQ()
 	
 end
 
+
 function X.ConsiderW()
 
 
@@ -204,16 +185,17 @@ function X.ConsiderW()
 	
 end
 
-function X.ConsiderE()
+
+function X.ConsiderR()
 
 
-	if not abilityE:IsFullyCastable() then return 0 end
+	if not abilityR:IsFullyCastable() then return 0 end
 	
-	local nSkillLV    = abilityE:GetLevel(); 
-	local nCastRange  = abilityE:GetCastRange();
-	local nCastPoint  = abilityE:GetCastPoint();
-	local nManaCost   = abilityE:GetManaCost();
-	local nDamage     = abilityE:GetAbilityDamage()
+	local nSkillLV    = abilityR:GetLevel(); 
+	local nCastRange  = abilityR:GetCastRange();
+	local nCastPoint  = abilityR:GetCastPoint();
+	local nManaCost   = abilityR:GetManaCost();
+	local nDamage     = abilityR:GetAbilityDamage()
 	local nDamageType = DAMAGE_TYPE_MAGICAL
 	local nInRangeEnemyList = bot:GetNearbyHeroes(nCastRange, true, BOT_MODE_NONE);
 	
@@ -223,5 +205,8 @@ function X.ConsiderE()
 	
 end
 
+
 return X
 -- dota2jmz@163.com QQ:2462331592。
+
+
