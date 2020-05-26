@@ -79,7 +79,7 @@ function X.Consider()
 			if  J.IsValidHero(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled(npcEnemy)
 			then
 				local npcEnemyDamage = npcEnemy:GetEstimatedDamageToTarget( false, bot, 3.0, DAMAGE_TYPE_ALL );
 				if ( npcEnemyDamage > nMostDangerousDamage )
@@ -107,7 +107,7 @@ function X.Consider()
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy) 
+				and not J.IsDisabled(npcEnemy) 
 				and not npcEnemy:IsIllusion()
 				and bot:IsFacingLocation(npcEnemy:GetLocation(),30)
 			then
@@ -123,7 +123,7 @@ function X.Consider()
 		then
 			if J.IsValid(nWeakestEnemyHeroInRange)
 			then
-				if not J.IsDisabled(true, nWeakestEnemyHeroInRange) 
+				if not J.IsDisabled(nWeakestEnemyHeroInRange) 
 				then
 					return BOT_ACTION_DESIRE_HIGH,nWeakestEnemyHeroInRange;
 				end
@@ -138,7 +138,7 @@ function X.Consider()
 				and #nTowers == 0
 				and ( (#nEnemysCreeps + #nEnemysHeroesInBonus) <= 5 or DotaTime() > 12*60 )
 			then
-				if not J.IsDisabled(true, nWeakestEnemyHeroInBonus) 
+				if not J.IsDisabled(nWeakestEnemyHeroInBonus) 
 				then
 					return BOT_ACTION_DESIRE_HIGH,nWeakestEnemyHeroInBonus;
 				end
@@ -162,7 +162,7 @@ function X.Consider()
 			and J.CanCastOnNonMagicImmune(npcTarget) 
 			and J.CanCastOnTargetAdvanced(npcTarget)
 			and J.IsInRange(npcTarget, bot, nCastRange + 150) 
-			and not J.IsDisabled(true, npcTarget)
+			and not J.IsDisabled(npcTarget)
 		then
 			return BOT_ACTION_DESIRE_HIGH, npcTarget;
 		end
@@ -177,7 +177,7 @@ function X.Consider()
 			    and bot:WasRecentlyDamagedByHero( npcEnemy, 3.1 ) 
 				and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy) 
+				and not J.IsDisabled(npcEnemy) 
 				and J.IsInRange(npcEnemy, bot, nCastRange) 
 				and ( not J.IsInRange(npcEnemy, bot, 450) or bot:IsFacingLocation(npcEnemy:GetLocation(), 45) )
 			then

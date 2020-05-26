@@ -33,6 +33,8 @@ local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
+local sRandomItem_1 = RandomInt(1,9) > 6 and "item_satanic" or "item_butterfly"
+
 local tOutFitList = {}
 
 tOutFitList['outfit_carry'] = {
@@ -43,9 +45,12 @@ tOutFitList['outfit_carry'] = {
 	"item_orchid",
 	"item_desolator",
 	"item_black_king_bar",
+	"item_travel_boots",
 	"item_bloodthorn",
 	"item_hurricane_pike",
-	"item_satanic",
+	sRandomItem_1,
+	"item_moon_shard",
+	"item_travel_boots_2",
 				
 }
 
@@ -74,7 +79,7 @@ nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroI
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
 X['bDeafaultAbility'] = false
-X['bDeafaultItem'] = true
+X['bDeafaultItem'] = false
 
 function X.MinionThink(hMinionUnit)
 
@@ -204,7 +209,7 @@ function X.ConsiderQ()
 	local nCastPoint  = abilityQ:GetCastPoint()
 	local nManaCost   = abilityQ:GetManaCost()
 	local nDamage     = abilityQ:GetAbilityDamage()
-	local nMaxCreepLV = abilityQ:GetSpecialValueInt('neutral_level')
+	--local nMaxCreepLV = abilityQ:GetSpecialValueInt('neutral_level')
 	local nDamageType = DAMAGE_TYPE_MAGICAL
 	
 	if #hEnemyList == 0 then nCastRange = 1600 end
@@ -222,8 +227,7 @@ function X.ConsiderQ()
 		if J.IsValid(nCreep)
 			and not nCreep:IsAncientCreep()
 			and not nCreep:IsMagicImmune()
-			--and (nCreep:GetTeam() ~= bot:GetTeam() or nCreep:GetUnitName() == 'npc_dota_clinkz_skeleton_archer')
-			and nCreep:GetLevel() <= nMaxCreepLV
+			--and nCreep:GetLevel() <= nMaxCreepLV
 			and nCreep:GetBountyGoldMax() * 10000 + nCreep:GetHealth() > targetCreepBountyGoldMax
 		then
 			nBestEnemyCreep = nCreep
@@ -233,7 +237,7 @@ function X.ConsiderQ()
 	
 	if nBestEnemyCreep ~= nil --compare the most with it will better
 	then
-		return BOT_ACTION_DESIRE_HIGH, nBestEnemyCreep, "Q-normal:"..nBestEnemyCreep:GetUnitName()
+		return BOT_ACTION_DESIRE_HIGH, nBestEnemyCreep, "Q-吃兵:"..nBestEnemyCreep:GetUnitName()
 	end	
 
 	
@@ -262,10 +266,10 @@ function X.ConsiderW()
 	local nTowers = bot:GetNearbyTowers(870,true)
 	local nEnemysLaneCreepsInRange = bot:GetNearbyLaneCreeps(nAttackRange + 100,true)
 	local nEnemysLaneCreepsInBonus = bot:GetNearbyLaneCreeps(500,true)
-	local nEnemysWeakestLaneCreepsInRange = J.GetVulnerableWeakestUnit(false, true, nAttackRange + 200, bot)
+	local nEnemysWeakestLaneCreepsInRange = J.GetVulnerableWeakestUnit(bot, false, true, nAttackRange + 200)
 	
 	local nEnemysHerosInAttackRange = bot:GetNearbyHeroes(nAttackRange,true,BOT_MODE_NONE);
-	local nEnemysWeakestHero = J.GetVulnerableWeakestUnit(true, true, nAttackRange + 40, bot)
+	local nEnemysWeakestHero = J.GetVulnerableWeakestUnit(bot, true, true, nAttackRange + 40)
 	
 	local nAllyLaneCreeps = bot:GetNearbyLaneCreeps(450,false)
 	local botMode = bot:GetActiveMode()
@@ -300,7 +304,7 @@ function X.ConsiderW()
 			and GetUnitToUnitDistance(bot,botTarget) < nAttackRange + 99
 		then
 			nTargetUint = botTarget;
-			return BOT_ACTION_DESIRE_HIGH, nTargetUint, "W-HandAttack"
+			return BOT_ACTION_DESIRE_HIGH, nTargetUint, "W-手动法球"
 		end	
 	end
 	
@@ -315,15 +319,15 @@ function X.ConsiderW()
 				and not bot:WasRecentlyDamagedByCreep(1.5)
 				and not bot:WasRecentlyDamagedByAnyHero(1.5)
 			then
-				return BOT_ACTION_DESIRE_HIGH,nEnemysWeakestHero, "W-HandAttack1"	
+				return BOT_ACTION_DESIRE_HIGH,nEnemysWeakestHero, "W-对线法球1"	
 			end
 			
-			if J.GetAllyUnitCountAroundEnemyTarget(nEnemysWeakestHero, 500, bot) >= 3
+			if J.GetAllyUnitCountAroundEnemyTarget(bot, nEnemysWeakestHero, 500) >= 3
 			   and nHP >= 0.6 
 			   and not bot:WasRecentlyDamagedByCreep(1.5)
 			   and not bot:WasRecentlyDamagedByAnyHero(1.5)
 			then
-				return BOT_ACTION_DESIRE_HIGH,nEnemysWeakestHero, "W-HandAttack2"	
+				return BOT_ACTION_DESIRE_HIGH,nEnemysWeakestHero, "W-对线法球2"	
 			end
 			
 		end
@@ -344,7 +348,7 @@ function X.ConsiderW()
 					local nAD = nAbilityDamage * bot:GetAttackCombatProficiency(creep);
 					if J.WillKillTarget(creep,nAD,nDamageType,nAttackProDelayTime)
 					then
-						return BOT_ACTION_DESIRE_HIGH, creep, nAD..'W-LastHit:'..creep:GetHealth()
+						return BOT_ACTION_DESIRE_HIGH, creep, nAD..'W-补刀:'..creep:GetHealth()
 					end				
 				end
 			end
@@ -402,7 +406,7 @@ function X.ConsiderW()
 			and not botTarget:HasModifier('modifier_fountain_glyph')
 			and J.IsInRange(bot,botTarget,nCastRange + 80)
 		then
-			return BOT_ACTION_DESIRE_HIGH,botTarget,'W-push_tower'
+			return BOT_ACTION_DESIRE_HIGH,botTarget,'W-推塔'
 		end
 		
 		if botTarget ~= nil
@@ -412,7 +416,7 @@ function X.ConsiderW()
 			and botTarget:GetHealth() > nAbilityDamage * 2.6
 			and J.IsInRange(bot,botTarget,nCastRange + 80)
 		then
-			return BOT_ACTION_DESIRE_HIGH,botTarget,'W-farm_creep'
+			return BOT_ACTION_DESIRE_HIGH,botTarget,'W-打钱'
 		end
 	end
 	
@@ -469,14 +473,14 @@ function X.ConsiderE()
 		and bot:GetActiveModeDesire() > BOT_MODE_DESIRE_HIGH
 		and #hEnemyList > 0
 	then
-		return BOT_ACTION_DESIRE_HIGH, 'E-Retreat'
+		return BOT_ACTION_DESIRE_HIGH, 'E-撤退了'
 	end
 	
 	--invis
-	if J.GetHPR(bot) < 0.166
+	if J.GetHP(bot) < 0.166
 	   and (#hEnemyList > 0 or bot:WasRecentlyDamagedByAnyHero(5.0))
 	then
-		return BOT_ACTION_DESIRE_HIGH, 'E-Fade'
+		return BOT_ACTION_DESIRE_HIGH, 'E-隐身保命'
 	end	
 	
 	--Attack
@@ -491,14 +495,21 @@ function X.ConsiderE()
 				local hEnemyCreepList = bot:GetNearbyLaneCreeps(700,true);
 				if #hEnemyCreepList == 0 and #hEnemyList == 0
 				then
-					return BOT_ACTION_DESIRE_HIGH, 'E-InvisAttack:'..J.Chat.GetNormName(botTarget)
+					return BOT_ACTION_DESIRE_HIGH, 'E-隐身攻击:'..J.Chat.GetNormName(botTarget)
 				end	
 			end
 			
-			if	nSkillLV >= 2
-				and J.IsInRange(bot,botTarget,bot:GetAttackRange() + 750)
+			if J.IsChasingTarget(bot,botTarget)
+				and J.IsInRange(bot, botTarget, 1000)
 			then
-				return BOT_ACTION_DESIRE_HIGH, 'E-AddAttackSpeed:'..J.Chat.GetNormName(botTarget)		
+				return BOT_ACTION_DESIRE_HIGH, 'E-隐身追击:'..J.Chat.GetNormName(botTarget)
+			end
+			
+			
+			if	nSkillLV >= 2
+				and J.IsInRange(bot,botTarget,bot:GetAttackRange() + 650)
+			then
+				return BOT_ACTION_DESIRE_HIGH, 'E-增加攻速:'..J.Chat.GetNormName(botTarget)		
 			end
 		end		
 	end
@@ -512,7 +523,7 @@ function X.ConsiderE()
 		local nEnemyTowers = bot:GetNearbyTowers(1400,true);
 		if #nEnemies == 0 and #nAllies <= 2 and nEnemyTowers == 0
 		then
-			return BOT_ACTION_DESIRE_HIGH, 'E-EnemyAreaRun'
+			return BOT_ACTION_DESIRE_HIGH, 'E-敌方地区潜行'
 		end
 	end
 	
@@ -545,7 +556,7 @@ function X.ConsiderR()
 			if #nEnemyCreepList == 0
 			then
 				local nCastLocation = bot:GetLocation()
-				return BOT_ACTION_DESIRE_HIGH,nCastLocation,"R-ForAbilitQ"
+				return BOT_ACTION_DESIRE_HIGH,nCastLocation,"R-给Q技能"
 			end
 		end	
 	end

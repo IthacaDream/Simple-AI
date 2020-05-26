@@ -271,7 +271,7 @@ function X.Consider()
 	then
 		local npcTarget = bot:GetAttackTarget();
 		if  J.IsRoshan(npcTarget) 
-		    and J.GetHPR(npcTarget) > 0.15
+		    and J.GetHP(npcTarget) > 0.15
 			and J.IsInRange(npcTarget, bot, nCastRange)  
 		then
 			return BOT_ACTION_DESIRE_HIGH, npcTarget;

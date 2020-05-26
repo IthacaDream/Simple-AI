@@ -41,9 +41,11 @@ tOutFitList['outfit_carry'] = {
 	"item_heavens_halberd",
 	"item_black_king_bar",
 	"item_hurricane_pike",
+	"item_travel_boots",
 	"item_satanic",
 	"item_heart",
-	"item_ultimate_scepter_2",
+	"item_moon_shard",
+	"item_travel_boots_2",
 	
 }
 
@@ -77,7 +79,7 @@ nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroI
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
 X['bDeafaultAbility'] = false
-X['bDeafaultItem'] = true
+X['bDeafaultItem'] = false
 
 function X.MinionThink(hMinionUnit)
 
@@ -234,7 +236,7 @@ function X.ConsiderHW()
 		if J.IsValidHero(botTarget)
 			and J.IsInRange(bot,botTarget,nCastRange)
 			and J.CanCastOnNonMagicImmune(botTarget)
-			and J.GetHPR(botTarget) > 0.25
+			and J.GetHP(botTarget) > 0.25
 			and not botTarget:IsAttackImmune()
 		then
 			return BOT_ACTION_DESIRE_HIGH, botTarget, '飓风之力:'..J.Chat.GetNormName(botTarget)
@@ -281,7 +283,7 @@ function X.ConsiderQ()
 			end
 			
 			if J.IsRetreating(bot)
-			   and not J.IsDisabled(true,npcEnemy)
+			   and not J.IsDisabled(npcEnemy)
 			   and not npcEnemy:IsDisarmed()
 			then
 				return BOT_ACTION_DESIRE_HIGH, "Q撤退:"..J.Chat.GetNormName(npcEnemy);
@@ -300,7 +302,7 @@ function X.ConsiderQ()
 				 or J.IsAttacking(botTarget)
 			     or botTarget:GetAttackTarget() ~= nil)
 			and J.CanCastOnNonMagicImmune(botTarget)
-			and not J.IsDisabled(true,botTarget)
+			and not J.IsDisabled(botTarget)
 			and not botTarget:IsDisarmed()
 		then
 			return BOT_ACTION_DESIRE_HIGH, "Q进攻:"..J.Chat.GetNormName(botTarget);
@@ -382,7 +384,7 @@ function X.ConsiderQ()
 	then
 		if J.IsRoshan(botTarget)
 			and J.IsInRange(bot,botTarget,nRadius - 200)
-			and J.GetHPR(botTarget) > 0.3
+			and J.GetHP(botTarget) > 0.3
 			and bot:GetMana() > 400
 		then
 			return BOT_ACTION_DESIRE_HIGH, "Q肉山:";
@@ -414,7 +416,7 @@ function X.ConsiderW()
 	
 	local nTowerList = bot:GetNearbyTowers(800,true)
 	local nEnemysHeroesInAttackRange = bot:GetNearbyHeroes(nCastRange,true,BOT_MODE_NONE);
-	local nInAttackRangeWeakestEnemyHero = J.GetAttackableWeakestUnit(true, true, nCastRange, bot);
+	local nInAttackRangeWeakestEnemyHero = J.GetAttackableWeakestUnit(bot, nCastRange, true, true);
 
 	
 	
@@ -481,7 +483,7 @@ function X.ConsiderW()
 		end
 		
 		--消耗近处的敌人
-		local nWeakestEnemyHero = J.GetAttackableWeakestUnit(true, true, 600, bot);
+		local nWeakestEnemyHero = J.GetAttackableWeakestUnit(bot, 600, true, true);
 		local nAllyCreepList = bot:GetNearbyCreeps(500,false);
 		local nEnemyCreepList = bot:GetNearbyCreeps(800,false);
 		if nWeakestEnemyHero ~= nil
@@ -562,7 +564,7 @@ function X.ConsiderW()
 	then
 		local nEnemyLaneCreeps = bot:GetNearbyLaneCreeps(nCastRange +80,true);
 		local nAllyLaneCreeps = bot:GetNearbyLaneCreeps(1200,false);
-		local nWeakestCreep = J.GetAttackableWeakestUnit(false, true, nCastRange +200, bot)
+		local nWeakestCreep = J.GetAttackableWeakestUnit(bot, nCastRange +200, false, true)
 	
 		if ( #nAllyLaneCreeps == 0
 			or (nWeakestCreep ~= nil and nWeakestCreep:GetHealth() > bot:GetAttackDamage() + 88 ))
@@ -644,7 +646,7 @@ function X.ConsiderR()
 		if J.IsValid(botTarget)
 		   and J.IsInRange(bot,botTarget,nCastRange)
 		   and not J.IsInRange(bot,botTarget,nCastRange -80)
-		   and J.GetHPR(botTarget) > 0.9
+		   and J.GetHP(botTarget) > 0.9
 		   and not botTarget:IsHero()
 		   and not J.IsRoshan(botTarget)
 		then
@@ -658,7 +660,7 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592
 
 
 

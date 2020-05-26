@@ -14,7 +14,7 @@ local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-local sOutfit = J.Skill.GetOutfitName(bot)
+
 
 local tTalentTreeList = {
 						['t25'] = {10, 0},
@@ -207,7 +207,7 @@ function X.ConsiderE()
 	if J.IsFarming(bot)
 		and J.IsAllowedToSpam(bot,50)
 	then
-		local nEnemyCreeps = bot:GetNearbyNeutralCreeps(nRadius,true)
+		local nEnemyCreeps = bot:GetNearbyNeutralCreeps(nRadius)
 		if #nEnemyCreeps >= 2 
 		then
 			return BOT_ACTION_DESIRE_HIGH,"E-Farm:"..#nEnemyCreeps
@@ -253,4 +253,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

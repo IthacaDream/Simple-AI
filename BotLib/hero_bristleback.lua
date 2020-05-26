@@ -39,11 +39,15 @@ tOutFitList['outfit_carry'] = {
 	"item_ultimate_scepter",
 	"item_lotus_orb",
 	"item_heavens_halberd", 
+	"item_travel_boots",	
 	"item_black_king_bar",
 	"item_abyssal_blade",
+	"item_moon_shard",
+	"item_travel_boots_2",
 	"item_soul_booster",
 	"item_ultimate_scepter_2",
 	"item_octarine_core",
+	
 				
 }
 
@@ -59,9 +63,13 @@ tOutFitList['outfit_tank'] = {
 	"item_crimson_guard",
 	"item_heavens_halberd",
 	"item_lotus_orb",
-	"item_assault", 
+	"item_assault",
+	"item_travel_boots",	
 	"item_heart",
+	"item_moon_shard",
+	"item_travel_boots_2",
 	"item_ultimate_scepter_2",
+	
 	
 }
 
@@ -69,7 +77,7 @@ X['sBuyList'] = tOutFitList[sOutfitType]
 
 X['sSellList'] = {
 	
-	"item_heavens_halberd",
+	"item_power_treads",
 	"item_quelling_blade",
 	
 	"item_assault",
@@ -83,7 +91,7 @@ nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroI
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
 X['bDeafaultAbility'] = false
-X['bDeafaultItem'] = true
+X['bDeafaultItem'] = false
 
 function X.MinionThink(hMinionUnit)
 
@@ -376,4 +384,4 @@ function X.ConsiderW()
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

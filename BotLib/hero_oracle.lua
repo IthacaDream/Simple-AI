@@ -35,12 +35,13 @@ local tOutFitList = {}
 
 tOutFitList['outfit_carry'] = {
 	
-	"item_mage_outfit",
+	"item_crystal_maiden_outfit",
 	"item_glimmer_cape",
 	"item_rod_of_atos",
 	"item_cyclone",
 	"item_lotus_orb",
 	"item_sheepstick",
+	"item_moon_shard",
 				
 }
 
@@ -57,6 +58,7 @@ tOutFitList['outfit_priest'] = {
 	"item_rod_of_atos",
 	"item_shivas_guard",
 	"item_sheepstick",
+	"item_moon_shard",
 	
 }
 
@@ -68,6 +70,7 @@ tOutFitList['outfit_mage'] = {
 	"item_veil_of_discord",
 	"item_cyclone",
 	"item_sheepstick",
+	"item_moon_shard",
 
 }
 
@@ -270,7 +273,7 @@ function X.ConsiderW()
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled( npcEnemy)
 				and not npcEnemy:IsDisarmed()
 			then
 				local npcEnemyDamage = npcEnemy:GetEstimatedDamageToTarget( false, bot, 3.0, DAMAGE_TYPE_PHYSICAL );
@@ -322,18 +325,18 @@ function X.ConsiderE()
 	local nDamageType = DAMAGE_TYPE_MAGICAL
 	local nInRangeEnemyList = bot:GetNearbyHeroes(nCastRange +50, true, BOT_MODE_NONE);
 	
-	--try kill 
+	--击杀
 	for _,npcEnemy in pairs(nInRangeEnemyList)
 	do
 		if J.IsValidHero(npcEnemy)
 			and J.CanCastOnNonMagicImmune(npcEnemy)
 			and J.WillMagicKillTarget(bot, npcEnemy, nDamage, nCastPoint)
 		then
-			return BOT_ACTION_DESIRE_HIGH, npcEnemy,"E-kill"..J.Chat.GetNormName(npcEnemy);
+			return BOT_ACTION_DESIRE_HIGH, npcEnemy,"E-击杀"..J.Chat.GetNormName(npcEnemy);
 		end
 	end
 	
-	--heal ally
+	--治疗队友
 	for _,npcAlly in pairs(hAllyList)
 	do
 		if J.IsValidHero(npcAlly)
@@ -341,10 +344,10 @@ function X.ConsiderE()
 			and J.CanCastOnNonMagicImmune(npcAlly)
 		then
 			if npcAlly:GetMagicResist() > 0.42
-				and J.GetHPR(npcAlly) < 0.8
+				and J.GetHP(npcAlly) < 0.8
 				and (#hEnemyList == 0 or npcAlly:GetHealth() > 999)
 			then
-				return BOT_ACTION_DESIRE_HIGH, npcAlly,"E-heal"..J.Chat.GetNormName(npcAlly);
+				return BOT_ACTION_DESIRE_HIGH, npcAlly,"E-治疗"..J.Chat.GetNormName(npcAlly);
 			end			
 		end		
 
@@ -352,14 +355,14 @@ function X.ConsiderE()
 			and J.GetModifierTime(npcAlly,'modifier_oracle_false_promise_timer') > 3.8
 			and J.IsInRange(bot,npcAlly,nCastRange)
 		then
-			return BOT_ACTION_DESIRE_HIGH, npcAlly,"E-support"..J.Chat.GetNormName(npcAlly);
+			return BOT_ACTION_DESIRE_HIGH, npcAlly,"E-支援抢救"..J.Chat.GetNormName(npcAlly);
 		end
 		
 		
 	end
 	
 	
-	--attack
+	--攻击
 	if J.IsGoingOnSomeone(bot)
 	then
 		if J.IsValidHero(botTarget)
@@ -375,7 +378,7 @@ function X.ConsiderE()
 				   and p.ability:GetName() == "oracle_fortunes_end"  
 				   and GetUnitToLocationDistance(botTarget, p.location) > 330 
 				then
-					return BOT_ACTION_DESIRE_HIGH, botTarget,"E-attack1"..J.Chat.GetNormName(botTarget);
+					return BOT_ACTION_DESIRE_HIGH, botTarget,"E-弹道前进攻"..J.Chat.GetNormName(botTarget);
 				end
 			end
 
@@ -384,7 +387,7 @@ function X.ConsiderE()
 				local nNearTargetAllyList = J.GetAlliesNearLoc(botTarget:GetLocation(),550)
 				if #nNearTargetAllyList >= 3
 				then
-					return BOT_ACTION_DESIRE_HIGH, botTarget,"E-attack2"..J.Chat.GetNormName(botTarget);
+					return BOT_ACTION_DESIRE_HIGH, botTarget,"E-击杀前进攻"..J.Chat.GetNormName(botTarget);
 				end
 			end
 			
@@ -392,43 +395,50 @@ function X.ConsiderE()
 	end
 	
 	
-	--push
+	--对线补刀
+	
+	
+	--推进
 	if ( J.IsPushing(bot) or J.IsDefending(bot) or J.IsFarming(bot) )
-	    and #hAllyList == 1 and nSkillLV >= 3 and J.IsAllowedToSpam(bot,30)
+	    and #hAllyList <= 2 and nSkillLV >= 3 and J.IsAllowedToSpam(bot,30)
 	then
 		local nLaneCreeps = bot:GetNearbyLaneCreeps(nCastRange + 350,true);
 		for _,creep in pairs(nLaneCreeps)
 		do
 			if J.IsValid(creep)
 				and not creep:HasModifier('modifier_fountain_glyph')
-				and creep:GetHealth() > nDamage *0.7
+				and creep:GetHealth() > nDamage * 0.6
+				and not J.IsOtherAllysTarget(creep)
 			then
 				if J.IsKeyWordUnit('ranged',creep) 
 				   and J.WillKillTarget(creep,nDamage,nDamageType,nCastPoint)
 				then
-					return BOT_ACTION_DESIRE_HIGH, creep,"E-ranged";
+					return BOT_ACTION_DESIRE_HIGH, creep,"E-补刀远程兵";
 				end		
 				
 				if bot:GetMana() > abilityR:GetManaCost() *2 and nSkillLV >= 4
 					and J.IsKeyWordUnit('melee',creep)
-					and creep:GetHealth() > nDamage *0.8
+					and creep:GetHealth() > nDamage * 0.7
 					and J.WillKillTarget(creep,nDamage,nDamageType,nCastPoint)
 				then
-					return BOT_ACTION_DESIRE_HIGH, creep,"E-melee";
+					return BOT_ACTION_DESIRE_HIGH, creep,"E-补刀近战兵";
 				end	
 				
 			end
 		
 		end
 		
-		local nCreeps = bot:GetNearbyNeutralCreeps(nCastRange + 150);
-		for _,creep in pairs(nCreeps)
-		do
-			if J.IsValid(creep)
-				and creep:GetHealth() > nDamage * 0.7
-				and J.WillKillTarget(creep,nDamage,nDamageType,nCastRange)
-			then
-				return BOT_ACTION_DESIRE_HIGH, creep,"E-farm";
+		if #hAllyList <= 1
+		then
+			local nCreeps = bot:GetNearbyNeutralCreeps(nCastRange + 150);
+			for _,creep in pairs(nCreeps)
+			do
+				if J.IsValid(creep)
+					and creep:GetHealth() > nDamage * 0.45
+					and J.WillKillTarget(creep,nDamage,nDamageType,nCastRange)
+				then
+					return BOT_ACTION_DESIRE_HIGH, creep,"E-补刀野怪";
+				end
 			end
 		end
 		
@@ -439,6 +449,7 @@ function X.ConsiderE()
 	
 	
 end
+
 
 function X.ConsiderR()
 
@@ -458,7 +469,7 @@ function X.ConsiderR()
 	do
 		if J.IsInRange(bot,ally, nCastRange +50)
 			and ally:WasRecentlyDamagedByAnyHero(2.0)
-			and J.GetHPR(ally) < 0.55
+			and J.GetHP(ally) < 0.55
 		then
 			if J.IsRetreating(ally)
 				and (ally ~= bot or nHP < 0.25)
@@ -466,7 +477,7 @@ function X.ConsiderR()
 				return BOT_ACTION_DESIRE_HIGH, ally, "R-protect"..J.Chat.GetNormName(ally);
 			end
 			
-			if J.IsGoingOnSomeone(ally) and J.GetHPR(ally) < 0.3
+			if J.IsGoingOnSomeone(ally) and J.GetHP(ally) < 0.3
 			then
 				local allyTarget = J.GetProperTarget(ally);
 				if J.IsValidHero(allyTarget)
@@ -486,7 +497,7 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592
 
 
 

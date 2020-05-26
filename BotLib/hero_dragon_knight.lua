@@ -18,7 +18,7 @@ local sAbilityList = J.Skill.GetAbilityList(bot)
 local sOutfitType = J.Item.GetOutfitType(bot)
 
 local tTalentTreeList = {
-						['t25'] = {10, 0},
+						['t25'] = {0, 10},
 						['t20'] = {10, 0},
 						['t15'] = {10, 0},
 						['t10'] = {10, 0},
@@ -36,13 +36,19 @@ local tOutFitList = {}
 
 tOutFitList['outfit_carry'] = {
 
-	"item_sven_outfit",
+	"item_bristleback_outfit",
 	"item_soul_ring",
+	"item_armlet",
 	"item_heavens_halberd",
-	"item_mjollnir",
 	"item_black_king_bar",
 	"item_satanic",
+	"item_travel_boots",
+	"item_heart",
 	"item_abyssal_blade",
+	"item_moon_shard",
+	"item_travel_boots_2",
+	"item_ultimate_scepter_2",
+	
 				
 }
 
@@ -55,12 +61,17 @@ tOutFitList['outfit_mage'] = tOutFitList['outfit_carry']
 tOutFitList['outfit_tank'] = {
 
 	"item_dragon_knight_outfit",
+	"item_armlet",
 	"item_crimson_guard",
 	"item_heavens_halberd",
+	"item_travel_boots",
 	"item_assault",
 	"item_heart",
+	"item_moon_shard",
+	"item_travel_boots_2",
 	"item_ultimate_scepter_2",
 	"item_black_king_bar",
+	
 	
 }
 
@@ -68,11 +79,14 @@ X['sBuyList'] = tOutFitList[sOutfitType]
 
 X['sSellList'] = {
 
-	"item_heavens_halberd",
+	"item_power_treads",
 	"item_quelling_blade",
 	
 	"item_heart",
 	"item_magic_wand",
+	
+	'item_heart',
+	'item_armlet',
 }
 
 if J.Role.IsPvNMode() or J.Role.IsAllShadow() then X['sBuyList'],X['sSellList'] = { 'PvN_tank' }, {"item_heavens_halberd",'item_quelling_blade'} end
@@ -83,7 +97,7 @@ X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentL
 
 
 X['bDeafaultAbility'] = false
-X['bDeafaultItem'] = true
+X['bDeafaultItem'] = false
 
 function X.MinionThink(hMinionUnit)
 
@@ -360,7 +374,7 @@ function X.ConsiderW()
 		nCastRange = 400;
 	end
 		
-	local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( nCastRange + 200, true, BOT_MODE_NONE );
+	local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( nCastRange + 240, true, BOT_MODE_NONE );
 	
 	--if we can kill any enemies
 	for _,npcEnemy in pairs(tableNearbyEnemyHeroes)
@@ -397,7 +411,7 @@ function X.ConsiderW()
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled( npcEnemy)
 				and not npcEnemy:IsDisarmed()
 			then
 				local npcEnemyDamage = npcEnemy:GetEstimatedDamageToTarget( false, bot, 3.0, DAMAGE_TYPE_PHYSICAL );
@@ -421,7 +435,8 @@ function X.ConsiderW()
 	then
 		if tableNearbyEnemyHeroes ~= nil 
 		   and #tableNearbyEnemyHeroes >= 1 
-		   and J.CanCastOnNonMagicImmune(tableNearbyEnemyHeroes[1]) 
+		   and J.CanCastOnNonMagicImmune(tableNearbyEnemyHeroes[1])
+		   and not J.IsDisabled(tableNearbyEnemyHeroes[1])
 		then
 			return BOT_ACTION_DESIRE_HIGH, tableNearbyEnemyHeroes[1];
 		end
@@ -432,7 +447,7 @@ function X.ConsiderW()
 		local npcTarget = bot:GetAttackTarget();
 		if ( J.IsRoshan(npcTarget) 
 			 and J.IsInRange(npcTarget, bot, nCastRange + 150) 
-             and not J.IsDisabled(true, npcTarget) )
+             and not J.IsDisabled( npcTarget) )
 		then
 			return BOT_ACTION_DESIRE_LOW, npcTarget;
 		end
@@ -445,8 +460,8 @@ function X.ConsiderW()
 		if J.IsValidHero(npcTarget) 
 		    and J.CanCastOnNonMagicImmune(npcTarget) 
 			and J.CanCastOnTargetAdvanced(npcTarget)
-			and J.IsInRange(npcTarget, bot, nCastRange + 200) 
-            and not J.IsDisabled(true, npcTarget) 		
+			and J.IsInRange(npcTarget, bot, nCastRange + 240) 
+            and not J.IsDisabled( npcTarget) 		
 		then
 			return BOT_ACTION_DESIRE_HIGH, npcTarget;
 		end
@@ -459,7 +474,7 @@ end
 function X.ConsiderR()
 
 	-- Make sure it's castable
-	if ( not abilityR:IsFullyCastable() or J.GetHPR(bot) < 0.25 ) then 
+	if ( not abilityR:IsFullyCastable() or J.GetHP(bot) < 0.25 ) then 
 		return BOT_ACTION_DESIRE_NONE;
 	end
 
@@ -494,4 +509,4 @@ function X.ConsiderR()
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

@@ -165,7 +165,7 @@ function X.Consider()
 				if  J.IsValid(npcEnemy)
 					and J.CanCastOnNonMagicImmune(npcEnemy) 
 					and J.CanCastOnTargetAdvanced(npcEnemy)
-					and J.GetAttackTargetEnemyCreepCount(npcEnemy, 1400) >= 3
+					and J.GetAttackEnemysAllyCreepCount(npcEnemy, 1400) >= 3
 				then
 					return BOT_ACTION_DESIRE_HIGH, npcEnemy;
 				end
@@ -206,7 +206,7 @@ function X.Consider()
 			and J.CanCastOnNonMagicImmune(botTarget) 
 			and J.CanCastOnTargetAdvanced(botTarget)
 		then
-			if nSkillLV >= 2 or nMP > 0.68 or J.GetHPR(botTarget) < 0.48 or nHP < 0.28
+			if nSkillLV >= 2 or nMP > 0.68 or J.GetHP(botTarget) < 0.48 or nHP < 0.28
 			then
 				return BOT_ACTION_DESIRE_HIGH, botTarget;
 			end
@@ -301,7 +301,7 @@ function X.Consider()
 	if  bot:GetActiveMode() == BOT_MODE_ROSHAN 
 		and bot:GetMana() >= 600
 	then
-		if J.IsRoshan(botTarget) and J.GetHPR(botTarget) > 0.2
+		if J.IsRoshan(botTarget) and J.GetHP(botTarget) > 0.2
 			and J.IsInRange(bot, botTarget, nRealRange)  
 		then
 			return BOT_ACTION_DESIRE_HIGH, botTarget;

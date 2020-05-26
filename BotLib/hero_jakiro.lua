@@ -42,6 +42,7 @@ tOutFitList['outfit_carry'] = {
 	"item_hurricane_pike",
 	"item_cyclone",	
 	"item_sheepstick",
+	"item_moon_shard",
 	"item_ultimate_scepter_2",
 	"item_lotus_orb",
 				
@@ -60,6 +61,7 @@ tOutFitList['outfit_priest'] = {
 	"item_rod_of_atos",
 	"item_ultimate_scepter",
 	"item_shivas_guard",
+	"item_moon_shard",
 	"item_ultimate_scepter_2",
 	"item_sheepstick",
 				
@@ -73,6 +75,7 @@ tOutFitList['outfit_mage'] = {
 	"item_veil_of_discord",
 	"item_cyclone",
 	"item_sheepstick",
+	"item_moon_shard",
 	"item_ultimate_scepter_2",
 	
 }
@@ -372,7 +375,7 @@ function X.ConsiderW()
 		if J.IsValidHero(target) 
 		   and J.CanCastOnNonMagicImmune(target) 
 		   and J.IsInRange(target, bot, castRange - 200) 
-		   and not J.IsDisabled(true, target)
+		   and not J.IsDisabled( target)
 		then
 			return BOT_ACTION_DESIRE_HIGH, target:GetExtrapolatedLocation(nDelay + castPoint);
 		end
@@ -583,4 +586,4 @@ function X.ConsiderR()
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

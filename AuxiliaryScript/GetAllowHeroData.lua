@@ -1714,7 +1714,7 @@ D.hero = {
               {["hero"] = "npc_dota_hero_faceless_void",["weight"] = 2,},
               {["hero"] = "npc_dota_hero_spectre",["weight"] = 2,},
   },["orientation"] = { ["core"] = true, ["durable"] = true,},["attribute"] = { ["type"] = "Agile", },
-  ["evaluation"] = "", ["bot"] = false,},
+  ["evaluation"] = "", ["bot"] = true,},
 ["npc_dota_hero_sniper"] = {
   ["hero_name"] = "sniper",
   ["proposal"] = {
@@ -3958,7 +3958,7 @@ D.hero = {
               {["hero"] = "npc_dota_hero_earthshaker",["weight"] = 2,},
               {["hero"] = "npc_dota_hero_life_stealer",["weight"] = 2,},
   },["orientation"] = { ["core"] = true, ["durable"] = true,},["attribute"] = { ["type"] = "Agile", },
-  ["evaluation"] = "", ["bot"] = false,},
+  ["evaluation"] = "", ["bot"] = true,},
 ["npc_dota_hero_slardar"] = {
   ["hero_name"] = "slardar",
   ["proposal"] = {

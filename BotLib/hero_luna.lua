@@ -31,6 +31,8 @@ local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
+local sRandomItem_1 = RandomInt(1,9) > 6 and "item_greater_crit" or "item_butterfly"
+
 local tOutFitList = {}
 
 tOutFitList['outfit_carry'] = {
@@ -40,10 +42,13 @@ tOutFitList['outfit_carry'] = {
 	"item_manta",
 	"item_skadi",
 	"item_hurricane_pike",
+	"item_travel_boots",
 	"item_black_king_bar",
-	"item_lesser_crit",
-	"item_bloodthorn",
+	sRandomItem_1,
+	"item_moon_shard",
+	"item_travel_boots_2",
 	"item_ultimate_scepter_2",
+	
 				
 }
 
@@ -55,9 +60,12 @@ tOutFitList['outfit_mid'] = {
 	"item_skadi",
 	"item_hurricane_pike",
 	"item_black_king_bar",
-	"item_lesser_crit",
-	"item_bloodthorn",
+	"item_travel_boots",
+	sRandomItem_1,
+	"item_moon_shard",
+	"item_travel_boots_2",
 	"item_ultimate_scepter_2",
+	
 	
 }
 
@@ -85,7 +93,7 @@ nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroI
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
 X['bDeafaultAbility'] = false
-X['bDeafaultItem'] = true
+X['bDeafaultItem'] = false
 
 function X.MinionThink(hMinionUnit)
 
@@ -239,7 +247,7 @@ function X.ConsiderQ()
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled( npcEnemy)
 			then
 				local npcEnemyHealth = npcEnemy:GetHealth();
 				if ( npcEnemyHealth < npcWeakestEnemyHealth )
@@ -267,7 +275,7 @@ function X.ConsiderQ()
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled( npcEnemy)
                 and not npcEnemy:IsDisarmed()				
 				and bot:IsFacingLocation(npcEnemy:GetLocation(),75)
 			then
@@ -285,10 +293,10 @@ function X.ConsiderQ()
 			and J.CanCastOnNonMagicImmune(npcTarget) 
 			and J.CanCastOnTargetAdvanced(npcTarget)
 			and J.IsInRange(npcTarget, bot, nCastRange +32) 
-			and not J.IsDisabled(true, npcTarget)
+			and not J.IsDisabled( npcTarget)
 			and not npcTarget:IsDisarmed()
 		then
-			if nSkillLV >= 4 or nMP > 0.88 or J.GetHPR(npcTarget) < 0.38
+			if nSkillLV >= 4 or nMP > 0.88 or J.GetHP(npcTarget) < 0.38
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcTarget;
 			end
@@ -305,7 +313,7 @@ function X.ConsiderQ()
 			    and bot:WasRecentlyDamagedByHero( npcEnemy, 5.0 ) 
 				and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy) 
+				and not J.IsDisabled( npcEnemy) 
 				and not npcEnemy:IsDisarmed()
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcEnemy;
@@ -398,7 +406,7 @@ function X.ConsiderQ()
 	then
 		local npcTarget = bot:GetAttackTarget();
 		if  J.IsRoshan(npcTarget) 
-			and not J.IsDisabled(true, npcTarget)
+			and not J.IsDisabled( npcTarget)
 			and not npcTarget:IsDisarmed()
 			and J.IsInRange(npcTarget, bot, nCastRange)  
 		then
@@ -416,7 +424,7 @@ function X.ConsiderQ()
 		do
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
-				and not J.IsDisabled(true, npcEnemy)			
+				and not J.IsDisabled( npcEnemy)			
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcEnemy
 			end
@@ -458,7 +466,7 @@ function X.ConsiderR()
 	if J.IsValidHero(npcTarget) 
 		and J.CanCastOnNonMagicImmune(npcTarget) 
 		and ( GetUnitToUnitDistance(npcTarget,bot) <= 450
-				or ( J.GetHPR(npcTarget) < 0.38 and  GetUnitToUnitDistance(npcTarget,bot) <= 650 ) )
+				or ( J.GetHP(npcTarget) < 0.38 and  GetUnitToUnitDistance(npcTarget,bot) <= 650 ) )
 		and npcTarget:GetHealth() > 600
 	then
 		return BOT_ACTION_DESIRE_HIGH;
@@ -469,4 +477,4 @@ function X.ConsiderR()
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

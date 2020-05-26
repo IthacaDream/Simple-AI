@@ -43,7 +43,7 @@ local tOutFitList = {}
 
 tOutFitList['outfit_carry'] = {
 
-	"item_mage_outfit",
+	"item_crystal_maiden_outfit",
 	"item_glimmer_cape",
 	"item_cyclone",
 	"item_lotus_orb",
@@ -51,6 +51,7 @@ tOutFitList['outfit_carry'] = {
 	"item_refresher",
 	"item_ultimate_scepter_2",
 	"item_sheepstick",
+	"item_moon_shard",
 				
 }
 
@@ -69,6 +70,7 @@ tOutFitList['outfit_priest'] = {
 	"item_refresher",
 	"item_ultimate_scepter_2",
 	"item_shivas_guard",
+	"item_moon_shard",
 	
 }
 
@@ -82,6 +84,7 @@ tOutFitList['outfit_mage'] = {
 	"item_cyclone",
 	"item_ultimate_scepter_2",
 	"item_refresher",
+	"item_moon_shard",
 
 }
 
@@ -310,7 +313,7 @@ function X.ConsiderR()
 	then
 		return BOT_ACTION_DESIRE_LOW, locationAoE.targetloc;
 	end
-	if locationAoE.count >= 1 and J.GetHPR(bot) < 0.38 and #hTrueHeroList >= 1
+	if locationAoE.count >= 1 and J.GetHP(bot) < 0.38 and #hTrueHeroList >= 1
 	then
 		return BOT_ACTION_DESIRE_LOW, locationAoE.targetloc;
 	end
@@ -542,7 +545,7 @@ function X.ConsiderQ()
 	
 	if J.IsRetreating(bot)
 	then
-		local target = J.GetVulnerableWeakestUnit(true, true, nCastRange - 100, bot);
+		local target = J.GetVulnerableWeakestUnit(bot, true, true, nCastRange - 100);
 		if target ~= nil and J.GetUnitAllyCountAroundEnemyTarget(target, nRadius) >= 3 then
 			return BOT_ACTION_DESIRE_HIGH, target;
 		end
@@ -566,4 +569,4 @@ function X.ConsiderQ()
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

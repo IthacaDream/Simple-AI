@@ -41,6 +41,7 @@ tOutFitList['outfit_carry'] = {
 	"item_rod_of_atos",
 	"item_cyclone",
 	"item_lotus_orb",
+	"item_moon_shard",
 	"item_ultimate_scepter_2",
 	"item_sheepstick",
 				
@@ -59,6 +60,7 @@ tOutFitList['outfit_priest'] = {
 	"item_rod_of_atos",
 	"item_ultimate_scepter",
 	"item_shivas_guard",
+	"item_moon_shard",
 	"item_ultimate_scepter_2",
 	"item_sheepstick",
 	
@@ -72,6 +74,7 @@ tOutFitList['outfit_mage'] = {
 	"item_ultimate_scepter",
 	"item_veil_of_discord",
 	"item_cyclone",
+	"item_moon_shard",
 	"item_ultimate_scepter_2",
 	"item_sheepstick",
 
@@ -308,7 +311,7 @@ function X.ConsiderQ()
 			and J.CanCastOnNonMagicImmune(botTarget) 
 			and J.IsInRange(botTarget, bot, nCastRange -80 ) 
 		then
-			if nSkillLV >= 2 or nMP > 0.68 or J.GetHPR(botTarget) < 0.38
+			if nSkillLV >= 2 or nMP > 0.68 or J.GetHP(botTarget) < 0.38
 			then
 				nTargetLocation = botTarget:GetExtrapolatedLocation( nCastPoint )
 				if J.IsInLocRange(bot,nTargetLocation,nCastRange)
@@ -392,7 +395,7 @@ function X.ConsiderQ()
 	if bot:GetActiveMode() == BOT_MODE_ROSHAN 
 	   and bot:GetMana() >= 900
 	then
-		if  J.IsRoshan(botTarget) and J.GetHPR(botTarget) > 0.15
+		if  J.IsRoshan(botTarget) and J.GetHP(botTarget) > 0.15
 			and J.IsInRange(botTarget, bot, nCastRange)  
 		then
 			nTargetLocation = botTarget:GetLocation();
@@ -470,7 +473,7 @@ function X.ConsiderW()
 			and J.IsInRange(bot,botTarget,nCastRange + nRadius - 200)
 			and J.CanCastOnNonMagicImmune(botTarget)
 			and ( J.IsInRange(bot,botTarget,700) or botTarget:IsFacingLocation(bot:GetLocation(),40) )
-			and not J.IsDisabled(true,botTarget)
+			and not J.IsDisabled(botTarget)
 		then
 			nTargetLocation = J.GetCastLocation(bot,botTarget,nCastRange,nRadius);
 			if nTargetLocation ~= nil
@@ -590,7 +593,7 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592
 
 
 

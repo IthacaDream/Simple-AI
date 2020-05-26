@@ -32,7 +32,7 @@ local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
 X['sBuyList'] = {
 				'item_sven_outfit',
-				"item_new_bfury",
+				"item_bfury",
 				"item_ultimate_scepter",
 				"item_black_king_bar",
 				"item_abyssal_blade",
@@ -228,4 +228,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

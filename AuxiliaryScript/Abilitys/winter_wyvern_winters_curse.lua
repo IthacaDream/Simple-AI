@@ -72,7 +72,7 @@ function X.Consider()
 		if ( #tableNearbyEnemyHeroes >= 3 ) then
 			for _,npcEnemy in pairs( tableNearbyEnemyHeroes )
 			do
-				if ( J.CanCastOnMagicImmune( npcEnemy ) and not J.IsDisabled(true, npcEnemy) )
+				if ( J.CanCastOnMagicImmune( npcEnemy ) and not J.IsDisabled(npcEnemy) )
 				then
 					local nHealth = npcEnemy:GetHealth()
 					if ( nHealth < nMostWeakHP )
@@ -94,7 +94,7 @@ function X.Consider()
 	local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( 1000, true, BOT_MODE_NONE );
 	for _,npcEnemy in pairs( tableNearbyEnemyHeroes )
 	do
-		if ( npcEnemy:IsChanneling() and  J.CanCastOnMagicImmune( npcEnemy ) and not J.IsDisabled(true, npcEnemy) ) 
+		if ( npcEnemy:IsChanneling() and  J.CanCastOnMagicImmune( npcEnemy ) and not J.IsDisabled(npcEnemy) ) 
 		then
 			return BOT_ACTION_DESIRE_MODERATE, npcEnemy;
 		end
@@ -110,7 +110,7 @@ function X.Consider()
 		then
 			for _,npcEnemy in pairs( tableNearbyEnemyHeroes )
 			do
-				if ( bot:WasRecentlyDamagedByHero( npcEnemy, 2.0 ) and  J.CanCastOnMagicImmune( npcEnemy ) and not J.IsDisabled(true, npcEnemy) ) 
+				if ( bot:WasRecentlyDamagedByHero( npcEnemy, 2.0 ) and  J.CanCastOnMagicImmune( npcEnemy ) and not J.IsDisabled(npcEnemy) ) 
 				then
 					return BOT_ACTION_DESIRE_MODERATE, npcEnemy;
 				end
@@ -122,7 +122,7 @@ function X.Consider()
 	if J.IsGoingOnSomeone(bot)
 	then
 		local npcTarget = bot:GetTarget();
-		if J.IsValidHero(npcTarget) and J.CanCastOnMagicImmune(npcTarget) and not J.IsDisabled(true, npcTarget) and J.IsInRange(npcTarget, bot, nCastRange+200) 
+		if J.IsValidHero(npcTarget) and J.CanCastOnMagicImmune(npcTarget) and not J.IsDisabled(npcTarget) and J.IsInRange(npcTarget, bot, nCastRange+200) 
 		then
 			local NearbyEnemyHeroes = npcTarget:GetNearbyHeroes( nRadius, false, BOT_MODE_NONE );
 			local nInvUnit = X.CountInvUnits(true, NearbyEnemyHeroes);

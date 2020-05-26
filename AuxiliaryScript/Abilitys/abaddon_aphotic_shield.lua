@@ -44,7 +44,7 @@ function X.Release(castTarget)
 			for _,npcEnemy in pairs( nEnemysHerosInRange )
 			do
 				if  J.IsValid(npcEnemy)
-					and not J.IsDisabled(true, npcEnemy)
+					and not J.IsDisabled(npcEnemy)
 					and not npcEnemy:IsDisarmed()
 					and npcEnemy:IsHero()
 				then
@@ -136,7 +136,7 @@ function X.Consider()
 					do
 						if  J.IsValid(npcEnemy)
 							and J.CanCastOnNonMagicImmune(npcEnemy) 
-							and not J.IsDisabled(true, npcEnemy)
+							and not J.IsDisabled(npcEnemy)
 							and not npcEnemy:IsDisarmed()
 						then
 							local npcEnemyDamage = npcEnemy:GetEstimatedDamageToTarget( false, bot, 3.0, DAMAGE_TYPE_PHYSICAL );
@@ -192,7 +192,7 @@ function X.Consider()
 			and #nEnemysHerosInView > 5
 			and J.IsValid(bot)
 		    and J.CanCastOnNonMagicImmune(bot) 
-			and not J.IsDisabled(true, bot)
+			and not J.IsDisabled(bot)
 		then
 			return BOT_ACTION_DESIRE_HIGH, bot;
 		end
@@ -209,7 +209,7 @@ function X.Consider()
 		do
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled(npcEnemy)
                 and not npcEnemy:IsDisarmed()				
 				and bot:IsFacingLocation(npcEnemy:GetLocation(),45)
 			then

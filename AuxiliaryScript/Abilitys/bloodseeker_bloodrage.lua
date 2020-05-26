@@ -148,7 +148,7 @@ function X.Consider()
 				if ( J.IsValid(npcAlly) 
 					 and npcAlly:GetAttackTarget() ~= nil
 				     and J.CanCastOnNonMagicImmune(npcAlly) 
-					 and ( J.GetHPR(npcAlly) > 0.18 or J.GetHPR(npcAlly:GetAttackTarget()) < 0.18 )
+					 and ( J.GetHP(npcAlly) > 0.18 or J.GetHP(npcAlly:GetAttackTarget()) < 0.18 )
 					 and not npcAlly:HasModifier('modifier_bloodseeker_bloodrage')
 					 and AllyAD > highesAD ) 
 				then
@@ -173,8 +173,8 @@ function X.Consider()
 		   and J.CanCastOnNonMagicImmune(npcTarget) 
 		   and J.IsInRange(npcTarget, bot, nCastRange + 150) 
 		then
-		    if J.IsDisabled(true, npcTarget) 
-			   and J.GetHPR(npcTarget) < 0.62
+		    if J.IsDisabled(npcTarget) 
+			   and J.GetHP(npcTarget) < 0.62
 			   and J.GetProperTarget(npcTarget) == nil
 			   and not npcTarget:HasModifier('modifier_bloodseeker_bloodrage')
 			then

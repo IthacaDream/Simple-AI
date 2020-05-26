@@ -36,12 +36,13 @@ local tOutFitList = {}
 
 tOutFitList['outfit_carry'] = {
 		
-		"item_mage_outfit",
+		"item_crystal_maiden_outfit",
 		"item_glimmer_cape",
 		"item_force_staff",
 		"item_cyclone",
 		"item_ultimate_scepter",
 		"item_sheepstick",
+		"item_moon_shard",
 		"item_ultimate_scepter_2",
 		"item_refresher",
 				
@@ -60,6 +61,8 @@ tOutFitList['outfit_priest'] = {
 	"item_rod_of_atos",
 	"item_shivas_guard",
 	"item_sheepstick",
+	"item_moon_shard",
+	"item_ultimate_scepter_2",
 	
 }
 
@@ -70,6 +73,8 @@ tOutFitList['outfit_mage'] = {
 				"item_veil_of_discord",
 				"item_cyclone",
 				"item_sheepstick",
+				"item_moon_shard",
+				"item_ultimate_scepter_2",
 }
 
 tOutFitList['outfit_tank'] = tOutFitList['outfit_carry']
@@ -355,7 +360,7 @@ function X.ConsiderQ()
 				if  J.IsValid(npcEnemy)
 					and J.CanCastOnNonMagicImmune(npcEnemy) 
 					and J.CanCastOnTargetAdvanced(npcEnemy)
-					and J.GetAttackTargetEnemyCreepCount(npcEnemy, 1400) >= 3
+					and J.GetAttackEnemysAllyCreepCount(npcEnemy, 1400) >= 3
 				then
 					return BOT_ACTION_DESIRE_HIGH, npcEnemy,"Q-Laning:"..J.Chat.GetNormName(npcEnemy);
 				end
@@ -396,7 +401,7 @@ function X.ConsiderQ()
 			and J.CanCastOnNonMagicImmune(botTarget) 
 			and J.CanCastOnTargetAdvanced(botTarget)
 		then
-			if nSkillLV >= 2 or nMP > 0.68 or J.GetHPR(botTarget) < 0.48 or nHP < 0.28
+			if nSkillLV >= 2 or nMP > 0.68 or J.GetHP(botTarget) < 0.48 or nHP < 0.28
 			then
 				return BOT_ACTION_DESIRE_HIGH, botTarget,"Q-Attack:"..J.Chat.GetNormName(botTarget);
 			end
@@ -491,7 +496,7 @@ function X.ConsiderQ()
 	if  bot:GetActiveMode() == BOT_MODE_ROSHAN 
 		and bot:GetMana() >= 600
 	then
-		if J.IsRoshan(botTarget) and J.GetHPR(botTarget) > 0.2
+		if J.IsRoshan(botTarget) and J.GetHP(botTarget) > 0.2
 			and J.IsInRange(bot, botTarget, nRealRange)  
 		then
 			return BOT_ACTION_DESIRE_HIGH, botTarget;
@@ -734,7 +739,7 @@ function X.ConsiderW()
 			and J.IsAllowedToSpam(bot,nManaCost)
 			and #hEnemyList == 0
 		then
-			if J.GetHPR(npcAlly) < 0.38
+			if J.GetHP(npcAlly) < 0.38
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcAlly, "W-Heal:"..J.Chat.GetNormName(npcAlly);
 			end
@@ -797,7 +802,7 @@ function X.ConsiderE()
 			do
 				if  J.IsValid(npcEnemy)
 					and J.CanCastOnNonMagicImmune(npcEnemy) 
-					and not J.IsDisabled(true, npcEnemy)
+					and not J.IsDisabled( npcEnemy)
 					and not npcEnemy:IsDisarmed()
 				then
 					local npcEnemyDamage = npcEnemy:GetEstimatedDamageToTarget( false, bot, 3.0, DAMAGE_TYPE_PHYSICAL );
@@ -839,7 +844,7 @@ function X.ConsiderE()
 	then
 		if J.IsRoshan(botTarget)
 			and J.IsInRange(bot,botTarget,nCastRange)
-			and not J.IsDisabled(true,botTarget)
+			and not J.IsDisabled(botTarget)
 			and not botTarget:IsDisarmed()
 		then
 			return BOT_ACTION_DESIRE_HIGH,botTarget,"E-Roshan"
@@ -948,6 +953,6 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592
 
 

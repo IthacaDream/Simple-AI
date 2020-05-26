@@ -117,7 +117,7 @@ function X.Consider()
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled(npcEnemy)
 				and not npcEnemy:IsDisarmed()
 			then
 				local npcEnemyDamage = npcEnemy:GetEstimatedDamageToTarget( false, bot, 3.0, DAMAGE_TYPE_PHYSICAL );
@@ -145,7 +145,7 @@ function X.Consider()
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled(npcEnemy)
                 and not npcEnemy:IsDisarmed()				
 				and bot:IsFacingLocation(npcEnemy:GetLocation(),45)
 			then
@@ -160,7 +160,7 @@ function X.Consider()
 		if( nMP > 0.5 or bot:GetMana()> nKeepMana )
 		then
 			if J.IsValid(nWeakestEnemyHeroInRange)
-			   and not J.IsDisabled(true, nWeakestEnemyHeroInRange) 
+			   and not J.IsDisabled(nWeakestEnemyHeroInRange) 
 			then
 				return BOT_ACTION_DESIRE_HIGH,nWeakestEnemyHeroInRange;
 			end
@@ -172,7 +172,7 @@ function X.Consider()
 				and nHP > 0.6 
 				and #nTowers == 0
 				and #nEnemysCreeps2 + #nEnemysHeroesInBonus <= 5
-			    and not J.IsDisabled(true, nWeakestEnemyHeroInBonus) 
+			    and not J.IsDisabled(nWeakestEnemyHeroInBonus) 
 				and nWeakestEnemyHeroInBonus:GetCurrentMovementSpeed() < bot:GetCurrentMovementSpeed()
 			then
 				return BOT_ACTION_DESIRE_HIGH,nWeakestEnemyHeroInBonus;
@@ -182,8 +182,8 @@ function X.Consider()
 		
 		if  J.IsValid(nEnemysHeroesInView[1])
 		then
-			if  J.GetAllyUnitCountAroundEnemyTarget(nEnemysHeroesInView[1], 350, bot) >= 5
-				and not J.IsDisabled(true, nEnemysHeroesInView[1]) 
+			if  J.GetAllyUnitCountAroundEnemyTarget(bot, nEnemysHeroesInView[1], 350) >= 5
+				and not J.IsDisabled(nEnemysHeroesInView[1]) 
 				and not nEnemysHeroesInView[1]:IsMagicImmune()
 				and nHP > 0.7
 				and bot:GetMana()> nKeepMana
@@ -270,7 +270,7 @@ function X.Consider()
 			and J.CanCastOnNonMagicImmune(npcTarget) 
 			and J.CanCastOnTargetAdvanced(npcTarget)
 			and J.IsInRange(npcTarget, bot, nCastRange + 50) 
-			and not J.IsDisabled(true, npcTarget)
+			and not J.IsDisabled(npcTarget)
 			and not npcTarget:IsDisarmed()
 		then
 			return BOT_ACTION_DESIRE_HIGH, npcTarget;
@@ -287,7 +287,7 @@ function X.Consider()
 			    and bot:WasRecentlyDamagedByHero( npcEnemy, 5.0 ) 
 				and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy) 
+				and not J.IsDisabled(npcEnemy) 
 				and J.IsInRange(npcEnemy, bot, nCastRange - 80) 
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcEnemy;
@@ -301,7 +301,7 @@ function X.Consider()
 	then
 		local npcTarget = bot:GetAttackTarget();
 		if  J.IsRoshan(npcTarget) 
-			and not J.IsDisabled(true, npcTarget)
+			and not J.IsDisabled(npcTarget)
 			and not npcTarget:IsDisarmed()
 			and J.IsInRange(npcTarget, bot, nCastRange)  
 		then

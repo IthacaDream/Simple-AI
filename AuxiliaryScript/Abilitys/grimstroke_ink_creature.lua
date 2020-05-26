@@ -84,7 +84,7 @@ function X.Consider()
 		do
 			if  J.IsValidHero(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled(npcEnemy)
 			then
 				local npcEnemyDamage = npcEnemy:GetEstimatedDamageToTarget( false, bot, 3.0, DAMAGE_TYPE_MAGICAL );
 				if ( npcEnemyDamage > nMostDangerousDamage )
@@ -111,7 +111,7 @@ function X.Consider()
 		do
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
-				and not J.IsDisabled(true, npcEnemy) 
+				and not J.IsDisabled(npcEnemy) 
 				and bot:IsFacingLocation(npcEnemy:GetLocation(),40)
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcEnemy;
@@ -125,7 +125,7 @@ function X.Consider()
 		if J.IsValidHero(hBotTarget) 
 			and J.CanCastOnNonMagicImmune(hBotTarget) 
 			and J.IsInRange(hBotTarget, bot, nCastRange) 
-			and not J.IsDisabled(true, hBotTarget)
+			and not J.IsDisabled(hBotTarget)
 		then
 			return BOT_ACTION_DESIRE_HIGH, hBotTarget;
 		end
@@ -139,7 +139,7 @@ function X.Consider()
 			if J.IsValid(npcEnemy)
 			    and bot:WasRecentlyDamagedByHero( npcEnemy, 3.1 ) 
 				and J.CanCastOnNonMagicImmune(npcEnemy) 
-				and not J.IsDisabled(true, npcEnemy) 
+				and not J.IsDisabled(npcEnemy) 
 				and J.IsInRange(npcEnemy, bot, nCastRange) 
 				and ( not J.IsInRange(npcEnemy, bot, 450) or bot:IsFacingLocation(npcEnemy:GetLocation(), 45) )
 			then

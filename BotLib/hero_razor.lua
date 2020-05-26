@@ -32,6 +32,8 @@ local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
+local sRandomItem_1 = RandomInt(1,9) > 6 and "item_monkey_king_bar" or "item_butterfly"
+
 local tOutFitList = {}
 
 tOutFitList['outfit_carry'] = {
@@ -41,11 +43,15 @@ tOutFitList['outfit_carry'] = {
 	"item_sange_and_yasha",
 	"item_ultimate_scepter",
 	"item_black_king_bar",
+	"item_travel_boots",
 	"item_broken_satanic",	
-	"item_monkey_king_bar",
+	sRandomItem_1,
+	"item_moon_shard",
+	"item_travel_boots_2",
 	"item_invis_sword",	
 	"item_ultimate_scepter_2",
-	"item_silver_edge"
+	"item_silver_edge",
+	
 				
 }
 
@@ -56,8 +62,11 @@ tOutFitList['outfit_mid'] = {
 	"item_sange_and_yasha",
 	"item_ultimate_scepter",
 	"item_black_king_bar",
+	"item_travel_boots",
 	"item_broken_satanic",	
-	"item_monkey_king_bar",
+	sRandomItem_1,
+	"item_moon_shard",
+	"item_travel_boots_2",
 	"item_invis_sword",	
 	"item_ultimate_scepter_2",
 	"item_silver_edge",
@@ -89,7 +98,7 @@ nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroI
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
 X['bDeafaultAbility'] = false
-X['bDeafaultItem'] = true
+X['bDeafaultItem'] = false
 
 function X.MinionThink(hMinionUnit)
 
@@ -391,7 +400,7 @@ function X.ConsiderW()
 	for _,npcEnemy in pairs(nInRangeEnemyList)
 	do
 		if J.IsValidHero(npcEnemy)
-		   and J.CanCastOnMagicImmune(npcEnemy)
+		   and J.CanCastOnNonMagicImmune(npcEnemy)
 		   and J.CanCastOnTargetAdvanced(npcEnemy)
 		then
 			nInRangeEnemyCount = nInRangeEnemyCount +1;
@@ -413,7 +422,7 @@ function X.ConsiderW()
 	then
 		nCastTarget = nInRangeEnemyList[1];
 		if J.IsValidHero(nCastTarget)
-		   and J.CanCastOnMagicImmune(nCastTarget)
+		   and J.CanCastOnNonMagicImmune(nCastTarget)
 		   and J.CanCastOnTargetAdvanced(nCastTarget)
 		   and J.IsInRange(bot,nCastTarget,nCastRange *0.93)
 		then
@@ -425,7 +434,7 @@ function X.ConsiderW()
 	
 	if J.IsGoingOnSomeone(bot)
 	   and J.IsValidHero(botTarget)
-	   and J.CanCastOnMagicImmune(botTarget)
+	   and J.CanCastOnNonMagicImmune(botTarget)
 	   and J.CanCastOnTargetAdvanced(botTarget)
 	   and J.IsInRange(bot,botTarget,nCastRange)
 	   and J.GetAllyCount(bot,1200) - J.GetEnemyCount(bot,1600) < 3
@@ -439,7 +448,7 @@ function X.ConsiderW()
 		for _,npcEnemy in pairs(nInRangeEnemyList)
 		do
 			if J.IsValidHero(npcEnemy)
-			   and J.CanCastOnMagicImmune(npcEnemy)
+			   and J.CanCastOnNonMagicImmune(npcEnemy)
 			   and J.CanCastOnTargetAdvanced(npcEnemy)
 			   and ( bot:WasRecentlyDamagedByHero(npcEnemy,3.0) or bot:GetActiveModeDesire() > BOT_MODE_DESIRE_VERYHIGH )
 			then
@@ -458,7 +467,7 @@ function X.ConsiderW()
 		do
 			if  J.IsValid(npcEnemy)
 				and J.IsInRange(bot,npcEnemy,nCastRange - 100)
-			    and J.CanCastOnMagicImmune(npcEnemy) 
+			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)				
 			then
 				return BOT_ACTION_DESIRE_HIGH,npcEnemy,'W通用'..J.Chat.GetNormName(npcEnemy)
@@ -538,5 +547,5 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592
 

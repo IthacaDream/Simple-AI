@@ -68,7 +68,7 @@ function X.Consider()
 	do
 		if  J.IsValid(enemy)
 			and J.CanCastOnNonMagicImmune(enemy)
-		    and ( J.IsDisabled(true, enemy) 
+		    and ( J.IsDisabled(enemy) 
 				  or J.IsInRange(bot, enemy, nRadius *0.82 - enemy:GetCurrentMovementSpeed()) )
 		then
 			aoeCanHurtCount = aoeCanHurtCount + 1
@@ -89,7 +89,7 @@ function X.Consider()
 		local npcTarget = J.GetProperTarget(bot);		
 		if J.IsValidHero(npcTarget) 
 			and J.CanCastOnNonMagicImmune(npcTarget) 
-			and ( J.IsDisabled(true, npcTarget) or J.IsInRange(bot,npcTarget,280) )
+			and ( J.IsDisabled(npcTarget) or J.IsInRange(bot,npcTarget,280) )
 			and npcTarget:GetHealth() <= npcTarget:GetActualIncomingDamage(bot:GetOffensivePower(),DAMAGE_TYPE_MAGICAL)
 			and GetUnitToUnitDistance(npcTarget,bot) <= nRadius
 			and npcTarget:GetHealth( ) > 400

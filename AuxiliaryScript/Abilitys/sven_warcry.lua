@@ -53,7 +53,7 @@ function X.Consider()
 	local nAlliesCount = #nAllies;
 	local nWeakestAlly = J.GetLeastHpUnit(nAllies);
 	if nWeakestAlly == nil then nWeakestAlly = bot; end
-	local nWeakestAllyHP = J.GetHPR(nWeakestAlly);
+	local nWeakestAllyHP = J.GetHP(nWeakestAlly);
 	
 	local nEnemysHerosNearby = nWeakestAlly:GetNearbyHeroes(800,true,BOT_MODE_NONE);
 	

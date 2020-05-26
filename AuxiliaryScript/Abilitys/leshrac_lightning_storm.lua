@@ -64,7 +64,7 @@ function X.Consider()
 	do
 		if J.IsValidHero(enemy)
 			and J.CanCastOnNonMagicImmune(enemy)
-			and J.GetHPR(enemy) <= 0.2
+			and J.GetHP(enemy) <= 0.2
 		then
 			return BOT_ACTION_DESIRE_HIGH, enemy;
 		end
@@ -98,7 +98,7 @@ function X.Consider()
 	then
 		local locationAoE = bot:FindAoELocation( true, true, bot:GetLocation(), nCastRange, nRadius, 0, 0 );
 		if ( locationAoE.count >= 2 ) then
-			local target = J.GetVulnerableUnitNearLoc(true, true, nCastRange, nRadius, locationAoE.targetloc, bot);
+			local target = J.GetVulnerableUnitNearLoc(bot, true, true, nCastRange, nRadius, locationAoE.targetloc);
 			if target ~= nil then
 				return BOT_ACTION_DESIRE_HIGH, target;
 			end
@@ -109,7 +109,7 @@ function X.Consider()
 	then
 		local locationAoE = bot:FindAoELocation( true, false, bot:GetLocation(), nCastRange, nRadius, 0, 0 );
 		if ( locationAoE.count >= 3 ) then
-			local target = J.GetVulnerableUnitNearLoc(false, true, nCastRange, nRadius, locationAoE.targetloc, bot);
+			local target = J.GetVulnerableUnitNearLoc(bot, false, true, nCastRange, nRadius, locationAoE.targetloc);
 			if target ~= nil then
 				return BOT_ACTION_DESIRE_HIGH, target;
 			end

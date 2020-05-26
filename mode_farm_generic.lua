@@ -81,15 +81,20 @@ local sNoticeList = {
 	
 	[1] = "使用AI锦囊包,体验特色军师锦囊模式.",
 	[2] = "重复上局的对抗阵容,交流群里有方法.",
-	[3] = "新分路版开局时会重新分路,而中路版不会.",
+	[3] = "新分路AI开局时会重新分路,让中版AI不会抢中.",
 	[4] = "想给敌我AI指定英雄的话,就来交流群里看看.",
 	[5] = "要使用本地主机创建房间,避免游戏时AI失效.",
-	[6] = "寻找AI玩家一起游戏,千人交流群等你进来.",
+	[6] = "寻找AI玩家一起游戏,千人交流群等着你过来.",
 	[7] = "注意不要通过主界面机器人训练赛开始游戏.",
 	[8] = "跟车队一起玩超疯狂AI,加群体验一下.",
 	[9] = "支持修改AI名字分路出装,加群了解一下.",
 	[10]= "每天都有游戏车队,加群感受不一样的车速.",
 	[11]= "我们正处于各种困境之中,请帮我们出谋划策.",
+	[12]= "我们还在学着说话,来群里设计专属语录吧.",
+	[13]= "可以和我们公屏聊天互动,武斗文斗同时进行.",
+	[14]= "如果有更好的出装加点或技能使用方式,欢迎赐教.",
+	[15]= "我们会认真听取你的每一条建议并努力改进.",
+	
 	
 }
 
@@ -178,13 +183,12 @@ function GetDesire()
 			}
 			C.DataUpload = true
 		end);
-		if J.Role.IsShuBuQi() then secondMessage = "为了老哥的鼠标键盘和屏幕着想,不建议您亲自指导我们的相关策略." end;
 	
 		bot:ActionImmediate_Chat( fMessage, true);
 		if bAllNotice
 		then
 			bot:ActionImmediate_Chat( sMessage, false);
-			bot:ActionImmediate_Chat("输入“取消上报”取消数据上报操作，QQ交流群:632117330",true);
+			bot:ActionImmediate_Chat("AI开车群:903256599",true);
 		elseif not J.Role.IsUserMode()
 			then
 				local sNoticeMessage = sNoticeList[RandomInt(1,#sNoticeList)]
@@ -266,7 +270,7 @@ function GetDesire()
 		return BOT_MODE_DESIRE_NONE;
 	end	
 
-	local nAttackAllys = J.GetSpecialModeAllies(BOT_MODE_ATTACK,2600,bot);
+	local nAttackAllys = J.GetSpecialModeAllies(bot,2600,BOT_MODE_ATTACK);
 	if #nAttackAllys > 0 and (not beVeryHighFarmer or bot:GetLevel() >= 18)
 	then
 		return BOT_MODE_DESIRE_NONE;
@@ -611,7 +615,7 @@ function Think()
 				--如果小兵正在被友方小兵攻击且生命值略高于自己的击杀线则S自己的出手
 				local allyTower = bot:GetNearbyTowers(1000,true)[1];
 				if bot:GetAttackTarget() == farmTarget
-				   and ( J.GetAttackTargetEnemyCreepCount(farmTarget, 800) > 0
+				   and ( J.GetAttackEnemysAllyCreepCount(farmTarget, 800) > 0
 						   or ( allyTower ~= nil and allyTower:GetAttackTarget() == farmTarget ) )
 				then
 					local botDamage = bot:GetAttackDamage();
@@ -619,7 +623,7 @@ function Think()
 					if bot:FindItemSlot("item_quelling_blade") > 0
 						or bot:FindItemSlot("item_bfury") > 0
 					then
-						botDamage = botDamage + 24;
+						botDamage = botDamage + 18;
 					end
 					
 					if not J.CanKillTarget(farmTarget, botDamage * nDamageReduce, DAMAGE_TYPE_PHYSICAL)
@@ -915,7 +919,7 @@ function X.ShouldRun(bot)
 	--防止离开自家泉水
 	if bot:DistanceFromFountain() < 200
 		and botMode ~= BOT_MODE_RETREAT
-		and ( J.GetHPR(bot) + J.GetMPR(bot) < 1.7 )
+		and ( J.GetHP(bot) + J.GetMP(bot) < 1.7 )
 	then
 		return 3;
 	end
@@ -934,7 +938,7 @@ function X.ShouldRun(bot)
 		and enemyFountainDistance < 8111
 	then
 		if botTarget ~= nil and botTarget:IsHero()
-		   and J.GetHPR(botTarget) > 0.35
+		   and J.GetHP(botTarget) > 0.35
 		   and (  not J.IsInRange(bot,botTarget,bot:GetAttackRange() + 150) 
 				  or not J.CanKillTarget(botTarget, bot:GetAttackDamage() * 2.33, DAMAGE_TYPE_PHYSICAL) )
 		then
@@ -1067,6 +1071,8 @@ function X.ShouldRun(bot)
 		and bot:GetActiveModeDesire() > 0.4
 		and #hAllyHeroList < 2
 		and J.IsValid(hEnemyHeroList[1])
+		and bot:GetUnitName() ~= "npc_dota_hero_riki"
+		and bot:GetUnitName() ~= "npc_dota_hero_bounty_hunter"
 		and J.GetDistanceFromAncient(bot,false) < J.GetDistanceFromAncient(hEnemyHeroList[1],false)
 	then
 		return 5;
@@ -1124,7 +1130,7 @@ function X.ShouldRun(bot)
 			if J.IsValid(enemy)
 				and enemy:GetUnitName() == "npc_dota_hero_necrolyte"
 				and enemy:GetMana() >= 200
-				and J.GetHPR(bot) < 0.45
+				and J.GetHP(bot) < 0.45
 				and enemy:IsFacingLocation(bot:GetLocation(),20)
 			then
 				return 3;
@@ -1342,4 +1348,4 @@ function X.IsVeryHighFarmer(bot)
 		or botName == "npc_dota_hero_razor"
 		
 end
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

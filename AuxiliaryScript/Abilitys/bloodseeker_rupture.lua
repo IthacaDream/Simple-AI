@@ -83,7 +83,7 @@ function X.Consider()
 			   and J.CanCastOnTargetAdvanced(npcEnemy)
 			   and J.Role.IsCarry(npcEnemy:GetUnitName()) 
 			   and not npcEnemy:HasModifier('modifier_bloodseeker_bloodrage')
-			   and not J.IsDisabled(true, npcEnemy) 
+			   and not J.IsDisabled(npcEnemy) 
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcEnemy;
 			end
@@ -99,7 +99,7 @@ function X.Consider()
 		   and J.CanCastOnTargetAdvanced(npcTarget)
 		   and J.IsInRange(npcTarget, bot, nCastRange +100)
 		   and not npcTarget:HasModifier('modifier_bloodseeker_bloodrage')
-		   and not J.IsDisabled(true, npcTarget)
+		   and not J.IsDisabled(npcTarget)
 		then
 			local allies = npcTarget:GetNearbyHeroes( 1200, true, BOT_MODE_NONE );
 			if ( allies ~= nil and #allies >= 2 )

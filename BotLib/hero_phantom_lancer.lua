@@ -33,6 +33,8 @@ local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
+local sRandomItem_1 = RandomInt(1,9) > 6 and "item_satanic" or "item_butterfly"
+
 local tOutFitList = {}
 
 tOutFitList['outfit_carry'] = {
@@ -41,8 +43,11 @@ tOutFitList['outfit_carry'] = {
 	"item_diffusal_blade",
 	"item_manta",
 	"item_skadi",
+	"item_travel_boots",
 	"item_abyssal_blade",
-	"item_heart",
+	sRandomItem_1,
+	"item_moon_shard",
+	"item_travel_boots_2",
 	
 }
 
@@ -58,7 +63,7 @@ X['sBuyList'] = tOutFitList[sOutfitType]
 
 X['sSellList'] = {
 	
-	"item_manta",
+	"item_power_treads",
 	"item_quelling_blade",
 	
 	"item_abyssal_blade",
@@ -205,7 +210,7 @@ function X.ConsiderQ()
 	local nAttackDamage = bot:GetAttackDamage();
 	
 	--击杀
-	if ( not J.IsValidHero(botTarget) or J.GetHPR(botTarget) > 0.2 )
+	if ( not J.IsValidHero(botTarget) or J.GetHP(botTarget) > 0.2 )
 	then
 		for _,npcEnemy in pairs(nInRangeEnemyList)
 		do
@@ -339,7 +344,7 @@ function X.ConsiderQ()
 		and nLV > 15 and nMP > 0.4
 	then
 		if J.IsRoshan(botTarget) 
-		    and J.GetHPR(botTarget) > 0.2
+		    and J.GetHP(botTarget) > 0.2
 			and J.IsInRange(botTarget, bot, nCastRange)  
 		then
 			return BOT_ACTION_DESIRE_HIGH, botTarget, 'Q肉山'
@@ -389,8 +394,8 @@ function X.ConsiderW()
 	then
 		if J.IsValidHero(botTarget)
 		   and J.CanCastOnMagicImmune(botTarget)
-		   and not J.IsDisabled(true, botTarget)
-		   and ( nSkillLV >= 3 or nMP > 0.6 or nHP < 0.4 or J.GetHPR(botTarget) < 0.4 or DotaTime() > 9 *60 )
+		   and not J.IsDisabled( botTarget)
+		   and ( nSkillLV >= 3 or nMP > 0.6 or nHP < 0.4 or J.GetHP(botTarget) < 0.4 or DotaTime() > 9 *60 )
 		then
 			
 			--迷惑目标
@@ -450,7 +455,7 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592
 
 
 

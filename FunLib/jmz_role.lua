@@ -10,8 +10,8 @@
 local X = {}
 
 local sBotVersion = "New";
-local sVersionDate = " 1.3.7"
-local sABAVersionDate = sBotVersion.." 7.24,2020/03/13"
+local sVersionDate = " 1.3.8"
+local sABAVersionDate = sBotVersion.." 7.26,2020/05/13"
 
 function X.GetBotVersion()
 	return sBotVersion,sVersionDate,sABAVersionDate;
@@ -1666,6 +1666,7 @@ X['safe'] = {
 	'npc_dota_hero_phantom_lancer',
 	'npc_dota_hero_razor',
 	'npc_dota_hero_riki',
+	'npc_dota_hero_bounty_hunter',
 	'npc_dota_hero_skeleton_king',
 	'npc_dota_hero_slark',
 	'npc_dota_hero_spectre',
@@ -1678,12 +1679,13 @@ X['safe'] = {
 	'npc_dota_hero_weaver',
 	'npc_dota_hero_ogre_magi',
 	'npc_dota_hero_omniknight',
+	
 }
 
 X['supp'] = {
 	'npc_dota_hero_ancient_apparition',
 	'npc_dota_hero_bane',
-	'npc_dota_hero_bounty_hunter',
+--	'npc_dota_hero_bounty_hunter',
 	'npc_dota_hero_chen',
 	'npc_dota_hero_crystal_maiden',
 	'npc_dota_hero_dark_willow',
@@ -1822,7 +1824,9 @@ function X.UpdateInvisEnemyStatus(bot)
 		if #enemies > 0 then
 			for i=1,#enemies
 			do
-				if enemies[i] ~= nil and enemies[i]:IsNull() == false and enemies[i]:CanBeSeen() == true then
+				if enemies[i] ~= nil 
+					and enemies[i]:CanBeSeen()
+				then
 					local SASlot = enemies[i]:FindItemSlot("item_shadow_amulet");
 					local GCSlot = enemies[i]:FindItemSlot("item_glimmer_cape");
 					local ISSlot = enemies[i]:FindItemSlot("item_invis_sword");
@@ -1895,17 +1899,12 @@ function X.GetReplyMemberID()
 	if X['replyMemberID'] ~= nil then return X['replyMemberID'] end
 
 	local tMemberIDList = GetTeamPlayers(GetTeam())
-	if IsPlayerBot(tMemberIDList[1]) 
-	then 
-		X['replyMemberID'] = 999
-		return 999
-	end
-	
+		
 	local nMemberCount = #tMemberIDList
 	local nHumanCount = 0
 	for i = 1, #tMemberIDList
 	do 
-		if IsPlayerBot(tMemberIDList[1]) 
+		if not IsPlayerBot(tMemberIDList[i]) 
 		then
 			nHumanCount = nHumanCount + 1
 		end
@@ -1917,6 +1916,50 @@ function X.GetReplyMemberID()
 
 end
 
+X['memberIDIndexTable'] = nil
+function X.IsAllyMemberID(nID)
+
+	if X['memberIDIndexTable'] == nil
+	then
+		local tMemberIDList = GetTeamPlayers(GetTeam())
+		if #tMemberIDList > 0
+		then
+			X['memberIDIndexTable'] = {}
+			for i = 1, #tMemberIDList
+			do 
+				X['memberIDIndexTable'][tMemberIDList[i]] = true 
+			end		
+		end
+	end
+	
+	return X['memberIDIndexTable'][nID] == true
+
+end
+
+X['enemyIDIndexTable'] = nil
+function X.IsEnemyMemberID(nID)
+
+	if X['enemyIDIndexTable'] == nil
+	then
+		local tEnemyIDList = GetTeamPlayers(GetOpposingTeam())
+		if #tEnemyIDList > 0
+		then
+			X['enemyIDIndexTable'] = {}
+			for i = 1, #tEnemyIDList
+			do 
+				X['enemyIDIndexTable'][tEnemyIDList[i]] = true 
+			end
+		else
+			return false
+		end
+	end
+	
+	return X['enemyIDIndexTable'][nID] == true
+
+end
+
+X['sLastChatString'] = '0'
+
 X['aegisHero'] = nil;
 function X.IsAllyHaveAegis()
 	if X['aegisHero'] ~= nil 
@@ -1926,10 +1969,6 @@ function X.IsAllyHaveAegis()
 	return X['aegisHero'] ~= nil;
 end
 
-X['moonshareCount'] = 3;
-function X.ShouldBuyMoonShare()
-	return X['moonshareCount'] > 0
-end
 
 X['lastbbtime'] = -90;
 function X.ShouldBuyBack()
@@ -1961,114 +2000,72 @@ function X.GetAvailableCampCount()
 	return #X['availableCampTable'];
 end
 
-X['nStopWaitTime'] = RandomInt(5,9);
+X['nStopWaitTime'] = RandomInt(3,8);
 function X.GetRuneActionTime()
 	return X['nStopWaitTime'];
 end
 
+
 function X.GetUserLV(sString)
 
-	if sString == 'RGNXWA-IZCYGF-NGGXXQ-BHDCXD-YYHBUG-WHZRTZ' then return 2 end
 	if sString == 'GDDYYN-MQBYGK-FXHPJT-YMYBYS-YBRFXD-TYM3QU' then return 3 end
     
 	return 1
 	
 end
 
-X["nUserMode"] = 0
+X["nUserModeLevel"] = 0
 function X.IsUserMode()
-	return X["nUserMode"] > 0
+	return X["nUserModeLevel"] >= 1
 end
 
 
-local tBasicHeroList = {	
-	["npc_dota_hero_nevermore"] = true,
-	["npc_dota_hero_templar_assassin"] = true,
-	["npc_dota_hero_chaos_knight"] = true,
-	["npc_dota_hero_dragon_knight"] = true,
-	["npc_dota_hero_kunkka"] = true,
-	["npc_dota_hero_skeleton_king"] = true,	
-	["npc_dota_hero_luna"] = true,
-	["npc_dota_hero_arc_warden"] = true,
-	["npc_dota_hero_drow_ranger"] = true,
-	["npc_dota_hero_bloodseeker"] = true,
-	["npc_dota_hero_phantom_assassin"] = true,
-	["npc_dota_hero_crystal_maiden"] = true,
-	["npc_dota_hero_skywrath_mage"] = true,
-	["npc_dota_hero_silencer"] = true,
-	["npc_dota_hero_necrolyte"] = true,
-	["npc_dota_hero_oracle"] = true,
-}
-
-local tSeniorHeroList = {
-	['npc_dota_hero_medusa'] = true,
-	['npc_dota_hero_arc_warden'] = true,
-	['npc_dota_hero_jakiro'] = true,
-	['npc_dota_hero_warlock'] = true,
-	['npc_dota_hero_zuus'] = true,
-}
-
 function X.IsUserHero()
 
-	local sBotName = GetBot():GetUnitName();
 	
-	if X["nUserMode"] <= 1 
+	if X["nUserModeLevel"] <= 1 
 	then
-		return tBasicHeroList[sBotName] == true 
-	end
-	
-	if X["nUserMode"] == 2 
-	then
-		return tBasicHeroList[sBotName] == true 
-				or tSeniorHeroList[sBotName] == true
+		return false
 	end	
 	
 	return true
 
 end
 
-function X.IsShuBuQi()
-	return X["nUserMode"] < 0
-end
 
-X["bHostSet"] = true
 function X.GetDirType()
 	if GetTeam() == TEAM_RADIANT
 	then
-		return X["bHostSet"] and 1 or 2
+		return 1 
 	else
-		return X["bHostSet"] and 3 or 4
+		return 3 
 	end
 end
+
 
 X["sUserName"] = "Null"
 function X.GetUserName()
 	return X["sUserName"]
 end
 
+
 function X.GetUserType()
 	
-	if X["bHostSet"]
+	if X["nUserModeLevel"] <= 1
 	then
-		if X["nUserMode"] == 1
-		then
-			return 7
-		elseif X["nUserMode"] == 2
-			then
-				return 8
-		else
-			return 9
-		end
+		return 7
 	else
-		return 10
+		return 9
 	end
 
 end
+
 
 X["sUserSupList"] = {}
 function X.SetUserSup(bot)
 	table.insert(X["sUserSupList"],bot:GetUnitName());
 end
+
 
 function X.IsUserSetSup(bot)
 	
@@ -2082,6 +2079,7 @@ function X.IsUserSetSup(bot)
 
 	return false;
 end
+
 
 X["bPvNMode"] = false
 function X.IsPvNMode()
@@ -2120,4 +2118,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

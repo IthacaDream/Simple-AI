@@ -42,6 +42,7 @@ tOutFitList['outfit_carry'] = {
 	"item_hurricane_pike",
 	"item_sheepstick",
 	"item_bloodthorn",
+	"item_moon_shard",
 				
 }
 
@@ -58,6 +59,7 @@ tOutFitList['outfit_priest'] = {
 	"item_rod_of_atos",
 	"item_shivas_guard",
 	"item_sheepstick",
+	"item_moon_shard",
 	
 }
 
@@ -69,6 +71,7 @@ tOutFitList['outfit_mage'] = {
 	"item_veil_of_discord",
 	"item_cyclone", 
 	"item_sheepstick",
+	"item_moon_shard",
 	
 }
 
@@ -499,11 +502,11 @@ function X.ConsiderW()
 	local nTowers = bot:GetNearbyTowers(900,true)
 	local nEnemysLaneCreepsInRange = bot:GetNearbyLaneCreeps(nAttackRange + 100,true)
 	local nEnemysLaneCreepsInBonus = bot:GetNearbyLaneCreeps(400,true)
-	local nEnemysWeakestLaneCreepsInRange = J.GetVulnerableWeakestUnit(false, true, nAttackRange + 100, bot)
+	local nEnemysWeakestLaneCreepsInRange = J.GetVulnerableWeakestUnit(bot, false, true, nAttackRange + 100)
 	
 	local nEnemysHerosInAttackRange = bot:GetNearbyHeroes(nAttackRange,true,BOT_MODE_NONE);
-	local nEnemysWeakestHerosInAttackRange = J.GetVulnerableWeakestUnit(true, true, nAttackRange, bot)
-	local nEnemysWeakestHero = J.GetVulnerableWeakestUnit(true, true, nAttackRange + 40, bot)
+	local nEnemysWeakestHerosInAttackRange = J.GetVulnerableWeakestUnit(bot, true, true, nAttackRange)
+	local nEnemysWeakestHero = J.GetVulnerableWeakestUnit(bot, true, true, nAttackRange + 40)
 	
 	local nAllyLaneCreeps = bot:GetNearbyLaneCreeps(350,false)
 	
@@ -562,7 +565,7 @@ function X.ConsiderW()
 			end
 			
 			
-			if J.GetAllyUnitCountAroundEnemyTarget(nEnemysWeakestHero, 500, bot) >= 3
+			if J.GetAllyUnitCountAroundEnemyTarget(bot, nEnemysWeakestHero, 500) >= 3
 			   and nHP >= 0.6 
 			   and not bot:WasRecentlyDamagedByCreep(1.5)
 			   and not bot:WasRecentlyDamagedByAnyHero(1.5)
@@ -733,7 +736,7 @@ function X.ConsiderE()
 			if  J.IsValidHero(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled( npcEnemy)
 			then
 				local npcEnemyDamage = npcEnemy:GetEstimatedDamageToTarget( false, bot, 3.0, DAMAGE_TYPE_ALL );
 				if ( npcEnemyDamage > nMostDangerousDamage )
@@ -761,7 +764,7 @@ function X.ConsiderE()
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy) 
+				and not J.IsDisabled( npcEnemy) 
 				and not npcEnemy:IsIllusion()
 				and bot:IsFacingLocation(npcEnemy:GetLocation(),30)
 			then
@@ -777,7 +780,7 @@ function X.ConsiderE()
 		then
 			if J.IsValid(nWeakestEnemyHeroInRange)
 			then
-				if not J.IsDisabled(true, nWeakestEnemyHeroInRange) 
+				if not J.IsDisabled( nWeakestEnemyHeroInRange) 
 				then
 					return BOT_ACTION_DESIRE_HIGH,nWeakestEnemyHeroInRange;
 				end
@@ -792,7 +795,7 @@ function X.ConsiderE()
 				and #nTowers == 0
 				and ( (#nEnemysCreeps + #nEnemysHeroesInBonus) <= 5 or DotaTime() > 12*60 )
 			then
-				if not J.IsDisabled(true, nWeakestEnemyHeroInBonus) 
+				if not J.IsDisabled( nWeakestEnemyHeroInBonus) 
 				then
 					return BOT_ACTION_DESIRE_HIGH,nWeakestEnemyHeroInBonus;
 				end
@@ -816,7 +819,7 @@ function X.ConsiderE()
 			and J.CanCastOnNonMagicImmune(npcTarget) 
 			and J.CanCastOnTargetAdvanced(npcTarget)
 			and J.IsInRange(npcTarget, bot, nCastRange + 150) 
-			and not J.IsDisabled(true, npcTarget)
+			and not J.IsDisabled( npcTarget)
 		then
 			return BOT_ACTION_DESIRE_HIGH, npcTarget;
 		end
@@ -831,7 +834,7 @@ function X.ConsiderE()
 			    and bot:WasRecentlyDamagedByHero( npcEnemy, 3.1 ) 
 				and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy) 
+				and not J.IsDisabled( npcEnemy) 
 				and J.IsInRange(npcEnemy, bot, nCastRange) 
 				and ( not J.IsInRange(npcEnemy, bot, 450) or bot:IsFacingLocation(npcEnemy:GetLocation(), 45) )
 			then
@@ -912,7 +915,7 @@ function X.ConsiderR()
 		if J.IsValidHero(npcTarget) 
 		   and J.CanCastOnNonMagicImmune(npcTarget) 
 		   and J.IsInRange(npcTarget, bot, 1200)
-		   and not J.IsDisabled(true, npcTarget)
+		   and not J.IsDisabled( npcTarget)
 		then
 			local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( 1600, false, BOT_MODE_NONE );
 			if #tableNearbyEnemyHeroes >= 2 
@@ -956,4 +959,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

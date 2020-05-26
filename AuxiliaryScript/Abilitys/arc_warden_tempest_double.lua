@@ -88,9 +88,9 @@ function X.Consider()
 		local nEnemyHeroes   = bot:GetNearbyHeroes( 800, true, BOT_MODE_NONE  );
 		local npcEnemy = nEnemyHeroes[1];
 		if J.IsValid(npcEnemy) 
-			and (J.GetHPR(bot) > 0.35 or #nEnemyHeroes <= 1)
+			and (J.GetHP(bot) > 0.35 or #nEnemyHeroes <= 1)
 			and bot:WasRecentlyDamagedByHero( npcEnemy, 2.0 ) 
-			and J.GetHPR(bot) > 0.25
+			and J.GetHP(bot) > 0.25
 			and #nEnemyHeroes <= 2
 		then
 			return BOT_ACTION_DESIRE_HIGH, npcEnemy;

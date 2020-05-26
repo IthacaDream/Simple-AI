@@ -66,7 +66,7 @@ function X.Consider()
 	then
 		if #enemies > 0 and bot:WasRecentlyDamagedByAnyHero(2.0) then
 			local enemy = X.GetLowestHPUnit(enemies, false);
-			if enemy ~= nil and not J.IsDisabled(true, enemy) then
+			if enemy ~= nil and not J.IsDisabled(enemy) then
 				return BOT_ACTION_DESIRE_HIGH, enemy:GetLocation();
 			end	
 		end
@@ -94,7 +94,7 @@ function X.Consider()
 
 	if J.IsGoingOnSomeone(bot)
 	then
-		if J.IsValidHero(target) and J.CanCastOnNonMagicImmune(target) and J.IsInRange(target, bot, castRange-200) and not J.IsDisabled(true, target)
+		if J.IsValidHero(target) and J.CanCastOnNonMagicImmune(target) and J.IsInRange(target, bot, castRange-200) and not J.IsDisabled(target)
 		then
 			return BOT_ACTION_DESIRE_HIGH, target:GetLocation();
 		end
@@ -137,7 +137,7 @@ function X.CountNotStunnedUnits(tUnits, locAOE, nRadius, nUnits)
 	if locAOE.count >= nUnits then
 		for _,unit in pairs(tUnits)
 		do
-			if GetUnitToLocationDistance(unit, locAOE.targetloc) <= nRadius and not unit:IsInvulnerable() and not J.IsDisabled(true, unit) then
+			if GetUnitToLocationDistance(unit, locAOE.targetloc) <= nRadius and not unit:IsInvulnerable() and not J.IsDisabled(unit) then
 				count = count + 1;
 			end
 		end

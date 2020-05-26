@@ -35,12 +35,13 @@ local tOutFitList = {}
 
 tOutFitList['outfit_carry'] = {
 
-	"item_mage_outfit",
+	"item_crystal_maiden_outfit",
 	"item_glimmer_cape",
 	"item_force_staff",
 	"item_cyclone",
 	"item_sheepstick",
 	"item_bloodthorn",
+	"item_moon_shard",
 				
 }
 
@@ -57,6 +58,7 @@ tOutFitList['outfit_priest'] = {
 	"item_rod_of_atos",
 	"item_shivas_guard",
 	"item_sheepstick",
+	"item_moon_shard",
 	
 }
 
@@ -68,6 +70,7 @@ tOutFitList['outfit_mage'] = {
 	"item_veil_of_discord",
 	"item_cyclone",
 	"item_sheepstick",
+	"item_moon_shard",
 
 }
 
@@ -395,7 +398,7 @@ function X.ConsiderQ()
 	if  bot:GetActiveMode() == BOT_MODE_ROSHAN 
 		and bot:GetMana() >= 600
 	then
-		if  J.IsRoshan(botTarget) and J.GetHPR(botTarget) > 0.2
+		if  J.IsRoshan(botTarget) and J.GetHP(botTarget) > 0.2
 			and J.IsInRange(botTarget, bot, nCastRange + 300)  
 		then
 			nTargetLocation = botTarget:GetLocation()
@@ -463,7 +466,7 @@ function X.ConsiderW()
 	
 	if J.IsValid(hNetherWard)
 	   and J.IsInRange(bot,hNetherWard,nCastRange)
-	   and J.GetHPR(hNetherWard) < 0.9
+	   and J.GetHP(hNetherWard) < 0.9
 	then
 		for _,npcEnemy in pairs(hEnemyList)
 		do
@@ -486,7 +489,7 @@ function X.ConsiderW()
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled( npcEnemy)
 				and not npcEnemy:IsDisarmed()
 			then
 				local npcEnemyDamage = npcEnemy:GetEstimatedDamageToTarget( false, bot, 3.0, DAMAGE_TYPE_PHYSICAL );
@@ -512,7 +515,7 @@ function X.ConsiderW()
 			and J.CanCastOnNonMagicImmune(botTarget)
 			and J.CanCastOnTargetAdvanced(botTarget)
 			and J.IsAttacking(botTarget)
-			and not J.IsDisabled(true,botTarget)
+			and not J.IsDisabled(botTarget)
 			and not botTarget:IsDisarmed()
 		then
 			return BOT_ACTION_DESIRE_HIGH,botTarget,"W-attack:"..J.Chat.GetNormName(botTarget);
@@ -669,7 +672,7 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592
 
 
 

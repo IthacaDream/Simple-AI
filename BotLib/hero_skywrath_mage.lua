@@ -40,6 +40,7 @@ tOutFitList['outfit_carry'] = {
 	"item_glimmer_cape",
 	"item_force_staff",
 	"item_cyclone", 
+	"item_moon_shard",
 	"item_ultimate_scepter_2",
 	"item_sheepstick",
 				
@@ -58,6 +59,7 @@ tOutFitList['outfit_priest'] = {
 	"item_rod_of_atos",
 	"item_ultimate_scepter",
 	"item_shivas_guard",
+	"item_moon_shard",
 	"item_ultimate_scepter_2",
 	"item_sheepstick",
 	
@@ -71,6 +73,7 @@ tOutFitList['outfit_mage'] = {
 	"item_pipe",
 	"item_glimmer_cape",
 	"item_veil_of_discord",
+	"item_moon_shard",
 	"item_ultimate_scepter_2",
 	"item_sheepstick",
 				
@@ -241,14 +244,14 @@ function X.ConsiderQ()
 	local hAllyList = bot:GetNearbyHeroes(1300,false,BOT_MODE_NONE)
 	
 	
-	if ( not J.IsValidHero(botTarget) or J.GetHPR(botTarget) > 0.2 )
+	if ( not J.IsValidHero(botTarget) or J.GetHP(botTarget) > 0.2 )
 	then
 		for _,npcEnemy in pairs(nInRangeEnemyHeroList)
 		do
 			if J.IsValidHero(npcEnemy)
 				and J.CanCastOnNonMagicImmune(npcEnemy)
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and J.GetHPR(npcEnemy) <= 0.2
+				and J.GetHP(npcEnemy) <= 0.2
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcEnemy, "Q击杀"..npcEnemy:GetUnitName()
 			end
@@ -283,7 +286,7 @@ function X.ConsiderQ()
 	
 	if J.IsRetreating(bot) and bot:WasRecentlyDamagedByAnyHero(2.0)
 	then
-		local target = J.GetVulnerableWeakestUnit(true, true, nCastRange, bot);
+		local target = J.GetVulnerableWeakestUnit(bot, true, true, nCastRange);
 		if target ~= nil 
 		   and bot:IsFacingLocation(target:GetLocation(),30) 
 		   and J.CanCastOnTargetAdvanced(target)
@@ -349,7 +352,7 @@ function X.ConsiderQ()
 		and nLV > 15 and nMP > 0.4
 	then
 		if J.IsRoshan(botTarget) 
-		    and J.GetHPR(botTarget) > 0.2
+		    and J.GetHP(botTarget) > 0.2
 			and J.IsInRange(botTarget, bot, nCastRange)  
 		then
 			return BOT_ACTION_DESIRE_HIGH, botTarget, 'Q肉山'
@@ -454,7 +457,7 @@ function X.ConsiderE()
 			if  J.IsValidHero(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled( npcEnemy)
 				and not npcEnemy:IsSilenced()
 			then
 				local npcEnemyDamage = npcEnemy:GetEstimatedDamageToTarget( false, bot, 3.0, DAMAGE_TYPE_MAGICAL );
@@ -483,7 +486,7 @@ function X.ConsiderE()
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy) 
+				and not J.IsDisabled( npcEnemy) 
 				and not npcEnemy:IsSilenced()
 				and bot:IsFacingLocation(npcEnemy:GetLocation(),40)
 			then
@@ -499,7 +502,7 @@ function X.ConsiderE()
 			and J.CanCastOnNonMagicImmune(botTarget) 
 			and J.CanCastOnTargetAdvanced(botTarget)
 			and J.IsInRange(botTarget, bot, nCastRange) 
-			and not J.IsDisabled(true, botTarget)
+			and not J.IsDisabled( botTarget)
 			and not botTarget:IsSilenced()
 		then
 			return BOT_ACTION_DESIRE_HIGH, botTarget, "E进攻"
@@ -515,7 +518,7 @@ function X.ConsiderE()
 			    and bot:WasRecentlyDamagedByHero( npcEnemy, 3.1 ) 
 				and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy) 
+				and not J.IsDisabled( npcEnemy) 
 				and not npcEnemy:IsSilenced()
 				and J.IsInRange(npcEnemy, bot, nCastRange) 
 				and ( not J.IsInRange(npcEnemy, bot, 450) or bot:IsFacingLocation(npcEnemy:GetLocation(), 45) )
@@ -576,7 +579,7 @@ function X.ConsiderR()
 		   and J.IsInRange(bot,botTarget,nCastRange +200)
 		then
 			if (not J.IsRunning(botTarget) and not J.IsMoving(botTarget))
-			   or J.IsDisabled(true,botTarget)
+			   or J.IsDisabled(botTarget)
 			   or botTarget:GetCurrentMovementSpeed() < 180
 			then	
 				return BOT_ACTION_DESIRE_HIGH,J.GetFaceTowardDistanceLocation(botTarget,148),'R进攻'
@@ -604,4 +607,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

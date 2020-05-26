@@ -42,6 +42,7 @@ tOutFitList['outfit_carry'] = {
 	"item_sheepstick",
 	"item_hurricane_pike",
 	"item_bloodthorn",
+	"item_moon_shard",
 	"item_ultimate_scepter_2",
 	"item_monkey_king_bar",
 				
@@ -60,6 +61,7 @@ tOutFitList['outfit_priest'] = {
 	"item_rod_of_atos",
 	"item_ultimate_scepter",
 	"item_shivas_guard",
+	"item_moon_shard",
 	"item_ultimate_scepter_2",
 	"item_sheepstick",
 	
@@ -73,6 +75,7 @@ tOutFitList['outfit_mage'] = {
 	"item_veil_of_discord",
 	"item_cyclone",
 	"item_sheepstick",
+	"item_moon_shard",
 	"item_ultimate_scepter_2",
 	
 }
@@ -300,7 +303,7 @@ function X.ConsiderQ()
 			and J.CanCastOnNonMagicImmune(botTarget) 
 			and J.IsInRange(botTarget, bot, nCastRange -80 ) 
 		then
-			if nSkillLV >= 2 or nMP > 0.68 or J.GetHPR(botTarget) < 0.38
+			if nSkillLV >= 2 or nMP > 0.68 or J.GetHP(botTarget) < 0.38
 			then
 				nTargetLocation = botTarget:GetExtrapolatedLocation( nCastPoint )
 				if J.IsInLocRange(bot,nTargetLocation,nCastRange)
@@ -383,7 +386,7 @@ function X.ConsiderQ()
 	if  bot:GetActiveMode() == BOT_MODE_ROSHAN 
 		and bot:GetMana() >= 400
 	then
-		if  J.IsRoshan(botTarget) and J.GetHPR(botTarget) > 0.15
+		if  J.IsRoshan(botTarget) and J.GetHP(botTarget) > 0.15
 			and J.IsInRange(botTarget, bot, nCastRange)  
 		then
 			nTargetLocation = botTarget:GetLocation();
@@ -612,7 +615,7 @@ function X.ConsiderW()
 	if  bot:GetActiveMode() == BOT_MODE_ROSHAN 
 		and bot:GetMana() >= 600
 	then
-		if  J.IsRoshan(botTarget) and J.GetHPR(botTarget) > 0.3
+		if  J.IsRoshan(botTarget) and J.GetHP(botTarget) > 0.3
 			and J.IsInRange(botTarget, bot, nCastRange)  
 		then
 			nTargetLocation = botTarget:GetLocation()
@@ -744,5 +747,5 @@ function X.CanCastAbilityROnTarget(nTarget)
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592
 

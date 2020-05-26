@@ -40,11 +40,15 @@ tOutFitList['outfit_carry'] = {
 	"item_hand_of_midas",
 	"item_glimmer_cape",
 	"item_ultimate_scepter",
-	"item_sheepstick",
+	"item_travel_boots",
+	"item_sheepstick", --
 	"item_octarine_core",
+	"item_moon_shard",
+	"item_travel_boots_2",
 	"item_ultimate_scepter_2",
 	"item_shivas_guard",
 	"item_dagon_5",
+	
 				
 }
 
@@ -63,6 +67,7 @@ tOutFitList['outfit_priest'] = {
 	"item_ultimate_scepter",
 	"item_octarine_core",
 	"item_shivas_guard",
+	"item_moon_shard",
 	"item_ultimate_scepter_2",
 	"item_sheepstick",
 	
@@ -76,9 +81,13 @@ tOutFitList['outfit_mage'] = {
 	"item_pipe",
 	"item_glimmer_cape",
 	"item_ultimate_scepter",
+	"item_travel_boots",
 	"item_veil_of_discord",
+	"item_moon_shard",
+	"item_travel_boots_2",
 	"item_ultimate_scepter_2",
 	"item_shivas_guard",
+	
 	
 }
 
@@ -88,10 +97,14 @@ tOutFitList['outfit_tank'] = {
 	"item_crimson_guard",
 	"item_ultimate_scepter",
 	"item_sheepstick",
+	"item_travel_boots",
 	"item_octarine_core",
 	"item_assault",
+	"item_moon_shard",
+	"item_travel_boots_2",
 	"item_ultimate_scepter_2",
 	"item_shivas_guard",
+	
 	
 }
 
@@ -99,7 +112,7 @@ X['sBuyList'] = tOutFitList[sOutfitType]
 
 X['sSellList'] = {
 
-	"item_ultimate_scepter",
+	"item_power_treads",
 	"item_quelling_blade",
 		
 	"item_assault",
@@ -117,7 +130,7 @@ nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroI
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
 X['bDeafaultAbility'] = false
-X['bDeafaultItem'] = true
+X['bDeafaultItem'] = false
 
 function X.MinionThink(hMinionUnit)
 
@@ -298,7 +311,7 @@ function X.ConsiderQ()
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled( npcEnemy)
 			then
 				local npcEnemyPower = npcEnemy:GetEstimatedDamageToTarget( false, bot, 3.0, DAMAGE_TYPE_PHYSICAL );
 				if ( npcEnemyPower > npcStrongestEnemyPower )
@@ -326,7 +339,7 @@ function X.ConsiderQ()
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled( npcEnemy)
                 and not npcEnemy:IsDisarmed()				
 				and bot:IsFacingLocation(npcEnemy:GetLocation(),60)
 			then
@@ -380,10 +393,10 @@ function X.ConsiderQ()
 			and J.CanCastOnNonMagicImmune(botTarget) 
 			and J.CanCastOnTargetAdvanced(botTarget)
 			and J.IsInRange(botTarget, bot, nCastRange +50) 
-			and not J.IsDisabled(true, botTarget)
+			and not J.IsDisabled( botTarget)
 			and not botTarget:IsDisarmed()
 		then
-			if nSkillLV >= 3 or nMP > 0.78 or J.GetHPR(botTarget) < 0.38
+			if nSkillLV >= 3 or nMP > 0.78 or J.GetHP(botTarget) < 0.38
 			then
 				return BOT_ACTION_DESIRE_HIGH, botTarget,'Q先手'..J.Chat.GetNormName(botTarget)
 			end
@@ -400,7 +413,7 @@ function X.ConsiderQ()
 			   and bot:WasRecentlyDamagedByHero( npcEnemy, 5.0 ) 
 			   and J.CanCastOnNonMagicImmune(npcEnemy) 
 			   and J.CanCastOnTargetAdvanced(npcEnemy)
-			   and not J.IsDisabled(true, npcEnemy) 
+			   and not J.IsDisabled( npcEnemy) 
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcEnemy,'Q撤退'..J.Chat.GetNormName(npcEnemy)
 			end
@@ -458,7 +471,7 @@ function X.ConsiderQ()
 		and bot:GetMana() >= 400
 	then
 		if  J.IsRoshan(botTarget) 
-			and not J.IsDisabled(true, botTarget)
+			and not J.IsDisabled( botTarget)
 			and not botTarget:IsDisarmed()
 			and J.IsInRange(botTarget, bot, nCastRange)  
 		then
@@ -479,7 +492,7 @@ function X.ConsiderQ()
 				and J.IsInRange(bot,npcEnemy,600)
 			    and J.CanCastOnNonMagicImmune(npcEnemy)
 				and J.CanCastOnTargetAdvanced(npcEnemy)				
-				and not J.IsDisabled(true, npcEnemy)			
+				and not J.IsDisabled( npcEnemy)			
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcEnemy,'Q通用'
 			end
@@ -688,7 +701,7 @@ function X.ConsiderE()
 	do
 		if J.IsValidHero(ally)
 		   and not ally:HasModifier("modifier_ogre_magi_bloodlust")
-		   and not J.IsDisabled(false,ally)
+		   and not J.IsDisabled(ally)
 		   and not J.IsWithoutTarget(ally)
 		   and ally:GetAttackDamage() > nMaxDamage
 		then
@@ -810,7 +823,7 @@ function X.ConsiderE()
 					
 					--给远程兵带线
 					if J.IsKeyWordUnit('ranged',creep) 
-					   and J.GetHPR(creep) > 0.8
+					   and J.GetHP(creep) > 0.8
 					   and nLV >= 12
 					   and #hEnemyList == 0 and #hAllyList == 1
 					then
@@ -887,7 +900,7 @@ function X.ConsiderD()
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled( npcEnemy)
 			then
 				local npcEnemyHealth = npcEnemy:GetHealth();
 				if ( npcEnemyHealth < npcWeakestEnemyHealth )
@@ -915,7 +928,7 @@ function X.ConsiderD()
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled( npcEnemy)
                 and not npcEnemy:IsDisarmed()				
 				and bot:IsFacingLocation(npcEnemy:GetLocation(),45)
 			then
@@ -932,7 +945,7 @@ function X.ConsiderD()
 			and J.CanCastOnNonMagicImmune(botTarget) 
 			and J.CanCastOnTargetAdvanced(botTarget)
 			and J.IsInRange(botTarget, bot, nCastRange +50) 
-			and not J.IsDisabled(true, botTarget)
+			and not J.IsDisabled( botTarget)
 		then
 			return BOT_ACTION_DESIRE_HIGH, botTarget,'D打架'..J.Chat.GetNormName(botTarget)
 		end
@@ -948,7 +961,7 @@ function X.ConsiderD()
 			   and bot:WasRecentlyDamagedByHero( npcEnemy, 5.0 ) 
 			   and J.CanCastOnNonMagicImmune(npcEnemy) 
 			   and J.CanCastOnTargetAdvanced(npcEnemy)
-			   and not J.IsDisabled(true, npcEnemy) 
+			   and not J.IsDisabled( npcEnemy) 
 			   and not npcEnemy:IsDisarmed()
 			   and (#nInBonusEnemyList <= 2 or bot:IsFacingLocation(npcEnemy:GetLocation(),30))
 			then
@@ -1004,7 +1017,7 @@ function X.ConsiderD()
 		and nManaCost < 100
 	then
 		if  J.IsRoshan(botTarget) 
-			and not J.IsDisabled(true, botTarget)
+			and not J.IsDisabled( botTarget)
 			and not botTarget:IsDisarmed()
 			and J.IsInRange(botTarget, bot, nCastRange)  
 		then
@@ -1025,7 +1038,7 @@ function X.ConsiderD()
 				and J.IsInRange(bot,npcEnemy,600)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)			
+				and not J.IsDisabled( npcEnemy)			
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcEnemy,'D通用'
 			end
@@ -1040,6 +1053,6 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592
 
 

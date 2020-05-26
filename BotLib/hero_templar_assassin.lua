@@ -31,6 +31,8 @@ local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
+local sRandomItem_1 = RandomInt(1,9) > 6 and "item_satanic" or "item_butterfly"
+
 local tOutFitList = {}
 
 tOutFitList['outfit_carry'] = {
@@ -40,9 +42,11 @@ tOutFitList['outfit_carry'] = {
 	"item_desolator",
 	"item_black_king_bar",
 	"item_hurricane_pike",
-	"item_satanic",
-	"item_lesser_crit",
-	"item_bloodthorn",
+	"item_travel_boots",
+	"item_greater_crit",
+	sRandomItem_1,
+	"item_moon_shard",
+	"item_travel_boots_2",
 				
 }
 
@@ -53,9 +57,11 @@ tOutFitList['outfit_mid'] = {
 	"item_desolator",
 	"item_black_king_bar",
 	"item_hurricane_pike",
-	"item_satanic",
-	"item_lesser_crit",
-	"item_bloodthorn",
+	"item_greater_crit",
+	"item_travel_boots",
+	sRandomItem_1,
+	"item_moon_shard",
+	"item_travel_boots_2",
 				
 }
 
@@ -71,7 +77,7 @@ X['sSellList'] = {
 	"item_black_king_bar",
 	"item_urn_of_shadows",
 	
-	'item_satanic',
+	'item_greater_crit',
 	'item_magic_wand',
 }
 
@@ -82,7 +88,7 @@ nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroI
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
 X['bDeafaultAbility'] = false
-X['bDeafaultItem'] = true
+X['bDeafaultItem'] = false
 
 function X.MinionThink(hMinionUnit)
 
@@ -414,7 +420,7 @@ function X.ConsiderQ()
 	if ( bot:GetActiveMode() == BOT_MODE_ROSHAN  ) 
 	then
 		local npcTarget = bot:GetAttackTarget();
-		if ( J.IsRoshan(npcTarget) and J.GetHPR(npcTarget) > 0.3 and J.IsInRange(npcTarget, bot, nRange)  )
+		if ( J.IsRoshan(npcTarget) and J.GetHP(npcTarget) > 0.3 and J.IsInRange(npcTarget, bot, nRange)  )
 		then
 			return BOT_ACTION_DESIRE_LOW;
 		end
@@ -557,7 +563,7 @@ function X.ConsiderW()
 	if J.IsValid(targetCreep)
 	   and J.IsKeyWordUnit("ranged",targetCreep)
 	   and not targetCreep:HasModifier("modifier_fountain_glyph")
-	   and J.GetHPR(targetCreep) > 0.48
+	   and J.GetHP(targetCreep) > 0.48
 	   and J.IsInRange(targetCreep,bot,nCastRange + 40)
 	   and not J.CanKillTarget(targetCreep,nAttackDamage * 1.2,nDamageType)
 	   and J.CanKillTarget(targetCreep,nTotalDamage * 1.2,nDamageType)
@@ -797,4 +803,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

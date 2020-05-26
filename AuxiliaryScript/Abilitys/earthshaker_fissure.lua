@@ -84,7 +84,7 @@ function X.Consider()
 		then
 			if J.IsValid(WeakestEnemy)
 			   and J.CanCastOnNonMagicImmune(WeakestEnemy) 
-			   and not J.IsDisabled(true, WeakestEnemy)
+			   and not J.IsDisabled(WeakestEnemy)
 			then
                 if WeakestEnemy:GetHealth() <= WeakestEnemy:GetActualIncomingDamage(nDamage, DAMAGE_TYPE_MAGICAL)
                    or WeakestEnemy:GetHealth() <= WeakestEnemy:GetActualIncomingDamage(nDamage,DAMAGE_TYPE_MAGICAL)
@@ -133,7 +133,7 @@ function X.Consider()
 			
 			if J.IsValid(WeakestEnemy)
 			and J.CanCastOnNonMagicImmune(WeakestEnemy) 
-			and not J.IsDisabled(true, WeakestEnemy)
+			and not J.IsDisabled(WeakestEnemy)
 			then
 				
 				return BOT_ACTION_DESIRE_LOW,WeakestEnemy:GetExtrapolatedLocation(nCastPoint)
@@ -175,7 +175,7 @@ function X.Consider()
 		then
 			if J.IsValid(WeakestEnemy)
 			   and J.CanCastOnNonMagicImmune(WeakestEnemy) 
-			   and not J.IsDisabled(true, WeakestEnemy)
+			   and not J.IsDisabled(WeakestEnemy)
 			   and GetUnitToUnitDistance(bot,npcEnemy) <= nCastRange
 			then
 				return BOT_ACTION_DESIRE_MODERATE, npcTarget:GetExtrapolatedLocation(nCastPoint);

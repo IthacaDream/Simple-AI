@@ -125,7 +125,7 @@ function X.Consider()
 			end
 			
 			
-			if J.GetAllyUnitCountAroundEnemyTarget(nEnemysWeakestHero, 500, bot) >= 3
+			if J.GetAllyUnitCountAroundEnemyTarget(bot, nEnemysWeakestHero, 500) >= 3
 			   and nHP >= 0.6 
 			   and not bot:WasRecentlyDamagedByCreep(1.5)
 			   and not bot:WasRecentlyDamagedByAnyHero(1.5)

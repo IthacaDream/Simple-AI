@@ -42,6 +42,7 @@ tOutFitList['outfit_carry'] = {
 	"item_cyclone",
 	"item_ultimate_scepter",
 	"item_sheepstick",
+	"item_moon_shard",
 	"item_ultimate_scepter_2",
 	"item_octarine_core",
 				
@@ -60,6 +61,7 @@ tOutFitList['outfit_priest'] = {
 	"item_rod_of_atos",
 	"item_ultimate_scepter",
 	"item_shivas_guard",
+	"item_moon_shard",
 	"item_ultimate_scepter_2",
 	"item_sheepstick",
 				
@@ -254,7 +256,7 @@ function X.ConsiderQ()
 		if J.IsValidHero(npcEnemy)
 			and J.CanCastOnNonMagicImmune(npcEnemy)
 			and J.CanCastOnTargetAdvanced(npcEnemy)
-			and J.GetHPR(npcEnemy) <= 0.2
+			and J.GetHP(npcEnemy) <= 0.2
 		then
 			return BOT_ACTION_DESIRE_HIGH, npcEnemy;
 		end
@@ -281,7 +283,7 @@ function X.ConsiderQ()
 	
 	if J.IsRetreating(bot) and bot:WasRecentlyDamagedByAnyHero(2.0)
 	then
-		local target = J.GetVulnerableWeakestUnit(true, true, nCastRange, bot);
+		local target = J.GetVulnerableWeakestUnit(bot, true, true, nCastRange);
 		if target ~= nil 
 		   and J.CanCastOnTargetAdvanced(target)
 		   and bot:IsFacingLocation(target:GetLocation(),45) 
@@ -294,7 +296,7 @@ function X.ConsiderQ()
 	then
 		local locationAoE = bot:FindAoELocation( true, true, bot:GetLocation(), nCastRange, nRadius, 0, 0 );
 		if ( locationAoE.count >= 2 ) then
-			local target = J.GetVulnerableUnitNearLoc(true, true, nCastRange, nRadius, locationAoE.targetloc, bot);
+			local target = J.GetVulnerableUnitNearLoc(bot, true, true, nCastRange, nRadius, locationAoE.targetloc);
 			if target ~= nil and J.CanCastOnTargetAdvanced(target) then
 				return BOT_ACTION_DESIRE_HIGH, target;
 			end
@@ -305,7 +307,7 @@ function X.ConsiderQ()
 	then
 		local locationAoE = bot:FindAoELocation( true, false, bot:GetLocation(), nCastRange, nRadius, 0, 0 );
 		if ( locationAoE.count >= 3 ) then
-			local target = J.GetVulnerableUnitNearLoc(false, true, nCastRange, nRadius, locationAoE.targetloc, bot);
+			local target = J.GetVulnerableUnitNearLoc(bot, false, true, nCastRange, nRadius, locationAoE.targetloc);
 			if target ~= nil then
 				return BOT_ACTION_DESIRE_HIGH, target;
 			end
@@ -338,7 +340,7 @@ function X.ConsiderW()
 		
 	if J.IsRetreating(bot) and bot:WasRecentlyDamagedByAnyHero(2.0)
 	then
-		local target = J.GetVulnerableWeakestUnit(true, true, nCastRange, bot);
+		local target = J.GetVulnerableWeakestUnit(bot, true, true, nCastRange);
 		if target ~= nil and J.CanCastOnTargetAdvanced(target) then
 			return BOT_ACTION_DESIRE_HIGH, target;
 		end
@@ -381,7 +383,7 @@ function X.ConsiderW2()
 	local nAllies = bot:GetNearbyHeroes(800,false,BOT_MODE_NONE);
 	
 	local nEnemyHeroesInSkillRange  = bot:GetNearbyHeroes(nCastRange + nRadius,true,BOT_MODE_NONE);
-	local nWeakestEnemyHeroInSkillRange = J.GetVulnerableWeakestUnit(true, true, nCastRange + nRadius, bot);
+	local nWeakestEnemyHeroInSkillRange = J.GetVulnerableWeakestUnit(bot, true, true, nCastRange + nRadius);
 	local nCanKillHeroLocationAoE = bot:FindAoELocation( true, true, bot:GetLocation(), nCastRange, nRadius , 0.3, nDamage);
 	
 	if nCanKillHeroLocationAoE.count >= 1
@@ -630,4 +632,4 @@ function X.GetRanged(bot,nRadius)
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

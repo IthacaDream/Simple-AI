@@ -244,7 +244,7 @@ function X.Consider()
 			and J.IsAllowedToSpam(bot,nManaCost)
 			and #hEnemyList == 0
 		then
-			if J.GetHPR(npcAlly) < 0.38
+			if J.GetHP(npcAlly) < 0.38
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcAlly;
 			end

@@ -226,7 +226,7 @@ function X.ConsiderQ()
 			and J.CanCastOnNonMagicImmune(botTarget) 
 			and J.IsInRange(botTarget, bot, nCastRange +50) 
 		then
-			if nSkillLV >= 2 or nMP > 0.68 or J.GetHPR(botTarget) < 0.43 or nHP <= 0.4
+			if nSkillLV >= 2 or nMP > 0.68 or J.GetHP(botTarget) < 0.43 or nHP <= 0.4
 			then
 				nCastTarget = botTarget
 				return BOT_ACTION_DESIRE_HIGH, nCastTarget,'Q-Attack:'..J.Chat.GetNormName(nCastTarget)
@@ -345,7 +345,7 @@ function X.ConsiderW()
 	do
 		if	J.IsValidHero(npcAlly)
 			and not npcAlly:HasModifier('modifier_dazzle_shallow_grave')
-			and J.GetHPR(npcAlly) < 0.23
+			and J.GetHP(npcAlly) < 0.23
 		then
 			--掩护撤退
 			if J.IsRetreating(npcAlly)

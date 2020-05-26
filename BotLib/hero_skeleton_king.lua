@@ -25,6 +25,7 @@ local tTalentTreeList = {
 
 if J.Skill.IsHeroInEnemyTeam("npc_dota_hero_antimage") 
    or J.Skill.IsHeroInEnemyTeam("npc_dota_hero_phantom_lancer")
+   or J.Skill.IsHeroInEnemyTeam("npc_dota_hero_riki")
 then  
 	tTalentTreeList['t20'][1] = 0; 
 else
@@ -43,13 +44,17 @@ local tOutFitList = {}
 
 tOutFitList['outfit_carry'] = {
 	
-	"item_sven_outfit",
+	"item_bristleback_outfit",
 	"item_echo_sabre",
+	"item_armlet",
+	"item_blade_mail",
 	"item_mjollnir",
-	"item_blink",
+	"item_travel_boots",
 	"item_black_king_bar",
 	"item_abyssal_blade",
 	"item_heart",
+	"item_moon_shard",
+	"item_travel_boots_2",
 				
 }
 
@@ -62,12 +67,16 @@ tOutFitList['outfit_mage'] = tOutFitList['outfit_carry']
 tOutFitList['outfit_tank'] = {
 
 	"item_tank_outfit",
+	"item_armlet",
 	"item_crimson_guard",
 	"item_echo_sabre",
 	"item_heavens_halberd",
+	"item_travel_boots",
 	"item_assault",
 	"item_heart",
 	"item_radiance",
+	"item_moon_shard",
+	"item_travel_boots_2",
 	
 }
 
@@ -75,7 +84,7 @@ X['sBuyList'] = tOutFitList[sOutfitType]
 
 X['sSellList'] = {
 	
-	"item_echo_sabre",
+	"item_power_treads",
 	"item_quelling_blade",
 	
 	"item_assault",
@@ -83,6 +92,10 @@ X['sSellList'] = {
 	
 	"item_heart",
 	"item_echo_sabre",
+	
+	"item_heart",
+	"item_armlet",
+	
 }
 
 if J.Role.IsPvNMode() or J.Role.IsAllShadow() then X['sBuyList'],X['sSellList'] = { 'PvN_tank' }, {"item_heavens_halberd",'item_quelling_blade'} end
@@ -93,7 +106,7 @@ X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentL
 
 
 X['bDeafaultAbility'] = true
-X['bDeafaultItem'] = true
+X['bDeafaultItem'] = false
 
 function X.MinionThink(hMinionUnit)
 
@@ -251,7 +264,7 @@ function X.ConsiderQ()
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled( npcEnemy)
 				and not npcEnemy:IsDisarmed()
 			then
 				local npcEnemyDamage = npcEnemy:GetEstimatedDamageToTarget( false, bot, 3.0, DAMAGE_TYPE_PHYSICAL );
@@ -277,8 +290,8 @@ function X.ConsiderQ()
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
-				and J.GetAttackTargetEnemyCreepCount(npcEnemy, 1400) >= 4
+				and not J.IsDisabled( npcEnemy)
+				and J.GetAttackEnemysAllyCreepCount(npcEnemy, 1400) >= 4
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcEnemy;
 			end
@@ -294,10 +307,10 @@ function X.ConsiderQ()
 			and J.CanCastOnNonMagicImmune(npcTarget) 
 			and J.CanCastOnTargetAdvanced(npcTarget)
 			and J.IsInRange(npcTarget, bot, nCastRange +80) 
-			and not J.IsDisabled(true, npcTarget)
+			and not J.IsDisabled( npcTarget)
 			and not npcTarget:IsDisarmed()
 		then
-			if nSkillLV >= 3 or nMP > 0.68 or J.GetHPR(npcTarget) < 0.38 or nHP < 0.25
+			if nSkillLV >= 3 or nMP > 0.68 or J.GetHP(npcTarget) < 0.38 or nHP < 0.25
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcTarget;
 			end
@@ -316,7 +329,7 @@ function X.ConsiderQ()
 						or GetUnitToUnitDistance(bot,npcEnemy) <= 400 )
 				and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy) 
+				and not J.IsDisabled( npcEnemy) 
 				and not npcEnemy:IsDisarmed()
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcEnemy;
@@ -352,7 +365,7 @@ function X.ConsiderQ()
 	then
 		local npcTarget = bot:GetAttackTarget();
 		if  J.IsRoshan(npcTarget) 
-			and not J.IsDisabled(true, npcTarget)
+			and not J.IsDisabled( npcTarget)
 			and not npcTarget:IsDisarmed()
 			and J.IsInRange(npcTarget, bot, nCastRange)  
 		then
@@ -372,7 +385,7 @@ function X.ConsiderQ()
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled( npcEnemy)
                 and not npcEnemy:IsDisarmed()				
 				and bot:IsFacingLocation(npcEnemy:GetLocation(),45)
 			then
@@ -392,7 +405,7 @@ function X.ConsiderQ()
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)			
+				and not J.IsDisabled( npcEnemy)			
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcEnemy
 			end
@@ -473,4 +486,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

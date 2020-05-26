@@ -33,6 +33,7 @@ C.GetScenario()
 local bDeafaultAbilityHero = BotBuild['bDeafaultAbility'];
 local bDeafaultItemHero = BotBuild['bDeafaultItem'];
 local sAbilityLevelUpList = BotBuild['sSkillList'];
+
 local function AbilityLevelUpComplement()  
 
 	if GetGameState() ~= GAME_STATE_PRE_GAME and GetGameState() ~= GAME_STATE_GAME_IN_PROGRESS 
@@ -125,10 +126,11 @@ local nLastKillCount = 999
 local nLastDeathCount = 0
 local nContinueKillCount = 0
 local nReplyHumanCount = 0
-local nMaxReplyCount = RandomInt(3,7)
+local nMaxReplyCount = RandomInt(5,9)
 local bInstallChatCallbackDone = false
 local nReplyHumanTime = nil
 local sHumanString = nil
+local bAllChat = false
 function X.SetTalkMessage()
 
 	local nBotID = bot:GetPlayerID()
@@ -151,18 +153,20 @@ function X.SetTalkMessage()
 			and nReplyHumanTime ~= nil
 			and DotaTime() > nReplyHumanTime + nTalkDelay
 		then
-			local chatString = J.Chat.GetReplyString(sHumanString)
-			
+			local chatString = J.Chat.GetReplyString(sHumanString,bAllChat)
+			if chatString ~= nil
+			then			
 			--if nReplyHumanCount == nMaxReplyCount
 			--then chatString = J.Chat.GetStopReplyString() end
 			
-			--bot:ActionImmediate_Chat( chatString, false );
-			
-			nReplyHumanCount = nReplyHumanCount + 1
-			nTalkDelay = RandomFloat(2.3,6.2)
+			--bot:ActionImmediate_Chat( chatString, bAllChat );
+				
+				nReplyHumanCount = nReplyHumanCount + 1
+				nTalkDelay = RandomFloat(0.8,3.0)
+				if nTalkDelay > 2.0 then nTalkDelay = RandomFloat(0.8,3.0) end
+			end
 			sHumanString = nil
 			nReplyHumanTime = nil
-			if nTalkDelay > 3.9 then nTalkDelay = RandomFloat(2.3,6.2) end
 		end		
 		
 	end
@@ -172,7 +176,7 @@ function X.SetTalkMessage()
 	if	bot:IsAlive()
 		and nCurrentGold > nLastGold + 600 * nRate
 		and nCurrentKills > nLastKillCount
-		and RandomInt(1,9) > 3
+		and RandomInt(1,9) > 4
 	then
 		local sTauntMark = "?"
 		if nCurrentGold > nLastGold + 800 * nRate then sTauntMark = "??" end
@@ -229,25 +233,21 @@ end
 
 
 function X.SetReplyHumanTime( tChat )
-
 	
-	if tChat.team_only == true
-		and not IsPlayerBot(tChat.player_id)
-		and J.Chat.IsShutUpString(tChat.string)
-	then
-		nReplyHumanCount = nMaxReplyCount + 1
-		return
-	end
+	local sChatString = tChat.string
+	local nChatID = tChat.player_id
+	J.Role['sLastChatString'] = sChatString	
 	
-	if IsTeamPlayer(tChat.player_id)
-		and not IsPlayerBot(tChat.player_id)
-		and tChat.team_only == true
-		and J.Chat.IsChineseString(tChat.string)
-		and J.Chat.GetReplyString(tChat.string) ~= tChat.string
+	--print(GetTeam()..sChatString)
+	
+	if not IsPlayerBot(nChatID)
+		and ( tChat.team_only or J.Role.IsEnemyMemberID(nChatID) )
 	then
-		sHumanString = tChat.string
+		sHumanString = sChatString
 		nReplyHumanTime = DotaTime()
+		bAllChat = not tChat.team_only
 	end
+	
 	
 end
 
@@ -341,9 +341,9 @@ local function CourierUsageComplement()
 	local cState = GetCourierState( npcCourier );
 	local courierHP = npcCourier:GetHealth() / npcCourier:GetMaxHealth(); 
 	local currentTime = DotaTime();
-	local botIsAlive = bot:IsAlive();
+	local bAliveBot = bot:IsAlive();
 	local botLV = bot:GetLevel();
-	local useCourierCD = 1.2;
+	local useCourierCD = 1.6;
 	local protectCourierCD = 5.0;
 	--------*******----------------*******----------------*******--------
 	
@@ -367,7 +367,7 @@ local function CourierUsageComplement()
 		end
 	end
 		
-	if bot.SShopUser and ( not botIsAlive or bot:GetActiveMode() == BOT_MODE_SECRET_SHOP or not bot.SecretShop  ) 
+	if bot.SShopUser and ( not bAliveBot or bot:GetActiveMode() == BOT_MODE_SECRET_SHOP or not bot.SecretShop  ) 
 	then
 		bot.SShopUser = false;
 		J.SetReportMotive(bDebugCourier,"Releasing the courier to anticipate secret shop stuck");
@@ -394,8 +394,8 @@ local function CourierUsageComplement()
 		end
 		
 		--TAKE ITEM FROM STASH (AND COURIER WILL TRANSFER IT)
-		if botIsAlive 
-		   and not X.IsInvFull(bot)
+		if bAliveBot 
+		   and ( not X.IsInvFull(bot) or ( bot.currListItemToBuy ~= nil and #bot.currListItemToBuy == 0 ) )
 		   and ( cState == COURIER_STATE_AT_BASE
 				 or ( cState == COURIER_STATE_IDLE and npcCourier:DistanceFromFountain() < 900 ) )
 		then
@@ -405,7 +405,7 @@ local function CourierUsageComplement()
 				if ( bot.currListItemToBuy ~= nil and #bot.currListItemToBuy == 0 )
 					or ( bot.currentComponentToBuy ~= nil 
 						 and ( IsItemPurchasedFromSecretShop(bot.currentComponentToBuy) 
-								or bot:GetGold() + 50 < GetItemCost( bot.currentComponentToBuy )))
+								or bot:GetGold() + 80 < GetItemCost( bot.currentComponentToBuy )))
 				then
 					J.SetReportMotive(bDebugCourier,"TAKE ITEM FROM STASH");
 					bot:ActionImmediate_Courier( npcCourier, COURIER_ACTION_TAKE_STASH_ITEMS );
@@ -415,7 +415,7 @@ local function CourierUsageComplement()
 		end
 		
 		--MAKE COURIER GOES TO SECRET SHOP
-		if  botIsAlive and bot.SecretShop 
+		if  bAliveBot and bot.SecretShop 
 			and npcCourier:DistanceFromFountain() < 7000 
 			and J.Item.GetEmptyInventoryAmount(npcCourier) >= 2
 			and not X.IsEnemyHeroAroundSecretShop() -- 商店附近没有敌人
@@ -429,7 +429,7 @@ local function CourierUsageComplement()
 		end
 		
 		--TRANSFER ITEM IN COURIER
-		if	botIsAlive 
+		if	bAliveBot 
 			and bot:GetCourierValue() > 0
 			and bot:GetStashValue() < 100
 			and ( not X.IsInvFull(bot) or ( X.GetNumStashItem(bot) == 0 and bot.currListItemToBuy ~= nil and #bot.currListItemToBuy == 0) )
@@ -443,7 +443,8 @@ local function CourierUsageComplement()
 		end
 		
 		--RETURN STASH ITEM WHEN DEATH
-		if  not botIsAlive 
+		--[[
+		if  not bAliveBot 
 		    and ( cState == COURIER_STATE_AT_BASE 
 			      or (cState == COURIER_STATE_IDLE and npcCourier:DistanceFromFountain() < 800 ) )  
 			and bot:GetCourierValue() > 0 
@@ -455,6 +456,7 @@ local function CourierUsageComplement()
 			courierTime = currentTime;
 			return
 		end
+		--]]
 		
 	end
 	
@@ -492,7 +494,7 @@ function X.IsCourierTargetedByUnit(courier)
 
 	local botLV = bot:GetLevel();
 	
-	if J.GetHPR(courier) < 0.9 
+	if J.GetHP(courier) < 0.9 
 	then 
 		return true;
 	end;
@@ -677,7 +679,7 @@ local function ItemUsageComplement()
 	   or bot:HasModifier('modifier_teleporting') --test
 	   or bot:HasModifier('modifier_doom_bringer_doom')
 	   or bot:HasModifier('modifier_phantom_lancer_phantom_edge_boost')
-	   or ( bot:IsInvisible() and not bot:HasModifier("modifier_phantom_assassin_blur_active") )
+	   or X.WillBreakInvisible(bot)
     then return	BOT_ACTION_DESIRE_NONE end
 
 	hNearbyEnemyHeroList = bot:GetNearbyHeroes( 1000, true, BOT_MODE_NONE );
@@ -706,11 +708,12 @@ local function ItemUsageComplement()
 				then
 					if J.Item.IsDebugItem(sItemName) and sMotive ~= nil
 					then
-						local sReportName = string.gsub(sItemName, "item_", "")
+						--local sReportName = string.gsub(sItemName, "item_", "")
+						local sReportName = J.Chat.GetItemCnName(sItemName)
 						J.SetReportMotive( bDebugMode, sReportName..'→'..sMotive ) 
 					end
 										
-					X.SetUseItem(hItem,hItemTarget,sCastType);
+					X.SetUseItem(hItem, hItemTarget, sCastType)
 					
 					return nSlot + 1
 				end				
@@ -746,8 +749,6 @@ function X.SetUseItem(hItem,hItemTarget,sCastType)
 			bot:ActionQueue_UseAbility(hItem)
 			return
 	end
-	
-	if bDebugMode then print("SetUseItem:sCastType Error") end
 
 end
 
@@ -800,6 +801,23 @@ function X.IsItemInStash(sItemName)
 
 end
 
+function X.WillBreakInvisible(bot)
+
+	local botName = bot:GetUnitName()
+	
+	if bot:IsInvisible()
+	then
+		if not bot:HasModifier("modifier_phantom_assassin_blur_active")
+			and botName ~= "npc_dota_hero_riki"
+		then
+			return true
+		end		
+	end	
+	
+	return false
+	
+end
+
 
 X.ConsiderItemDesire = {};
 
@@ -824,15 +842,15 @@ X.ConsiderItemDesire["item_abyssal_blade"] = function(hItem)
 			if npcEnemy:IsChanneling() or npcEnemy:IsCastingAbility()
 			then
 				hEffectTarget = npcEnemy 
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'check:'..J.Chat.GetNormName(hEffectTarget)
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "打断:"..J.Chat.GetNormName(hEffectTarget)
 			end
 			
 			--Retreat
 			if 	nMode == BOT_MODE_RETREAT 
-				and not J.IsDisabled(true,npcEnemy)
+				and not J.IsDisabled(npcEnemy)
 			then
 				hEffectTarget = npcEnemy 
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'retreat:'..J.Chat.GetNormName(hEffectTarget)
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "撤退:"..J.Chat.GetNormName(hEffectTarget)
 			end				
 		end
 				
@@ -845,10 +863,10 @@ X.ConsiderItemDesire["item_abyssal_blade"] = function(hItem)
 			and J.IsInRange(bot,botTarget,nCastRange + 50)
 			and J.CanCastOnNonMagicImmune(botTarget) --bug
 			and X.IsWithoutSpellShield(botTarget)
-			and not J.IsDisabled(true,botTarget)			
+			and not J.IsDisabled(botTarget)			
 		then
 			hEffectTarget = botTarget
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'attack:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "进攻:"..J.Chat.GetNormName(hEffectTarget)
 		end
 	end
 	
@@ -856,12 +874,13 @@ X.ConsiderItemDesire["item_abyssal_blade"] = function(hItem)
 	
 end
 
+
 --战鼓
 X.ConsiderItemDesire["item_ancient_janggo"] = function(hItem)
 
 	if hItem:GetCurrentCharges() <= 0 then return BOT_ACTION_DESIRE_NONE end
 
-	local nCastRange = 700
+	local nCastRange = 600
 	local sCastType = 'none'	
 	local hEffectTarget = nil
 	local nInRangeEnmyList = bot:GetNearbyHeroes(nCastRange,true,BOT_MODE_NONE)
@@ -874,13 +893,14 @@ X.ConsiderItemDesire["item_ancient_janggo"] = function(hItem)
 			and J.IsInRange(bot,botTarget,nCastRange)
 		then
 			hEffectTarget = botTarget
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'attack:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "进攻:"..J.Chat.GetNormName(hEffectTarget)
 		end
 	end	
 	
 	return BOT_ACTION_DESIRE_NONE
 	
 end
+
 
 --秘法
 X.ConsiderItemDesire["item_arcane_boots"] = function(hItem)
@@ -899,7 +919,7 @@ X.ConsiderItemDesire["item_arcane_boots"] = function(hItem)
 		and bot:GetHealth() <= 120
 		and bot:WasRecentlyDamagedByAnyHero(3.0)
 	then
-		return BOT_ACTION_DESIRE_HIGH, hNearbyAllyList[2], sCastType, 'beforedeath'
+		return BOT_ACTION_DESIRE_HIGH, hNearbyAllyList[2], sCastType, '死前为队友用'
 	end
 	
 	local nNeedMPCount = 0;
@@ -913,13 +933,13 @@ X.ConsiderItemDesire["item_arcane_boots"] = function(hItem)
 		
 		if nNeedMPCount >= 2 
 		then
-			return BOT_ACTION_DESIRE_HIGH, hNearbyAllyList[2], sCastType, 'team_magic'
+			return BOT_ACTION_DESIRE_HIGH, hNearbyAllyList[2], sCastType, '团队回蓝'
 		end
 	end
 
 	if bot:GetMana()/bot:GetMaxMana() < 0.58 
 	then  
-		return BOT_ACTION_DESIRE_HIGH, bot, sCastType, 'self_magic'
+		return BOT_ACTION_DESIRE_HIGH, bot, sCastType, '自己补蓝'
 	end	
 	
 	
@@ -927,12 +947,69 @@ X.ConsiderItemDesire["item_arcane_boots"] = function(hItem)
 	
 end
 
+
+--臂章
+local nLastActiveArmletTime = -90
+X.ConsiderItemDesire["item_armlet"] = function(hItem)
+
+	if bDeafaultItemHero then return BOT_ACTION_DESIRE_NONE end
+	
+	local nCastRange = 1000
+	local sCastType = 'none'	
+	local hEffectTarget = nil
+	local nInRangeEnmyList = bot:GetNearbyHeroes(nCastRange,true,BOT_MODE_NONE)
+	
+	local bActive = hItem:GetToggleState()
+		
+	if ( J.IsValid( botTarget ) or J.IsValidBuilding(botTarget) )
+		and not botTarget:IsAttackImmune()
+		and not botTarget:IsInvulnerable()
+		and ( not botTarget:IsBuilding() or not J.IsKeyWordUnit("OutpostName",botTarget) )
+		and not J.HasForbiddenModifier( botTarget )
+		and J.IsInRange( bot, botTarget, bot:GetAttackRange() + 180 )
+		and not bot:IsDisarmed()
+	then		
+		nLastActiveArmletTime = DotaTime()
+		if not bActive
+		then
+			hEffectTarget = botTarget
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '激活臂章攻击'..(hEffectTarget:IsHero() and J.Chat.GetNormName(hEffectTarget) or "非英雄")
+		end
+	end	
+	
+	
+	if bot:GetHealth() <= 600
+		and ( bot:WasRecentlyDamagedByAnyHero(2.0) or J.IsAttackProjectileIncoming(bot, 1600) )
+	then
+		nLastActiveArmletTime = DotaTime()
+		if not bActive
+		then
+			hEffectTarget = bot
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '激活临时血量'
+		end
+	end
+	
+	
+	if bActive
+		and DotaTime() > nLastActiveArmletTime + 0.9
+		and ( #nInRangeEnmyList == 0 or bot:GetHealth() > 990 )
+	then
+		hEffectTarget = bot
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType --, '关闭臂章'	
+	end
+		
+	return BOT_ACTION_DESIRE_NONE
+	
+end
+
+
 --狂战
 X.ConsiderItemDesire["item_bfury"] = function(hItem)
 
 	return X.ConsiderItemDesire["item_quelling_blade"](hItem)
 	
 end
+
 
 --BKB
 X.ConsiderItemDesire["item_black_king_bar"] = function(hItem)
@@ -951,33 +1028,34 @@ X.ConsiderItemDesire["item_black_king_bar"] = function(hItem)
 	then
 		if bot:IsRooted()
 		then
-			return BOT_ACTION_DESIRE_HIGH, bot, sCastType, 'Rooted'
+			return BOT_ACTION_DESIRE_HIGH, bot, sCastType, '解缠绕'
 		end
 		
 		if ( bot:IsSilenced() and bot:GetMana() > 100 and not bot:HasModifier("modifier_item_mask_of_madness_berserk") )
 		then
-			return BOT_ACTION_DESIRE_HIGH, bot, sCastType, 'Silenced'
+			return BOT_ACTION_DESIRE_HIGH, bot, sCastType, '解沉默'
 		end
 		
 		if J.IsNotAttackProjectileIncoming(bot, 400) 
 		then
-			return BOT_ACTION_DESIRE_HIGH, bot, sCastType, 'ProjectileIncoming'
+			return BOT_ACTION_DESIRE_HIGH, bot, sCastType, '防御弹道'
 		end
 		
 		if J.IsWillBeCastUnitTargetSpell(bot,nCastRange)
 		then
-			return BOT_ACTION_DESIRE_HIGH, bot, sCastType, 'UnitTargetSpell'
+			return BOT_ACTION_DESIRE_HIGH, bot, sCastType, '防御指向技能'
 		end
 		
 		if J.IsWillBeCastPointSpell(bot,nCastRange)
 		then
-			return BOT_ACTION_DESIRE_HIGH, bot, sCastType, 'PointSpell'
+			return BOT_ACTION_DESIRE_HIGH, bot, sCastType, '防御地点技能'
 		end			
 	end	
 	
 	return BOT_ACTION_DESIRE_NONE
 	
 end
+
 
 --刃甲
 X.ConsiderItemDesire["item_blade_mail"] = function(hItem)
@@ -992,7 +1070,7 @@ X.ConsiderItemDesire["item_blade_mail"] = function(hItem)
 		and #nInRangeEnmyList >= 1 
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'ProjectileIncoming'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '反弹弹道'
 	end
 	
 	for _,npcEnemy in pairs(hNearbyEnemyHeroList)
@@ -1003,7 +1081,7 @@ X.ConsiderItemDesire["item_blade_mail"] = function(hItem)
 		   and bot:WasRecentlyDamagedByHero(npcEnemy, 5.0)
 		then
 			hEffectTarget = npcEnemy
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'enemy:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '反弹敌人:'..J.Chat.GetNormName(hEffectTarget)
 		end
 	end	
 	
@@ -1011,19 +1089,21 @@ X.ConsiderItemDesire["item_blade_mail"] = function(hItem)
 	
 end
 
+
 --跳刀
 X.ConsiderItemDesire["item_blink"] = function(hItem)
 
-	local nCastRange = 300 + aetherRange
+	local nCastRange = 1200 + aetherRange
 	local sCastType = 'ground'	
 	local hEffectTarget = nil
 	local nInRangeEnmyList = bot:GetNearbyHeroes(nCastRange,true,BOT_MODE_NONE)
 	
+	if bot:IsRooted() then return BOT_ACTION_DESIRE_NONE end
 
 	if J.IsStuck(bot)
 	then
 		hEffectTarget = J.GetLocationTowardDistanceLocation(bot, GetAncient(GetTeam()):GetLocation(), 1100 )
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Stuck'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '卡了'
 	end
 	
 	--Retreat
@@ -1038,7 +1118,7 @@ X.ConsiderItemDesire["item_blink"] = function(hItem)
 		   and #hNearbyEnemyHeroList >= 1
 		then
 			hEffectTarget = bLocation
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Retreat'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "撤退"
 		end
 	end 
 	
@@ -1064,7 +1144,7 @@ X.ConsiderItemDesire["item_blink"] = function(hItem)
 			   and IsLocationVisible(vLocation)
 			then
 				hEffectTarget = bLocation
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'FarmCreep:'..#nLaneCreeps
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '去刷小兵,数量:'..#nLaneCreeps
 			end
 		end				
 	end
@@ -1076,12 +1156,38 @@ X.ConsiderItemDesire["item_blink"] = function(hItem)
 			or not J.IsInRange(bot,botTarget,bot:GetAttackRange() + 100) )
 	then
 		hEffectTarget = J.GetLocationTowardDistanceLocation(bot, GetAncient(GetTeam()):GetLocation(), 1199 );
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'DodgingSkill'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '躲避弹道'
 	end
+	
+	
+	--Attack
+	if J.IsGoingOnSomeone(bot)
+	then
+		if  J.IsValidHero(botTarget) 
+			and J.IsInRange(bot, botTarget, nCastRange + 350)
+			and J.CanCastOnMagicImmune(botTarget)			
+			and not J.IsInRange(bot, botTarget, bot:GetAttackRange() + 150)
+		then
+			if bot:GetStunDuration(true) > 0.8 
+				or J.GetAllyCount(bot, 1200) >= J.GetEnemyCount(bot, 1600)
+			then
+				
+				local nDistance = GetUnitToUnitDistance(bot,botTarget)
+				if nDistance >= 1200
+				then
+					nDistance = 1199
+				end
+				
+				hEffectTarget = J.GetUnitTowardDistanceLocation(bot, botTarget, nDistance );
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '闪烁进攻:'..J.Chat.GetNormName(hEffectTarget)
+			end
+		end
+	end
+	
 	
 	--Shopping
 	
-	--Attack
+	
 		
 	return BOT_ACTION_DESIRE_NONE
 	
@@ -1117,7 +1223,7 @@ X.ConsiderItemDesire["item_cheese"] = function(hItem)
 				and J.CanCastOnMagicImmune(botTarget)
 			then
 				hEffectTarget = bot
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Attack'		
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "进攻"		
 			end
 		end
 		
@@ -1125,7 +1231,7 @@ X.ConsiderItemDesire["item_cheese"] = function(hItem)
 			and bot:WasRecentlyDamagedByAnyHero(4.0)
 		then
 			hEffectTarget = bot
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Retreat'		
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "撤退"		
 		end
 	end
 	
@@ -1145,12 +1251,12 @@ X.ConsiderItemDesire["item_bloodstone"] = function(hItem)
 	local nInRangeEnmyList = bot:GetNearbyHeroes(nCastRange,true,BOT_MODE_NONE)
 	
 
-	if J.GetHPR(bot) < 0.35
+	if J.GetHP(bot) < 0.35
 		and bot:WasRecentlyDamagedByAnyHero(3.0)
 		and #hNearbyEnemyHeroList >= 1
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Retreat'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "撤退"
 	end
 	
 	return BOT_ACTION_DESIRE_NONE
@@ -1168,17 +1274,47 @@ end
 --魔瓶
 X.ConsiderItemDesire["item_bottle"] = function(hItem)
 
-	if hItem:GetCurrentCharges() == 0 then return BOT_ACTION_DESIRE_NONE end
+	if hItem:GetCurrentCharges() == 0 
+	then return BOT_ACTION_DESIRE_NONE end
 
 	local nCastRange = 400 + aetherRange
 	local sCastType = 'none'	
 	local hEffectTarget = nil 
+	local nLostMana = bot:GetMaxMana() - bot:GetMana()
+	local nLostHealth = bot:GetMaxHealth() - bot:GetHealth()
 	
 	
-	--对自己喝
+	--泉水喝
+	if bot:HasModifier("modifier_fountain_aura")
+	then
+		hEffectTarget = bot
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "在泉水里喝"
+	end
 
+	if bot:HasModifier("modifier_bottle_regeneration")
+	then return BOT_ACTION_DESIRE_NONE end
 	
-	--给队友喝
+	--自己喝
+	if not bot:WasRecentlyDamagedByAnyHero(3.0)
+	then
+		if nLostHealth > 150 and nLostMana > 90
+		then
+			hEffectTarget = bot
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "补血补篮"	
+		end
+		
+		if nLostHealth > 500 and J.GetHP(bot) < 0.5
+		then
+			hEffectTarget = bot
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "只补血"	
+		end
+		
+		if nLostMana > 280 and J.GetMP(bot) < 0.4
+		then
+			hEffectTarget = bot
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "只补篮"	
+		end
+	end
 	
 	
 	return BOT_ACTION_DESIRE_NONE
@@ -1197,13 +1333,13 @@ X.ConsiderItemDesire["item_clarity"] = function(hItem)
 	local nInRangeEnmyList = bot:GetNearbyHeroes(nCastRange,true,BOT_MODE_NONE)
 	
 
-	if  J.GetMPR(bot) < 0.35 
+	if  J.GetMP(bot) < 0.35 
 		and not bot:HasModifier("modifier_clarity_potion")
 		and #nInRangeEnmyList == 0 
 		and not bot:WasRecentlyDamagedByAnyHero(4.0)
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'self'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '净化自己'
 	end
 	
 	if #nInRangeEnmyList == 0 	
@@ -1231,7 +1367,7 @@ X.ConsiderItemDesire["item_clarity"] = function(hItem)
 		if(hNeedManaAlly ~= nil)
 		then
 			hEffectTarget = hNeedManaAlly
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'npcAlly:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '净化队友:'..J.Chat.GetNormName(hEffectTarget)
 		end
 	end	
 	
@@ -1261,7 +1397,7 @@ X.ConsiderItemDesire["item_crimson_guard"] = function(hItem)
 			and #hNearbyEnemyHeroList > 0 
 		then
 			hEffectTarget = npcAlly
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'npcAlly:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '救救队友:'..J.Chat.GetNormName(hEffectTarget)
 		end
 	end
 	
@@ -1276,7 +1412,7 @@ X.ConsiderItemDesire["item_crimson_guard"] = function(hItem)
 				and not npcAlly:HasModifier("modifier_item_crimson_guard_nostack")
 			then
 				hEffectTarget = npcAlly
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'NearbyAlly:'..J.Chat.GetNormName(hEffectTarget)
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '保护队友:'..J.Chat.GetNormName(hEffectTarget)
 			end
 		end
 	end	
@@ -1284,6 +1420,7 @@ X.ConsiderItemDesire["item_crimson_guard"] = function(hItem)
 	return BOT_ACTION_DESIRE_NONE
 	
 end
+
 
 --吹风
 X.ConsiderItemDesire["item_cyclone"] = function(hItem)
@@ -1306,19 +1443,19 @@ X.ConsiderItemDesire["item_cyclone"] = function(hItem)
 			 or botTarget:IsChanneling()
 		then
 			hEffectTarget = botTarget
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'check_buff:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '驱散Buff:'..J.Chat.GetNormName(hEffectTarget)
 		end
 		
-		if J.GetHPR(botTarget) > 0.49 and J.IsCastingUltimateAbility(botTarget)
+		if J.GetHP(botTarget) > 0.49 and J.IsCastingUltimateAbility(botTarget)
 		then
 			hEffectTarget = botTarget
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'check_ability:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '打断大招:'..J.Chat.GetNormName(hEffectTarget)
 		end
 		
 		if J.IsRunning(botTarget) and botTarget:GetCurrentMovementSpeed() > 440
 		then
 			hEffectTarget = botTarget
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'check_Run:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '阻止逃跑:'..J.Chat.GetNormName(hEffectTarget)
 		end
 	end
 	
@@ -1328,20 +1465,20 @@ X.ConsiderItemDesire["item_cyclone"] = function(hItem)
 		if bot:GetHealth() < 216 and bot:WasRecentlyDamagedByAnyHero(3.0)
 		then
 			hEffectTarget = bot
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Retreat:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '撤退:'..J.Chat.GetNormName(hEffectTarget)
 		end
 		
 		if bot:IsRooted() 
 			or ( bot:GetPrimaryAttribute() == ATTRIBUTE_INTELLECT and bot:IsSilenced() )
 		then
 			hEffectTarget = bot
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Dispel:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '解缠绕:'..J.Chat.GetNormName(hEffectTarget)
 		end
 		
 		if J.IsUnitTargetProjectileIncoming(bot, 800)
 		then
 			hEffectTarget = bot
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'ProjectileIncoming:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '防御弹道:'..J.Chat.GetNormName(hEffectTarget)
 		end
 	end
 	
@@ -1352,15 +1489,27 @@ end
 --大根
 X.ConsiderItemDesire["item_dagon"] = function(hItem)
 
-	local nCastRange = hItem:GetCastRange() + aetherRange + 50
+	local nCastRange = hItem:GetCastRange() + aetherRange
 	local sCastType = 'unit'	
 	local hEffectTarget = nil 
-	local nInRangeEnmyList = bot:GetNearbyHeroes(nCastRange,true,BOT_MODE_NONE)
+	local nInRangeEnmyList = bot:GetNearbyHeroes(nCastRange + 100,true,BOT_MODE_NONE)
+	local nDamage = hItem:GetSpecialValueInt("damage")
 	
 
-	--kill
+	--击杀
+	for _,npcEnemy in pairs(nInRangeEnmyList)
+	do 
+		if J.IsValidHero(npcEnemy) 
+			and J.CanCastOnNonMagicImmune(npcEnemy)	
+			and X.IsWithoutSpellShield(npcEnemy)
+			and J.CanKillTarget(npcEnemy,nDamage,DAMAGE_TYPE_MAGICAL)
+		then
+			hEffectTarget = npcEnemy
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "击杀:"..J.Chat.GetNormName(hEffectTarget)
+		end
+	end
 	
-	--attack
+	--攻击
 	if J.IsGoingOnSomeone(bot)
 	then			
 		if  J.IsValidHero(botTarget) 
@@ -1369,7 +1518,7 @@ X.ConsiderItemDesire["item_dagon"] = function(hItem)
 			and J.IsInRange(bot, botTarget, nCastRange)
 		then
 			hEffectTarget = botTarget
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Attack:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "进攻:"..J.Chat.GetNormName(hEffectTarget)
 		end
 	end
 	
@@ -1421,10 +1570,10 @@ X.ConsiderItemDesire["item_diffusal_blade"] = function(hItem)
 				and npcEnemy:GetCurrentMovementSpeed() > 200
 				and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and X.IsWithoutSpellShield(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy) 					
+				and not J.IsDisabled( npcEnemy) 					
 			then
 				hEffectTarget = npcEnemy
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Retreat'..J.Chat.GetNormName(hEffectTarget)
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "撤退:"..J.Chat.GetNormName(hEffectTarget)
 			end
 		end
 	end	
@@ -1437,10 +1586,10 @@ X.ConsiderItemDesire["item_diffusal_blade"] = function(hItem)
 			and J.IsInRange(botTarget, bot, nCastRange) 
 			and J.CanCastOnNonMagicImmune(botTarget) 
 			and X.IsWithoutSpellShield(botTarget)
-			and not J.IsDisabled(true, botTarget) 				
+			and not J.IsDisabled( botTarget) 				
 		then
 			hEffectTarget = botTarget
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Attack'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "进攻:"..J.Chat.GetNormName(hEffectTarget)
 		end
 	end
 	
@@ -1449,13 +1598,13 @@ X.ConsiderItemDesire["item_diffusal_blade"] = function(hItem)
 		and J.IsInRange(bot,npcEnemy,nCastRange - 100)
 		and J.CanCastOnNonMagicImmune(npcEnemy) 
 		and X.IsWithoutSpellShield(npcEnemy)
-		and not J.IsDisabled(true,npcEnemy) 
+		and not J.IsDisabled(npcEnemy) 
 		and J.IsMoving(npcEnemy)
 		and J.IsRunning(npcEnemy)
-		and npcEnemy:GetCurrentMovementSpeed() > 300
+		and npcEnemy:GetCurrentMovementSpeed() > bot:GetCurrentMovementSpeed() * 0.8
 	then
 		hEffectTarget = npcEnemy
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Check'..J.Chat.GetNormName(hEffectTarget)
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '减速:'..J.Chat.GetNormName(hEffectTarget)
 	end
 	
 	return BOT_ACTION_DESIRE_NONE
@@ -1478,7 +1627,7 @@ X.ConsiderItemDesire["item_enchanted_mango"] = function(hItem)
 	   and J.IsInRange(bot,botTarget,1000)
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'self'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '自己吃'
 	end
 	
 	return BOT_ACTION_DESIRE_NONE
@@ -1502,7 +1651,7 @@ X.ConsiderItemDesire["item_ethereal_blade"] = function(hItem)
 			and J.IsInRange(bot,botTarget,nCastRange) 
 		then
 			hEffectTarget = botTarget
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Attack'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "进攻"..J.Chat.GetNormName(hEffectTarget)
 		end
 	end	
 	
@@ -1527,17 +1676,17 @@ X.ConsiderItemDesire["item_faerie_fire"] = function(hItem)
 		 and ( bot:GetHealth() / bot:GetMaxHealth() ) < 0.2 ) 
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Retreat'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "撤退"
 	end
 	
 	--attack
 	if J.IsGoingOnSomeone(bot)
-		and J.GetHPR(bot) < 0.3
+		and J.GetHP(bot) < 0.3
 		and J.IsValidHero(botTarget)
 		and bot:WasRecentlyDamagedByAnyHero(3.0)
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Attack'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "进攻"
 	end
 	
 	--self
@@ -1547,7 +1696,7 @@ X.ConsiderItemDesire["item_faerie_fire"] = function(hItem)
 		and bot:GetMaxHealth() - bot:GetHealth() > 200 
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Self'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '自己吃'
 	end
 	
 	return BOT_ACTION_DESIRE_NONE
@@ -1559,21 +1708,21 @@ X.ConsiderItemDesire["item_flask"] = function(hItem)
 
 	if bot:DistanceFromFountain() < 3000 then return BOT_ACTION_DESIRE_NONE end
 
-	local nCastRange = 1000
+	local nCastRange = 900
 	local sCastType = 'unit'	
 	local hEffectTarget = nil 
 	local nInRangeEnmyList = bot:GetNearbyHeroes(nCastRange,true,BOT_MODE_NONE)
 	
 	
-	if  bot:GetMaxHealth() - bot:GetHealth() > 550
+	if  bot:GetMaxHealth() - bot:GetHealth() > 500
 		and #nInRangeEnmyList == 0 
-		and not bot:WasRecentlyDamagedByAnyHero(5.0)
+		and not bot:WasRecentlyDamagedByAnyHero(3.2)
 		and not bot:HasModifier("modifier_filler_heal") 
 		and not bot:HasModifier("modifier_elixer_healing") 
 		and not bot:HasModifier("modifier_flask_healing")
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'self'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '自己吃'
 	end
 	
 	local hAllyList = J.GetAlliesNearLoc(bot:GetLocation(),700)
@@ -1600,7 +1749,7 @@ X.ConsiderItemDesire["item_flask"] = function(hItem)
 	if hNeedHealAlly ~= nil and #hNearbyEnemyHeroList == 0
 	then
 		hEffectTarget = hNeedHealAlly
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'npcAlly'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '给队友贴:'..J.Chat.GetNormName(hEffectTarget)
 	end
 	
 	return BOT_ACTION_DESIRE_NONE
@@ -1610,25 +1759,27 @@ end
 --推推
 X.ConsiderItemDesire["item_force_staff"] = function(hItem)
 
-	local nCastRange = 750 + aetherRange
+	local nCastRange = 850 + aetherRange
 	local sCastType = 'unit'	
 	local hEffectTarget = nil 
 	local nInRangeEnmyList = bot:GetNearbyHeroes(nCastRange,true,BOT_MODE_NONE)
 	
 		
-	local hAllyList = J.GetAlliesNearLoc(bot:GetLocation(),880)
+	local hAllyList = J.GetAlliesNearLoc(bot:GetLocation(),580)
 	for _,npcAlly in pairs(hAllyList) 
 	do
 		if npcAlly ~= nil and npcAlly:IsAlive()
 			and J.CanCastOnNonMagicImmune(npcAlly)
 		then
-			if  not npcAlly:IsInvisible()
+			local nNearAllysEnemyList = npcAlly:GetNearbyHeroes(1200,true,BOT_MODE_NONE)
+			if  #nNearAllysEnemyList >= 1
+				and not npcAlly:IsInvisible()
 				and npcAlly:GetActiveMode() == BOT_MODE_RETREAT
-				and npcAlly:IsFacingLocation(GetAncient(GetTeam()):GetLocation(),20)
+				and npcAlly:IsFacingLocation(GetAncient(GetTeam()):GetLocation(),30)
 				and npcAlly:DistanceFromFountain() > 600 
 			then		
 				hEffectTarget = npcAlly
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'AllyRetreat'
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '帮队友撤退'..J.Chat.GetNormName(hEffectTarget)
 			end
 			
 			if J.IsGoingOnSomeone(npcAlly)
@@ -1643,14 +1794,14 @@ X.ConsiderItemDesire["item_force_staff"] = function(hItem)
 					and J.GetEnemyCount(npcAlly,1600) < 3
 				then
 					hEffectTarget = npcAlly
-					return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'AllyAttack'
+					return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '帮队友进攻'..J.Chat.GetNormName(hEffectTarget)
 				end
 			end
 			
 			if J.IsStuck(npcAlly)
 			then
 				hEffectTarget = npcAlly
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'AllyStuck'
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '队友卡地形了'..J.Chat.GetNormName(hEffectTarget)
 			end
 		end		
 		
@@ -1673,7 +1824,7 @@ X.ConsiderItemDesire["item_force_staff"] = function(hItem)
 					and npcAlly:IsFacingLocation(npcEnemy:GetLocation(),30)
 			    then
 					hEffectTarget = npcAlly
-					return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'CM'
+					return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '推冰女'
 				end
 			end
 		end		
@@ -1689,7 +1840,7 @@ X.ConsiderItemDesire["item_force_staff"] = function(hItem)
 				and GetUnitToLocationDistance(npcEnemy,GetAncient(GetTeam()):GetLocation()) < 1200 
 			then
 				hEffectTarget = npcEnemy
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Enemy_to_ancient'
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '推人入泉'..J.Chat.GetNormName(hEffectTarget)
 			end	
 		end
 	end
@@ -1720,7 +1871,7 @@ X.ConsiderItemDesire["item_ghost"] = function(hItem)
 			   and npcEnemy:GetAttackDamage() > bot:GetAttackDamage()
 			then
 				hEffectTarget = npcEnemy
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Retreat'..J.Chat.GetNormName(hEffectTarget)
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "撤退"..J.Chat.GetNormName(hEffectTarget)
 			end	
 		end
 	end
@@ -1732,7 +1883,7 @@ end
 --微光
 X.ConsiderItemDesire["item_glimmer_cape"] = function(hItem)
 
-	local nCastRange = 1049 + aetherRange
+	local nCastRange = 800 + aetherRange
 	local sCastType = 'unit'	
 	local hEffectTarget = nil 
 	
@@ -1746,14 +1897,14 @@ X.ConsiderItemDesire["item_glimmer_cape"] = function(hItem)
 		if bot:IsSilenced() or bot:IsRooted()
 		then
 			hEffectTarget = bot
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'self_root_or_silence'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '自己被缠绕或沉默了'
 		end
 		
 		if ( J.IsRetreating(bot) and bot:GetActiveModeDesire() >= BOT_MODE_DESIRE_VERYHIGH )
-			 or ( botTarget == nil and #hNearbyEnemyHeroList > 0 and J.GetHPR(bot) < 0.36 + (0.09 * #hNearbyEnemyHeroList) ) 
+			 or ( botTarget == nil and #hNearbyEnemyHeroList > 0 and J.GetHP(bot) < 0.36 + (0.09 * #hNearbyEnemyHeroList) ) 
 		then
 			hEffectTarget = bot
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'self_retreat'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '自己撤退'
 		end
 		
 		--------------------
@@ -1776,18 +1927,18 @@ X.ConsiderItemDesire["item_glimmer_cape"] = function(hItem)
 				if #nNearbyAllyEnemyTowers == 0
 				then
 					--retreat
-					if J.GetHPR(npcAlly) < 0.35 + (0.05 * #hNearbyEnemyHeroList) 
+					if J.GetHP(npcAlly) < 0.35 + (0.05 * #hNearbyEnemyHeroList) 
 					   and J.IsRetreating(npcAlly)
 					then
 						hEffectTarget = npcAlly
-						return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'ally_retreat:'..J.Chat.GetNormName(hEffectTarget)
+						return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '保护队友撤退:'..J.Chat.GetNormName(hEffectTarget)
 					end
 					
 					--Disable
-					if J.IsDisabled(false,npcAlly)  --debug
+					if J.IsDisabled(npcAlly)  --debug
 					then
 						hEffectTarget = npcAlly
-						return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'ally_disable:'..J.Chat.GetNormName(hEffectTarget)
+						return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '保护被控队友:'..J.Chat.GetNormName(hEffectTarget)
 					end
 				end
 			end
@@ -1810,11 +1961,11 @@ X.ConsiderItemDesire["item_guardian_greaves"] = function(hItem)
 	local hAllyList = J.GetAllyList(bot,nCastRange);
 	for _,npcAlly in pairs(hAllyList) do
 		if  npcAlly ~= nil and npcAlly:IsAlive()
-			and J.GetHPR(npcAlly) < 0.45 
+			and J.GetHP(npcAlly) < 0.45 
 			and #hNearbyEnemyHeroList > 0 
 		then
 			hEffectTarget = npcAlly
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'heal_ally'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '治疗队友'..J.Chat.GetNormName(hEffectTarget)
 		end
 	end
 	
@@ -1829,13 +1980,13 @@ X.ConsiderItemDesire["item_guardian_greaves"] = function(hItem)
 			if needHPCount >= 2 and  npcAlly:GetHealth()/npcAlly:GetMaxHealth() < 0.55 
 			then
 				hEffectTarget = npcAlly
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'heal_two:'..J.Chat.GetNormName(hEffectTarget)
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '治疗二队友:'..J.Chat.GetNormName(hEffectTarget)
 			end
 			
 			if needHPCount >= 3 
 			then
 				hEffectTarget = npcAlly
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'heal_three:'..J.Chat.GetNormName(hEffectTarget)
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '治疗多个队友:'..J.Chat.GetNormName(hEffectTarget)
 			end
 			
 		end
@@ -1848,7 +1999,7 @@ X.ConsiderItemDesire["item_guardian_greaves"] = function(hItem)
 		or bot:HasModifier("modifier_item_spirit_vessel_damage")
 	then  
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'heal_self:'..J.Chat.GetNormName(hEffectTarget)
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '治疗自己:'..J.Chat.GetNormName(hEffectTarget)
 	end
 	
 	local nNeedMPCount = 0;
@@ -1863,13 +2014,13 @@ X.ConsiderItemDesire["item_guardian_greaves"] = function(hItem)
 		if nNeedMPCount >= 2 and bot:GetMana()/bot:GetMaxMana() < 0.2 
 		then
 			hEffectTarget = npcAlly
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'mana_two:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '回蓝二队友:'..J.Chat.GetNormName(hEffectTarget)
 		end
 		
 		if nNeedMPCount >= 3 
 		then
 			hEffectTarget = npcAlly
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'mana_three:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '回蓝多个队友:'..J.Chat.GetNormName(hEffectTarget)
 		end
 		
 	end
@@ -1882,7 +2033,7 @@ X.ConsiderItemDesire["item_guardian_greaves"] = function(hItem)
 		   and GetUnitToLocationDistance(bot,nAOELocation.targetloc) <= 200
 		then
 			hEffectTarget = bot
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'heal_creep:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '治疗小兵们:'..J.Chat.GetNormName(hEffectTarget)
 		end
 	end
 	
@@ -1921,7 +2072,7 @@ X.ConsiderItemDesire["item_hand_of_midas"] = function(hItem)
 	if targetCreep ~= nil
 	then
 		hEffectTarget = targetCreep
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'creep'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '点金小兵:'..hEffectTarget:GetUnitName()
 	end	
 	
 	return BOT_ACTION_DESIRE_NONE
@@ -1943,7 +2094,7 @@ X.ConsiderItemDesire["item_heavens_halberd"] = function(hItem)
 	do
 	   if J.IsValidHero(npcEnemy)
 		  and not npcEnemy:IsDisarmed()
-		  and not J.IsDisabled(true, npcEnemy)
+		  and not J.IsDisabled( npcEnemy)
 		  and J.CanCastOnNonMagicImmune(npcEnemy)
 		  and X.IsWithoutSpellShield(npcEnemy)
 		  and (npcEnemy:GetPrimaryAttribute() ~= ATTRIBUTE_INTELLECT or npcEnemy:GetAttackDamage() > 200)
@@ -1959,18 +2110,18 @@ X.ConsiderItemDesire["item_heavens_halberd"] = function(hItem)
 	if targetHero ~= nil
 	then
 		hEffectTarget = targetHero
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'enemy:'..J.Chat.GetNormName(hEffectTarget)
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '缴械敌人:'..J.Chat.GetNormName(hEffectTarget)
 	end	
 	
 	if ( bot:GetActiveMode() == BOT_MODE_ROSHAN  ) 
 	then
 		local botTarget = bot:GetAttackTarget();
 		if  J.IsRoshan(botTarget) 
-			and not J.IsDisabled(true, botTarget)
+			and not J.IsDisabled( botTarget)
 			and not botTarget:IsDisarmed()
 		then
 			hEffectTarget = botTarget
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'roshan:'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '缴械肉山'
 		end	
 	end
 	
@@ -2009,7 +2160,7 @@ X.ConsiderItemDesire["item_helm_of_the_dominator"] = function(hItem)
 	if hCreep ~= nil 
 	then
 		hEffectTarget = hCreep
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, ':'..hEffectTarget:GetUnitName()
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '支配:'..hEffectTarget:GetUnitName()
 	end	
 	
 	return BOT_ACTION_DESIRE_NONE
@@ -2020,7 +2171,7 @@ end
 X.ConsiderItemDesire["item_hood_of_defiance"] = function(hItem)
 
 	if bot:HasModifier('modifier_item_pipe_barrier') 
-		or J.GetHPR(bot) > 0.88 
+		or J.GetHP(bot) > 0.88 
 	then return BOT_ACTION_DESIRE_NONE end
 
 	local nCastRange = 1000
@@ -2032,7 +2183,7 @@ X.ConsiderItemDesire["item_hood_of_defiance"] = function(hItem)
 	if #nInRangeEnmyList > 0 
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'self'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '套盾'
 	end	
 	
 	return BOT_ACTION_DESIRE_NONE
@@ -2063,15 +2214,16 @@ X.ConsiderItemDesire["item_hurricane_pike"] = function(hItem)
 			if ( J.IsInRange(bot,npcEnemy,nNearRange) and J.CanCastOnNonMagicImmune(npcEnemy) )
 			then
 				hEffectTarget = npcEnemy
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'retreat'
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '撤退了推敌人'
 			end	
 		end
 		
 		if bot:IsFacingLocation(GetAncient(GetTeam()):GetLocation(),20) 
 		   and bot:DistanceFromFountain() > 600 
+		   and #hNearbyEnemyHeroList >= 1
 		then
 			hEffectTarget = bot
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'retreat_self'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '撤退了推自己'
 		end	
 	end 
 	
@@ -2087,7 +2239,7 @@ X.ConsiderItemDesire["item_hurricane_pike"] = function(hItem)
 			and J.GetEnemyCount(bot,1600) <= 2
 		then
 			hEffectTarget = bot
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Attack'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "进攻"..J.Chat.GetNormName(hEffectTarget)
 		end	
 	end
 	
@@ -2103,7 +2255,7 @@ X.ConsiderItemDesire["item_hurricane_pike"] = function(hItem)
 			then
 				bot:SetTarget(npcEnemy)
 				hEffectTarget = npcEnemy
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'pull_back'
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '推开'..J.Chat.GetNormName(hEffectTarget)
 			end	
 		end
 	end
@@ -2127,7 +2279,7 @@ X.ConsiderItemDesire["item_hurricane_pike"] = function(hItem)
 					and npcAlly:IsFacingLocation(npcEnemy:GetLocation(),30)
 			   then
 					hEffectTarget = npcAlly
-					return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'CM'
+					return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '推CM'
 				end
 			end
 		end		
@@ -2156,14 +2308,14 @@ X.ConsiderItemDesire["item_invis_sword"] = function(hItem)
 		and #hNearbyEnemyHeroList > 0
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'retreat'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '撤退了'
 	end
 	
-	if J.GetHPR(bot) < 0.166
+	if J.GetHP(bot) < 0.166
 	   and (#hNearbyEnemyHeroList > 0 or bot:WasRecentlyDamagedByAnyHero(5.0))
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'invis'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '残血了'
 	end	
 	
 	if J.IsGoingOnSomeone(bot)
@@ -2177,7 +2329,7 @@ X.ConsiderItemDesire["item_invis_sword"] = function(hItem)
 			if #hEnemyCreepList == 0 and #hNearbyEnemyHeroList == 0
 			then
 				hEffectTarget = botTarget
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'attack:'..J.Chat.GetNormName(hEffectTarget)
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "进攻:"..J.Chat.GetNormName(hEffectTarget)
 			end	
 		end		
 	end
@@ -2208,21 +2360,21 @@ X.ConsiderItemDesire["item_lotus_orb"] = function(hItem)
 			if J.IsUnitTargetProjectileIncoming(npcAlly, 800) 
 			then
 				hEffectTarget = npcAlly
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'ProjectileIncoming'
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '反弹弹道'
 			end	
 		
 			if npcAlly:IsRooted()
-			   or npcAlly:IsSilenced()
-			   or npcAlly:IsDisarmed()
+			   or ( npcAlly:IsSilenced() and not npcAlly:HasModifier("modifier_item_mask_of_madness_berserk") )
+			   or ( npcAlly:IsDisarmed() and not npcAlly:HasModifier("modifier_oracle_fates_edict") )
 			then
 				hEffectTarget = npcAlly
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'dispel:'..J.Chat.GetNormName(hEffectTarget)
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '驱散队友:'..J.Chat.GetNormName(hEffectTarget)
 			end	
 									
 			if J.IsWillBeCastUnitTargetSpell(npcAlly,1200)
 			then
 				hEffectTarget = npcAlly
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'UnitTargetSpell'
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '给队友反弹技能:'..J.Chat.GetNormName(hEffectTarget)
 			end				
 		end
 	end
@@ -2248,19 +2400,19 @@ X.ConsiderItemDesire["item_magic_stick"] = function(hItem)
 	if (nHPrate < 0.5 or nMPrate < 0.3) and nEnemyCount >= 1 and nCharges >= 1 
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '1'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '用途1'
 	end	
 	
 	if ( nHPrate + nMPrate < 1.1 and nCharges >= 7 and nEnemyCount >= 1 )
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '2'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '用途2'
 	end	
 	
 	if ( nCharges >= 9 and bot:GetItemInSlot(6) ~= nil and (nHPrate <= 0.7 or nMPrate <= 0.6))  
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '3'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '用途3'
 	end	
 		
 	return BOT_ACTION_DESIRE_NONE
@@ -2288,25 +2440,25 @@ X.ConsiderItemDesire["item_magic_wand"] = function(hItem)
 	if ((nHPrate < 0.4 or nMPrate < 0.3) and nEnemyCount >= 1 and nCharges >= 1 )
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '1'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '用途1'
 	end	
 	
 	if ( nHPrate < 0.7 and nMPrate < 0.7 and nCharges >= 12 and nEnemyCount >= 1 ) 		
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '2'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '用途2'
 	end	
 	
 	if ( nCharges >= 19 and bot:GetItemInSlot(6) ~= nil and (nHPrate <= 0.6 or nMPrate <= 0.5 )) 		
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '3'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '用途3'
 	end	
 	
 	if ( nCharges == 20 and nEnemyCount >= 1 and nLostHP > 350 and nLostMP > 350 ) 				
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '4'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '用途4'
 	end	
 	
 	return BOT_ACTION_DESIRE_NONE
@@ -2335,17 +2487,17 @@ X.ConsiderItemDesire["item_manta"] = function(hItem)
 			and #nNearbyAlliedCreeps >= 1
 		then
 			hEffectTarget = bot
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'push'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '推进'
 		end	
 	end
 	
 	if J.IsGoingOnSomeone(bot)
 	   and J.IsValidHero(botTarget)
 	   and J.CanCastOnMagicImmune(botTarget)
-	   and J.IsInRange(bot, botTarget, bot:GetAttackRange() -50)
+	   and J.IsInRange(bot, botTarget, bot:GetAttackRange() + 80)
 	then
 		hEffectTarget = botTarget
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'attack'..J.Chat.GetNormName(hEffectTarget)
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '进攻:'..J.Chat.GetNormName(hEffectTarget)
 	end	
 	
 	if  bot:IsRooted()
@@ -2354,9 +2506,10 @@ X.ConsiderItemDesire["item_manta"] = function(hItem)
 		or bot:HasModifier('modifier_item_medallion_of_courage_armor_reduction') 
 		or bot:HasModifier('modifier_item_spirit_vessel_damage')
 		or bot:HasModifier('modifier_dragonknight_breathefire_reduction')
+		or bot:HasModifier('modifier_item_dustofappearance')
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'dispel'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '解Buff'
 	end	
 	
 	if J.IsNotAttackProjectileIncoming(bot, 70) 
@@ -2373,7 +2526,7 @@ X.ConsiderItemDesire["item_manta"] = function(hItem)
 		if tAbility == nil or not tAbility:IsFullyCastable()
 		then
 			hEffectTarget = bot
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'ProjectileIncoming'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '躲弹道'
 		end	
 	end
 	
@@ -2382,21 +2535,21 @@ X.ConsiderItemDesire["item_manta"] = function(hItem)
 	   and bot:DistanceFromFountain() > 600
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'retreat'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '撤退了'
 	end	
 	
 	if #nNearbyEnemyCreeps >= 8
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'creep'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '刷小兵'
 	end	
 
 	if bot:WasRecentlyDamagedByAnyHero(5.0)
 	   and bot:GetHealth()/bot:GetMaxHealth() < 0.18
-	   and bot:DistanceFromFountain() > 300
+	   and bot:DistanceFromFountain() > 800
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Health'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '残血了'
 	end	
 	
 	return BOT_ACTION_DESIRE_NONE
@@ -2431,7 +2584,7 @@ X.ConsiderItemDesire["item_mask_of_madness"] = function(hItem)
 			then
 				bot:SetTarget(nAttackTarget);
 				hEffectTarget = nAttackTarget
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'mask'
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '启动'
 			end	
 		end
 	end
@@ -2439,6 +2592,7 @@ X.ConsiderItemDesire["item_mask_of_madness"] = function(hItem)
 	return BOT_ACTION_DESIRE_NONE
 	
 end
+
 
 --勋章
 X.ConsiderItemDesire["item_medallion_of_courage"] = function(hItem)
@@ -2455,12 +2609,13 @@ X.ConsiderItemDesire["item_medallion_of_courage"] = function(hItem)
 		   and not botTarget:HasModifier('modifier_item_solar_crest_armor_reduction') 
 		   and not botTarget:HasModifier('modifier_item_medallion_of_courage_armor_reduction') 
 		   and J.CanCastOnNonMagicImmune(botTarget)
+		   and not botTarget:IsAncientCreep()
 		   and ( J.IsInRange(bot, botTarget, bot:GetAttackRange() + 150 )
 				or (J.IsInRange(bot, botTarget, 1000)
-					and J.GetAroundTargetOtherAllyHeroCount(botTarget, 600, bot) >= 1) )
+					and J.GetAroundTargetOtherAllyHeroCount(bot, botTarget, 600) >= 1) )
 		then
 			hEffectTarget = botTarget
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'hero:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '进攻:'..J.Chat.GetNormName(hEffectTarget)
 		end	
 	end
 	
@@ -2474,7 +2629,7 @@ X.ConsiderItemDesire["item_medallion_of_courage"] = function(hItem)
 		   and J.IsInRange(bot, botTarget, bot:GetAttackRange() + 150 )
 		then
 			hEffectTarget = botTarget
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'creep:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '刷小兵:'..J.Chat.GetNormName(hEffectTarget)
 		end	
 	end
 	
@@ -2489,12 +2644,12 @@ X.ConsiderItemDesire["item_medallion_of_courage"] = function(hItem)
 		   and not npcAlly:HasModifier('modifier_item_solar_crest_armor_addition') 
 		   and not npcAlly:HasModifier('modifier_item_medallion_of_courage_armor_addition') 
 		   and not npcAlly:HasModifier("modifier_arc_warden_tempest_double")
-		   and (  ( J.IsDisabled(false,npcAlly) )
-			   or ( J.GetHPR(npcAlly) < 0.35 and #hNearbyEnemyHeroList > 0 and npcAlly:WasRecentlyDamagedByAnyHero(2.0) ) 
+		   and (  ( J.IsDisabled(npcAlly) )
+			   or ( J.GetHP(npcAlly) < 0.35 and #hNearbyEnemyHeroList > 0 and npcAlly:WasRecentlyDamagedByAnyHero(2.0) ) 
 			   or ( J.IsValidHero(npcAlly:GetAttackTarget()) and GetUnitToUnitDistance(npcAlly,npcAlly:GetAttackTarget()) <= npcAlly:GetAttackRange() and #hNearbyEnemyHeroList == 0 ) )
 		then
 			hEffectTarget = npcAlly
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'npcAlly:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '救队友:'..J.Chat.GetNormName(hEffectTarget)
 		end	
 	end
 	
@@ -2517,8 +2672,7 @@ X.ConsiderItemDesire["item_moon_shard"] = function(hItem)
 	local hEffectTarget = nil 
 	
 	
-	if bot:GetPrimaryAttribute() == ATTRIBUTE_AGILITY 
-		and not bot:HasModifier("modifier_item_moon_shard_consumed")
+	if not bot:HasModifier("modifier_item_moon_shard_consumed")
 	then
 		if moonSharedTime == nil
 		then
@@ -2527,7 +2681,7 @@ X.ConsiderItemDesire["item_moon_shard"] = function(hItem)
 		then	
 			hEffectTarget = bot
 			moonSharedTime = nil
-			return BOT_ACTION_DESIRE_HIGH,hEffectTarget,sCastType,"self"
+			return BOT_ACTION_DESIRE_HIGH,hEffectTarget,sCastType,"自己吃"
 		end
 	end
 
@@ -2553,7 +2707,7 @@ X.ConsiderItemDesire["item_moon_shard"] = function(hItem)
 		then	
 			hEffectTarget = targetMember
 			moonSharedTime = nil
-			return BOT_ACTION_DESIRE_HIGH,hEffectTarget,sCastType,"ally"
+			return BOT_ACTION_DESIRE_HIGH,hEffectTarget,sCastType,"给队友"
 		end
 	end
 
@@ -2575,7 +2729,7 @@ X.ConsiderItemDesire["item_necronomicon"] = function(hItem)
 	   and J.IsInRange(bot, botTarget, 700)
 	then
 		hEffectTarget = botTarget
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Attack'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "进攻"
 	end	
 	
 	return BOT_ACTION_DESIRE_NONE
@@ -2612,7 +2766,7 @@ X.ConsiderItemDesire["item_nullifier"] = function(hItem)
 		   and not botTarget:HasModifier("modifier_item_nullifier_mute")
 		then
 			hEffectTarget = botTarget
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'hero:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '进攻:'..J.Chat.GetNormName(hEffectTarget)
 		end	
 	end	
 	
@@ -2638,15 +2792,15 @@ X.ConsiderItemDesire["item_orchid"] = function(hItem)
 			if (npcEnemy:IsChanneling() or npcEnemy:IsCastingAbility())
 			then
 				hEffectTarget = npcEnemy
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'check:'..J.Chat.GetNormName(hEffectTarget)
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "打断:"..J.Chat.GetNormName(hEffectTarget)
 			end
 			
 			if J.IsRetreating(bot)
 			then
-				if not J.IsDisabled(true,npcEnemy)
+				if not J.IsDisabled(npcEnemy)
 				then
 					hEffectTarget = npcEnemy
-					return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'retreat:'..J.Chat.GetNormName(hEffectTarget)
+					return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "撤退:"..J.Chat.GetNormName(hEffectTarget)
 				end
 			end			
 		end	
@@ -2656,12 +2810,12 @@ X.ConsiderItemDesire["item_orchid"] = function(hItem)
 	then		
 		if	J.IsValidHero(botTarget)
 			and J.IsInRange(bot,botTarget,nCastRange)
-			and not J.IsDisabled(true,botTarget)
+			and not J.IsDisabled(botTarget)
 			and J.CanCastOnNonMagicImmune(botTarget)	
 			and X.IsWithoutSpellShield(botTarget)			
 		then
 			hEffectTarget = botTarget
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Attack:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "进攻:"..J.Chat.GetNormName(hEffectTarget)
 		end
 	end
 		
@@ -2681,7 +2835,7 @@ X.ConsiderItemDesire["item_phase_boots"] = function(hItem)
 	if J.IsRunning(bot)
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'runing'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '跑起来'
 	end
 	
 	return BOT_ACTION_DESIRE_NONE
@@ -2705,7 +2859,7 @@ X.ConsiderItemDesire["item_pipe"] = function(hItem)
 			and #hNearbyEnemyHeroList > 0 
 		then
 			hEffectTarget = npcAlly
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'protect_ally:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '保护队友:'..J.Chat.GetNormName(hEffectTarget)
 		end
 	end
 	
@@ -2716,7 +2870,7 @@ X.ConsiderItemDesire["item_pipe"] = function(hItem)
 		or (#nNearbyEnemyHeroes >= 2 and #nNearbyAllyHeroes + #nNearbyAllyTowers >= 2)
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'protect_team:'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '保护团队'
 	end
 	
 	return BOT_ACTION_DESIRE_NONE
@@ -2756,9 +2910,9 @@ X.ConsiderItemDesire["item_power_treads"] = function(hItem)
 			lastSwitchPtTime = DotaTime()
 			if nPtStat == ATTRIBUTE_STRENGTH
 			then
-				return BOT_ACTION_DESIRE_HIGH, bot, 'twice', 'STRENGTH_to_AGILITY'
+				return BOT_ACTION_DESIRE_HIGH, bot, 'twice', '力量腿切敏捷回复'
 			else
-				return BOT_ACTION_DESIRE_HIGH, bot, sCastType, 'INTELLECT_to_AGILITY'
+				return BOT_ACTION_DESIRE_HIGH, bot, sCastType, '智力腿切敏捷回复'
 			end
 			
 		end
@@ -2776,9 +2930,9 @@ X.ConsiderItemDesire["item_power_treads"] = function(hItem)
 				lastSwitchPtTime = DotaTime()
 				if nPtStat == ATTRIBUTE_AGILITY
 				then
-					return BOT_ACTION_DESIRE_HIGH, bot, sCastType, 'power_treads-AGILITY_to_STRENGTH'
+					return BOT_ACTION_DESIRE_HIGH, bot, sCastType, '敏捷腿切换力量吃伤害'
 				else
-					return BOT_ACTION_DESIRE_HIGH, bot, 'twice', 'power_treads-INTELLECT_to_STRENGTH'
+					return BOT_ACTION_DESIRE_HIGH, bot, 'twice', '智力腿切换力量吃伤害'
 				end
 				
 			end
@@ -2789,35 +2943,13 @@ X.ConsiderItemDesire["item_power_treads"] = function(hItem)
 			   and lastSwitchPtTime < DotaTime() - 0.2
 			then
 				--切换主属性腿攻击
-				return BOT_ACTION_DESIRE_HIGH, bot, sCastType, 'power_treads-To_Main_mode'				
+				return BOT_ACTION_DESIRE_HIGH, bot, sCastType, '切换主属性腿攻击'				
 			end
-	else
-		local hEnemyList = bot:GetNearbyHeroes( 1600, true, BOT_MODE_NONE );
-		local hCreepList = bot:GetNearbyCreeps(800,true);
-		if  #hCreepList == 0
-			and #hEnemyList == 0 
-			and (botTarget == nil or GetUnitToUnitDistance(bot,botTarget) > 1200)
-			and bot:DistanceFromFountain() > 400
-			and nMode ~= BOT_MODE_ROSHAN
-		then
-			if nPtStat ~= ATTRIBUTE_AGILITY
-			then
-				--切敏捷腿赶路回蓝
-				lastSwitchPtTime = DotaTime()
-				if nPtStat == ATTRIBUTE_STRENGTH
-				then
-					return BOT_ACTION_DESIRE_HIGH, bot, 'twice', 'power_treads-STRENGTH_to_AGILITY_run'
-				else
-					return BOT_ACTION_DESIRE_HIGH, bot, sCastType, 'power_treads-INTELLECT_to_AGILITY_run'
-				end
-				
-			end
-		elseif J.ShouldSwitchPTStat(bot,hItem)
+	elseif J.ShouldSwitchPTStat(bot,hItem)
 				and lastSwitchPtTime < DotaTime() - 0.2
 			then
 				--默认为主属性腿	
-				return BOT_ACTION_DESIRE_HIGH, bot, sCastType, 'power_treads-To_Main_default'
-		end
+				return BOT_ACTION_DESIRE_HIGH, bot, sCastType, '默认为主属性腿'
 	end
 	
 	
@@ -2868,7 +3000,7 @@ X.ConsiderItemDesire["item_quelling_blade"] = function(hItem)
 				local treeLoc = GetTreeLocation(tree);
 				if GetUnitToLocationDistance(theMonkeyKing,treeLoc) < 30
 				then
-					return BOT_ACTION_DESIRE_HIGH, tree, sCastType, 'monkey_king'	
+					return BOT_ACTION_DESIRE_HIGH, tree, sCastType, '砍大圣的树'	
 				end			
 			end
 		end
@@ -2889,7 +3021,7 @@ X.ConsiderItemDesire["item_quelling_blade"] = function(hItem)
 				local tree = nTrees[treeID]
 				if bot:IsFacingLocation(GetTreeLocation(tree), 7) 
 				then
-					return BOT_ACTION_DESIRE_HIGH, tree, sCastType, 'blade_tree'	
+					return BOT_ACTION_DESIRE_HIGH, tree, sCastType, '开视野'	
 				end
 			end
 		end
@@ -2912,7 +3044,7 @@ X.ConsiderItemDesire["item_refresher"] = function(hItem)
 	   and J.CanUseRefresherShard(bot)  
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'attack'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '进攻'
 	end
 	
 	return BOT_ACTION_DESIRE_NONE
@@ -2945,7 +3077,7 @@ X.ConsiderItemDesire["item_rod_of_atos"] = function(hItem)
 		   and J.CanCastOnTargetAdvanced(npcEnemy)
 		then
 			hEffectTarget = npcEnemy
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'check'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '打断:'..J.Chat.GetNormName(hEffectTarget)
 		end
 	end
 	
@@ -2954,23 +3086,23 @@ X.ConsiderItemDesire["item_rod_of_atos"] = function(hItem)
 	   and	J.IsValid(nEnemysHerosInCastRange[1])
 	   and  J.CanCastOnNonMagicImmune(nEnemysHerosInCastRange[1])
 	   and  J.CanCastOnTargetAdvanced(nEnemysHerosInCastRange[1])
-	   and  not J.IsDisabled(true,nEnemysHerosInCastRange[1])
+	   and  not J.IsDisabled(nEnemysHerosInCastRange[1])
 	then
 		hEffectTarget = nEnemysHerosInCastRange[1] 
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'retreat'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '撤退了'
 	end
 
 	if J.IsGoingOnSomeone(bot)
 	then			
 		if  J.IsValidHero(botTarget) 
-			and not J.IsDisabled(true,botTarget)
+			and not J.IsDisabled(botTarget)
 			and J.CanCastOnNonMagicImmune(botTarget)
 			and J.CanCastOnTargetAdvanced(botTarget)				
 			and GetUnitToUnitDistance(botTarget, bot) <= nCastRange
 			and J.IsMoving(botTarget)
 		then
 			hEffectTarget = botTarget
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'attack'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '进攻:'..J.Chat.GetNormName(hEffectTarget)
 		end
 	end
 	
@@ -2994,7 +3126,7 @@ X.ConsiderItemDesire["item_satanic"] = function(hItem)
 	then
 		--bot:SetTarget(botTarget);
 		hEffectTarget = botTarget
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'attack'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '进攻'
 	end
 	
 	return BOT_ACTION_DESIRE_NONE
@@ -3027,7 +3159,7 @@ X.ConsiderItemDesire["item_shadow_amulet"] = function(hItem)
 				then
 					lastAmuletTime = DotaTime();
 					hEffectTarget = bot
-					return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'self'
+					return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '自己用'
 				end
 			end
 		end
@@ -3042,7 +3174,7 @@ X.ConsiderItemDesire["item_shadow_amulet"] = function(hItem)
 			then
 				lastAmuletTime = DotaTime();
 				hEffectTarget = bot
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'retreat'
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '撤退了'
 			end
 		end
 	end
@@ -3065,7 +3197,7 @@ X.ConsiderItemDesire["item_shadow_amulet"] = function(hItem)
 			if #nNearbyAllyEnemyTowers == 0
 			then					
 				hEffectTarget = npcAlly
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'npcAlly'
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '帮助队友隐身'
 			end
 		end
 	end
@@ -3092,16 +3224,16 @@ X.ConsiderItemDesire["item_sheepstick"] = function(hItem)
 			if (npcEnemy:IsChanneling() or npcEnemy:IsCastingAbility())
 			then
 				hEffectTarget = npcEnemy
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'check:'..J.Chat.GetNormName(hEffectTarget)
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "打断:"..J.Chat.GetNormName(hEffectTarget)
 			end
 			
 			if J.IsRetreating(bot)
 			then
-				if not J.IsDisabled(true,npcEnemy)
+				if not J.IsDisabled(npcEnemy)
 					and not npcEnemy:IsDisarmed()
 				then
 					hEffectTarget = npcEnemy
-					return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'retreat:'..J.Chat.GetNormName(hEffectTarget)
+					return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "撤退:"..J.Chat.GetNormName(hEffectTarget)
 				end
 			end			
 		end	
@@ -3111,12 +3243,12 @@ X.ConsiderItemDesire["item_sheepstick"] = function(hItem)
 	then		
 		if	J.IsValidHero(botTarget)
 			and J.IsInRange(bot,botTarget,nCastRange)
-			and not J.IsDisabled(true,botTarget)
+			and not J.IsDisabled(botTarget)
 			and J.CanCastOnNonMagicImmune(botTarget)	
 			and X.IsWithoutSpellShield(botTarget)
 		then
 			hEffectTarget = botTarget
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'attack:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "进攻:"..J.Chat.GetNormName(hEffectTarget)
 		end
 	end
 	
@@ -3138,7 +3270,7 @@ X.ConsiderItemDesire["item_shivas_guard"] = function(hItem)
 	   or #nInRangeEnmyList >= 1
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'used'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '启动'
 	end
 	
 	return BOT_ACTION_DESIRE_NONE
@@ -3166,7 +3298,7 @@ X.ConsiderItemDesire["item_silver_edge"] = function(hItem)
 			if #nearTargetTower == 0
 			then
 				hEffectTarget = botTarget
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'broken:'..J.Chat.GetNormName(botTarget)
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '破坏被动:'..J.Chat.GetNormName(botTarget)
 			end
 		end
 	end
@@ -3207,7 +3339,7 @@ X.ConsiderItemDesire["item_sphere"] = function(hItem)
 				  or bot:GetHealth() < 150 )
 		then
 			hEffectTarget = npcAlly
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'npcAlly'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '帮助队友'
 		end
 	end
 
@@ -3236,7 +3368,7 @@ X.ConsiderItemDesire["item_sphere"] = function(hItem)
 			if targetAlly ~= nil
 			then
 				hEffectTarget = targetAlly
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'defence'
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '先给前排套上'
 			end
 		end
 	end
@@ -3273,7 +3405,7 @@ X.ConsiderItemDesire["item_tango"] = function(hItem)
 		then
 			lastGiveTangoTime = DotaTime();
 			hEffectTarget = target
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'share_to_mid'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '分享中单吃树'
 		end
 	elseif	bot:GetLevel() <= 12
 			and (#hNearbyEnemyHeroList == 0 or nMode == BOT_MODE_LANING)
@@ -3297,7 +3429,7 @@ X.ConsiderItemDesire["item_tango"] = function(hItem)
 					then
 						lastGiveTangoTime = DotaTime();
 						hEffectTarget = npcAlly
-						return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'share_to_ally'
+						return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '分享队友吃树'
 					end
 				end
 			end
@@ -3342,7 +3474,7 @@ X.ConsiderItemDesire["item_tango_single"] = function(hItem)
 			   and ( #nearTowerList == 0 or GetUnitToLocationDistance(nearestTower,targetTreeLoc) > 920 )   
 			then
 				hEffectTarget = targetTree
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '800dist'
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '800码内的树'
 			end
 		end
 		
@@ -3354,7 +3486,7 @@ X.ConsiderItemDesire["item_tango_single"] = function(hItem)
 			if bot:GetMaxHealth() - bot:GetHealth() > nUseTangoLostHealth
 			then
 				hEffectTarget = nearbyTrees[1]
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '240Dist'
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '近处的树'
 			end
 			
 			if bot:GetMaxHealth() - bot:GetHealth() > nUseTangoLostHealth *0.38
@@ -3364,7 +3496,7 @@ X.ConsiderItemDesire["item_tango_single"] = function(hItem)
 						  and bot:GetActiveModeDesire() > BOT_MODE_DESIRE_HIGH ) )
 			then
 				hEffectTarget = nearbyTrees[1]
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'modeUse'
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '提前吃树'
 			end
 		end
 	end
@@ -3384,7 +3516,7 @@ X.ConsiderItemDesire["item_tango_single"] = function(hItem)
 			   and #hNearbyEnemyHeroList == 0 
 			then
 				hEffectTarget = trees[1]
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'single_4:30'
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '消耗吃树'
 			end
 		end
 	
@@ -3399,7 +3531,7 @@ X.ConsiderItemDesire["item_tango_single"] = function(hItem)
 			   and bot:GetMaxHealth() - bot:GetHealth() > 80
 			then
 				hEffectTarget = trees[1]
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'single_7:30'
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '用掉吃树'
 			end
 		end
 	
@@ -3420,7 +3552,7 @@ X.ConsiderItemDesire["item_tome_of_knowledge"] = function(hItem)
 	if hItem:IsFullyCastable()
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'knowledge'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '读书'
 	end
 	
 	return BOT_ACTION_DESIRE_NONE
@@ -3453,14 +3585,14 @@ function X.GetLaningTPLocation(nLane)
 end	
 
 function X.GetDefendTPLocation(nLane)
-	return GetLaneFrontLocation(myTeam,nLane,-600)
+	return GetLaneFrontLocation(myTeam, nLane, -950)
 end
 
 function X.GetPushTPLocation(nLane)
 	
-	local laneFront = GetLaneFrontLocation(myTeam,nLane,0);
+	local laneFront = GetLaneFrontLocation(myTeam, nLane, 0);
 	local bestTpLoc = J.GetNearbyLocationToTp(laneFront);
-	if J.GetLocationToLocationDistance(laneFront,bestTpLoc) < 2000
+	if J.GetLocationToLocationDistance(laneFront, bestTpLoc) < 2000
 	then
 		return bestTpLoc;
 	end
@@ -3579,6 +3711,7 @@ end
 X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 
 	if  nMode == BOT_MODE_RUNE
+		or ( bot:IsRooted() )
 		or ( bot:HasModifier("modifier_kunkka_x_marks_the_spot") )
 		or ( bot:HasModifier("modifier_sniper_assassinate") )
 		or ( bot:HasModifier("modifier_viper_nethertoxin") )
@@ -3597,6 +3730,15 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 		then return BOT_ACTION_DESIRE_NONE end
 	end
 	
+	if bot:DistanceFromFountain() < 1200
+	then
+		local hNeedDropItem = J.Item.GetNeedDropNeutralItem(bot)
+		if hNeedDropItem ~= nil
+		then
+			return BOT_ACTION_DESIRE_NONE
+		end	
+	end
+	
 	local nNearbyEnemyTowers = bot:GetNearbyTowers(888,true);
 	if #nNearbyEnemyTowers > 0 then return BOT_ACTION_DESIRE_NONE end
 
@@ -3609,8 +3751,8 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 	local nMode = bot:GetActiveMode()
 	local nModeDesire = bot:GetActiveModeDesire()
 	local botLocation = bot:GetLocation()
-	local botHP = J.GetHPR(bot)
-	local botMP = J.GetMPR(bot)
+	local botHP = J.GetHP(bot)
+	local botMP = J.GetMP(bot)
 	local nEnemyCount = X.GetNumHeroWithinRange(1600)
 	local nAllyCount = J.GetAllyCount(bot,1600)
 	local itemFlask = J.IsItemAvailable("item_flask")
@@ -3621,6 +3763,7 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 	--对线
 	if nMode == BOT_MODE_LANING 
 		and nEnemyCount == 0
+		and bot:GetLevel() <= 10
 	then
 		local assignedLane = bot:GetAssignedLane();
 		local botAmount = GetAmountAlongLane(assignedLane, botLocation)
@@ -3634,7 +3777,7 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 		if tpLoc ~= nil
 		then
 			hEffectTarget = tpLoc
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Laning'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '前往对线'
 		end
 	end
 	
@@ -3657,10 +3800,10 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 		end	
 		
 		if tpLoc ~= nil
-			and GetUnitToLocationDistance(bot,tpLoc) > nMinTPDistance - 300
+			and GetUnitToLocationDistance(bot,tpLoc) > nMinTPDistance - 200
 		then
 			hEffectTarget = tpLoc
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Defend:'..sLane
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '前往守塔:'..sLane
 		end	
 	end
 	
@@ -3686,7 +3829,7 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 			and GetUnitToLocationDistance(bot,tpLoc) > nMinTPDistance - 600
 		then
 			hEffectTarget = tpLoc
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Push:'..sLane
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '前往推塔:'..sLane
 		end	
 	end
 	
@@ -3713,7 +3856,7 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 		if tpLoc ~= nil
 		then
 			hEffectTarget = tpLoc
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'DEFEND_ALLY:'..J.Chat.GetNormName(target)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '支援队友:'..J.Chat.GetNormName(target)
 		end	
 	end
 	
@@ -3735,7 +3878,7 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 		   and bot:DistanceFromFountain() > nMinTPDistance
 		then
 			tpLoc = J.GetTeamFountain();
-			return BOT_ACTION_DESIRE_HIGH, tpLoc, sCastType, 'Retreat:1'
+			return BOT_ACTION_DESIRE_HIGH, tpLoc, sCastType, '撤退:1'
 		end
 		
 		
@@ -3755,7 +3898,7 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 			and bot:DistanceFromFountain() > nMinTPDistance
 		then
 			tpLoc = J.GetTeamFountain();
-			return BOT_ACTION_DESIRE_HIGH, tpLoc, sCastType, 'Retreat:2'
+			return BOT_ACTION_DESIRE_HIGH, tpLoc, sCastType, '撤退:2'
 		end
 			   
 			   
@@ -3778,7 +3921,7 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 			and bot:DistanceFromFountain() > nMinTPDistance
 		then
 			tpLoc = J.GetTeamFountain();
-			return BOT_ACTION_DESIRE_HIGH, tpLoc, sCastType, 'Retreat:3'
+			return BOT_ACTION_DESIRE_HIGH, tpLoc, sCastType, '撤退:3'
 		end	
 	end
 	
@@ -3806,7 +3949,7 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 		if tpLoc ~= nil
 		then
 			hEffectTarget = tpLoc
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'FARM_FOUNTAIN'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '出去发育'
 		end	
 		
 	end
@@ -3832,7 +3975,8 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 			and #nAttackAllyList == 0				
 		then
 			
-			if hItem:GetName() ~= "item_tpscroll"
+			if J.IsItemAvailable("item_travel_boots")
+				or J.IsItemAvailable("item_travel_boots_2") 
 			then
 				tpLoc = GetLaneFrontLocation(GetTeam(),mostFarmDesireLane,-600);
 				local nNearAllyList = J.GetAlliesNearLoc(tpLoc, 1600);
@@ -3840,7 +3984,7 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 					and #nNearAllyList == 0
 				then
 					J.Role['lastFarmTpTime'] = DotaTime();
-					return BOT_ACTION_DESIRE_HIGH, tpLoc, sCastType, 'TBOOT-Farm_Lane'
+					return BOT_ACTION_DESIRE_HIGH, tpLoc, sCastType, '飞鞋带线'
 				end
 			end
 					
@@ -3853,7 +3997,7 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 			   and #nNearAllyList == 0
 			then
 				J.Role['lastFarmTpTime'] = DotaTime();
-				return BOT_ACTION_DESIRE_HIGH, bestTpLoc, sCastType, 'Farm_Lane'
+				return BOT_ACTION_DESIRE_HIGH, bestTpLoc, sCastType, '线上打钱'
 			end
 		end	
 	end
@@ -3872,9 +4016,10 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 		   and GetUnitToLocationDistance(bot,nTeamFightLocation) > nMinTPDistance - 600
 		then
 		
-			if hItem:GetName() ~= "item_tpscroll"
+			if J.IsItemAvailable("item_travel_boots")
+				or J.IsItemAvailable("item_travel_boots_2") 
 			then
-				return BOT_ACTION_DESIRE_HIGH,nTeamFightLocation, sCastType, 'TBOOT-TeamFight:'..GetUnitToLocationDistance(bot,nTeamFightLocation)
+				return BOT_ACTION_DESIRE_HIGH,nTeamFightLocation, sCastType, '飞鞋支援团战:'..GetUnitToLocationDistance(bot,nTeamFightLocation)
 			end
 		
 			local bestTpLoc = J.GetNearbyLocationToTp(nTeamFightLocation);
@@ -3882,7 +4027,7 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 			   and J.GetLocationToLocationDistance(bestTpLoc,nTeamFightLocation) < 1800
 			   and GetUnitToLocationDistance(bot,bestTpLoc) > nMinTPDistance - 1200
 			then
-				return BOT_ACTION_DESIRE_HIGH,bestTpLoc, sCastType, 'TeamFight:'..GetUnitToLocationDistance(bot,nTeamFightLocation)
+				return BOT_ACTION_DESIRE_HIGH,bestTpLoc, sCastType, '支援团战:'..GetUnitToLocationDistance(bot,nTeamFightLocation)
 			end
 		end
 		
@@ -3891,7 +4036,7 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 		   and J.Role.ShouldTpToFarm() 
 		   and bot:DistanceFromFountain() > 2000
 		   and GetUnitToUnitDistance(bot,nAncient) > nMinTPDistance - 200
-		   and J.GetAroundTargetAllyHeroCount(nAncient, 1600, bot) == 0
+		   and J.GetAroundTargetAllyHeroCount(nAncient, 1600) == 0
 		then
 			local nEnemyLaneFront = J.GetNearestLaneFrontLocation(nAncient:GetLocation(),true,400);
 			if nEnemyLaneFront ~= nil
@@ -3899,7 +4044,7 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 			then
 				
 				J.Role['lastFarmTpTime'] = DotaTime();			
-				return BOT_ACTION_DESIRE_HIGH,nAncient:GetLocation(), sCastType, 'DefendAncient'
+				return BOT_ACTION_DESIRE_HIGH,nAncient:GetLocation(), sCastType, '守护遗迹'
 			end
 		end
 		
@@ -3930,7 +4075,7 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 		if tpLoc ~= nil
 		then
 			hEffectTarget = tpLoc
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Recover'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '回复状态'
 		end
 	end
 	
@@ -3947,7 +4092,7 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 		if tpLoc ~= nil
 		then
 			hEffectTarget = tpLoc
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'bloodseeker_rupture'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '躲血魔大'
 		end	
 	end
 	
@@ -3955,49 +4100,20 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 	if X.IsFarmingAlways(bot) 
 	then
 		tpLoc = GetAncient(GetTeam()):GetLocation();
-		return BOT_ACTION_DESIRE_HIGH, tpLoc, sCastType, 'StopFarm'
+		return BOT_ACTION_DESIRE_HIGH, tpLoc, sCastType, '处理特殊情况一'
 	end	
 	
 	--处理特殊情况二
 	if J.IsStuck(bot) and nEnemyCount == 0 
 	then
 		tpLoc = GetAncient(GetTeam()):GetLocation();
-		return BOT_ACTION_DESIRE_HIGH, tpLoc, sCastType, 'AvoidStuck'
+		return BOT_ACTION_DESIRE_HIGH, tpLoc, sCastType, '处理特殊情况二'
 	end	
 	
 	return BOT_ACTION_DESIRE_NONE
 	
 end
 
---飞鞋
-X.ConsiderItemDesire["item_travel_boots"] = function(hItem)
-
-	local nCastRange = 1600 
-	local sCastType = 'ground'	
-	local hEffectTarget = nil 
-	local nInRangeEnmyList = bot:GetNearbyHeroes(nCastRange,true,BOT_MODE_NONE)
-	
-
-	--TP小兵
-	
-	return X.ConsiderItemDesire["item_tpscroll"](hItem)
-	
-end
-
---大飞鞋
-X.ConsiderItemDesire["item_travel_boots_2"] = function(hItem)
-
-	local nCastRange = 1600 
-	local sCastType = 'ground'	
-	local hEffectTarget = nil 
-	local nInRangeEnmyList = bot:GetNearbyHeroes(nCastRange,true,BOT_MODE_NONE)
-	
-
-	--TP队友
-
-	return X.ConsiderItemDesire["item_travel_boots"](hItem)
-	
-end
 
 --骨灰
 X.ConsiderItemDesire["item_urn_of_shadows"] = function(hItem)
@@ -4020,12 +4136,11 @@ X.ConsiderItemDesire["item_urn_of_shadows"] = function(hItem)
 		   and (botTarget:GetHealth()/botTarget:GetMaxHealth() < 0.95 or GetUnitToUnitDistance(bot, botTarget) <= 700)
 		then
 			hEffectTarget = botTarget
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'attack:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "进攻:"..J.Chat.GetNormName(hEffectTarget)
 		end
 	end
 	
-	if hItem:GetCurrentCharges() >= 2 
-		and	bot:GetActiveMode() ~= BOT_MODE_ROSHAN
+	if bot:GetActiveMode() ~= BOT_MODE_ROSHAN
 	then
 		local hAllyList = bot:GetNearbyHeroes(nCastRange,false,BOT_MODE_NONE);
 		local hNeedHealAlly = nil
@@ -4055,7 +4170,7 @@ X.ConsiderItemDesire["item_urn_of_shadows"] = function(hItem)
 		if(hNeedHealAlly ~= nil)
 		then
 			hEffectTarget = hNeedHealAlly
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'heal:'..J.Chat.GetNormName(hEffectTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '治疗:'..J.Chat.GetNormName(hEffectTarget)
 		end
 	end
 		
@@ -4080,7 +4195,7 @@ X.ConsiderItemDesire["item_veil_of_discord"] = function(hItem)
 		   and GetUnitToLocationDistance(bot,nAOELocation.targetloc) <= nCastRange
 		then
 			hEffectTarget = nAOELocation.targetloc
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Aoe_more'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Aoe远处敌人'
 		end
 	end
 	
@@ -4092,7 +4207,7 @@ X.ConsiderItemDesire["item_veil_of_discord"] = function(hItem)
 		   and GetUnitToLocationDistance(bot,nAOELocation.targetloc) <= 1000
 		then
 			hEffectTarget = nAOELocation.targetloc
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Aoe_near'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Aoe近处敌人'
 		end
 	end
 	
@@ -4103,7 +4218,7 @@ X.ConsiderItemDesire["item_veil_of_discord"] = function(hItem)
 		   and GetUnitToLocationDistance(bot,nAOELocation.targetloc) <= nCastRange
 		then
 			hEffectTarget = nAOELocation.targetloc
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Aoe_creep'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Aoe小兵'
 		end
 	end
 	
@@ -4136,7 +4251,7 @@ X.ConsiderItemDesire["item_mango_tree"] = function(hItem)
 		elseif DotaTime() > mangoTreeTime + 3.0
 		then
 			hEffectTarget = nLocation
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'MangTree'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '种树'
 		end
 	end	
 	
@@ -4159,7 +4274,7 @@ X.ConsiderItemDesire["item_ironwood_tree"] = function(hItem)
 	then
 		lastKACount = -1
 		hEffectTarget = J.GetFaceTowardDistanceLocation(bot,nCastRange)
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'GGTree'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'GG树'
 	end
 
 	return BOT_ACTION_DESIRE_NONE
@@ -4177,13 +4292,13 @@ X.ConsiderItemDesire["item_iron_talon"] = function(hItem)
 	if J.IsValid(botTarget)
 		and not botTarget:IsHero()
 		and not botTarget:IsBuilding()
-		and not botTarget:IsAncientCreep()
+		--and not botTarget:IsAncientCreep()
 		and J.IsInRange(bot,botTarget,nCastRange)
 		and not botTarget:HasModifier("modifier_fountain_glyph")
 		and botTarget:GetHealth() * 0.4 > bot:GetAttackDamage()
 	then
 		hEffectTarget = botTarget
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'farm'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '打钱'
 	end
 	
 	return X.ConsiderItemDesire["item_quelling_blade"](hItem)
@@ -4206,23 +4321,34 @@ X.ConsiderItemDesire["item_royal_jelly"] = function(hItem)
 	local sCastType = 'unit'	
 	local hEffectTarget = nil 
 	local hAllyList = J.GetAlliesNearLoc(bot:GetLocation(),800)
-
-	for _,npcAlly in pairs(hAllyList)
-	do 
-		if J.IsValidHero(npcAlly)
-			and not npcAlly:HasModifier("modifier_royal_jelly")
+	local nMaxNetworth = 0
+	
+	if royalJellyTime == nil
+	then
+		royalJellyTime = DotaTime()
+	else
+		if royalJellyTime < DotaTime() - 2.0
 		then
-			if royalJellyTime == nil
-			then
-				royalJellyTime = DotaTime()
-			elseif royalJellyTime < DotaTime() - 2.0
+			for i = 1, 5
+			do 
+				local npcAlly = GetTeamMember(i)
+				if J.IsValidHero(npcAlly)
+					and not npcAlly:HasModifier("modifier_royal_jelly")
+					and npcAlly:GetNetWorth() > nMaxNetworth
 				then
-					royalJellyTime = nil
 					hEffectTarget = npcAlly
-					return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Ally'
+					nMaxNetworth = npcAlly:GetNetWorth()
+				end
+			end
+			
+			if hEffectTarget ~= nil
+			then
+				royalJellyTime = nil
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '给队友吃:'..J.Chat.GetNormName(hEffectTarget)
 			end
 		end	
 	end
+	
 	
 	return BOT_ACTION_DESIRE_NONE
 
@@ -4241,7 +4367,7 @@ X.ConsiderItemDesire["item_trusty_shovel"] = function(hItem)
 	if #hNearbyEnemyHeroList == 0
 	then
 		hEffectTarget = bot:GetLocation()
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'dig'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '挖'
 	end
 		
 	return BOT_ACTION_DESIRE_NONE
@@ -4259,14 +4385,14 @@ X.ConsiderItemDesire["item_clumsy_net"] = function(hItem)
 	if J.IsGoingOnSomeone(bot)
 	then			
 		if  J.IsValidHero(botTarget) 
-			and not J.IsDisabled(true,botTarget)
+			and not J.IsDisabled(botTarget)
 			and J.CanCastOnNonMagicImmune(botTarget)
 			and J.CanCastOnTargetAdvanced(botTarget)				
 			and J.IsInRange(botTarget, bot, nCastRange)
 			and ( J.IsRunning(botTarget) or botTarget:HasModifier("modifier_teleporting") )
 		then
 			hEffectTarget = botTarget
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Attack'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "进攻"
 		end
 	end
 
@@ -4288,7 +4414,7 @@ X.ConsiderItemDesire["item_essence_ring"] = function(hItem)
 		and J.IsAllowedToSpam(bot, 200)
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Heal'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '治疗自己'
 	end
 
 	return X.ConsiderItemDesire["item_faerie_fire"](hItem)
@@ -4306,17 +4432,17 @@ X.ConsiderItemDesire["item_repair_kit"] = function(hItem)
 
 	local nTowerList = bot:GetNearbyTowers(990,false);
 	
-	if #nInRangeEnmyList >= 1
+	if #nTowerList >= 1
 	then
 		for _,nTower in pairs(nTowerList)
 		do 
 			if J.IsValidBuilding(nTower)
-				and J.GetHPR(nTower) < 0.88
-				and ( nTower:GetAttackTarget() ~= nil or J.GetHPR(nTower) < 0.18 )
+				and J.GetHP(nTower) < 0.6
+				and ( nTower:GetAttackTarget() ~= nil or J.GetHP(nTower) < 0.38 )
 				and not nTower:HasModifier('modifier_repair_kit')
 			then			
 				hEffectTarget = nTower
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'tower'
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '修塔'
 			end		
 		end
 	end
@@ -4333,7 +4459,7 @@ X.ConsiderItemDesire["item_greater_faerie_fire"] = function(hItem)
 	local hEffectTarget = nil 
 
 	if J.IsGoingOnSomeone(bot) 
-		and ( hItem:GetCurrentCharges() >= 2 or J.GetHPR(bot) < 0.5 )
+		and ( hItem:GetCurrentCharges() >= 2 or J.GetHP(bot) < 0.5 )
 		and bot:GetMaxHealth() - bot:GetHealth() > 500
 	then
 		if J.IsValidHero(botTarget)
@@ -4341,7 +4467,7 @@ X.ConsiderItemDesire["item_greater_faerie_fire"] = function(hItem)
 			and J.CanCastOnMagicImmune(botTarget)
 		then
 			hEffectTarget = bot
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'heal'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '治疗自己'
 		end
 	end
 	
@@ -4362,7 +4488,7 @@ end
 --闪灵
 X.ConsiderItemDesire["item_flicker"] = function(hItem)
 
-	if bot:DistanceFromFountain() < 600 then return BOT_ACTION_DESIRE_NONE end
+	if bot:DistanceFromFountain() < 600 or bot:IsRooted() then return BOT_ACTION_DESIRE_NONE end
 
 	local nCastRange = 600
 	local sCastType = 'none'
@@ -4375,7 +4501,7 @@ X.ConsiderItemDesire["item_flicker"] = function(hItem)
 			and ( bot:IsSilenced() or bot:IsRooted() )
 		then
 			hEffectTarget = bot
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'debuff'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '驱散沉默或缠绕'
 		end
 	end
 	
@@ -4385,7 +4511,7 @@ X.ConsiderItemDesire["item_flicker"] = function(hItem)
 		and #nInRangeEnmyList >= 1
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Retreat'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "撤退"
 	end
 
 
@@ -4412,7 +4538,7 @@ X.ConsiderItemDesire["item_ninja_gear"] = function(hItem)
 			if #hEnemyCreepList == 0 and #hNearbyEnemyHeroList == 0
 			then
 				hEffectTarget = botTarget
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Attack:'..J.Chat.GetNormName(hEffectTarget)
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "进攻:"..J.Chat.GetNormName(hEffectTarget)
 			end	
 		end		
 	end
@@ -4442,7 +4568,7 @@ X.ConsiderItemDesire["item_havoc_hammer"] = function(hItem)
 		and #nInRangeEnmyList >= 1
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Retreat'	
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "撤退"	
 	end
 
 	if J.IsGoingOnSomeone(bot)
@@ -4453,7 +4579,7 @@ X.ConsiderItemDesire["item_havoc_hammer"] = function(hItem)
 			and ( nCastTarget ~= botTarget or GetUnitToUnitDistance(bot,nCastTarget) + 250 <= bot:GetAttackRange() )
 		then
 			hEffectTarget = bot
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Atttack'	
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '进攻'	
 		end
 	end
 
@@ -4484,7 +4610,7 @@ X.ConsiderItemDesire["item_force_boots"] = function(hItem)
 		   and bot:DistanceFromFountain() > 600 
 		then
 			hEffectTarget = bot
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'retreat'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, '撤退'
 		end	
 	end 
 	
@@ -4499,7 +4625,7 @@ X.ConsiderItemDesire["item_force_boots"] = function(hItem)
 			and nEnemyCount <= 2
 		then
 			hEffectTarget = bot
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Attack'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "进攻"
 		end	
 	end
 
@@ -4521,7 +4647,7 @@ X.ConsiderItemDesire["item_woodland_striders"] = function(hItem)
 		and bot:WasRecentlyDamagedByAnyHero(4.0)
 	then
 		hEffectTarget = bot
-		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Retreat'
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "撤退"
 	end
 	
 	return BOT_ACTION_DESIRE_NONE
@@ -4563,7 +4689,7 @@ X.ConsiderItemDesire["item_fallen_sky"] = function(hItem)
 			if nCastLocation ~= nil
 			then
 				hEffectTarget = nCastLocation
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Attack'
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "进攻"
 			end
 		end	
 	end
@@ -4579,7 +4705,7 @@ X.ConsiderItemDesire["item_fallen_sky"] = function(hItem)
 		   and #nInRangeEnmyList >= 1
 		then
 			hEffectTarget = bLocation
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Retreat'
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "撤退"
 		end	
 	end
 
@@ -4615,7 +4741,7 @@ X.ConsiderItemDesire["item_ex_machina"] = function(hItem)
 			if nRemainTime >= 30
 			then
 				hEffectTarget = botTarget
-				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Attack'
+				return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "刷新CD"
 			end
 		end
 	end
@@ -4638,7 +4764,7 @@ X.ConsiderItemDesire["item_new"] = function(hItem)
 		if J.IsValidHero(botTarget)
 		then
 			hEffectTarget = botTarget
-			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, 'Attack:'..J.Chat.GetNormName(botTarget)
+			return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "进攻:"..J.Chat.GetNormName(botTarget)
 		end
 	end
 	
@@ -4721,6 +4847,21 @@ local function UseGlyph()
 	
 end
 
+
+local BotUpdate = nil
+if pcall(function() require('bot_update') end) 
+then BotUpdate = dofile('bot_update') end
+
+local function ConsiderUpdate()
+
+	if BotUpdate ~= nil
+	then
+		local UpdateBot = BotUpdate.ConsiderUpdateBot()
+		if UpdateBot ~= nil	then BotBuild = UpdateBot end
+	end
+
+end
+
 if not bDeafaultItemHero
 then
 
@@ -4742,13 +4883,15 @@ end
 
 function BuybackUsageThink()
 	
-	BotBuild.SkillsComplement();
-
-	ItemUsageComplement();
-
-	BuybackUsageComplement();
+	ConsiderUpdate()
 	
-	UseGlyph();
+	BotBuild.SkillsComplement()
+
+	ItemUsageComplement()
+
+	BuybackUsageComplement()
+	
+	UseGlyph()
 
 end
 
@@ -4832,4 +4975,4 @@ function FGUtilStringSplit(str,split_char)
 
     return sub_str_tab;
 end
--- dota2jmz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592

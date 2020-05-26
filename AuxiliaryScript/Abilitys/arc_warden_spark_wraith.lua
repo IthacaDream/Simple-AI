@@ -77,7 +77,7 @@ function X.Consider()
 		local npcTarget = bot:GetAttackTarget();
 		if J.IsRoshan(npcTarget) 
 		   and J.IsInRange(npcTarget, bot, nCastRange) 
-		   and J.GetHPR(npcTarget) > 0.2
+		   and J.GetHP(npcTarget) > 0.2
 		then
 			return BOT_ACTION_DESIRE_LOW, npcTarget:GetLocation();
 		end
@@ -108,7 +108,7 @@ function X.Consider()
 		if locationAoE.count >= 1 
 		   and not bot:HasModifier("modifier_silencer_curse_of_the_silent")
 		then
-			local nCreep = J.GetVulnerableUnitNearLoc(false, true, 1600, nRadius, locationAoE.targetloc, bot);
+			local nCreep = J.GetVulnerableUnitNearLoc(bot, false, true, 1600, nRadius, locationAoE.targetloc);
 			if nCreep == nil 
 			   or bot:HasModifier("modifier_arc_warden_tempest_double")
 			then
@@ -150,12 +150,12 @@ function X.Consider()
 			local nLaneCreeps = bot:GetNearbyLaneCreeps(1400,true);
 			if #nLaneCreeps >= 2
 			then
-				if J.GetMPR(bot) > 0.62
+				if J.GetMP(bot) > 0.62
 				then
 					return BOT_ACTION_DESIRE_HIGH,locationAoE.targetloc;
 				end
 			else
-				if J.GetMPR(bot) > 0.75
+				if J.GetMP(bot) > 0.75
 				then
 					return BOT_ACTION_DESIRE_HIGH,locationAoE.targetloc;
 				end
@@ -234,8 +234,8 @@ function X.Consider()
 	
 	local castLocation = J.GetLocationTowardDistanceLocation(bot,J.GetEnemyFountain(),nCastRange)
 	if  bot:HasModifier("modifier_arc_warden_tempest_double")
-		or ( J.GetMPR(bot) > 0.92 and bot:GetLevel() > 11 and not IsLocationVisible(castLocation) )
-		or ( J.GetMPR(bot) > 0.38 and J.GetDistanceFromEnemyFountain(bot) < 4300 )
+		or ( J.GetMP(bot) > 0.92 and bot:GetLevel() > 11 and not IsLocationVisible(castLocation) )
+		or ( J.GetMP(bot) > 0.38 and J.GetDistanceFromEnemyFountain(bot) < 4300 )
 	then
 		if IsLocationPassable(castLocation)
 		   and not bot:HasModifier("modifier_silencer_curse_of_the_silent")

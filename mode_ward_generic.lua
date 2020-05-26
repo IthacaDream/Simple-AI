@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2Sitemz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -224,7 +224,7 @@ function Think()
 	if GetGameState()~=GAME_STATE_PRE_GAME and GetGameState()~= GAME_STATE_GAME_IN_PROGRESS then
 		return;
 	end
-	
+
 	if blockBreep ~= nil then
 
 		--外塔位置
@@ -265,7 +265,7 @@ function Think()
 			--如果附近有小兵
 			if nLeadCreep ~= nil then
 				--计算兵线偏移
-				--local offsetAngle = math.deg(math.tan(J.GetLocationToLocationDistance(nLeadCreep:GetLocation(), teamLocation2) / (nLeadCreep:GetLocation().y - teamLocation2.y) ))
+				--local offsetAngle = math.deg(math.tan(J.Site.GetLocationToLocationDistance(nLeadCreep:GetLocation(), teamLocation2) / (nLeadCreep:GetLocation().y - teamLocation2.y) ))
 				local botToCreepDistance = GetUnitToLocationDistance(bot, nLeadCreep:GetLocation())
 				if bot.blockBreepCD == nil then bot.blockBreepCD = DotaTime() end
 				--距离小兵小于150的时候，卡一下兵
@@ -582,4 +582,4 @@ function X.IsHumanPlayerInTeam()
 	
 	return false;
 end
--- dota2jmz@163.com QQ:2462331592.
+-- dota2Sitemz@163.com QQ:2462331592.

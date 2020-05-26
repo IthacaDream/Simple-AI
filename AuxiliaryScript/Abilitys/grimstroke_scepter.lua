@@ -127,7 +127,7 @@ function X.Consider()
 		do
 			if  J.IsValid(npcEnemy)
 				and J.CanCastOnNonMagicImmune(npcEnemy) 
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled(npcEnemy)
 				and J.GetAroundTargetEnemyHeroCount(npcEnemy, 600) >= 4
 			then
 				for _,npcAlly in pairs( npcEnemy:GetNearbyHeroes(castRange, true, BOT_MODE_NONE) )

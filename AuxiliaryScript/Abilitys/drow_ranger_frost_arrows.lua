@@ -61,7 +61,7 @@ function X.Consider()
 	local nTowers = bot:GetNearbyTowers(900,true)
 	local nEnemysLaneCreepsInRange = bot:GetNearbyLaneCreeps(nAttackRange + 30,true)
 	local nEnemysLaneCreepsNearby = bot:GetNearbyLaneCreeps(400,true)
-	local nEnemysWeakestLaneCreepsInRange = J.GetAttackableWeakestUnit(false, true, nAttackRange + 30, bot)
+	local nEnemysWeakestLaneCreepsInRange = J.GetAttackableWeakestUnit(bot, nAttackRange + 30, false, true)
 	local nEnemysWeakestLaneCreepsInRangeHealth = 10000
 	if(nEnemysWeakestLaneCreepsInRange ~= nil)
 	then
@@ -69,8 +69,8 @@ function X.Consider()
 	end
 	
 	local nEnemysHeroesInAttackRange = bot:GetNearbyHeroes(nAttackRange,true,BOT_MODE_NONE);
-	local nInAttackRangeWeakestEnemyHero = J.GetAttackableWeakestUnit(true, true, nAttackRange, bot);
-	local nInViewWeakestEnemyHero = J.GetAttackableWeakestUnit(true, true, 800, bot);
+	local nInAttackRangeWeakestEnemyHero = J.GetAttackableWeakestUnit(bot, nAttackRange, true, true);
+	local nInViewWeakestEnemyHero = J.GetAttackableWeakestUnit(bot, 800), true, true;
 
 	local nAllyLaneCreeps = bot:GetNearbyLaneCreeps(330,false);
 	local npcTarget = J.GetProperTarget(bot)

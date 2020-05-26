@@ -38,12 +38,16 @@ local tOutFitList = {}
 tOutFitList['outfit_carry'] = {
 	
 	"item_phantom_assassin_outfit",
-	"item_new_bfury",
+	"item_bfury",
 	"item_desolator",
 	"item_black_king_bar",
+	"item_travel_boots",
 	"item_satanic",
 	"item_abyssal_blade",
+	"item_moon_shard",
+	"item_travel_boots_2",
 	"item_ultimate_scepter_2",
+	
 				
 }
 
@@ -72,7 +76,7 @@ nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroI
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
 X['bDeafaultAbility'] = false
-X['bDeafaultItem'] = true
+X['bDeafaultItem'] = false
 
 function X.MinionThink(hMinionUnit)
 
@@ -132,9 +136,7 @@ function X.SkillsComplement()
 
 	if J.CanNotUseAbility(bot) then return end
 
-	nKeepMana = 400
-	aetherRange = 0
-	talentDamage = 0
+	nKeepMana = 300
 	nLV = bot:GetLevel();
 	nMP = bot:GetMana()/bot:GetMaxMana();
 	nHP = bot:GetHealth()/bot:GetMaxHealth();
@@ -207,7 +209,7 @@ function X.ConsiderQ()
 	for _,npcEnemy in pairs( nEnemysHerosInBonus )
 	do
 		if J.IsValid(npcEnemy)
-		   and J.CanCastOnMagicImmune(npcEnemy)
+		   and J.CanCastOnNonMagicImmune(npcEnemy)
 		   and J.CanCastOnTargetAdvanced(npcEnemy)
 		   and GetUnitToUnitDistance(bot,npcEnemy) <= nCastRange + 80
 		   and ( J.CanKillTarget(npcEnemy,nDamage * 1.6,nDamageType) 
@@ -227,7 +229,7 @@ function X.ConsiderQ()
 		for _,npcEnemy in pairs( nEnemysHerosInRange )
 		do
 			if  J.IsValid(npcEnemy)
-			    and J.CanCastOnMagicImmune(npcEnemy) 
+			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
 			then
 				local npcEnemyHealth = npcEnemy:GetHealth();
@@ -251,13 +253,13 @@ function X.ConsiderQ()
 	then
 	    local npcTarget = J.GetProperTarget(bot);
 		if J.IsValidHero(npcTarget) 
-			and J.CanCastOnMagicImmune(npcTarget) 
+			and J.CanCastOnNonMagicImmune(npcTarget) 
 			and J.CanCastOnTargetAdvanced(npcTarget)
 			and J.IsInRange(npcTarget, bot, nCastRange + 50) 
 		then
 			if nSkillLV >= 3 
 			   or nMP > 0.6 or nHP < 0.4  
-			   or J.GetHPR(npcTarget) < 0.38 
+			   or J.GetHP(npcTarget) < 0.38 
 			   or DotaTime() > 6 * 60
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcTarget;
@@ -273,9 +275,9 @@ function X.ConsiderQ()
 		do
 			if  J.IsValid(npcEnemy)
 			    and bot:WasRecentlyDamagedByHero( npcEnemy, 5.0 ) 
-				and J.CanCastOnMagicImmune(npcEnemy) 
+				and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy) 
+				and not J.IsDisabled( npcEnemy) 
 				and ( bot:IsFacingLocation(npcEnemy:GetLocation(),60)
 						or not J.IsInRange(npcEnemy,bot,nCastRange - 300) )
 			then
@@ -329,13 +331,13 @@ function X.ConsiderQ()
 		end
 		
 		--对线期间对敌人使用
-		local nWeakestEnemyLaneCreep = J.GetVulnerableWeakestUnit(false, true, nCastRange + 100, bot);
-		local nWeakestEnemyLaneHero  = J.GetVulnerableWeakestUnit(true , true, nCastRange + 40, bot);
+		local nWeakestEnemyLaneCreep = J.GetVulnerableWeakestUnit(bot, false, true, nCastRange + 100);
+		local nWeakestEnemyLaneHero  = J.GetVulnerableWeakestUnit(bot, true , true, nCastRange + 40);
 		if nWeakestEnemyLaneCreep == nil 
 		   or not J.CanKillTarget(nWeakestEnemyLaneCreep,(nDamage+nBonusDamage) * 2,nDamageType)
 		then
 			if nWeakestEnemyLaneHero ~= nil 
-				and ( J.GetHPR(nWeakestEnemyLaneHero) <= 0.48
+				and ( J.GetHP(nWeakestEnemyLaneHero) <= 0.48
 					  or J.IsInRange(bot, nWeakestEnemyLaneHero, 400))
 			then
 				return BOT_ACTION_DESIRE_HIGH, nWeakestEnemyLaneHero;
@@ -346,7 +348,7 @@ function X.ConsiderQ()
 		for _,npcEnemy in pairs( nEnemysHerosInRange )
 		do
 			if J.IsValid(npcEnemy)
-			   and J.CanCastOnMagicImmune(npcEnemy)
+			   and J.CanCastOnNonMagicImmune(npcEnemy)
 			   and GetUnitToUnitDistance(bot,npcEnemy) <= nCastRange + 80
 			   and ( npcEnemy:HasModifier("modifier_flask_healing") 
 					 or npcEnemy:HasModifier("modifier_clarity_potion")
@@ -457,9 +459,9 @@ function X.ConsiderQ()
 		for _,npcEnemy in pairs( nEnemysHerosInRange )
 		do
 			if  J.IsValid(npcEnemy)
-			    and J.CanCastOnMagicImmune(npcEnemy) 
+			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)			
+				and not J.IsDisabled( npcEnemy)			
 				and bot:IsFacingLocation(npcEnemy:GetLocation(),80)
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcEnemy
@@ -484,7 +486,7 @@ function X.ConsiderW()
 	local nCastPoint  = abilityW:GetCastPoint();
 	local nManaCost   = abilityW:GetManaCost();
 	local nSkillLV    = abilityW:GetLevel(); 
-	local nBonus      = 24;
+	local nBonus      = 18;
 	local nDamage     = nAttackDamage;
 	local nDamageType = DAMAGE_TYPE_PHYSICAL;
 	
@@ -504,7 +506,7 @@ function X.ConsiderW()
 	do
 		if J.IsValid(npcEnemy)
 		   and not npcEnemy:IsAttackImmune()
-		   and J.CanCastOnMagicImmune(npcEnemy)
+		   and J.CanCastOnNonMagicImmune(npcEnemy)
 		   and GetUnitToUnitDistance(bot,npcEnemy) <= nCastRange + 80
 		   and ( J.CanKillTarget(npcEnemy,nDamage *1.28,nDamageType)
 				or ( npcEnemy:IsChanneling() and J.CanKillTarget(npcEnemy,nDamage *2.28,nDamageType)))
@@ -523,7 +525,7 @@ function X.ConsiderW()
 		
 		if J.IsValid(npcTarget)
 			and J.IsInRange(bot,npcTarget,nCastRange)
-			and J.CanCastOnMagicImmune(npcTarget)
+			and J.CanCastOnNonMagicImmune(npcTarget)
 		then
 			return BOT_ACTION_DESIRE_HIGH, npcTarget;
 		end
@@ -532,7 +534,7 @@ function X.ConsiderW()
 		do
 			if  J.IsValid(npcEnemy)
 				and not npcEnemy:IsAttackImmune()
-			    and J.CanCastOnMagicImmune(npcEnemy) 
+			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 			then
 				local npcEnemyHealth = npcEnemy:GetHealth();
 				local tableNearbyAllyHeroes = npcEnemy:GetNearbyHeroes( 600, true, BOT_MODE_NONE );
@@ -560,7 +562,7 @@ function X.ConsiderW()
 	    
 		if J.IsValidHero(npcTarget) 
 			and not npcTarget:IsAttackImmune()
-			and J.CanCastOnMagicImmune(npcTarget) 
+			and J.CanCastOnNonMagicImmune(npcTarget) 
 			and J.IsInRange(npcTarget, bot, nCastRange +50) 
 		then
 			local tableNearbyEnemyHeroes = npcTarget:GetNearbyHeroes( 800, false, BOT_MODE_NONE );
@@ -697,7 +699,7 @@ function X.ConsiderW()
 	then
 		local npcTarget = bot:GetAttackTarget();
 		if  J.IsRoshan(npcTarget) 
-		    and J.GetHPR(npcTarget) > 0.15
+		    and J.GetHP(npcTarget) > 0.15
 			and J.IsInRange(npcTarget, bot, nCastRange)  
 		then
 			return BOT_ACTION_DESIRE_HIGH, npcTarget;
@@ -761,4 +763,4 @@ function X.ConsiderE()
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

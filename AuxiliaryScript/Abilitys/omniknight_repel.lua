@@ -90,7 +90,7 @@ function X.Consider()
 			if  J.IsValid(npcEnemy)
 				and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and (npcEnemyHP < 0.4
-				or  J.IsDisabled(false, npcEnemy)
+				or  J.IsDisabled(npcEnemy)
 				or  bot:HasModifier("modifier_silencer_curse_of_the_silent")
 			    or  bot:HasModifier("modifier_silencer_last_word"))
 			then
@@ -114,7 +114,7 @@ function X.Consider()
 			if  J.IsValid(npcEnemy)
 				and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and (npcEnemyHP < 0.5
-				or  J.IsDisabled(false, npcEnemy)
+				or  J.IsDisabled(npcEnemy)
 				or  bot:HasModifier("modifier_silencer_curse_of_the_silent")
 			    or  bot:HasModifier("modifier_silencer_last_word"))
 			then
@@ -130,7 +130,7 @@ function X.Consider()
 			and #nEnemysHerosInView > 3
 			and J.IsValid(bot)
 		    and J.CanCastOnNonMagicImmune(bot) 
-			and not J.IsDisabled(true, bot)
+			and not J.IsDisabled(bot)
 		then
 			return BOT_ACTION_DESIRE_HIGH, bot;
 		end
@@ -146,7 +146,7 @@ function X.Consider()
 		do
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled(npcEnemy)
                 and not npcEnemy:IsDisarmed()				
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcEnemy
@@ -164,7 +164,7 @@ function X.Consider()
 			if  J.IsValid(npcEnemy)
 				and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and (npcEnemyHP < 0.3
-				or  J.IsDisabled(false, npcEnemy)
+				or  J.IsDisabled(npcEnemy)
 				or  bot:HasModifier("modifier_silencer_curse_of_the_silent")
 			    or  bot:HasModifier("modifier_silencer_last_word"))
 			then

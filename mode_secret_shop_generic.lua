@@ -143,7 +143,8 @@ end
 function X.IsSuitableToBuy()
 	local mode = bot:GetActiveMode();
 	local Enemies = bot:GetNearbyHeroes(1600, true, BOT_MODE_NONE);
-	if ( ( mode == BOT_MODE_RETREAT and bot:GetActiveModeDesire() >= BOT_MODE_DESIRE_HIGH )
+	if ( not bot:IsAlive() 
+		or ( mode == BOT_MODE_RETREAT and bot:GetActiveModeDesire() >= BOT_MODE_DESIRE_HIGH )
 		or mode == BOT_MODE_ATTACK
 		or mode == BOT_MODE_DEFEND_ALLY
 		or mode == BOT_MODE_DEFEND_TOWER_TOP
@@ -165,4 +166,4 @@ function X.IsStronger(bot, enemy)
 	local EPower = enemy:GetEstimatedDamageToTarget(true, bot, 4.0, DAMAGE_TYPE_ALL);
 	return EPower > BPower;
 end
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

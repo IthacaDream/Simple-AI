@@ -36,14 +36,16 @@ local tOutFitList = {}
 tOutFitList['outfit_carry'] = {
 
 	"item_sven_outfit",
-	"item_mask_of_madness",
+	"item_hand_of_midas",
 	"item_echo_sabre",
 	"item_blink",
 	"item_black_king_bar",
-	"item_broken_satanic", 
-	"item_orchid",
-	"item_bloodthorn",
+	"item_satanic", 
+	"item_travel_boots",
+	"item_greater_crit",	
 	"item_abyssal_blade",
+	"item_moon_shard",
+	"item_travel_boots_2",
 	
 }
 
@@ -65,8 +67,8 @@ X['sSellList'] = {
 	"item_black_king_bar",
 	"item_magic_wand",
 	
-	"item_bloodthorn",
-	"item_phase_boots",
+	"item_greater_crit",
+	"item_hand_of_midas",
 	
 	"item_abyssal_blade",
 	"item_blink",
@@ -79,7 +81,7 @@ nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroI
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
 X['bDeafaultAbility'] = false
-X['bDeafaultItem'] = true
+X['bDeafaultItem'] = false
 
 function X.MinionThink(hMinionUnit)
 
@@ -139,8 +141,6 @@ function X.SkillsComplement()
 	if J.CanNotUseAbility(bot) or bot:IsInvisible() then return end
 		
 	nKeepMana = 400
-	aetherRange = 0
-	talentDamage = 0
 	nLV = bot:GetLevel();
 	nMP = bot:GetMana()/bot:GetMaxMana();
 	nHP = bot:GetHealth()/bot:GetMaxHealth();
@@ -186,7 +186,6 @@ function X.ConsiderQ()
 	
 	if not abilityQ:IsFullyCastable() then return 0 end
 	
-	-- Get some of its values
 	local nCastRange  = abilityQ:GetCastRange();
 	local nCastPoint  = abilityQ:GetCastPoint();
 	local nManaCost   = abilityQ:GetManaCost();
@@ -218,7 +217,7 @@ function X.ConsiderQ()
 		if J.IsValid(npcEnemy)
 		   and J.CanCastOnNonMagicImmune(npcEnemy)
 		   and J.CanCastOnTargetAdvanced(npcEnemy)
-		   and not J.IsDisabled(true,npcEnemy)
+		   and not J.IsDisabled(npcEnemy)
 		then
 			if npcEnemy:IsChanneling()
 				or J.CanKillTarget(npcEnemy,nDamage,nDamageType)
@@ -267,7 +266,7 @@ function X.ConsiderQ()
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled( npcEnemy)
 				and not npcEnemy:IsDisarmed()
 			then
 				
@@ -298,7 +297,6 @@ function X.ConsiderQ()
 
 		if ( npcMostDangerousEnemy ~= nil )
 		then
---			J.SetReport("团战控制战力最强:",npcMostDangerousEnemy:GetUnitName());
 			return BOT_ACTION_DESIRE_HIGH, npcMostDangerousEnemy;
 		end	
 	end
@@ -311,10 +309,9 @@ function X.ConsiderQ()
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
-				and J.GetAttackTargetEnemyCreepCount(npcEnemy, 1400) >= 5
+				and not J.IsDisabled( npcEnemy)
+				and J.GetAttackEnemysAllyCreepCount(npcEnemy, 1400) >= 5
 			then
-				J.SetReport("对线期间使用:",npcEnemy:GetUnitName());
 				return BOT_ACTION_DESIRE_HIGH, npcEnemy;
 			end
 		end	
@@ -328,10 +325,10 @@ function X.ConsiderQ()
 			and J.CanCastOnNonMagicImmune(npcTarget) 
 			and J.CanCastOnTargetAdvanced(npcTarget)
 			and J.IsInRange(npcTarget, bot, nCastRange +60) 
-			and not J.IsDisabled(true, npcTarget)
+			and not J.IsDisabled( npcTarget)
 			and not npcTarget:IsDisarmed()
 		then
-			if nSkillLV >= 3 or nMP > 0.88 or J.GetHPR(npcTarget) < 0.38 or nHP < 0.25
+			if nSkillLV >= 3 or nMP > 0.88 or J.GetHP(npcTarget) < 0.38 or nHP < 0.25
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcTarget;
 			end
@@ -349,10 +346,9 @@ function X.ConsiderQ()
 						or GetUnitToUnitDistance(bot,npcEnemy) <= 400 )
 				and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy) 
+				and not J.IsDisabled( npcEnemy) 
 				and not npcEnemy:IsDisarmed()
 			then
-				J.SetReport("撤退了保护自己:",npcEnemy:GetUnitName());
 				return BOT_ACTION_DESIRE_HIGH, npcEnemy;
 			end
 		end
@@ -374,7 +370,6 @@ function X.ConsiderQ()
 					and J.IsInRange(creep,bot,350)
 					and J.GetAroundTargetEnemyUnitCount(creep, nRadius) >= 3
 				then
-					J.SetReport("打野时野怪数量:",#nNeutralCreeps);
 					return BOT_ACTION_DESIRE_HIGH, creep;
 				end			
 			end
@@ -399,7 +394,6 @@ function X.ConsiderQ()
 					and J.IsInRange(creep,bot,nCastRange + 100)
 					and J.GetAroundTargetEnemyUnitCount(creep, nRadius) >= 5
 				then
-					J.SetReport("推进时小兵数量:",#nLaneCreeps);
 					return BOT_ACTION_DESIRE_HIGH, creep;
 				end			
 			end
@@ -412,7 +406,7 @@ function X.ConsiderQ()
 	then
 		local npcTarget = bot:GetAttackTarget();
 		if  J.IsRoshan(npcTarget) 
-			and not J.IsDisabled(true, npcTarget)
+			and not J.IsDisabled( npcTarget)
 			and not npcTarget:IsDisarmed()
 			and J.IsInRange(npcTarget, bot, nCastRange)  
 		then
@@ -431,11 +425,10 @@ function X.ConsiderQ()
 			if  J.IsValidHero(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled( npcEnemy)
                 and not npcEnemy:IsDisarmed()				
 				and bot:IsFacingLocation(npcEnemy:GetLocation(),45)
 			then
-				J.SetReport("保护我自己:",npcEnemy:GetUnitName());
 				return BOT_ACTION_DESIRE_HIGH, npcEnemy
 			end
 		end
@@ -452,9 +445,8 @@ function X.ConsiderQ()
 			if  J.IsValidHero(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)			
+				and not J.IsDisabled( npcEnemy)			
 			then
-				J.SetReport("通用的情况:",npcEnemy:GetUnitName());
 				return BOT_ACTION_DESIRE_HIGH, npcEnemy
 			end
 		end
@@ -477,7 +469,7 @@ function X.ConsiderE()
 	local nAlliesCount = #nAllies;
 	local nWeakestAlly = J.GetLeastHpUnit(nAllies);
 	if nWeakestAlly == nil then nWeakestAlly = bot; end
-	local nWeakestAllyHP = J.GetHPR(nWeakestAlly);
+	local nWeakestAllyHP = J.GetHP(nWeakestAlly);
 	
 	local nEnemysHerosNearby = nWeakestAlly:GetNearbyHeroes(800,true,BOT_MODE_NONE);
 	
@@ -538,7 +530,7 @@ function X.ConsiderR()
 	then
 	    local npcTarget = J.GetProperTarget(bot);
 		if J.IsValidHero(npcTarget) 
-		   and ( J.GetHPR(npcTarget) > 0.25 or #nEnemysHerosInBonus >= 2 )
+		   and ( J.GetHP(npcTarget) > 0.25 or #nEnemysHerosInBonus >= 2 )
 		   and ( J.IsInRange(npcTarget,bot,700)
 				 or J.IsInRange(npcTarget,bot,npcTarget:GetAttackRange() + 80) )				  
 		then
@@ -586,4 +578,4 @@ function X.SvenConsiderTarget()
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

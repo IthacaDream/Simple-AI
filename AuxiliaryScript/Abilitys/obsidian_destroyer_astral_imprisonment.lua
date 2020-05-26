@@ -93,7 +93,7 @@ function X.Consider()
     for _,npcEnemy in pairs( tableNearbyEnemyHeroes )
     do
         if ( J.CanKillTarget(npcEnemy, nDamage, DAMAGE_TYPE_MAGICAL) or npcEnemy:IsChanneling() ) and J.CanCastOnNonMagicImmune( npcEnemy ) 
-            and not J.IsDisabled(true, npcEnemy) 
+            and not J.IsDisabled(npcEnemy) 
         then
             return BOT_ACTION_DESIRE_HIGH, npcEnemy;
         end
@@ -106,7 +106,7 @@ function X.Consider()
         local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( 1000, true, BOT_MODE_NONE );
         for _,npcEnemy in pairs( tableNearbyEnemyHeroes )
         do
-            if J.CanCastOnNonMagicImmune( npcEnemy ) and not J.IsDisabled(true, npcEnemy) 
+            if J.CanCastOnNonMagicImmune( npcEnemy ) and not J.IsDisabled(npcEnemy) 
             then
                 local nDamage = npcEnemy:GetEstimatedDamageToTarget( false, bot, 3.0, DAMAGE_TYPE_ALL );
                 if ( nDamage > nMostDangerousDamage )
@@ -128,7 +128,7 @@ function X.Consider()
     then
         local npcTarget = bot:GetTarget();
         if J.IsValidHero(npcTarget) and J.CanCastOnNonMagicImmune(npcTarget) and not J.IsInRange(npcTarget, bot, (nCastRange+200)/2) and J.IsInRange(npcTarget, bot, nCastRange+200) and
-            not J.IsDisabled(true, npcTarget) 
+            not J.IsDisabled(npcTarget) 
         then
             local allies = npcTarget:GetNearbyHeroes(450, true, BOT_MODE_NONE);
             if #allies <= 1 then

@@ -36,12 +36,16 @@ local tOutFitList = {}
 tOutFitList['outfit_carry'] = {
 
 	"item_sven_outfit",
-	"item_echo_sabre",
+	"item_lotus_orb",
 	"item_black_king_bar",
-	"item_bloodthorn",
+	"item_greater_crit",
+	"item_travel_boots",
 	"item_abyssal_blade",
 	"item_heart",
+	"item_moon_shard",
+	"item_travel_boots_2",
 	"item_ultimate_scepter_2",
+	
 				
 }
 
@@ -55,12 +59,16 @@ tOutFitList['outfit_tank'] = {
 
 	"item_tank_outfit",
 	"item_crimson_guard",
-	"item_echo_sabre",
 	"item_heavens_halberd",
+	"item_lotus_orb",
 	"item_assault",
+	"item_travel_boots",
 	"item_heart",
-	"item_bloodthorn",
+	"item_greater_crit",
+	"item_moon_shard",
+	"item_travel_boots_2",
 	"item_ultimate_scepter_2",
+	
 	
 }
 
@@ -68,14 +76,15 @@ X['sBuyList'] = tOutFitList[sOutfitType]
 
 X['sSellList'] = {
 	
-	"item_echo_sabre",
+	"item_power_treads",
+	"item_quelling_blade",
+	
+	"item_heavens_halberd",
 	"item_quelling_blade",
 	
 	"item_assault",
 	"item_magic_wand",
 	
-	"item_heart",
-	"item_echo_sabre",
 }
 
 if J.Role.IsPvNMode() or J.Role.IsAllShadow() then X['sBuyList'],X['sSellList'] = { 'PvN_tank' }, {"item_heavens_halberd",'item_quelling_blade'} end
@@ -85,7 +94,7 @@ nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroI
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
 X['bDeafaultAbility'] = false
-X['bDeafaultItem'] = true
+X['bDeafaultItem'] = false
 
 function X.MinionThink(hMinionUnit)
 
@@ -688,4 +697,4 @@ function X.GetNearbyUnit(bot, npcTarget)
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

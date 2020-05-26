@@ -84,7 +84,7 @@ function X.Consider()
 		do
 			if  J.IsValid(npcEnemy)
 				and J.CanCastOnNonMagicImmune(npcEnemy) 
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled(npcEnemy)
 				and not npcEnemy:IsAttackImmune()
 				and npcEnemy:GetPrimaryAttribute() == ATTRIBUTE_INTELLECT
 				and npcEnemy:GetUnitName() ~= "npc_dota_hero_necrolyte"
@@ -108,7 +108,7 @@ function X.Consider()
 		do
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled(npcEnemy)
 				and not npcEnemy:IsAttackImmune()
 				and npcEnemy:GetPrimaryAttribute() == ATTRIBUTE_AGILITY
 				and not npcEnemy:GetUnitName() == "npc_dota_hero_meepo"
@@ -133,7 +133,7 @@ function X.Consider()
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and not npcEnemy:IsAttackImmune()
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled(npcEnemy)
 			then
 				if ( npcEnemy:GetHealth() < npcTargetHealth )
 				then
@@ -158,7 +158,7 @@ function X.Consider()
 		if  J.IsValidHero(target) 
 			and J.CanCastOnNonMagicImmune(target) 
 			and J.IsInRange(target, bot, nCastRange) 
-            and not J.IsDisabled(true, target)
+            and not J.IsDisabled(target)
             and not DangerousTarget(target)
 		then
 			return BOT_ACTION_DESIRE_HIGH, target;

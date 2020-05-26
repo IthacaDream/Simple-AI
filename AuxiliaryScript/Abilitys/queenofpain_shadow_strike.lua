@@ -78,7 +78,7 @@ function X.Consider()
         and J.CanCastOnTargetAdvanced(npcEnemy)
         and GetUnitToUnitDistance(bot,npcEnemy) <= nCastRange + 80
         and ( J.CanKillTarget(npcEnemy,nDamage *1.38,nDamageType)
-        or ( npcEnemy:IsChanneling() and J.GetHPR(npcEnemy) < 0.25))
+        or ( npcEnemy:IsChanneling() and J.GetHP(npcEnemy) < 0.25))
         then
             return BOT_ACTION_DESIRE_HIGH, npcEnemy;
         end
@@ -123,7 +123,7 @@ function X.Consider()
            and not J.CanKillTarget(nWeakestEnemyLaneCreep,nDamage *2,nDamageType) )
         then
             if nWeakestEnemyLaneHero ~= nil 
-                and ( J.GetHPR(nWeakestEnemyLaneHero) <= 0.48
+                and ( J.GetHP(nWeakestEnemyLaneHero) <= 0.48
                     or GetUnitToUnitDistance(bot,nWeakestEnemyLaneHero) < 350 )
             then
                 return BOT_ACTION_DESIRE_HIGH, nWeakestEnemyLaneHero;
@@ -158,7 +158,7 @@ function X.Consider()
         then
             if nSkillLV >= 3 
             or nMP > 0.6 or nHP < 0.4  
-            or J.GetHPR(npcTarget) < 0.38 
+            or J.GetHP(npcTarget) < 0.38 
             or DotaTime() > 6 *60
             then
                 return BOT_ACTION_DESIRE_HIGH, npcTarget;
@@ -177,7 +177,7 @@ function X.Consider()
                 and bot:WasRecentlyDamagedByHero( npcEnemy, 5.0 ) 
                 and J.CanCastOnNonMagicImmune(npcEnemy) 
                 and J.CanCastOnTargetAdvanced(npcEnemy)
-                and not J.IsDisabled(true, npcEnemy) 
+                and not J.IsDisabled(npcEnemy) 
                 and ( bot:IsFacingLocation(npcEnemy:GetLocation(),45)
                         or not J.IsInRange(npcEnemy,bot,nCastRange - 300) )
             then
@@ -210,7 +210,7 @@ function X.Consider()
             if  J.IsValid(npcEnemy)
                 and J.CanCastOnNonMagicImmune(npcEnemy) 
                 and J.CanCastOnTargetAdvanced(npcEnemy)
-                and not J.IsDisabled(true, npcEnemy)			
+                and not J.IsDisabled(npcEnemy)			
                 and bot:IsFacingLocation(npcEnemy:GetLocation(),80)
             then
                 return BOT_ACTION_DESIRE_HIGH, npcEnemy

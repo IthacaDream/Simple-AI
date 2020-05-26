@@ -78,7 +78,7 @@ function X.Consider()
 	if J.IsValidHero(npcTarget) 
 		and J.CanCastOnNonMagicImmune(npcTarget) 
 		and ( GetUnitToUnitDistance(npcTarget,bot) <= 350
-				or ( J.GetHPR(npcTarget) < 0.38 and  GetUnitToUnitDistance(npcTarget,bot) <= 650 ) )
+				or ( J.GetHP(npcTarget) < 0.38 and  GetUnitToUnitDistance(npcTarget,bot) <= 650 ) )
 		and npcTarget:GetHealth() > 600
 	then
 		return BOT_ACTION_DESIRE_HIGH;

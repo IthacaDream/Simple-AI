@@ -15,6 +15,7 @@ local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
 
+
 local tTalentTreeList = {
 						['t25'] = {10, 0},
 						['t20'] = {0, 10},
@@ -212,4 +213,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

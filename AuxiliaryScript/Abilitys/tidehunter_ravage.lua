@@ -82,7 +82,7 @@ function X.Consider()
         then
             return BOT_ACTION_DESIRE_LOW, locationAoE.targetloc;
         end
-        if locationAoE.count >= 1 and J.GetHPR(bot) < 0.38
+        if locationAoE.count >= 1 and J.GetHP(bot) < 0.38
         then
             return BOT_ACTION_DESIRE_LOW, locationAoE.targetloc;
         end

@@ -14,7 +14,7 @@ local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
 local Minion = dofile( GetScriptDirectory()..'/FunLib/Minion')
 local sTalentList = J.Skill.GetTalentList(bot)
 local sAbilityList = J.Skill.GetAbilityList(bot)
-local sOutfit = J.Skill.GetOutfitName(bot)
+
 
 local tTalentTreeList = {
 						['t25'] = {0, 10},
@@ -55,7 +55,7 @@ nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroI
 
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
-X['bDeafaultAbility'] = false
+X['bDeafaultAbility'] = true
 X['bDeafaultItem'] = true
 
 function X.MinionThink(hMinionUnit)
@@ -224,4 +224,4 @@ function X.ConsiderE()
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

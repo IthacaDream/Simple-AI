@@ -65,7 +65,7 @@ function X.Consider()
 	then
 	    local npcTarget = J.GetProperTarget(bot);
 		if J.IsValidHero(npcTarget) 
-		   and ( J.GetHPR(npcTarget) > 0.25 or #nEnemysHerosInBonus >= 2 )
+		   and ( J.GetHP(npcTarget) > 0.25 or #nEnemysHerosInBonus >= 2 )
 		   and ( J.IsInRange(npcTarget,bot,700)
 				 or J.IsInRange(npcTarget,bot,npcTarget:GetAttackRange() + 80) )				  
 		then

@@ -42,7 +42,7 @@ function X.Consider()
     if ability == nil
 	   or ability:IsNull()
        or not ability:IsFullyCastable()
-       or J.GetHPR(bot) < 0.25
+       or J.GetHP(bot) < 0.25
 	then 
 		return BOT_ACTION_DESIRE_NONE, 0; --没欲望
 	end

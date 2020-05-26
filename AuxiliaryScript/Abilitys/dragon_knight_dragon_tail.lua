@@ -101,7 +101,7 @@ function X.Consider()
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled(npcEnemy)
 				and not npcEnemy:IsDisarmed()
 			then
 				local npcEnemyDamage = npcEnemy:GetEstimatedDamageToTarget( false, bot, 3.0, DAMAGE_TYPE_PHYSICAL );
@@ -136,7 +136,7 @@ function X.Consider()
 		local npcTarget = bot:GetAttackTarget();
 		if ( J.IsRoshan(npcTarget) 
 			 and J.IsInRange(npcTarget, bot, nCastRange + 150) 
-             and not J.IsDisabled(true, npcTarget) )
+             and not J.IsDisabled(npcTarget) )
 		then
 			return BOT_ACTION_DESIRE_LOW, npcTarget;
 		end
@@ -150,7 +150,7 @@ function X.Consider()
 		    and J.CanCastOnNonMagicImmune(npcTarget) 
 			and J.CanCastOnTargetAdvanced(npcTarget)
 			and J.IsInRange(npcTarget, bot, nCastRange + 200) 
-            and not J.IsDisabled(true, npcTarget) 		
+            and not J.IsDisabled(npcTarget) 		
 		then
 			return BOT_ACTION_DESIRE_HIGH, npcTarget;
 		end

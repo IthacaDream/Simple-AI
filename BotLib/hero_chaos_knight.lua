@@ -36,13 +36,17 @@ local tOutFitList = {}
 
 tOutFitList['outfit_carry'] = {
 
-	"item_sven_outfit",
-	"item_echo_sabre",
+	"item_bristleback_outfit",
+	"item_armlet",
+	"item_heavens_halberd",
 	"item_manta",
 	"item_heart",
 	"item_abyssal_blade",
+	"item_travel_boots",
 	"item_assault",
-	"item_black_king_bar",
+	"item_satanic",
+	"item_moon_shard",
+	"item_travel_boots_2",
 
 				
 }
@@ -56,12 +60,15 @@ tOutFitList['outfit_mage'] = tOutFitList['outfit_carry']
 tOutFitList['outfit_tank'] = {
 
 	"item_tank_outfit",
+	"item_armlet",
 	"item_crimson_guard",
-	"item_echo_sabre",
 	"item_heavens_halberd",
 	"item_manta",
+	"item_travel_boots",
 	"item_assault",
 	"item_heart",
+	"item_moon_shard",
+	"item_travel_boots_2",
 				
 }
 
@@ -69,11 +76,11 @@ X['sBuyList'] = tOutFitList[sOutfitType]
 
 X['sSellList'] = {
 	
-	"iitem_heavens_halberd",
+	"item_power_treads",
 	"item_quelling_blade",
-	
-	"item_assault",
-	"item_echo_sabre",
+		
+	'item_assault',
+	'item_armlet',
 	
 	"item_assault",
 	"item_magic_wand",
@@ -89,8 +96,8 @@ nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroI
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
 
-X['bDeafaultAbility'] = true
-X['bDeafaultItem'] = true
+X['bDeafaultAbility'] = false
+X['bDeafaultItem'] = false
 
 function X.MinionThink(hMinionUnit)
 
@@ -133,10 +140,12 @@ local abilityQ = bot:GetAbilityByName( sAbilityList[1] );
 local abilityW = bot:GetAbilityByName( sAbilityList[2] );
 local abilityR = bot:GetAbilityByName( sAbilityList[6] );
 local talent6  = bot:GetAbilityByName( sTalentList[6] );
+local abilityArmlet = nil
 
 local castQDesire,castQTarget = 0;
 local castWDesire,castWTarget = 0;
 local castRDesire = 0;
+
 
 local nKeepMana,nMP,nHP,nLV,hEnemyHeroList;
 
@@ -150,10 +159,19 @@ function X.SkillsComplement()
 	nHP = bot:GetHealth()/bot:GetMaxHealth();
 	nLV = bot:GetLevel();
 	hEnemyHeroList = bot:GetNearbyHeroes(1600,true,BOT_MODE_NONE);
+	abilityArmlet = J.IsItemAvailable("item_armlet");
 		
 	castRDesire = X.ConsiderR();
 	if ( castRDesire > 0 ) 
 	then
+
+		if abilityArmlet ~= nil
+			and abilityArmlet:IsFullyCastable()
+			and abilityArmlet:GetToggleState() == false
+		then
+			bot:ActionQueue_UseAbility( abilityArmlet )
+		end
+		
 		bot:ActionQueue_UseAbility( abilityR )
 		return;	
 	end
@@ -202,7 +220,7 @@ function X.ConsiderQ()
 			   and J.CanCastOnTargetAdvanced(nEnemysHeroesInCastRange[i])
 			   and nEnemysHeroesInCastRange[i]:GetHealth() < nEnemysHeroesInCastRange[i]:GetActualIncomingDamage(nDamage,DAMAGE_TYPE_MAGICAL)
 			   and not (GetUnitToUnitDistance(nEnemysHeroesInCastRange[i],bot) <= bot:GetAttackRange() + 60)
-			   and not J.IsDisabled(true, nEnemysHeroesInCastRange[i]) 
+			   and not J.IsDisabled( nEnemysHeroesInCastRange[i]) 
 			then
 				return BOT_ACTION_DESIRE_HIGH, nEnemysHeroesInCastRange[i];
 			end
@@ -235,7 +253,7 @@ function X.ConsiderQ()
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled( npcEnemy)
 				and not npcEnemy:IsDisarmed()
 				--and not npcEnemy:HasModifier("modifier_chaos_knight_reality_rift_debuff")
 			then
@@ -261,7 +279,7 @@ function X.ConsiderQ()
 		if  J.IsValid(npcEnemy)
 		    and J.CanCastOnNonMagicImmune(npcEnemy) 
 			and J.CanCastOnTargetAdvanced(npcEnemy)
-			and not J.IsDisabled(true, npcEnemy)
+			and not J.IsDisabled( npcEnemy)
 			and not npcEnemy:IsDisarmed()
 			and npcEnemy:HasModifier("modifier_chaos_knight_reality_rift")
 		then
@@ -288,7 +306,7 @@ function X.ConsiderQ()
 			and J.CanCastOnNonMagicImmune(target) 
 			and J.CanCastOnTargetAdvanced(target)
 			and J.IsInRange(target, bot, nCastRange) 
-		    and not J.IsDisabled(true, target)
+		    and not J.IsDisabled( target)
 			and not target:IsDisarmed()
 			and not target:HasModifier("modifier_chaos_knight_reality_rift_debuff")
 		then
@@ -302,7 +320,7 @@ function X.ConsiderQ()
 		if J.IsValid(nEnemysHeroesInCastRange[1]) 
 		   and J.CanCastOnNonMagicImmune(nEnemysHeroesInCastRange[1]) 
 		   and J.CanCastOnTargetAdvanced(nEnemysHeroesInCastRange[1])
-		   and not J.IsDisabled(true, nEnemysHeroesInCastRange[1])
+		   and not J.IsDisabled( nEnemysHeroesInCastRange[1])
 		   and not nEnemysHeroesInCastRange[1]:IsDisarmed()
 		   and GetUnitToUnitDistance(bot,nEnemysHeroesInCastRange[1]) <= nCastRange - 60 
 		then
@@ -317,8 +335,8 @@ function X.ConsiderQ()
 		local target =  bot:GetAttackTarget();
 		
 		if target ~= nil and target:IsAlive()
-		    and J.GetHPR(target) > 0.2
-			and not J.IsDisabled(true, target)
+		    and J.GetHP(target) > 0.2
+			and not J.IsDisabled( target)
 			and not target:IsDisarmed()
 		then
 			return BOT_ACTION_DESIRE_LOW, target;
@@ -332,106 +350,24 @@ function X.ConsiderW()
 	
 	if not abilityW:IsFullyCastable() or bot:IsRooted() then return BOT_ACTION_DESIRE_NONE end
 	
-	local nCastRange = abilityW:GetCastRange() + 40;
-	local nCastPoint = abilityW:GetCastPoint();
-	local nSkillLV   = abilityW:GetLevel();
+	local nCastRange = abilityW:GetCastRange()
+	local nCastPoint = abilityW:GetCastPoint()
+	local nSkillLV   = abilityW:GetLevel()
 	local nDamage    = 0;
 	local bIgnoreMagicImmune = talent6:IsTrained();
 	
 	local nEnemysHeroesInCastRange = bot:GetNearbyHeroes(nCastRange, true, BOT_MODE_NONE);		
 	
-	--[[
-
-	if J.IsInTeamFight(bot, 1200)
-	   and DotaTime() > 6*60
-	then
-		local npcTarget = nil;
-		local npcTargetHealth = 99999;		
-		
-		for _,npcEnemy in pairs( nEnemysHeroesInCastRange )
-		do
-			if  J.IsValid(npcEnemy)
-				and J.CanCastAbilityOnTarget(npcEnemy,bIgnoreMagicImmune)
-				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
-				and not npcEnemy:IsAttackImmune()
-				and npcEnemy:GetPrimaryAttribute() == ATTRIBUTE_INTELLECT
-				and npcEnemy:GetUnitName() ~= "npc_dota_hero_necrolyte"
-			then
-				if ( npcEnemy:GetHealth() < npcTargetHealth )
-				then
-					npcTarget = npcEnemy;
-					npcTargetHealth = npcEnemy:GetHealth();
-				end
-			end
-		end		
-		if ( npcTarget ~= nil )
-		then
-			bot:SetTarget(npcTarget);
-			return BOT_ACTION_DESIRE_HIGH, npcTarget;
-		end		
-		
-		
-		for _,npcEnemy in pairs( nEnemysHeroesInCastRange )
-		do
-			if  J.IsValid(npcEnemy)
-			    and J.CanCastAbilityOnTarget(npcEnemy,bIgnoreMagicImmune)
-				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
-				and not npcEnemy:IsAttackImmune()
-				and npcEnemy:GetPrimaryAttribute() == ATTRIBUTE_AGILITY
-				and not npcEnemy:GetUnitName() == "npc_dota_hero_meepo"
-			then
-				if ( npcEnemy:GetHealth() < npcTargetHealth )
-				then
-					npcTarget = npcEnemy;
-					npcTargetHealth = npcEnemy:GetHealth();
-				end
-			end
-		end		
-		if ( npcTarget ~= nil )
-		then
-			bot:SetTarget(npcTarget);
-			return BOT_ACTION_DESIRE_HIGH, npcTarget;
-		end		
-		
-		
-		for _,npcEnemy in pairs( nEnemysHeroesInCastRange )
-		do
-			if  J.IsValid(npcEnemy)
-			    and J.CanCastAbilityOnTarget(npcEnemy,bIgnoreMagicImmune)
-				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not npcEnemy:IsAttackImmune()
-				and not J.IsDisabled(true, npcEnemy)
-			then
-				if ( npcEnemy:GetHealth() < npcTargetHealth )
-				then
-					npcTarget = npcEnemy;
-					npcTargetHealth = npcEnemy:GetHealth();
-				end
-			end
-		end		
-		if ( npcTarget ~= nil )
-		then
-			
-			bot:SetTarget(npcTarget);
-			return BOT_ACTION_DESIRE_HIGH, npcTarget;
-		end			
-	end
-
-
---]]
-	
 		
 	if J.IsGoingOnSomeone(bot)
-		and DotaTime() > 6*30 
 	then
 		local target = J.GetProperTarget(bot)
 		if  J.IsValidHero(target) 
+			and J.IsInRange(target, bot, nCastRange) 
+			and not J.IsInRange(bot, target, 200)
 			and J.CanCastAbilityOnTarget(target,bIgnoreMagicImmune)
 			and J.CanCastOnTargetAdvanced(target)
-			and J.IsInRange(target, bot, nCastRange) 
-		    and not J.IsDisabled(true, target)
+		    and not J.IsDisabled( target )
 		then
 			return BOT_ACTION_DESIRE_HIGH, target;
 		end
@@ -442,18 +378,7 @@ function X.ConsiderW()
 	then
 		local enemies = bot:GetNearbyHeroes(800, true, BOT_MODE_NONE);
 		local creeps  = bot:GetNearbyLaneCreeps(nCastRange, true);
-		if J.IsValid(enemies[1])
-		   and bot:IsFacingLocation(enemies[1]:GetLocation(),45)
-		   and J.CanCastAbilityOnTarget(enemies[1],bIgnoreMagicImmune)
-		   and J.CanCastOnTargetAdvanced(enemies[1])
-		   and J.IsInRange(enemies[1], bot, 150)
-		   and not J.IsDisabled(true, enemies[1])
-		   and not enemies[1]:IsDisarmed()
-		then
-			
-			return BOT_ACTION_DESIRE_HIGH, enemies[1];
-		end		
-		
+				
 		if enemies[1] ~= nil and creeps[1] ~= nil
 		then
 		    for _,creep in pairs( creeps )
@@ -462,7 +387,6 @@ function X.ConsiderW()
 					and bot:IsFacingLocation(creep:GetLocation(),30)
 					and GetUnitToUnitDistance(bot,creep) >= 650
 				then
-					
 					return BOT_ACTION_DESIRE_LOW, creep;
 				end
 			end
@@ -492,7 +416,7 @@ function X.ConsiderW()
 	then
 		local target =  bot:GetAttackTarget();
 		if target ~= nil 
-			and not J.IsDisabled(true, target)
+			and not J.IsDisabled(target)
 			and not target:IsDisarmed()
 		then
 			return BOT_ACTION_DESIRE_LOW, target;
@@ -511,7 +435,7 @@ function X.ConsiderR()
 	local nNearbyEnemyTowers = bot:GetNearbyTowers(700,true);
 	local nNearbyEnemyBarracks = bot:GetNearbyBarracks(400,true);
 	local nNearbyAlliedCreeps = bot:GetNearbyLaneCreeps(1000,false);
-	local nCastRange = abilityW:IsFullyCastable() and 780 or 650;
+	local nCastRange = abilityW:IsFullyCastable() and 9500 or 800;
 	
 	-- if #nNearbyAllyHeroes + #nNearbyEnemyHeroes >= 3
 	   -- and  #hEnemyHeroList - #nNearbyAllyHeroes <= 2
@@ -520,12 +444,17 @@ function X.ConsiderR()
 	  	-- return BOT_ACTION_DESIRE_HIGH;
 	-- end
 	
-	if J.IsGoingOnSomeone(bot) and #nNearbyAllyHeroes - #nNearbyEnemyHeroes <= 3
+	if J.IsGoingOnSomeone(bot)
 	then
-		local hBotTarget = J.GetProperTarget(bot)		 
-		if J.IsValidHero(hBotTarget)
-		   and J.CanCastOnMagicImmune(hBotTarget)
-		   and J.IsInRange(hBotTarget, bot,  nCastRange)
+		local botTarget = J.GetProperTarget(bot)		 
+		if J.IsValidHero(botTarget)
+			and J.IsInRange(bot, botTarget, nCastRange)
+			and J.CanCastOnMagicImmune(botTarget)
+			and ( #nNearbyAllyHeroes - #nNearbyEnemyHeroes <= 3 
+				or J.GetHP(botTarget) > 0.8 
+				or nHP < 0.6
+				or #nNearbyEnemyHeroes >= 3 )
+					
 		then
 			return BOT_ACTION_DESIRE_HIGH
 		end
@@ -533,7 +462,7 @@ function X.ConsiderR()
 	
 	
 	if J.IsPushing(bot) 
-	   and DotaTime() > 6 * 30
+	   and DotaTime() > 8 * 30
 	then
 		if (#nNearbyEnemyTowers >= 1 or #nNearbyEnemyBarracks >= 1)
 			and #nNearbyAlliedCreeps >= 2
@@ -546,7 +475,7 @@ function X.ConsiderR()
 	if bot:GetActiveMode() == BOT_MODE_RETREAT
 	   and nHP >= 0.5
 	   and nNearbyEnemyHeroes[1] ~= nil
-	   and GetUnitToUnitDistance(bot,nNearbyEnemyHeroes[1]) <= 400
+	   and GetUnitToUnitDistance(bot,nNearbyEnemyHeroes[1]) <= 700
 	then
 		return BOT_ACTION_DESIRE_HIGH;
 	end
@@ -556,4 +485,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

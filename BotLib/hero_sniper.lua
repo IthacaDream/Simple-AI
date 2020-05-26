@@ -48,10 +48,16 @@ tOutFitList['outfit_carry'] = {
 	"item_mask_of_madness",
 	"item_maelstrom",
 	"item_hurricane_pike",
+	"item_ultimate_scepter",
+	"item_travel_boots",
 	"item_skadi",
 	"item_mjollnir",
-	"item_broken_satanic",	
+	"item_broken_satanic",
+	"item_moon_shard",
+	"item_travel_boots_2",
+	"item_ultimate_scepter_2",
 	"item_monkey_king_bar",
+	
 				
 }
 
@@ -62,10 +68,16 @@ tOutFitList['outfit_mid'] = {
 	"item_mask_of_madness",
 	"item_maelstrom",
 	"item_hurricane_pike",
+	"item_ultimate_scepter",
+	"item_travel_boots",
 	"item_skadi",
 	"item_mjollnir",
-	"item_broken_satanic",	
+	"item_broken_satanic",
+	"item_moon_shard",
+	"item_travel_boots_2",
+	"item_ultimate_scepter_2",	
 	"item_monkey_king_bar",
+	
 				
 }
 
@@ -85,11 +97,16 @@ then
 					"item_hand_of_midas",
 					"item_maelstrom",
 					"item_hurricane_pike",
+					"item_ultimate_scepter",
 					"item_mjollnir",
 					"item_skadi",
+					"item_travel_boots",
 					"item_greater_crit",
-					"item_monkey_king_bar",
+					"item_moon_shard",
+					"item_travel_boots_2",
 					"item_ultimate_scepter_2",
+					"item_monkey_king_bar",
+					
 	}
 end
 
@@ -115,7 +132,7 @@ nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroI
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
 X['bDeafaultAbility'] = false
-X['bDeafaultItem'] = true
+X['bDeafaultItem'] = false
 
 function X.MinionThink(hMinionUnit)
 
@@ -229,7 +246,7 @@ function X.ConsiderTarget()
 
 	local nAttackRange = bot:GetAttackRange() + 60;	
 	if nAttackRange > 1600 then nAttackRange = 1600 end
-	local nInAttackRangeWeakestEnemyHero = J.GetAttackableWeakestUnit(true, true, nAttackRange, bot);
+	local nInAttackRangeWeakestEnemyHero = J.GetAttackableWeakestUnit(bot, nAttackRange, true, true);
 	
 	local npcTarget = J.GetProperTarget(bot);
 	local nTargetUint = nil;
@@ -293,7 +310,7 @@ function X.ConsiderQ()
 	then
 		
 		if npcTarget:IsFacingLocation(J.GetEnemyFountain(),30)
-			and J.GetHPR(npcTarget) < 0.4
+			and J.GetHP(npcTarget) < 0.4
 			and J.IsRunning(npcTarget)
 		then
 			for i=0,800,200
@@ -408,7 +425,7 @@ function X.ConsiderQ()
 	then
 	    local nAttackTarget = bot:GetAttackTarget();
 		if  J.IsValid(nAttackTarget)
-			and J.GetHPR(nAttackTarget) > 0.5
+			and J.GetHP(nAttackTarget) > 0.5
 			and J.IsInRange(nAttackTarget,bot,600)
 			and not nAttackTarget:HasModifier("modifier_sniper_shrapnel_slow")
 		    and not X.IsAbiltyQCastedHere(nAttackTarget:GetLocation(),nRadius)
@@ -610,4 +627,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

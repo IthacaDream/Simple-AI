@@ -145,7 +145,7 @@ function X.Consider()
 		   and tossTarget:IsHero()
 		   and #hEnemyHeroListInRange <= 2
 		   and hEnemyHeroListInRange[1] ~= nil
-		   and J.GetHPR(tossTarget) > 0.5
+		   and J.GetHP(tossTarget) > 0.5
 		then
 			return BOT_ACTION_DESIRE_HIGH, hEnemyHeroListInRange[1]
 		end

@@ -41,6 +41,7 @@ tOutFitList['outfit_carry'] = {
 	"item_cyclone",
 	"item_lotus_orb",
 	"item_sheepstick",
+	"item_moon_shard",
 				
 }
 
@@ -57,6 +58,7 @@ tOutFitList['outfit_priest'] = {
 	"item_rod_of_atos",
 	"item_shivas_guard",
 	"item_sheepstick",	
+	"item_moon_shard",
 	
 }
 
@@ -68,6 +70,7 @@ tOutFitList['outfit_mage'] = {
 	"item_veil_of_discord",
 	"item_cyclone",
 	"item_sheepstick",
+	"item_moon_shard",
 
 }
 
@@ -90,7 +93,7 @@ nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroI
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
 
-X['bDeafaultAbility'] = true
+X['bDeafaultAbility'] = false
 X['bDeafaultItem'] = true
 
 function X.MinionThink(hMinionUnit)
@@ -245,7 +248,7 @@ function X.ConsiderW()
 		   and bot:GetAttackTarget() == nil
 		   and J.CanCastOnNonMagicImmune(npcTarget)
 		   and J.IsInRange(npcTarget, bot, nRadius - 30)
-		   and ( J.GetHPR(bot) < 0.25 
+		   and ( J.GetHP(bot) < 0.25 
 		         or ( not J.IsInRange(npcTarget, bot, 430)
 					  and bot:IsFacingLocation(npcTarget:GetLocation(),30) 
 				      and not npcTarget:IsFacingLocation(bot:GetLocation(),120) ))
@@ -266,7 +269,7 @@ function X.ConsiderQ()
 	-- Make sure it's castable
 	if  not abilityQ:IsFullyCastable() 
 		or bot:IsInvisible()
-		or ( J.GetHPR(bot) > 0.62 and abilityR:GetCooldownTimeRemaining() < 6 and bot:GetMana() < abilityR:GetManaCost() )
+		or ( J.GetHP(bot) > 0.62 and abilityR:GetCooldownTimeRemaining() < 6 and bot:GetMana() < abilityR:GetManaCost() )
 	then 
 		return BOT_ACTION_DESIRE_NONE;
 	end
@@ -283,13 +286,13 @@ function X.ConsiderQ()
 	--------------------------------------
 
 	-- If we're seriously retreating, see if we can land a stun on someone who's damaged us recently
-	if J.IsRetreating(bot) or J.GetHPR(bot) < 0.5
+	if J.IsRetreating(bot) or J.GetHP(bot) < 0.5
 	then
 		local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( 2*nRadius, true, BOT_MODE_NONE );
 		if ( bot:WasRecentlyDamagedByAnyHero( 2.0 ) and #tableNearbyEnemyHeroes > 0 )
-			or (J.GetHPR(bot) < 0.75 and bot:DistanceFromFountain() < 400)
-			or J.GetHPR(bot) < J.GetMPR(bot)
-			or J.GetHPR(bot) < 0.25
+			or (J.GetHP(bot) < 0.75 and bot:DistanceFromFountain() < 400)
+			or J.GetHP(bot) < J.GetMP(bot)
+			or J.GetHP(bot) < 0.25
 		then
 			return BOT_ACTION_DESIRE_MODERATE;
 		end
@@ -314,10 +317,10 @@ function X.ConsiderQ()
 		end
 		
 		if  nCanKillCount >= 2
-			or (nCanKillCount >= 1 and J.GetMPR(bot) > 0.9)
+			or (nCanKillCount >= 1 and J.GetMP(bot) > 0.9)
 			or (nCanHurtCount >= 3 and bot:GetActiveMode() ~= BOT_MODE_LANING)
 			or (nCanHurtCount >= 3 and nCanKillCount >= 1 and J.IsAllowedToSpam(bot, 190))
-			or (nCanHurtCount >= 3 and J.GetMPR(bot) > 0.8 and bot:GetLevel() > 10 and #tableNearbyEnemyCreeps == 3)
+			or (nCanHurtCount >= 3 and J.GetMP(bot) > 0.8 and bot:GetLevel() > 10 and #tableNearbyEnemyCreeps == 3)
 			or (nCanHurtCount >= 2 and nCanKillCount >= 1 and bot:GetLevel() > 24 and #tableNearbyEnemyCreeps == 2)
 		then
 			return BOT_ACTION_DESIRE_HIGH;
@@ -486,7 +489,7 @@ function X.GetEstDamage(bot, npcTarget, nDamagePerHealth)
 		return targetMaxHealth * 0.3;
 	end
 	
-	local AroundTargetAllyCount = J.GetAroundTargetAllyHeroCount(npcTarget, 650, bot);
+	local AroundTargetAllyCount = J.GetAroundTargetAllyHeroCount(npcTarget, 650);
 	
 	local MagicResistReduce = 1 - npcTarget:GetMagicResist();
 	if MagicResistReduce  < 0.1 then  MagicResistReduce  = 0.1 end;
@@ -498,7 +501,7 @@ function X.GetEstDamage(bot, npcTarget, nDamagePerHealth)
 	if bot:GetLevel() >= 12 then EstDamage = EstDamage + targetMaxHealth * 0.032; end
 	if bot:GetLevel() >= 18 then EstDamage = EstDamage + targetMaxHealth * 0.016; end
 	
-	if bot:HasScepter() and J.GetHPR(bot) < 0.2 then EstDamage = EstDamage + targetMaxHealth * 0.3; end
+	if bot:HasScepter() and J.GetHP(bot) < 0.2 then EstDamage = EstDamage + targetMaxHealth * 0.3; end
 		
 	if AroundTargetAllyCount >= 2 then EstDamage = EstDamage + targetMaxHealth * 0.08 *(AroundTargetAllyCount - 1); end
 
@@ -565,4 +568,4 @@ function X.ReportDetails(bot,npcTarget,EstDamage,nDamagePerHealth)
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

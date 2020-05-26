@@ -12,14 +12,13 @@ end
 
 
 local bot = GetBot();
-local bDebugMode = ( 1 == 1 )
+local bDebugMode = ( 1 == 10 )
 local X = {}
 
 local J = require( GetScriptDirectory()..'/FunLib/jmz_func')
 
 local botName = bot:GetUnitName();
 local cAbility = nil;
-local targetShrine = nil;
 
 local targetUnit = nil;
 
@@ -361,7 +360,7 @@ function X.SupportFindTarget( bot )
 	end
 	
 	
-	local enemyCourier = X.GetEnemyCourier(bot, nAttackRange + botLV * 5 + 50);
+	local enemyCourier = X.GetEnemyCourier(bot, nAttackRange + botLV * 2 + 30);
 	if enemyCourier ~= nil
 	then
 		return enemyCourier,BOT_MODE_DESIRE_ABSOLUTE * 1.5; 
@@ -425,7 +424,7 @@ function X.SupportFindTarget( bot )
 	
 	local denyDamage = botAD -1;
 	local nNearbyEnemyHeroes = bot:GetNearbyHeroes(750,true,BOT_MODE_NONE); -----------*************
-	if  IsModeSuitHit and not bePvNMode
+	if  IsModeSuitHit and not bePvNMode and bot:GetLevel() <= 10
 		and bot:GetNetWorth() < 13998   -----------*************
 		and ( botHP > 0.38 or not bot:WasRecentlyDamagedByAnyHero(3.0))
 		and (nNearbyEnemyHeroes[1] == nil or nNearbyEnemyHeroes[1]:GetLevel() < 10) -----------*************
@@ -449,7 +448,7 @@ function X.SupportFindTarget( bot )
 		   and #nAllyTowers > 0
 		then
 			if X.CanBeAttacked(nAllyTowers[1])
-			   and J.GetHPR(nAllyTowers[1]) < 0.08
+			   and J.GetHP(nAllyTowers[1]) < 0.08
 			   and X.IsLastHitCreep(nAllyTowers[1],denyDamage * 3)
 			then 
 				return nAllyTowers[1],BOT_MODE_DESIRE_ABSOLUTE; 
@@ -506,7 +505,7 @@ function X.SupportFindTarget( bot )
 				end
 		    end
 			
-			local nWillAttackCreeps = X.GetExceptRangeLastHitCreep(true, centerAlly:GetAttackDamage() *1.3, 0, 800, centerAlly);
+			local nWillAttackCreeps = X.GetExceptRangeLastHitCreep(true, centerAlly:GetAttackDamage() * 1.2, 0, 800, centerAlly);
 			if nWillAttackCreeps == nil 
 				or not X.IsOthersTarget(nWillAttackCreeps)
 			then				
@@ -522,7 +521,7 @@ function X.SupportFindTarget( bot )
 						for _,ally in pairs(nAllies)
 						do
 							if X.CanAttackTogether(ally)
-								and GetUnitToUnitDistance(ally,creep) <= ally:GetAttackRange() +50 
+								and GetUnitToUnitDistance(ally,creep) <= ally:GetAttackRange() + 150 
 							then
 								togetherDamage = ally:GetAttackDamage() + togetherDamage;
 								togetherCount = togetherCount +1;
@@ -530,7 +529,7 @@ function X.SupportFindTarget( bot )
 						end
 						if X.IsLastHitCreep(creep,togetherDamage)
 						   and togetherCount >= 2
-						   and GetUnitToUnitDistance(bot,creep) <= bot:GetAttackRange() +50
+						   and GetUnitToUnitDistance(bot,creep) <= bot:GetAttackRange() + 150
 						then
 							return creep,BOT_MODE_DESIRE_HIGH;
 						end
@@ -572,7 +571,8 @@ function X.SupportFindTarget( bot )
 			end
 		end
 				
-		if  bot:DistanceFromFountain() > 3800 and not bePvNMode
+		if  bot:DistanceFromFountain() > 3800 
+			and not bePvNMode and bot:GetLevel() <= 6
 			and J.GetDistanceFromEnemyFountain(bot) > 5000
 			and nEnemyTowers[1] == nil
 			and bot:GetNetWorth() < 19800
@@ -671,7 +671,7 @@ function X.CarryFindTarget( bot )
 	end
 	
 	
-	local enemyCourier = X.GetEnemyCourier(bot, nAttackRange + botLV * 5 + 50);
+	local enemyCourier = X.GetEnemyCourier(bot, nAttackRange + botLV * 2 + 30);
 	if enemyCourier ~= nil
 	then
 		return enemyCourier,BOT_MODE_DESIRE_ABSOLUTE * 1.5; 
@@ -801,7 +801,7 @@ function X.CarryFindTarget( bot )
 	
 	local denyDamage = botAD;
 	local nNearbyEnemyHeroes = bot:GetNearbyHeroes(650,true,BOT_MODE_NONE);
-	if  IsModeSuitHit and not bePvNMode
+	if  IsModeSuitHit and not bePvNMode and bot:GetLevel() <= 10
 		and bot:GetNetWorth() < 19990
 		and ( botHP > 0.38 or not bot:WasRecentlyDamagedByAnyHero(3.0))
 		and (nNearbyEnemyHeroes[1] == nil or nNearbyEnemyHeroes[1]:GetLevel() < 12)
@@ -826,7 +826,7 @@ function X.CarryFindTarget( bot )
 		   and #nAllyTowers > 0
 		then
 			if X.CanBeAttacked(nAllyTowers[1])
-			   and J.GetHPR(nAllyTowers[1]) < 0.05
+			   and J.GetHP(nAllyTowers[1]) < 0.05
 			   and X.IsLastHitCreep(nAllyTowers[1],denyDamage * 3)
 			then 
 				return nAllyTowers[1],BOT_MODE_DESIRE_ABSOLUTE; 
@@ -837,7 +837,7 @@ function X.CarryFindTarget( bot )
 	if  IsModeSuitHit and not bePvNMode
 		and X.CanAttackTogether(bot)
 		and DotaTime() < 25 * 60
-		and denyDamage < 111
+		and denyDamage < 150
 		and (nNearbyEnemyHeroes[1] == nil or nNearbyEnemyHeroes[1]:GetLevel() < 12)
 		and bot:DistanceFromFountain() > 3800
 		and J.GetDistanceFromEnemyFountain(bot) > 5000
@@ -882,7 +882,7 @@ function X.CarryFindTarget( bot )
 				end
 		    end
 			
-			local nWillAttackCreeps = X.GetExceptRangeLastHitCreep(true, centerAlly:GetAttackDamage() *1.3, 0, 800, centerAlly);
+			local nWillAttackCreeps = X.GetExceptRangeLastHitCreep(true, centerAlly:GetAttackDamage() *1.2, 0, 800, centerAlly);
 			if nWillAttackCreeps == nil 
 				or not X.IsOthersTarget(nWillAttackCreeps)
 			then				
@@ -898,7 +898,7 @@ function X.CarryFindTarget( bot )
 						for _,ally in pairs(nAllies)
 						do
 							if X.CanAttackTogether(ally)
-								and GetUnitToUnitDistance(ally,creep) <= ally:GetAttackRange() +50 
+								and GetUnitToUnitDistance(ally,creep) <= ally:GetAttackRange() + 150 
 							then
 								togetherDamage = ally:GetAttackDamage() + togetherDamage;
 								togetherCount = togetherCount +1;
@@ -906,7 +906,7 @@ function X.CarryFindTarget( bot )
 						end
 						if X.IsLastHitCreep(creep,togetherDamage)
 						   and togetherCount >= 2
-						   and GetUnitToUnitDistance(bot,creep) <= bot:GetAttackRange() +50
+						   and GetUnitToUnitDistance(bot,creep) <= bot:GetAttackRange() + 150
 						then
 							return creep,BOT_MODE_DESIRE_HIGH;
 						end
@@ -956,7 +956,8 @@ function X.CarryFindTarget( bot )
 			
 		end
 		
-		if  bot:DistanceFromFountain() > 3800 and not bePvNMode
+		if  bot:DistanceFromFountain() > 3800 
+			and not bePvNMode and bot:GetLevel() <= 6
 			and J.GetDistanceFromEnemyFountain(bot) > 5000
 			and nEnemyTowers[1] == nil
 			and bot:GetNetWorth() < 19800
@@ -978,7 +979,7 @@ function X.CarryFindTarget( bot )
 		
 		--分开打野和收线的逻辑更好		
 		local nEnemysCreeps = bot:GetNearbyCreeps(1600,true)
-		local nAttackAlly = J.GetSpecialModeAllies(BOT_MODE_ATTACK,2800,bot);
+		local nAttackAlly = J.GetSpecialModeAllies(bot,2800,BOT_MODE_ATTACK);
 		local nTeamFightLocation = J.GetTeamFightLocation(bot);
 		local nDefendLane,nDefendDesire = J.GetMostDefendLaneDesire();
 		if  X.CanBeAttacked(nEnemysCreeps[1])
@@ -988,7 +989,7 @@ function X.CarryFindTarget( bot )
 			and (nEnemysCreeps[1]:GetTeam() == TEAM_NEUTRAL or attackDamage > 130)
 			and (not nEnemysCreeps[1]:IsAncientCreep() or attackDamage > 160 )
 			and ( not J.IsKeyWordUnit("warlock",nEnemysCreeps[1])
-				  or J.GetHPR(bot) > 0.58 )		
+				  or J.GetHP(bot) > 0.58 )		
 			and ( nTeamFightLocation == nil 
 			      or GetUnitToLocationDistance(bot,nTeamFightLocation) >= 3000 )
 			and ( nDefendDesire <= 0.8 )
@@ -1083,9 +1084,29 @@ function X.CanNotUseAttack(bot)
 		   or bot:IsDisarmed()
 		   or bot:IsHexed()
 		   or bot:IsRooted()	
-		   or ( bot:IsInvisible() 
-				and not bot:HasModifier('modifier_templar_assassin_meld')
-				and not bot:HasModifier('modifier_phantom_assassin_blur_active') )
+		   or X.WillBreakInvisible(bot)
+end
+
+
+function X.WillBreakInvisible(bot)
+
+	local botName = bot:GetUnitName()
+	
+	local tInvisibleHeroIndex = {
+		["npc_dota_hero_riki"] = true,
+		["npc_dota_hero_phantom_assassin"] = true,
+		["npc_dota_hero_templar_assassin"] = true,		
+		["npc_dota_hero_bounty_hunter"] = true,		
+	}
+
+	if bot:IsInvisible() 
+		and tInvisibleHeroIndex[botName] == nil
+	then
+		return true
+	end
+
+	return false
+	
 end
 
 
@@ -1682,6 +1703,8 @@ function X.IsSpecialCarry(bot)
 		["npc_dota_hero_templar_assassin"] = true,
 		["npc_dota_hero_tidehunter"] = true,
 		["npc_dota_hero_viper"] = true,
+		["npc_dota_hero_riki"] = true,
+		["npc_dota_hero_bounty_hunter"] = true,
 	}
 	
 	return tSpecialCarryList[botName] == true
@@ -1729,7 +1752,7 @@ function X.ShouldAttackTowerCreep(bot)
 		and bot:GetTarget() == nil 
 	    and bot:GetAttackTarget() == nil
 		and X.IsModeSuitToHitCreep(bot)
-		and J.GetHPR(bot) > 0.38
+		and J.GetHP(bot) > 0.38
 		and not bot:WasRecentlyDamagedByAnyHero(2.0)
 	then
 		local nRange = bot:GetAttackRange() + 150;
@@ -1742,7 +1765,7 @@ function X.ShouldAttackTowerCreep(bot)
 		local nEnemyTowers = bot:GetNearbyTowers(nRange,true);
 		local botMoveSpeed = bot:GetCurrentMovementSpeed();
 		if X.CanBeAttacked(nEnemyTowers[1]) 
-			and ( nEnemyTowers[1]:GetAttackTarget() ~= bot or J.GetHPR(bot) > 0.8 )
+			and ( nEnemyTowers[1]:GetAttackTarget() ~= bot or J.GetHP(bot) > 0.8 )
 			and not nEnemyTowers[1]:HasModifier('modifier_backdoor_protection')
 			and #allyCreeps > 0
 			and fLastReturnTime < DotaTime() - 1.0
@@ -1770,7 +1793,7 @@ function X.ShouldAttackTowerCreep(bot)
 			and not nEnemyAncient:HasModifier('modifier_backdoor_protection')
 			and( nEnemyHeroes[1] == nil 
 			     or nEnemyHeroes[1]:GetAttackTarget() ~= bot 
-				 or J.GetHPR(bot) > 0.49 )
+				 or J.GetHP(bot) > 0.49 )
 		then
 			attackTarget = nEnemyAncient;
 			local nDist = GetUnitToUnitDistance(bot,attackTarget) - bot:GetAttackRange();
@@ -1829,7 +1852,7 @@ function X.ShouldNotRetreat(bot)
 	local nAttackAlly = bot:GetNearbyHeroes(1000,false,BOT_MODE_ATTACK);
 	if  ( bot:HasModifier("modifier_item_mask_of_madness_berserk")
 			or bot:HasModifier("modifier_oracle_false_promise_timer") )
-		and ( #nAttackAlly >= 1 or J.GetHPR(bot) > 0.6 )
+		and ( #nAttackAlly >= 1 or J.GetHP(bot) > 0.6 )
 	then
 		return true;
 	end		
@@ -1861,7 +1884,7 @@ function X.ShouldNotRetreat(bot)
 	do
 		if J.IsValid(ally) 
 		then
-			if  ( J.GetHPR(ally) > 0.88 and ally:GetLevel() >= 12 and ally:GetActiveMode() ~= BOT_MODE_RETREAT)
+			if  ( J.GetHP(ally) > 0.88 and ally:GetLevel() >= 12 and ally:GetActiveMode() ~= BOT_MODE_RETREAT)
 			    or ( ally:HasModifier("modifier_black_king_bar_immune") or ally:IsMagicImmune() )
 				or ( ally:HasModifier("modifier_item_mask_of_madness_berserk") and ally:GetAttackTarget() ~= nil )
 				or ally:HasModifier("modifier_abaddon_borrowed_time")
@@ -1875,4 +1898,4 @@ function X.ShouldNotRetreat(bot)
 	
 	return false;
 end
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

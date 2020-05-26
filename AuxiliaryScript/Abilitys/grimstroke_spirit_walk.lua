@@ -74,7 +74,7 @@ function X.Consider()
 		do
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled(npcEnemy)
 				and not npcEnemy:IsDisarmed()
 			then
 				local npcEnemyDamage = npcEnemy:GetEstimatedDamageToTarget( false, bot, 3.0, DAMAGE_TYPE_PHYSICAL );
@@ -99,8 +99,8 @@ function X.Consider()
 		do
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
-				and not J.IsDisabled(true, npcEnemy)
-				and J.GetAttackTargetEnemyCreepCount(npcEnemy, 600) >= 4
+				and not J.IsDisabled(npcEnemy)
+				and J.GetAttackEnemysAllyCreepCount(npcEnemy, 600) >= 4
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcEnemy;
 			end
@@ -114,7 +114,7 @@ function X.Consider()
 		if J.IsValidHero(npcTarget) 
 			and J.CanCastOnNonMagicImmune(npcTarget) 
 			and J.IsInRange(npcTarget, bot, nCastRange +80) 
-			and not J.IsDisabled(true, npcTarget)
+			and not J.IsDisabled(npcTarget)
 			and not npcTarget:IsDisarmed()
 		then
 			return BOT_ACTION_DESIRE_HIGH, npcTarget;

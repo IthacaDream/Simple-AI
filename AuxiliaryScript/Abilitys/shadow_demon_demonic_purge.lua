@@ -78,7 +78,7 @@ function X.Consider()
 		local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( nCastRange + 200, true, BOT_MODE_NONE );
 		for _,npcEnemy in pairs( tableNearbyEnemyHeroes )
 		do
-			if ( J.CanCastOnMagicImmune(npcEnemy) and not npcEnemy:HasModifier("modifier_shadow_demon_purge_slow") and not J.IsDisabled(true, npcEnemy) )
+			if ( J.CanCastOnMagicImmune(npcEnemy) and not npcEnemy:HasModifier("modifier_shadow_demon_purge_slow") and not J.IsDisabled(npcEnemy) )
 			then
 				local nDamage = npcEnemy:GetEstimatedDamageToTarget( false, bot, 3.0, DAMAGE_TYPE_ALL );
 				if ( nDamage > nMostDangerousDamage )
@@ -100,7 +100,7 @@ function X.Consider()
 	then
 		local npcTarget = bot:GetTarget();
 		if J.IsValidHero(npcTarget) and J.CanCastOnMagicImmune(npcTarget) and J.IsInRange(npcTarget, bot, nCastRange + 200) 
-		   and not npcTarget:HasModifier("modifier_shadow_demon_purge_slow") and not J.IsDisabled(true, npcTarget)
+		   and not npcTarget:HasModifier("modifier_shadow_demon_purge_slow") and not J.IsDisabled(npcTarget)
 		then
 			return BOT_ACTION_DESIRE_MODERATE, npcTarget;
 		end

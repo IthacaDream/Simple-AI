@@ -4,8 +4,7 @@
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ---------------------------------------------------------------------------
---	When the bot is thinking, the player is laughing.
---  But when the player no longer thinking, the bot still thinking.
+--	When the bot is thinking, the creator is laughing.
 ------------------------------------------------------2019.11
 local targetdata = require(GetScriptDirectory() .. "/AuxiliaryScript/RoleTargetsData")
 local otherGameMod = require(GetScriptDirectory() .. "/AuxiliaryScript/OtherGameMod");
@@ -362,6 +361,8 @@ local sSecondList = {
 	"npc_dota_hero_kunkka",
 	"npc_dota_hero_skeleton_king",	
 	"npc_dota_hero_ogre_magi",
+	"npc_dota_hero_sand_king",
+	"npc_dota_hero_bounty_hunter",
 }
 
 local sThirdList = {	
@@ -374,6 +375,8 @@ local sThirdList = {
 	"npc_dota_hero_phantom_assassin",
 	"npc_dota_hero_phantom_lancer",
 	"npc_dota_hero_huskar",
+	"npc_dota_hero_riki",
+	"npc_dota_hero_bounty_hunter",
 	"npc_dota_hero_clinkz",
 	
 }
@@ -396,24 +399,23 @@ local sFifthList = {
 	"npc_dota_hero_witch_doctor",
 	"npc_dota_hero_lich",
 	"npc_dota_hero_death_prophet",
+	"npc_dota_hero_lion",
 }				
 
 ---------------------------------------------------------
 ---------------------------------------------------------
 
 local sMidList = {
-	"npc_dota_hero_antimage",
+	"npc_dota_hero_templar_assassin",
 	"npc_dota_hero_arc_warden",
 	"npc_dota_hero_bloodseeker",
 	"npc_dota_hero_bristleback",
 	"npc_dota_hero_chaos_knight",
 	"npc_dota_hero_medusa",	
 	"npc_dota_hero_nevermore",
-	"npc_dota_hero_phantom_assassin",
 	"npc_dota_hero_razor",
 	"npc_dota_hero_sniper",
 	"npc_dota_hero_sniper",
-	"npc_dota_hero_templar_assassin",
 	"npc_dota_hero_viper",
 	"npc_dota_hero_viper",
 }
@@ -425,6 +427,8 @@ local sTankList = {
 	"npc_dota_hero_kunkka",
 	"npc_dota_hero_ogre_magi",
 	"npc_dota_hero_skeleton_king",
+	"npc_dota_hero_sand_king",
+	"npc_dota_hero_bounty_hunter",
 }
 
 local sCarryList = {
@@ -448,6 +452,12 @@ local sCarryList = {
 	"npc_dota_hero_sven",
 	"npc_dota_hero_templar_assassin",
 	"npc_dota_hero_viper",
+	"npc_dota_hero_ogre_magi",
+	"npc_dota_hero_sand_king",
+	"npc_dota_hero_riki",
+	"npc_dota_hero_riki",
+	"npc_dota_hero_bounty_hunter",
+	"npc_dota_hero_bounty_hunter",
 }
 
 local sMageList = {
@@ -465,6 +475,7 @@ local sMageList = {
 	"npc_dota_hero_warlock",
 	"npc_dota_hero_witch_doctor",
 	"npc_dota_hero_zuus",
+	"npc_dota_hero_lion",
 }
 
 local sPriestList = {
@@ -481,6 +492,7 @@ local sPriestList = {
 	"npc_dota_hero_warlock",
 	"npc_dota_hero_witch_doctor",
 	"npc_dota_hero_zuus",
+	"npc_dota_hero_lion",
 }
 
 tSelectPoolList = {
@@ -521,22 +533,12 @@ then
 	--初始策略位置
 	if GetTeam() ~= TEAM_DIRE then HeroSet = require( (Chat.GetLocalWord(1))..(Chat.GetLocalWord(5)) ) end
 	if GetTeam() == TEAM_DIRE then HeroSet = require( (Chat.GetLocalWord(3))..(Chat.GetLocalWord(6)) ) end
-	
-	--修改策略位置
-	if Chat.GetRawGameWord(HeroSet['QiYongKeChang']) == true 
-	then
-		Role["bHostSet"] = false
-		if GetTeam() ~= TEAM_DIRE then HeroSet = require( (Chat.GetLocalWord(2))..(Chat.GetLocalWord(5)) ) end
-		if GetTeam() == TEAM_DIRE then HeroSet = require( (Chat.GetLocalWord(4))..(Chat.GetLocalWord(6)) ) end
-	end
-	
+		
 	--根据策略内容决定模式
-	Role["nUserMode"] = Chat.GetRawGameWord(HeroSet['JiHuoCeLue']) == true and Role.GetUserLV(sABATiYanMa) or 0
+	Role["nUserModeLevel"] = Chat.GetRawGameWord(HeroSet['JiHuoCeLue']) == true and Role.GetUserLV(sABATiYanMa) or 0
 	Role["sUserName"] = HeroSet['ZhanDuiJunShi']
 	
-	if Chat.GetRawGameWord(HeroSet['ShuBuQi']) ~= false then Role["nUserMode"] = -1 end
-	
-	if Role["nUserMode"] <= 0 then bUserMode = false end
+	if Role["nUserModeLevel"] <= 0 then bUserMode = false end
 	
 	if bUserMode 
 	then
@@ -626,8 +628,8 @@ function X.SetLineUpInit()
 	if bLineupActive then sSelectList = Chat.GetHeroSelectList(HeroSet['ZhenRong'])	end
 	if bLaneAssignActive then tLaneAssignList = Chat.GetLaneAssignList(HeroSet['FenLu']) end
 		
-	local IDs = GetTeamPlayers(GetTeam())
-	for i,id in pairs(IDs) 
+	local nIDs = GetTeamPlayers(GetTeam())
+	for i,id in pairs(nIDs) 
 	do
 		if not IsPlayerBot(id) 
 		then
@@ -673,8 +675,8 @@ function X.IsHumanNotReady(team)
 	if GameTime() > 20 or bLineupReserve then return false end
 
 	local humanCount,readyCount = 0, 0;
-	local IDs = GetTeamPlayers(team);
-	for i,id in pairs(IDs)
+	local nIDs = GetTeamPlayers(team);
+	for i,id in pairs(nIDs)
 	do
         if not IsPlayerBot(id)
 		then
@@ -885,7 +887,7 @@ local sDiStarsList =
 --"地藏星",
 }
 
-if RandomInt(1,987) < 65
+if RandomInt(1,20200) < 11
 then
 sDiStarsList = {
 "冠状细菌",
@@ -961,8 +963,8 @@ function AllPickLogic()
 	--自定义挑选逻辑
 	if bLineupActive
 	then
-		local IDs = GetTeamPlayers(GetTeam());
-		for i,id in pairs(IDs) 
+		local nIDs = GetTeamPlayers(GetTeam());
+		for i,id in pairs(nIDs) 
 		do
 			if ( IsPlayerBot(id) or bLineupReserve ) 
 				and ( GetSelectedHeroName(id) == "" )
@@ -986,8 +988,8 @@ function AllPickLogic()
 	end
 	
 	--常规挑选逻辑
-	local IDs = GetTeamPlayers(GetTeam());
-	for i,id in pairs(IDs) 
+	local nIDs = GetTeamPlayers(GetTeam());
+	for i,id in pairs(nIDs) 
 	do
 		if IsPlayerBot(id) and GetSelectedHeroName(id) == ""
 		then
@@ -1046,4 +1048,4 @@ function UpdateLaneAssignments()
 end
 
 end
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

@@ -69,7 +69,7 @@ function X.Consider()
 			   and J.CanCastOnNonMagicImmune(nEnemysHeroesInCastRange[i]) 
 			   and nEnemysHeroesInCastRange[i]:GetHealth() < nEnemysHeroesInCastRange[i]:GetActualIncomingDamage(nDamage,DAMAGE_TYPE_MAGICAL)
 			   and not (GetUnitToUnitDistance(nEnemysHeroesInCastRange[i],bot) <= bot:GetAttackRange() + 60)
-			   and not J.IsDisabled(true, nEnemysHeroesInCastRange[i]) 
+			   and not J.IsDisabled(nEnemysHeroesInCastRange[i]) 
 			then
 				return BOT_ACTION_DESIRE_HIGH, nEnemysHeroesInCastRange[i];
 			end
@@ -100,7 +100,7 @@ function X.Consider()
 		do
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled(npcEnemy)
 				and not npcEnemy:IsDisarmed()
 			then
 				local npcEnemyDamage = npcEnemy:GetEstimatedDamageToTarget( false, bot, 3.0, DAMAGE_TYPE_ALL );
@@ -125,7 +125,7 @@ function X.Consider()
 		if J.IsValidHero(target) 
 			and J.CanCastOnNonMagicImmune(target) 
 			and J.IsInRange(target, bot, nCastRange) 
-		    and not J.IsDisabled(true, target)
+		    and not J.IsDisabled(target)
 			and not target:IsDisarmed()
 		then
 			return BOT_ACTION_DESIRE_HIGH, target;
@@ -137,7 +137,7 @@ function X.Consider()
 	then
 		if J.IsValid(nEnemysHeroesInCastRange[1]) 
 		   and J.CanCastOnNonMagicImmune(nEnemysHeroesInCastRange[1]) 
-		   and not J.IsDisabled(true, nEnemysHeroesInCastRange[1])
+		   and not J.IsDisabled(nEnemysHeroesInCastRange[1])
 		   and not nEnemysHeroesInCastRange[1]:IsDisarmed()
 		   and GetUnitToUnitDistance(bot,nEnemysHeroesInCastRange[1]) <= nCastRange - 60 
 		then
@@ -153,7 +153,7 @@ function X.Consider()
 		local target =  bot:GetAttackTarget();
 		
 		if target ~= nil and target:IsAlive()
-			and not J.IsDisabled(true, target)
+			and not J.IsDisabled(target)
 			and not target:IsDisarmed()
 		then
 			return BOT_ACTION_DESIRE_LOW, target;

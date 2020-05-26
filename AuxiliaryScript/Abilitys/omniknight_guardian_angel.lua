@@ -64,7 +64,7 @@ function X.Consider()
 		if npcAlly ~= nil
            and J.IsValidHero(npcAlly)
            and J.CanCastOnNonMagicImmune(npcAlly)
-           and J.GetHPR(npcAlly) <= 0.45
+           and J.GetHP(npcAlly) <= 0.45
         then
             nAllieslowhp = nAllieslowhp + 1;
         end

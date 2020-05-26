@@ -102,7 +102,7 @@ function X.Consider()
 		if J.IsValidHero(npcTarget) 
 		   and J.CanCastOnNonMagicImmune(npcTarget) 
 		   and J.IsInRange(npcTarget, bot, 1200)
-		   and not J.IsDisabled(true, npcTarget)
+		   and not J.IsDisabled(npcTarget)
 		then
 			local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( 1600, false, BOT_MODE_NONE );
 			if #tableNearbyEnemyHeroes >= 2 

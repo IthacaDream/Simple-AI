@@ -98,7 +98,7 @@ function X.Consider()
 			do
 				if  J.IsValid(npcEnemy)
 					and J.CanCastOnNonMagicImmune(npcEnemy) 
-					and not J.IsDisabled(true, npcEnemy)
+					and not J.IsDisabled(npcEnemy)
 					and not npcEnemy:IsDisarmed()
 				then
 					local npcEnemyDamage = npcEnemy:GetEstimatedDamageToTarget( false, bot, 3.0, DAMAGE_TYPE_PHYSICAL );

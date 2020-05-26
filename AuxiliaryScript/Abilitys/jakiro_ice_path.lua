@@ -110,7 +110,7 @@ function X.Consider()
 		if J.IsValidHero(target) 
 		   and J.CanCastOnNonMagicImmune(target) 
 		   and J.IsInRange(target, bot, castRange - 200) 
-		   and not J.IsDisabled(true, target)
+		   and not J.IsDisabled(target)
 		then
 			return BOT_ACTION_DESIRE_HIGH, target:GetExtrapolatedLocation(nDelay + castPoint);
 		end

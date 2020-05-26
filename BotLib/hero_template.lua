@@ -222,7 +222,7 @@ function X.ConsiderQ()--使用一技能的欲望
 		do
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled(npcEnemy)
 				and not npcEnemy:IsDisarmed()
 			then
 				local npcEnemyDamage = npcEnemy:GetEstimatedDamageToTarget( false, bot, 3.0, DAMAGE_TYPE_PHYSICAL );
@@ -247,8 +247,8 @@ function X.ConsiderQ()--使用一技能的欲望
 		do
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
-				and not J.IsDisabled(true, npcEnemy)
-				and J.GetAttackTargetEnemyCreepCount(npcEnemy, 600) >= 4
+				and not J.IsDisabled(npcEnemy)
+				and J.GetAttackEnemysAllyCreepCount(npcEnemy, 600) >= 4
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcEnemy;
 			end
@@ -276,10 +276,10 @@ function X.ConsiderQ()--使用一技能的欲望
 		if J.IsValidHero(npcTarget) 
 			and J.CanCastOnNonMagicImmune(npcTarget) 
 			and J.IsInRange(npcTarget, bot, nCastRange +80) 
-			and not J.IsDisabled(true, npcTarget)
+			and not J.IsDisabled(npcTarget)
 			and not npcTarget:IsDisarmed()
 		then
-			if nSkillLV >= 3 or nMP > 0.68 or J.GetHPR(npcTarget) < 0.38 or nHP < 0.25
+			if nSkillLV >= 3 or nMP > 0.68 or J.GetHP(npcTarget) < 0.38 or nHP < 0.25
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcTarget;
 			end
@@ -319,7 +319,7 @@ function X.ConsiderQ()--使用一技能的欲望
 		do
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled(npcEnemy)
                 and not npcEnemy:IsDisarmed()				
 				and bot:IsFacingLocation(npcEnemy:GetLocation(),45)
 			then
@@ -338,7 +338,7 @@ function X.ConsiderQ()--使用一技能的欲望
 		do
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
-				and not J.IsDisabled(true, npcEnemy)			
+				and not J.IsDisabled(npcEnemy)			
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcEnemy
 			end

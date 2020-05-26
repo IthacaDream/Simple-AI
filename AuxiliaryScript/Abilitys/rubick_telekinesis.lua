@@ -105,7 +105,7 @@ function X.Consider()
 	then
 		local npcTarget = bot:GetTarget();
 		if J.IsValidHero(npcTarget) and J.CanCastOnNonMagicImmune(npcTarget) and J.IsInRange(npcTarget, bot, nCastRange + 200) and
-           not J.IsDisabled(true, npcTarget)		
+           not J.IsDisabled(npcTarget)		
 		then
 			return BOT_ACTION_DESIRE_HIGH, npcTarget;
 		end

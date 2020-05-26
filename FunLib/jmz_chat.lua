@@ -168,12 +168,6 @@ Chat['tLanguageNameList'] = {
 		['sLocalName'] = 'Испанский',
 	},
 	
-	[8] = {
-		['sRawName'] = 0,
-		['sLocalName'] = 0,
-	},
-
-
 
 }
 
@@ -185,11 +179,7 @@ Chat['tGameWordList'] = {
 		['sShortName'] = 'y',
 		['sCnName'] = '是',
 		['sEnName'] = 'yes',
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	
@@ -198,11 +188,7 @@ Chat['tGameWordList'] = {
 		['sShortName'] = 'n',
 		['sCnName'] = '否',
 		['sEnName'] = 'no',
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 
@@ -211,11 +197,7 @@ Chat['tGameWordList'] = {
 		['sShortName'] = 'l',
 		['sCnName'] = '左',
 		['sEnName'] = 'left',
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[4] = {
@@ -223,11 +205,7 @@ Chat['tGameWordList'] = {
 		['sShortName'] = 'r',
 		['sCnName'] = '右',
 		['sEnName'] = 'right',
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[5] = {
@@ -235,11 +213,7 @@ Chat['tGameWordList'] = {
 		['sShortName'] = 'top',
 		['sCnName'] = '上路',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[6] = {
@@ -247,11 +221,7 @@ Chat['tGameWordList'] = {
 		['sShortName'] = 'mid',
 		['sCnName'] = '中路',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[7] = {
@@ -259,11 +229,7 @@ Chat['tGameWordList'] = {
 		['sShortName'] = 'bot',
 		['sCnName'] = '下路',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 }
@@ -278,11 +244,7 @@ Chat['tSpWordList'] = {
 		['sSp2Name'] = '1',
 		['sCnName'] = 'game/AI锦囊/天辉锦囊/',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	
@@ -291,11 +253,7 @@ Chat['tSpWordList'] = {
 		['sSp2Name'] = '2',
 		['sCnName'] = 'game/AI锦囊/客场锦囊/天辉锦囊/',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 
@@ -304,11 +262,7 @@ Chat['tSpWordList'] = {
 		['sSp2Name'] = '3',
 		['sCnName'] = 'game/AI锦囊/夜魇锦囊/',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	
@@ -317,11 +271,7 @@ Chat['tSpWordList'] = {
 		['sSp2Name'] = '4',
 		['sCnName'] = 'game/AI锦囊/客场锦囊/夜魇锦囊/',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[5] = {
@@ -329,11 +279,7 @@ Chat['tSpWordList'] = {
 		['sSp2Name'] = '5',
 		['sCnName'] = 'AI天辉阵容',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[6] = {
@@ -341,11 +287,7 @@ Chat['tSpWordList'] = {
 		['sSp2Name'] = '6',
 		['sCnName'] = 'AI夜魇阵容',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[7] = {
@@ -353,11 +295,7 @@ Chat['tSpWordList'] = {
 		['sSp2Name'] = '',
 		['sCnName'] = '锦囊模式  军师:',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	
@@ -366,11 +304,7 @@ Chat['tSpWordList'] = {
 		['sSp2Name'] = '',
 		['sCnName'] = '锦囊模式  中级军师:',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	
@@ -379,11 +313,7 @@ Chat['tSpWordList'] = {
 		['sSp2Name'] = '',
 		['sCnName'] = '锦囊模式  高级军师:',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	
@@ -392,11 +322,7 @@ Chat['tSpWordList'] = {
 		['sSp2Name'] = '',
 		['sCnName'] = '锦囊模式  客场军师:',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	
@@ -405,11 +331,7 @@ Chat['tSpWordList'] = {
 		['sSp2Name'] = '新词汇1',
 		['sCnName'] = '',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[12] = {
@@ -417,11 +339,7 @@ Chat['tSpWordList'] = {
 		['sSp2Name'] = '',
 		['sCnName'] = '新词汇2',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 }
@@ -435,11 +353,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = 'Eul的神圣法杖',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[2] = {
@@ -447,11 +361,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '阿哈利姆神杖',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[3] = {
@@ -459,11 +369,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '阿哈利姆神杖2',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[4] = {
@@ -471,11 +377,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '阿托斯之棍',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[5] = {
@@ -483,11 +385,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '暗影护符',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[6] = {
@@ -495,11 +393,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '黯灭',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[7] = {
@@ -507,11 +401,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '奥术鞋',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[8] = {
@@ -519,11 +409,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '白银之锋',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[9] = {
@@ -531,11 +417,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '板甲',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[10] = {
@@ -543,11 +425,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '标枪',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[11] = {
@@ -555,11 +433,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '赤红甲',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[12] = {
@@ -567,11 +441,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '淬毒之珠',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[13] = {
@@ -579,11 +449,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '达贡之神力',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[14] = {
@@ -591,11 +457,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '达贡之神力2',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[15] = {
@@ -603,11 +465,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '达贡之神力3',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[16] = {
@@ -615,11 +473,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '达贡之神力4',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[17] = {
@@ -627,11 +481,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '达贡之神力5',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[18] = {
@@ -639,11 +489,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '大剑',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[19] = {
@@ -651,11 +497,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '代达罗斯之殇',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[20] = {
@@ -663,11 +505,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '动力鞋',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[21] = {
@@ -675,11 +513,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '动物信使',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[22] = {
@@ -687,11 +521,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '洞察烟斗',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[23] = {
@@ -699,11 +529,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '短棍',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[24] = {
@@ -711,11 +537,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '恶魔刀锋',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[25] = {
@@ -723,11 +545,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '法师长袍',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[26] = {
@@ -735,11 +553,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '纷争面纱',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[27] = {
@@ -747,11 +561,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '疯狂面具',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[28] = {
@@ -759,11 +569,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '否决坠饰',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[29] = {
@@ -771,11 +577,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '弗拉迪米尔的祭品',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[30] = {
@@ -783,11 +585,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '岗哨守卫',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[31] = {
@@ -795,11 +593,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '攻击之爪',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[32] = {
@@ -807,11 +601,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '诡计之雾',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[33] = {
@@ -819,11 +609,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '黑皇杖',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[34] = {
@@ -831,11 +617,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '蝴蝶',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[35] = {
@@ -843,11 +625,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '护腕',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[36] = {
@@ -855,11 +633,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '欢欣之刃',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[37] = {
@@ -867,11 +641,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '幻影斧',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[38] = {
@@ -879,11 +649,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '恢复头巾',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[39] = {
@@ -891,11 +657,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '辉耀',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[40] = {
@@ -903,11 +665,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '回城卷轴',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[41] = {
@@ -915,11 +673,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '回复戒指',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[42] = {
@@ -927,11 +681,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '回音战刃',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[43] = {
@@ -939,11 +689,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '慧光',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[44] = {
@@ -951,11 +697,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '慧夜对剑',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[45] = {
@@ -963,11 +705,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '活力之球',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[46] = {
@@ -975,11 +713,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '极限法球',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[47] = {
@@ -987,11 +721,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '加速手套',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[48] = {
@@ -999,11 +729,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '坚韧球',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[49] = {
@@ -1011,11 +737,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '金箍棒',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[50] = {
@@ -1023,11 +745,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '精灵布带',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[51] = {
@@ -1035,11 +753,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '精气之球',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[52] = {
@@ -1047,11 +761,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '净化药水',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[53] = {
@@ -1059,11 +769,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '净魂之刃',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[54] = {
@@ -1071,11 +777,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '静谧之鞋',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[55] = {
@@ -1083,11 +785,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '抗魔斗篷',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[56] = {
@@ -1095,11 +793,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '空灵挂件',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[57] = {
@@ -1107,11 +801,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '空明杖',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[58] = {
@@ -1119,11 +809,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '恐鳌之戒',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[59] = {
@@ -1131,11 +817,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '恐鳌之心',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[60] = {
@@ -1143,11 +825,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '狂战斧',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[61] = {
@@ -1155,11 +833,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '阔剑',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[62] = {
@@ -1167,11 +841,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '雷神之锤',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[63] = {
@@ -1179,11 +849,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '力量手套',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[64] = {
@@ -1191,11 +857,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '力量腰带',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[65] = {
@@ -1203,11 +865,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '林肯法球',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[66] = {
@@ -1215,11 +873,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '灵魂之戒',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[67] = {
@@ -1227,11 +881,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '玲珑心',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[68] = {
@@ -1239,11 +889,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '掠夺者之斧',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[69] = {
@@ -1251,11 +897,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '迈达斯之手',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[70] = {
@@ -1263,11 +905,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '梅肯斯姆',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[71] = {
@@ -1275,11 +913,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '秘银锤',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[72] = {
@@ -1287,11 +921,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '敏捷便鞋',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[73] = {
@@ -1299,11 +929,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '魔棒',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[74] = {
@@ -1311,11 +937,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '魔法芒果',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[75] = {
@@ -1323,11 +945,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '魔力法杖',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[76] = {
@@ -1335,11 +953,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '魔龙枪',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[77] = {
@@ -1347,11 +961,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '魔瓶',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[78] = {
@@ -1359,11 +969,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '魔杖',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[79] = {
@@ -1371,11 +977,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '莫尔迪基安的臂章',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[80] = {
@@ -1383,11 +985,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '能量之球',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[81] = {
@@ -1395,11 +993,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '强袭胸甲',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[82] = {
@@ -1407,11 +1001,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '清莲宝珠',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[83] = {
@@ -1419,11 +1009,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '刃甲',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[84] = {
@@ -1431,11 +1017,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '韧鼓',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[85] = {
@@ -1443,11 +1025,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '撒旦之邪力',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[86] = {
@@ -1455,11 +1033,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '散华',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[87] = {
@@ -1467,11 +1041,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '散慧对剑',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[88] = {
@@ -1479,11 +1049,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '散夜对剑',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[89] = {
@@ -1491,11 +1057,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '闪避护符',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[90] = {
@@ -1503,11 +1065,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '闪烁匕首',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[91] = {
@@ -1515,11 +1073,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '深渊之刃',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[92] = {
@@ -1527,11 +1081,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '神秘法杖',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[93] = {
@@ -1539,11 +1089,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '圣剑',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[94] = {
@@ -1551,11 +1097,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '圣洁吊坠',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[95] = {
@@ -1563,11 +1105,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '圣者遗物',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[96] = {
@@ -1575,11 +1113,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '食人魔之斧',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[97] = {
@@ -1587,11 +1121,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '守护指环',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[98] = {
@@ -1599,11 +1129,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '树之祭祀',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[99] = {
@@ -1611,11 +1137,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '刷新球',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[100] = {
@@ -1623,11 +1145,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '水晶剑',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[101] = {
@@ -1635,11 +1153,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '斯嘉蒂之眼',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[102] = {
@@ -1647,11 +1161,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '死灵书',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[103] = {
@@ -1659,11 +1169,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '死灵书2',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[104] = {
@@ -1671,11 +1177,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '死灵书3',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[105] = {
@@ -1683,11 +1185,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '速度之靴',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[106] = {
@@ -1695,11 +1193,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '碎颅锤',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[107] = {
@@ -1707,11 +1201,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '锁子甲',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[108] = {
@@ -1719,11 +1209,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '天堂之戟',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[109] = {
@@ -1731,11 +1217,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '挑战头巾',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[110] = {
@@ -1743,11 +1225,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '铁树枝干',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[111] = {
@@ -1755,11 +1233,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '铁意头盔',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[112] = {
@@ -1767,11 +1241,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '王冠',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[113] = {
@@ -1779,11 +1249,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '王者之戒',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[114] = {
@@ -1791,11 +1257,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '微光披风',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[115] = {
@@ -1803,11 +1265,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '卫士胫甲',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[116] = {
@@ -1815,11 +1273,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '吸血面具',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[117] = {
@@ -1827,11 +1281,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '希瓦的守护',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[118] = {
@@ -1839,11 +1289,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '仙灵之火',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[119] = {
@@ -1851,11 +1297,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '先锋盾',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[120] = {
@@ -1863,11 +1305,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '贤者面罩',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[121] = {
@@ -1875,11 +1313,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '显影之尘',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[122] = {
@@ -1887,11 +1321,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '相位鞋',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[123] = {
@@ -1899,11 +1329,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '邪恶镰刀',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[124] = {
@@ -1911,11 +1337,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '虚灵之刃',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[125] = {
@@ -1923,11 +1345,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '虚无宝石',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[126] = {
@@ -1935,11 +1353,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '玄冥盾牌',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[127] = {
@@ -1947,11 +1361,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '漩涡',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[128] = {
@@ -1959,11 +1369,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '血棘',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[129] = {
@@ -1971,11 +1377,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '血精石',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[130] = {
@@ -1983,11 +1385,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '压制之刃',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[131] = {
@@ -1995,11 +1393,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '炎阳纹章',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[132] = {
@@ -2007,11 +1401,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '夜叉',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[133] = {
@@ -2019,11 +1409,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '以太透镜',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[134] = {
@@ -2031,11 +1417,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '银月之晶',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[135] = {
@@ -2043,11 +1425,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '鹰歌弓',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[136] = {
@@ -2055,11 +1433,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '影刃',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[137] = {
@@ -2067,11 +1441,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '影之灵龛',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[138] = {
@@ -2079,11 +1449,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '永恒之盘',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[139] = {
@@ -2091,11 +1457,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '勇气勋章',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[140] = {
@@ -2103,11 +1465,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '幽魂权杖',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[141] = {
@@ -2115,23 +1473,15 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '原力法杖',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[142] = {
-		['sRawName'] = 'item_tpscroll',
+		['sRawName'] = 'item_aegis',
 		['sShortName'] = 'itemNull',
-		['sCnName'] = '圆盾',
+		['sCnName'] = '不朽之守护',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[143] = {
@@ -2139,11 +1489,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '圆环',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[144] = {
@@ -2151,11 +1497,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '远行鞋',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[145] = {
@@ -2163,11 +1505,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '远行鞋2',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[146] = {
@@ -2175,11 +1513,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '怨灵系带',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[147] = {
@@ -2187,11 +1521,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '陨星锤',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[148] = {
@@ -2199,11 +1529,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '侦查守卫',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[149] = {
@@ -2211,11 +1537,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '真视宝石',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[150] = {
@@ -2223,11 +1545,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '振奋宝石',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[151] = {
@@ -2235,11 +1553,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '镇魂石',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[152] = {
@@ -2247,11 +1561,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '支配头盔',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[153] = {
@@ -2259,11 +1569,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '治疗药膏',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[154] = {
@@ -2271,11 +1577,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '治疗指环',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[155] = {
@@ -2283,11 +1585,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '智力斗篷',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[156] = {
@@ -2295,11 +1593,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '紫怨',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[157] = {
@@ -2307,11 +1601,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '魂之灵瓮',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[158] = {
@@ -2319,11 +1609,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '枯萎之石',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[159] = {
@@ -2331,71 +1617,47 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '飓风长戟',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[160] = {
-		['sRawName'] = 'item_new_bfury',
-		['sShortName'] = 'itemNull',
-		['sCnName'] = '新狂战斧',
-		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
-	},
-	
-	[161] = {
-		['sRawName'] = 'item_broken_satanic',
-		['sShortName'] = 'itemNull',
-		['sCnName'] = '拆疯脸转撒旦',
-		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
-	},
-	
-	[162] = {
 		['sRawName'] = 'item_tome_of_knowledge',
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '知识之书',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
-	[163] = {
+	[161] = {
 		['sRawName'] = 'item_infused_raindrop',
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '凝魂之露',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
-	[164] = {
+	[162] = {
 		['sRawName'] = 'item_wind_lace',
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '风灵之纹',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
+	},
+	
+	[163] = {
+		['sRawName'] = 'item_refresher_shard',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '刷新球碎片',
+		['sEnName'] = 0,
+		
+	},
+	
+	[164] = { 
+		['sRawName'] = 'item_cheese',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '奶酪',
+		['sEnName'] = 0,
+		
 	},
 	
 	[165] = {
@@ -2403,11 +1665,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '新物品5',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[166] = {
@@ -2415,11 +1673,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '新物品6',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[167] = {
@@ -2427,11 +1681,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '新物品7',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[168] = {
@@ -2439,23 +1689,15 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '新物品8',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[169] = {
-		['sRawName'] = 'item_new_9',
+		['sRawName'] = 'item_broken_satanic',
 		['sShortName'] = 'itemNull',
-		['sCnName'] = '新物品9',
+		['sCnName'] = '拆疯脸转撒旦',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[170] = {
@@ -2463,11 +1705,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '两个树之祭祀',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[171] = {
@@ -2475,11 +1713,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '两个净化药水',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[172] = {
@@ -2487,11 +1721,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '两个治疗药膏',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[173] = {
@@ -2499,11 +1729,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '两个魔法芒果',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[174] = {
@@ -2511,11 +1737,7 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '两个铁树枝干',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[175] = {
@@ -2523,135 +1745,530 @@ Chat['tItemNameList'] = {
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '两个圆环',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	[176] = {
-		['sRawName'] = 'item_double_stout_shield',
-		['sShortName'] = 'itemNull',
-		['sCnName'] = '两个圆盾',
-		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
-	},
-	
-	[177] = {
 		['sRawName'] = 'item_double_slippers',
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '两个敏捷便鞋',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
-	[178] = {
+	[177] = {
 		['sRawName'] = 'item_double_mantle',
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '两个智力斗篷',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
-	[179] = {
+	[178] = {
 		['sRawName'] = 'item_double_gauntlets',
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '两个力量手套',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
-	[180] = {
+	[179] = {
 		['sRawName'] = 'item_double_wraith_band',
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '两个怨灵系带',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
-	[181] = {
+	[180] = {
 		['sRawName'] = 'item_double_null_talisman',
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '两个空灵挂件',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
-	[182] = {
+	[181] = {
 		['sRawName'] = 'item_double_bracer',
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '两个护腕',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
-	[183] = {
+	[182] = {
 		['sRawName'] = 'item_double_crown',
 		['sShortName'] = 'itemNull',
 		['sCnName'] = '两个王冠',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
+	},
+	
+	[183] = {
+		['sRawName'] = 'item_keen_optic',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '基恩镜片',
+		['sEnName'] = 0,
+		
 	},
 	
 	[184] = {
-		['sRawName'] = 'item_new_2',
+		['sRawName'] = 'item_poor_mans_shield',
 		['sShortName'] = 'itemNull',
-		['sCnName'] = '新物品2',
+		['sCnName'] = '穷鬼盾',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
+	
 	[185] = {
-		['sRawName'] = 'item_new_3',
+		['sRawName'] = 'item_iron_talon',
 		['sShortName'] = 'itemNull',
-		['sCnName'] = '新物品3',
+		['sCnName'] = '寒铁钢爪',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
+	},
+	
+	[186] = {
+		['sRawName'] = 'item_ironwood_tree',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '铁树之木',
+		['sEnName'] = 0,
+		
+	},
+	
+	[187] = {
+		['sRawName'] = 'item_royal_jelly',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '蜂王浆',
+		['sEnName'] = 0,
+		
+	},
+	
+	[188] = {
+		['sRawName'] = 'item_mango_tree',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '芒果树',
+		['sEnName'] = 0,
+		
+	},
+	
+	[189] = {
+		['sRawName'] = 'item_ocean_heart',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '海洋之心',
+		['sEnName'] = 0,
+		
+	},
+	
+	[190] = {
+		['sRawName'] = 'item_broom_handle',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '扫帚柄',
+		['sEnName'] = 0,
+		
+	},
+	
+	
+	[191] = {
+		['sRawName'] = 'item_trusty_shovel',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '可靠铁铲',
+		['sEnName'] = 0,
+		
+	},
+	
+	[192] = {
+		['sRawName'] = 'item_faded_broach',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '暗淡胸针',
+		['sEnName'] = 0,
+		
+	},
+	
+	[193] = {
+		['sRawName'] = 'item_arcane_ring',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '奥术指环',
+		['sEnName'] = 0,
+		
+	},
+	
+	[194] = {
+		['sRawName'] = 'item_grove_bow',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '林野长弓',
+		['sEnName'] = 0,
+		
+	},
+	
+	[195] = {
+		['sRawName'] = 'item_vampire_fangs',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '吸血鬼獠牙',
+		['sEnName'] = 0,
+		
+	},
+	
+	[196] = {
+		['sRawName'] = 'item_ring_of_aquila',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '天鹰之戒',
+		['sEnName'] = 0,
+		
+	},
+	
+	
+	[197] = {
+		['sRawName'] = 'item_pupils_gift',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '学徒之礼',
+		['sEnName'] = 0,
+		
+	},
+	
+	[198] = {
+		['sRawName'] = 'item_imp_claw',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '魔童之爪',
+		['sEnName'] = 0,
+		
+	},
+	
+	[199] = {
+		['sRawName'] = 'item_philosophers_stone',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '贤者石',
+		['sEnName'] = 0,
+		
+	},
+	
+	[200] = {
+		['sRawName'] = 'item_nether_shawl',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '幽冥披巾',
+		['sEnName'] = 0,
+		
+	},
+	
+	[201] = {
+		['sRawName'] = 'item_dragon_scale',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '炎龙之鳞',
+		['sEnName'] = 0,
+		
+	},
+	
+	[202] = {
+		['sRawName'] = 'item_essence_ring',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '精华指环',
+		['sEnName'] = 0,
+		
+	},
+	
+	
+	[203] = {
+		['sRawName'] = 'item_vambrace',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '臂甲',
+		['sEnName'] = 0,
+		
+	},
+	
+	[204] = {
+		['sRawName'] = 'item_clumsy_net',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '笨拙渔网',
+		['sEnName'] = 0,
+		
+	},
+	
+	[205] = {
+		['sRawName'] = 'item_repair_kit',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '维修器具',
+		['sEnName'] = 0,
+		
+	},
+	
+	[206] = {
+		['sRawName'] = 'item_craggy_coat',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '崎岖外衣',
+		['sEnName'] = 0,
+		
+	},
+	
+	[207] = {
+		['sRawName'] = 'item_greater_faerie_fire',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '高级仙灵之火',
+		['sEnName'] = 0,
+		
+	},
+	
+	[208] = {
+		['sRawName'] = 'item_quickening_charm',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '加速护符',
+		['sEnName'] = 0,
+		
+	},
+	
+	
+	[209] = {
+		['sRawName'] = 'item_mind_breaker',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '智灭',
+		['sEnName'] = 0,
+		
+	},
+	
+	[210] = {
+		['sRawName'] = 'item_spider_legs',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '网虫腿',
+		['sEnName'] = 0,
+		
+	},
+	
+	[211] = {
+		['sRawName'] = 'item_enchanted_quiver',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '魔力箭袋',
+		['sEnName'] = 0,
+		
+	},
+	
+	[212] = {
+		['sRawName'] = 'item_paladin_sword',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '骑士剑',
+		['sEnName'] = 0,
+		
+	},
+	
+	[213] = {
+		['sRawName'] = 'item_orb_of_destruction',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '毁灭灵球',
+		['sEnName'] = 0,
+		
+	},
+	
+	[214] = {
+		['sRawName'] = 'item_titan_sliver',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '巨神残铁',
+		['sEnName'] = 0,
+		
+	},
+	
+	
+	[215] = {
+		['sRawName'] = 'item_witless_shako',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '无知小帽',
+		['sEnName'] = 0,
+		
+	},
+	
+	[216] = {
+		['sRawName'] = 'item_timeless_relic',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '永恒遗物',
+		['sEnName'] = 0,
+		
+	},
+	
+	[217] = {
+		['sRawName'] = 'item_spell_prism',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '法术棱镜',
+		['sEnName'] = 0,
+		
+	},
+	
+	[218] = {
+		['sRawName'] = 'item_princes_knife',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '亲王短刀',
+		['sEnName'] = 0,
+		
+	},
+	
+	[219] = {
+		['sRawName'] = 'item_flicker',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '闪灵',
+		['sEnName'] = 0,
+		
+	},
+	
+	[220] = {
+		['sRawName'] = 'item_spy_gadget',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '望远镜',
+		['sEnName'] = 0,
+		
+	},
+	
+	
+	[221] = {
+		['sRawName'] = 'item_ninja_gear',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '忍者用具',
+		['sEnName'] = 0,
+		
+	},
+	
+	[222] = {
+		['sRawName'] = 'item_illusionsts_cape',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '幻术师披风',
+		['sEnName'] = 0,
+		
+	},
+	
+	[223] = {
+		['sRawName'] = 'item_havoc_hammer',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '浩劫巨锤',
+		['sEnName'] = 0,
+		
+	},
+	
+	[224] = {
+		['sRawName'] = 'item_panic_button',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '魔力明灯',
+		['sEnName'] = 0,
+		
+	},
+	
+	[225] = {
+		['sRawName'] = 'item_the_leveller',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '平世剑',
+		['sEnName'] = 0,
+		
+	},
+	
+	[226] = {
+		['sRawName'] = 'item_minotaur_horn',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '恶牛角',
+		['sEnName'] = 0,
+		
+	},
+	
+	
+	[227] = {
+		['sRawName'] = 'item_force_boots',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '原力靴',
+		['sEnName'] = 0,
+		
+	},
+	
+	[228] = {
+		['sRawName'] = 'item_desolator_2',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '寂灭',
+		['sEnName'] = 0,
+		
+	},
+	
+	[229] = {
+		['sRawName'] = 'item_seer_stone',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '先哲之石',
+		['sEnName'] = 0,
+		
+	},
+	
+	[230] = {
+		['sRawName'] = 'item_mirror_shield',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '神镜盾',
+		['sEnName'] = 0,
+		
+	},
+	
+	[230] = {
+		['sRawName'] = 'item_apex',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '极',
+		['sEnName'] = 0,
+		
+	},
+	
+	[232] = {
+		['sRawName'] = 'item_ballista',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '弩炮',
+		['sEnName'] = 0,
+		
+	},
+	
+	[233] = {
+		['sRawName'] = 'item_woodland_striders',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '林地神行靴',
+		['sEnName'] = 0,
+		
+	},
+	
+	[234] = {
+		['sRawName'] = 'item_trident',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '三元重戟',
+		['sEnName'] = 0,
+		
+	},
+	
+	[235] = {
+		['sRawName'] = 'item_demonicon',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '冥灵书',
+		['sEnName'] = 0,
+		
+	},
+	
+	[236] = {
+		['sRawName'] = 'item_fallen_sky',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '堕天斧',
+		['sEnName'] = 0,
+		
+	},
+	
+	[237] = {
+		['sRawName'] = 'item_pirate_hat',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '海盗帽',
+		['sEnName'] = 0,
+		
+	},
+	
+	[238] = {
+		['sRawName'] = 'item_ex_machina',
+		['sShortName'] = 'itemNull',
+		['sCnName'] = '机械之心',
+		['sEnName'] = 0,
+		
 	},
 	
 }
 
+local sChineseItemNameIndexList = {}
+for _,v in pairs(Chat['tItemNameList'])
+do 
+	local sRawItemName = v['sRawName']
+	local sCnItemName = v['sCnName']
+	sChineseItemNameIndexList[sRawItemName] = sCnItemName
+end
 
 Chat['tHeroNameList'] = {
 
@@ -2661,11 +2278,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'random',
 		['sCnName'] = '随机英雄',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--001
@@ -2674,11 +2287,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'loa',
 		['sCnName'] = '亚巴顿',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	--002
@@ -2687,11 +2296,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'ga',
 		['sCnName'] = '炼金术士',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	--003
@@ -2700,11 +2305,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'axe',
 		['sCnName'] = '斧王',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	--004
@@ -2713,11 +2314,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'bm',
 		['sCnName'] = '兽王',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	--005
@@ -2726,11 +2323,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'panda',
 		['sCnName'] = '酒仙',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	--006
@@ -2739,11 +2332,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'bb',
 		['sCnName'] = '钢背兽',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	--007
@@ -2752,11 +2341,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'cent',
 		['sCnName'] = '半人马战行者',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	--008
@@ -2765,11 +2350,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'ck',
 		['sCnName'] = '混沌骑士',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	--009
@@ -2778,11 +2359,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'cg',
 		['sCnName'] = '发条技师',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--010
@@ -2791,11 +2368,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'doom',
 		['sCnName'] = '末日使者',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--011
@@ -2804,11 +2377,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'dk',
 		['sCnName'] = '龙骑士',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--012
@@ -2817,11 +2386,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'earthspirit',
 		['sCnName'] = '大地之灵',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--013
@@ -2830,11 +2395,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'es',
 		['sCnName'] = '撼地者',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--014
@@ -2843,11 +2404,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'et',
 		['sCnName'] = '上古巨神',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--015
@@ -2856,11 +2413,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'grimstroke',
 		['sCnName'] = '天涯墨客',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	--016
@@ -2869,11 +2422,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'hus',
 		['sCnName'] = '哈斯卡',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--017
@@ -2882,11 +2431,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'wisp',
 		['sCnName'] = '艾欧',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--018
@@ -2895,11 +2440,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'coco',
 		['sCnName'] = '昆卡',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--019
@@ -2908,11 +2449,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'legion',
 		['sCnName'] = '军团指挥官',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--020
@@ -2921,11 +2458,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'naix',
 		['sCnName'] = '噬魂鬼',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--021
@@ -2934,11 +2467,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'lyc',
 		['sCnName'] = '狼人',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--022
@@ -2947,11 +2476,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'mag',
 		['sCnName'] = '马格纳斯',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--023
@@ -2960,11 +2485,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'ns',
 		['sCnName'] = '暗夜魔王',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--024
@@ -2973,11 +2494,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'ok',
 		['sCnName'] = '全能骑士',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--025
@@ -2986,11 +2503,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'pho',
 		['sCnName'] = '凤凰',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--026
@@ -2999,11 +2512,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'pudge',
 		['sCnName'] = '帕吉',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--027
@@ -3012,11 +2521,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'sk',
 		['sCnName'] = '沙王',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--028
@@ -3025,11 +2530,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'sg',
 		['sCnName'] = '斯拉达',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--029
@@ -3038,11 +2539,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'sb',
 		['sCnName'] = '裂魂人',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--030
@@ -3051,11 +2548,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'sv',
 		['sCnName'] = '斯温',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	--031
@@ -3064,11 +2557,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'th',
 		['sCnName'] = '潮汐猎人',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--032
@@ -3077,11 +2566,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'gs',
 		['sCnName'] = '伐木机',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--033
@@ -3090,11 +2575,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'tiny',
 		['sCnName'] = '小小',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--034
@@ -3103,11 +2584,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'tp',
 		['sCnName'] = '树精卫士',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--035
@@ -3116,11 +2593,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'tusk',
 		['sCnName'] = '巨牙海民',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--036
@@ -3129,11 +2602,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'au',
 		['sCnName'] = '孽主',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--037
@@ -3142,11 +2611,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'ud',
 		['sCnName'] = '不朽尸王',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--038
@@ -3155,11 +2620,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'snk',
 		['sCnName'] = '冥魂大帝',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--039
@@ -3168,11 +2629,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'am',
 		['sCnName'] = '敌法师',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--040
@@ -3181,11 +2638,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'arc',
 		['sCnName'] = '天穹守望者',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--041
@@ -3194,11 +2647,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'bs',
 		['sCnName'] = '血魔',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--042
@@ -3207,11 +2656,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'bh',
 		['sCnName'] = '赏金猎人',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--043
@@ -3220,11 +2665,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'br',
 		['sCnName'] = '育母蜘蛛',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--044
@@ -3233,11 +2674,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'bone',
 		['sCnName'] = '克林克兹',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--045
@@ -3246,11 +2683,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'dw',
 		['sCnName'] = '邪影芳灵',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	--046
@@ -3259,11 +2692,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'dr',
 		['sCnName'] = '卓尔游侠',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--047
@@ -3272,11 +2701,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'ember',
 		['sCnName'] = '灰烬之灵',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--048
@@ -3285,11 +2710,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'fv',
 		['sCnName'] = '虚空假面',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--049
@@ -3298,11 +2719,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'av',
 		['sCnName'] = '矮人直升机',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--050
@@ -3311,11 +2728,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'jugg',
 		['sCnName'] = '主宰',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--051
@@ -3324,11 +2737,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'ld',
 		['sCnName'] = '德鲁伊',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--052
@@ -3337,11 +2746,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'luna',
 		['sCnName'] = '露娜',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--053
@@ -3350,11 +2755,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'med',
 		['sCnName'] = '美杜莎',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--054
@@ -3363,11 +2764,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'meepo',
 		['sCnName'] = '米波',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--055
@@ -3376,11 +2773,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'pom',
 		['sCnName'] = '米拉娜',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--056
@@ -3389,11 +2782,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'monkey',
 		['sCnName'] = '齐天大圣',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--057
@@ -3402,11 +2791,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'mor',
 		['sCnName'] = '变体精灵',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--058
@@ -3415,11 +2800,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'naga',
 		['sCnName'] = '娜迦海妖',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--059
@@ -3428,11 +2809,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'na',
 		['sCnName'] = '司夜刺客',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--060
@@ -3441,11 +2818,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'pa',
 		['sCnName'] = '幻影刺客',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--061
@@ -3454,11 +2827,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'pl',
 		['sCnName'] = '幻影长矛手',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--062
@@ -3467,11 +2836,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'razor',
 		['sCnName'] = '剃刀',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--063
@@ -3480,11 +2845,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'sa',
 		['sCnName'] = '力丸',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--064
@@ -3493,11 +2854,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'sf',
 		['sCnName'] = '影魔',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--065
@@ -3506,11 +2863,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'nc',
 		['sCnName'] = '斯拉克',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--066
@@ -3519,11 +2872,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'sniper',
 		['sCnName'] = '狙击手',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--067
@@ -3532,11 +2881,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'spe',
 		['sCnName'] = '幽鬼',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--068
@@ -3545,11 +2890,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'ta',
 		['sCnName'] = '圣堂刺客',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--069
@@ -3558,11 +2899,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'tb',
 		['sCnName'] = '恐怖利刃',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--070
@@ -3571,11 +2908,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'tw',
 		['sCnName'] = '巨魔战将',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--071
@@ -3584,11 +2917,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'ursa',
 		['sCnName'] = '熊战士',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--072
@@ -3597,11 +2926,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'vs',
 		['sCnName'] = '复仇之魂',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--073
@@ -3610,11 +2935,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'veno',
 		['sCnName'] = '剧毒术士',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--074
@@ -3623,11 +2944,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'vip',
 		['sCnName'] = '冥界亚龙',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--075
@@ -3636,11 +2953,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'nw',
 		['sCnName'] = '编织者',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--076
@@ -3649,11 +2962,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'aa',
 		['sCnName'] = '远古冰魄',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--077
@@ -3662,11 +2971,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'bane',
 		['sCnName'] = '祸乱之源',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--078
@@ -3675,11 +2980,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'bat',
 		['sCnName'] = '蝙蝠骑士',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--079
@@ -3688,11 +2989,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'chen',
 		['sCnName'] = '陈',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--080
@@ -3701,11 +2998,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'cm',
 		['sCnName'] = '水晶室女',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--081
@@ -3714,11 +3007,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'ds',
 		['sCnName'] = '黑暗贤者',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--082
@@ -3727,11 +3016,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'sp',
 		['sCnName'] = '戴泽',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--083
@@ -3740,11 +3025,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'DP',
 		['sCnName'] = '死亡先知',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--084
@@ -3753,11 +3034,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'thrall',
 		['sCnName'] = '干扰者',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--085
@@ -3766,11 +3043,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'eh',
 		['sCnName'] = '魅惑魔女',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--086
@@ -3779,11 +3052,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'em',
 		['sCnName'] = '谜团',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--087
@@ -3792,11 +3061,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'invoker',
 		['sCnName'] = '祈求者',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--088
@@ -3805,11 +3070,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'thd',
 		['sCnName'] = '杰奇洛',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--089
@@ -3818,11 +3079,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'kotl',
 		['sCnName'] = '光之守卫',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--090
@@ -3831,11 +3088,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'TS',
 		['sCnName'] = '拉席克',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--091
@@ -3844,11 +3097,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'lich',
 		['sCnName'] = '巫妖',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--092
@@ -3857,11 +3106,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'lina',
 		['sCnName'] = '莉娜',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--093
@@ -3870,11 +3115,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'lion',
 		['sCnName'] = '莱恩',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--094
@@ -3883,11 +3124,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'fur',
 		['sCnName'] = '先知',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--095
@@ -3896,11 +3133,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'nec',
 		['sCnName'] = '瘟疫法师',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--096
@@ -3909,11 +3142,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'om',
 		['sCnName'] = '食人魔魔法师',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--097
@@ -3922,11 +3151,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'oracle',
 		['sCnName'] = '神谕者',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--098
@@ -3935,11 +3160,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'od',
 		['sCnName'] = '殁境神蚀者',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--099
@@ -3948,11 +3169,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'pangolier',
 		['sCnName'] = '石鳞剑士',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	--100
@@ -3961,11 +3178,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'puck',
 		['sCnName'] = '帕克',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--101
@@ -3974,11 +3187,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'pugna',
 		['sCnName'] = '帕格纳',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--102
@@ -3987,11 +3196,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'qop',
 		['sCnName'] = '痛苦女王',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--103
@@ -4000,11 +3205,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'rubick',
 		['sCnName'] = '拉比克',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--104
@@ -4013,11 +3214,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'sd',
 		['sCnName'] = '暗影恶魔',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--105
@@ -4026,11 +3223,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'ss',
 		['sCnName'] = '暗影萨满',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--106
@@ -4039,11 +3232,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'sil',
 		['sCnName'] = '沉默术士',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--107
@@ -4052,11 +3241,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'sm',
 		['sCnName'] = '天怒法师',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--108
@@ -4065,11 +3250,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'st',
 		['sCnName'] = '风暴之灵',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--109
@@ -4078,11 +3259,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'techies',
 		['sCnName'] = '工程师',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--110
@@ -4117,11 +3294,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'wlk',
 		['sCnName'] = '术士',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--113
@@ -4130,11 +3303,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'wr',
 		['sCnName'] = '风行者',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--114
@@ -4143,11 +3312,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'ww',
 		['sCnName'] = '寒冬飞龙',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--115
@@ -4156,11 +3321,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'wd',
 		['sCnName'] = '巫医',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	--116
@@ -4169,11 +3330,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'mars',
 		['sCnName'] = '马尔斯',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 
 	--117
@@ -4182,11 +3339,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'zeus',
 		['sCnName'] = '宙斯',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	--118
@@ -4195,11 +3348,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'snapfire',
 		['sCnName'] = '电炎绝手',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 	--119
@@ -4208,11 +3357,7 @@ Chat['tHeroNameList'] = {
 		['sShortName'] = 'void',
 		['sCnName'] = '虚无之灵',
 		['sEnName'] = 0,
-		['sFrName'] = 0,
-		['sDeName'] = 0,
-		['sRuName'] = 0,
-		['sJpName'] = 0,
-		['sEsName'] = 0,
+		
 	},
 	
 
@@ -4233,11 +3378,13 @@ function Chat.GetRawLanguge(sName)
 
 end
 
+
 function Chat.SetRawLanguage(sName)
 
 	--sRawLanguage = Chat.GetRawLanguge(sName)
 
 end
+
 
 function Chat.GetEnName(npcBot)
 
@@ -4246,6 +3393,14 @@ function Chat.GetEnName(npcBot)
 	return sHeroName
 	
 end
+
+
+function Chat.GetItemCnName(sRawName)
+
+	return sChineseItemNameIndexList[sRawName] or "未定义:"..sRawName
+	
+end
+
 
 --本地英雄名
 function Chat.GetLocalName(npcBot)
@@ -4264,7 +3419,7 @@ function Chat.GetNormName(npcBot)
 
 	local tBotName = Chat['tHeroNameList'][npcBot:GetUnitName()]
 	
-	return tBotName ~= nil and tBotName['sNormName'] or '大神' 
+	return tBotName ~= nil and tBotName['sNormName'] or string.sub(npcBot:GetUnitName(), 10) 
 	
 end
 
@@ -4322,6 +3477,7 @@ function Chat.GetItemName(sName)
 	return '未知物品'  --如果是错误物品,则改为未知物品
 	
 end
+
 
 --由本地名获得游戏词汇代码名
 function Chat.GetRawGameWord(sName)
@@ -4428,6 +3584,7 @@ function Chat.GetLocalWord(nType)
 
 end
 
+
 function Chat.GetUserKeyDir()
 
 	return Chat['tSpWordList'][0]
@@ -4435,39 +3592,122 @@ function Chat.GetUserKeyDir()
 end
 
 
-function Chat.IsChineseString(sString)
+local tChatString = require(GetScriptDirectory()..'/FunLib/aba_chat_table')
 
-	if sString == nil then return false end
 
-	local nByte = string.byte(sString,1,1)
-	if nByte > 127
-	then
-		return true
+local tChatStringIndex = {}
+
+for nChatStringIndex = 1, #tChatString
+do 
+	local tIndexKey = tChatString[nChatStringIndex][1]
+	for nIndexValue = 1, #tIndexKey
+	do 
+		local sIndexKey = tIndexKey[nIndexValue]
+		
+		if tChatStringIndex[sIndexKey] == nil 
+		then
+			tChatStringIndex[sIndexKey] = nChatStringIndex
+		else
+			local nRepeatedIndexKey = tChatStringIndex[sIndexKey]
+			
+			for i = 1, #tChatString[nChatStringIndex][2]
+			do 
+				table.insert(tChatString[nRepeatedIndexKey][2],tChatString[nChatStringIndex][2][i])
+			end
+
+			for i = 1, #tChatString[nChatStringIndex][3]
+			do 
+				table.insert(tChatString[nRepeatedIndexKey][3],tChatString[nChatStringIndex][3][i])
+			end		
+		end
 	end
+end
 
-	return false
+
+function Chat.GetChatStringTableIndex(sString)
+
+	return tChatStringIndex[sString] or -1
 
 end
 
 
-function Chat.IsShutUpString(sString)
+function Chat.GetChatTableString(nIndex,bAllChat)
 
-	return sString == "闭嘴"
+	local nStringTableIndex = 2 
 
-end
+	if bAllChat then nStringTableIndex = 3 end
 
-
-function Chat.GetReplyString(sString)
-
-	if sString == "你好" or sString == "你好！" then return "你也好呀" end
+	local sChatStringList = tChatString[nIndex][nStringTableIndex]
 	
+	local sChatTableString = sChatStringList[RandomInt(1, #sChatStringList)]
+	
+	return sChatTableString
+
+end
+
+
+
+function Chat.GetReplyString(sString,bAllChat)
+	
+	local sReplyString = nil
+	
+	local nIndex = Chat.GetChatStringTableIndex(sString)
+	
+	if nIndex ~= -1
+	then
+		sReplyString = Chat.GetChatTableString(nIndex,bAllChat)	
+	else
+		--print(sString)
+		sReplyString = Chat.GetCheaterReplyString(sString)
+		if sReplyString == nil
+		then
+			sReplyString = Chat.GetRepeatString(sString)
+			if sReplyString == nil or RandomInt(1,99) > 88
+			then
+				sReplyString = "目前还没有这句话的回答,快来群里设计吧."
+				if bAllChat then sReplyString = "不知道你在说什么" end
+			end
+		else
+			return nil
+		end
+	end
+	
+	return sReplyString
+
+end
+
+
+function Chat.GetCheaterReplyString(sString)
+
+	return string.byte(sString, 1) == string.byte('-', 1) and "cheater" or nil
+
+end
+
+
+function Chat.GetRepeatString(sString)
+
 	if sString == "你们" or sString == "你" or sString == "我" 
 		or sString == "吗？" or sString == "吗"
 		or sString == "吧" or sString == "？"
-	then return sString end
+	then return nil end
+	
+	local sRawString = sString
 	
 	if string.find(sString,"我是你") ~= nil
 	then return string.gsub(sString, "我是你", "我才是你") end
+	
+	if string.find(sString,"sb") ~= nil
+		or string.find(sString,"SB") ~= nil
+		or string.find(sString,"智障") ~= nil
+		or string.find(sString,"弱智") ~= nil
+		or string.find(sString,"脑残") ~= nil
+		or string.find(sString,"脑瘫") ~= nil
+		or string.find(sString,"猪") ~= nil
+		or string.find(sString,"傻") ~= nil
+		or string.find(sString,"菜") ~= nil
+		or string.find(sString,"笨") ~= nil
+		or string.find(sString,"蠢") ~= nil
+	then return Chat.GetReplyTauntString() end
 	
 	local sMaReplyList = {"呀","哦","呀！","哦！","！",""}
 	local sMaReplyWord = sMaReplyList[RandomInt(1,#sMaReplyList)]
@@ -4480,17 +3720,36 @@ function Chat.GetReplyString(sString)
 	sString = string.gsub(sString, "？", "！")
 	sString = string.gsub(sString, "我", "你")
 
-	return sString
+	return sString ~= sRawString and sString or nil
 
 end
 
 
+function Chat.GetReplyTauntString()
+
+	local sReplyTauntList = {
+			"你是在说你自己吗?",
+			"你就这种程度而已吗?",
+			"我不允许你这么说你自己!",
+			"别这么说你自己,小伙汁.",
+			"其实你不用这么来说你自己的.",
+			"原来你自己就是酱紫的呀.",	
+			"自信点,别这么说你自己.",	
+			"反弹biubiubiu.",	
+			"给爷爬~~~",	
+	}	
+	
+	return sReplyTauntList[RandomInt(1,#sReplyTauntList)]
+
+
+end
+
 function Chat.GetStopReplyString()
 
 	local sStopStringList = {
-	"你别逗了，我已无话可说了。",
-	"我要专心打游戏了，以后再说吧。",
-	"别闹了，我要开始认真玩了。",
+	"我已无话可说了。",
+	"我要专心打游戏了，下次再说吧。",
+	"不和你闹了，我要开始认真玩了。",
 	"我的心好累，不说了。",
 	"好了好了，别逗我玩了。",
 	"玩游戏的时候就不能严肃点嘛。",
@@ -4877,4 +4136,4 @@ item_pirate_hat
 item_ex_machina
 
 --]]
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

@@ -35,7 +35,7 @@ local tOutFitList = {}
 
 tOutFitList['outfit_carry'] = {
 
-	"item_mage_outfit",
+	"item_crystal_maiden_outfit",
 	"item_glimmer_cape",
 	"item_rod_of_atos",
 	"item_lotus_orb",
@@ -43,6 +43,7 @@ tOutFitList['outfit_carry'] = {
 	"item_shivas_guard",
 	"item_ultimate_scepter_2",
 	"item_sheepstick",
+	"item_moon_shard",
 				
 }
 
@@ -61,6 +62,7 @@ tOutFitList['outfit_priest'] = {
 	"item_shivas_guard",
 	"item_ultimate_scepter_2",
 	"item_sheepstick",
+	"item_moon_shard",
 	
 }
 
@@ -73,6 +75,7 @@ tOutFitList['outfit_mage'] = {
 	"item_cyclone",
 	"item_ultimate_scepter_2",
 	"item_sheepstick",
+	"item_moon_shard",
 
 }
 
@@ -566,7 +569,7 @@ function X.ConsiderR()
 			and J.IsInRange(bot,botTarget,nCastRange + nRadius -260)
 			and not botTarget:IsAttackImmune()
 			and J.CanCastOnMagicImmune(botTarget) 
-			and ( J.IsDisabled(true, botTarget) 
+			and ( J.IsDisabled( botTarget) 
 			      or botTarget:GetHealth() <= botTarget:GetActualIncomingDamage(bot:GetOffensivePower() *2,DAMAGE_TYPE_ALL) )
 			and botTarget:GetHealth( ) > 500
 			and #hAllyList <= 2 
@@ -588,5 +591,5 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592
 

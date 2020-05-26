@@ -943,7 +943,7 @@ Site.ConsiderIsTimeToFarm["npc_dota_hero_arc_warden"] = function()
 	
 	if Site.IsHaveItem(bot,"item_gloves")
 		and not Site.IsHaveItem(bot,"item_hand_of_midas")
-		and bot:GetGold() > 1300
+		and bot:GetGold() > 800
 	then
 		return true;
 	end
@@ -1248,7 +1248,7 @@ Site.ConsiderIsTimeToFarm["npc_dota_hero_nevermore"] = function()
 	local botNetWorth = bot:GetNetWorth()
 	
 	if DotaTime() > 10 * 60
-		and ( bot:GetLevel() < 25 or botNetWorth < 20000 )
+		and ( bot:GetLevel() < 25 or botNetWorth < 22000 )
 	then
 		return true;
 	end
@@ -1261,7 +1261,7 @@ Site.ConsiderIsTimeToFarm["npc_dota_hero_nevermore"] = function()
 	
 	
 	if not Site.IsHaveItem(bot,"item_sphere")
-		and botNetWorth < 26000
+		and botNetWorth < 28000
 	then
 		local allies = bot:GetNearbyHeroes(1300,false,BOT_MODE_NONE);
 		if #allies < 2
@@ -1517,7 +1517,7 @@ Site.ConsiderIsTimeToFarm["npc_dota_hero_sven"] = function()
 		end
 	end
 	
-	if not Site.IsHaveItem(bot,"item_bloodthorn") 
+	if not Site.IsHaveItem(bot,"item_greater_crit") 
 		and botNetWorth < 26000
 	then
 		local allies = bot:GetNearbyHeroes(1300,false,BOT_MODE_NONE);
@@ -1692,4 +1692,4 @@ function Site.IsHaveItem(bot,item_name)
 end
 
 return Site;
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

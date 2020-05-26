@@ -36,12 +36,13 @@ local tOutFitList = {}
 
 tOutFitList['outfit_carry'] = {
 		
-		"item_mage_outfit",
+		"item_crystal_maiden_outfit",
 		"item_glimmer_cape",
 		"item_force_staff",
 		"item_cyclone",
 		"item_ultimate_scepter",
 		"item_sheepstick",
+		"item_moon_shard",
 		"item_ultimate_scepter_2",
 		"item_refresher",
 				
@@ -58,6 +59,7 @@ tOutFitList['outfit_priest'] = {
 	"item_rod_of_atos",
 	"item_ultimate_scepter",
 	"item_shivas_guard",
+	"item_moon_shard",
 	"item_ultimate_scepter_2",
 	"item_refresher",
 	
@@ -71,6 +73,8 @@ tOutFitList['outfit_mage'] = {
 	"item_veil_of_discord",
 	"item_cyclone",
 	"item_sheepstick",
+	"item_moon_shard",
+	"item_ultimate_scepter_2",
 	
 }
 
@@ -292,7 +296,7 @@ function X.ConsiderQ()
 			and J.CanCastOnNonMagicImmune(botTarget)
 			and J.CanCastOnTargetAdvanced(botTarget)
 		then
-			if nSkillLV >= 2 or nMP > 0.7 or J.GetHPR(botTarget) < 0.5 or nHP < 0.4
+			if nSkillLV >= 2 or nMP > 0.7 or J.GetHP(botTarget) < 0.5 or nHP < 0.4
 			then
 				return BOT_ACTION_DESIRE_HIGH,botTarget,'Q-attack:'..J.Chat.GetNormName(botTarget)
 			end
@@ -327,7 +331,7 @@ function X.ConsiderQ()
 				if  J.IsValid(npcEnemy)
 					and J.CanCastOnNonMagicImmune(npcEnemy) 
 					and J.CanCastOnTargetAdvanced(npcEnemy)
-					and J.GetAttackTargetEnemyCreepCount(npcEnemy, 1400) >= 3
+					and J.GetAttackEnemysAllyCreepCount(npcEnemy, 1400) >= 3
 				then
 					return BOT_ACTION_DESIRE_HIGH, npcEnemy,"Q-Laning:"..J.Chat.GetNormName(npcEnemy);
 				end
@@ -476,7 +480,7 @@ function X.ConsiderW()
 			if  J.IsValid(npcEnemy)
 				and J.CanCastOnNonMagicImmune(npcEnemy)
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled( npcEnemy)
 				and not J.IsTaunted(npcEnemy)
 				and not npcEnemy:IsDisarmed()
 			then
@@ -505,7 +509,7 @@ function X.ConsiderW()
 			and J.CanCastOnNonMagicImmune(botTarget)
 			and J.CanCastOnTargetAdvanced(botTarget)
 			and J.IsInRange(bot,botTarget,nCastRange +32)
-			and not J.IsDisabled(true, botTarget)
+			and not J.IsDisabled( botTarget)
 			and not J.IsTaunted(botTarget)
 			and not botTarget:IsDisarmed()
 		then
@@ -524,7 +528,7 @@ function X.ConsiderW()
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled( npcEnemy)
 				and not J.IsTaunted(npcEnemy)
                 and not npcEnemy:IsDisarmed()				
 			then
@@ -544,7 +548,7 @@ function X.ConsiderW()
 						or GetUnitToUnitDistance(bot,npcEnemy) <= 500 )
 				and J.CanCastOnNonMagicImmune(npcEnemy) 
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled( npcEnemy)
 				and not J.IsTaunted(npcEnemy)
                 and not npcEnemy:IsDisarmed()
 			then
@@ -558,7 +562,7 @@ function X.ConsiderW()
 	then
 		if J.IsRoshan(botTarget)
 			and J.IsInRange(bot,botTarget,nCastRange)
-			and not J.IsDisabled(true,botTarget)
+			and not J.IsDisabled(botTarget)
 			and not botTarget:IsDisarmed()
 		then
 			return BOT_ACTION_DESIRE_HIGH,botTarget,"W-Roshan"
@@ -616,7 +620,7 @@ function X.ConsiderE()
 		do
 			if  J.IsValid(npcEnemy)
 				and J.CanCastOnNonMagicImmune(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled( npcEnemy)
 				and not J.IsTaunted(npcEnemy)
 				and not npcEnemy:IsDisarmed()
 			then
@@ -644,11 +648,11 @@ function X.ConsiderE()
 			and J.IsInRange(bot, botTarget, nCastRange +30)
 			and J.CanCastOnNonMagicImmune(botTarget) 
 			and J.CanCastOnTargetAdvanced(botTarget)
-			and not J.IsDisabled(true, botTarget)
+			and not J.IsDisabled( botTarget)
 			and not J.IsTaunted(botTarget)
 			and not botTarget:IsDisarmed()
 		then
-			if nSkillLV >= 2 or nMP > 0.68 or J.GetHPR(botTarget) < 0.35 or nHP < 0.28
+			if nSkillLV >= 2 or nMP > 0.68 or J.GetHP(botTarget) < 0.35 or nHP < 0.28
 			then
 				return BOT_ACTION_DESIRE_HIGH, botTarget,"E-Attack:"..J.Chat.GetNormName(botTarget);
 			end
@@ -666,7 +670,7 @@ function X.ConsiderE()
 			if J.IsValidHero(npcEnemy)
 				and J.CanCastOnNonMagicImmune(npcEnemy)
 				and J.CanCastOnTargetAdvanced(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled( npcEnemy)
 				and not J.IsTaunted(npcEnemy)
 				and not npcEnemy:IsDisarmed()
 			then
@@ -681,9 +685,9 @@ function X.ConsiderE()
 		and bot:GetMana() >= 800
 	then
 		if J.IsRoshan(botTarget) 
-			and J.GetHPR(botTarget) > 0.2
+			and J.GetHP(botTarget) > 0.2
 			and J.IsInRange(bot, botTarget, nCastRange + 100) 
-			and not J.IsDisabled(true,botTarget)
+			and not J.IsDisabled(botTarget)
 			and not botTarget:IsDisarmed()
 		then
 			return BOT_ACTION_DESIRE_HIGH, botTarget;

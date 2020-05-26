@@ -209,8 +209,6 @@ local switchTime = 0
 local buyWardTime = -999
 
 local hasSelltEarlyBoots = false
-local addTB2toBuy     = false
-local addTravelBoots  = false
 
 
 local buyTPtime = 0;
@@ -333,9 +331,9 @@ function ItemPurchaseThink()
 	
 	
 	--buy tp before die
-	if botGold >= 50 
+	if botGold >= 90 
 	   and bot:IsAlive()
-	   and botGold < ( 50 + botWorth/40 )
+	   and botGold < ( 90 + botWorth/40 )
 	   and botHP < 0.08	   
 	   and GetGameMode() ~= 23
 	   and bot:GetHealth() >= 1
@@ -556,7 +554,7 @@ function ItemPurchaseThink()
 	
 		
 		--Sell non travel_boot when have travel_boot
-		if currentTime > 30 * 60 and not hasSelltEarlyBoots 
+		if currentTime > 30 * 60 --and not hasSelltEarlyBoots 
 		   and  ( Item.HasItem( bot, "item_travel_boots") or Item.HasItem( bot, "item_travel_boots_2")) 
 		then	
 			for i=1,#Item['tEarlyBoots']
@@ -579,7 +577,7 @@ function ItemPurchaseThink()
 		and bot:GetCourierValue() == 0 
 		and ( bot:FindItemSlot('item_tpscroll') == -1 
 		      or ( botLevel >= 12 and Item.GetItemCharges(bot, 'item_tpscroll') <= 1 )) 
-		and botGold >= 50
+		and botGold >= 90
 	then
 		local tCharges = Item.GetItemCharges( bot, 'item_tpscroll' );
 		
@@ -600,7 +598,7 @@ function ItemPurchaseThink()
 			return;
 		end
 		
-		if botLevel >= 12 and tCharges == 0 and botGold >= 100
+		if botLevel >= 15 and tCharges == 0 and botGold >= 180
 		then
 			buyTP = true;
 			buyTPtime = currentTime;
@@ -620,64 +618,14 @@ function ItemPurchaseThink()
 	end
 	
 	--Change the flag to buy tp scroll to false when it already has it in inventory so the bot can insert tp scroll to list item to buy whenever they don't have any tp scroll
-	if buyTP == true and buyTPtime < currentTime - 50
+	if buyTP == true and buyTPtime < currentTime - 60
 	then
 		buyTP = false;
 	end
 	
-	--Add travelboots,moonshare,bkb to buy when in very late
-	if currentTime > 10 * 60 
-		and #bot.itemToBuy == 0 
-		and not Role.IsUserMode() 
-	then
-
-		if addTravelBoots == false
-		   and Item.HasItem(bot, 'item_travel_boots') 
-		then
-			addTravelBoots = true;
-			return;
-		end
-	
-		if addTravelBoots == false 
-		   and not Item.HasItem(bot, 'item_guardian_greaves')
-		then
-			bot.itemToBuy = {'item_travel_boots'};
-			addTravelBoots = true;
-			return;
-		end
-	
-		if Role.ShouldBuyMoonShare()
-		   and botGold > 4000 + bot:GetBuybackCost() + ( 50 + botWorth/40 ) - 333
-		then
-			
-			bot.itemToBuy = {'item_moon_shard' };
-			Role['moonshareCount'] = Role['moonshareCount'] - 1;
-			return;
-			
-		end
-		
-		if addTB2toBuy == false
-		   and Item.HasItem(bot, 'item_travel_boots_2')
-		then
-			addTB2toBuy = true;
-			return;
-		end
-	
-		if  addTB2toBuy == false
-		    and addTravelBoots == true
-		    and not Item.HasItem(bot, 'item_guardian_greaves')
-			and not Role.ShouldBuyMoonShare()
-			and not Item.HasItem(bot, 'item_moon_shard')
-			and botGold > 2000 + bot:GetBuybackCost() + botWorth/40 - 222
-		then
-			addTB2toBuy = true;
-			bot.itemToBuy = {'item_travel_boots_2'};
-			return;
-		end
-	end
 	
 	--Sell cheapie when have travel_boots
-	if  currentTime > 52 * 60 --and #bot.itemToBuy == 0 
+	if  currentTime > 52 * 60 and false 
 		and ( ( bot:GetItemInSlot(7) ~= nil or bot:GetItemInSlot(8) ~= nil ) and bot:GetItemInSlot(6) ~= nil )
 		and ( Item.HasItem(bot, 'item_travel_boots') or Item.HasItem(bot, 'item_travel_boots_2'))
 		and ( bot:DistanceFromFountain() <= 100 or bot:DistanceFromSecretShop() == 0 )
@@ -749,4 +697,4 @@ function ItemPurchaseThink()
 	end
 
 end
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

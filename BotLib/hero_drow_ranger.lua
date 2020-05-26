@@ -20,7 +20,7 @@ local tTalentTreeList = {
 						['t25'] = {10, 0},
 						['t20'] = {10, 0},
 						['t15'] = {10, 0},
-						['t10'] = {10, 0},
+						['t10'] = {0, 10},
 }
 
 local tAllAbilityBuildList = {
@@ -43,27 +43,17 @@ tOutFitList['outfit_carry'] = {
 	"item_manta",
 	"item_hurricane_pike",	
 	"item_satanic",
+	"item_travel_boots",
 	"item_butterfly",
-	"item_black_king_bar",
+	"item_moon_shard",
+	"item_travel_boots_2",
 	"item_ultimate_scepter_2",
+	"item_black_king_bar",
+	
 				
 }
 
-tOutFitList['outfit_mid'] = {
-
-	"item_mid_outfit",
-	"item_dragon_lance", 
-	"item_yasha", 
-	"item_ultimate_scepter",
-	"item_manta",
-	"item_hurricane_pike",	
-	"item_satanic",
-	"item_butterfly",
-	"item_black_king_bar",
-	"item_ultimate_scepter_2",
-
-				
-}
+tOutFitList['outfit_mid'] = tOutFitList['outfit_carry']
 
 tOutFitList['outfit_priest'] = tOutFitList['outfit_carry']
 
@@ -88,7 +78,7 @@ nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroI
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
 X['bDeafaultAbility'] = false
-X['bDeafaultItem'] = true
+X['bDeafaultItem'] = false
 
 function X.MinionThink(hMinionUnit)
 
@@ -149,8 +139,6 @@ function X.SkillsComplement()
 	if J.CanNotUseAbility(bot) or bot:IsInvisible() then return end
 		
 	nKeepMana = 90
-	aetherRange = 0
-	talentDamage = 0
 	nMP = bot:GetMana()/bot:GetMaxMana();
 	nHP = bot:GetHealth()/bot:GetMaxHealth();
 	nLV = bot:GetLevel();
@@ -287,7 +275,7 @@ function X.ConsiderWM()
 		
 		if J.IsValidHero(npcTarget) 
 			and not npcTarget:IsSilenced()
-			and not J.IsDisabled(true, npcTarget)
+			and not J.IsDisabled( npcTarget)
 			and J.CanCastOnNonMagicImmune(npcTarget) 
 			and J.IsInRange(npcTarget, bot, nCastRange)
 			and npcTarget:IsFacingLocation(bot:GetLocation(),150)
@@ -333,7 +321,7 @@ function X.ConsiderW()
 		if  J.IsValid(npcEnemy)
 			and npcEnemy:IsChanneling()  
 			and not npcEnemy:HasModifier("modifier_teleporting") 
-			and not npcEnemy:HasModifier("modifier_boots_of_travel_incoming")
+			--and not npcEnemy:HasModifier("modifier_boots_of_travel_incoming")
 		then
 			nTargetLocation = npcEnemy:GetLocation();
 			return BOT_ACTION_DESIRE_HIGH, nTargetLocation;
@@ -380,7 +368,7 @@ function X.ConsiderW()
 			and J.CanCastOnNonMagicImmune(npcTarget) 
 			and J.IsInRange(npcTarget, bot, nCastRange)
 		    and not npcTarget:IsSilenced()
-			and not J.IsDisabled(true, npcTarget)
+			and not J.IsDisabled( npcTarget)
 			and ( npcTarget:IsFacingLocation(bot:GetLocation(),120) 
 				  or npcTarget:GetAttackTarget() ~= nil )
 		then		
@@ -484,7 +472,7 @@ function X.ConsiderQ()
 	local nTowers = bot:GetNearbyTowers(900,true)
 	local nEnemysLaneCreepsInRange = bot:GetNearbyLaneCreeps(nAttackRange + 30,true)
 	local nEnemysLaneCreepsNearby = bot:GetNearbyLaneCreeps(400,true)
-	local nEnemysWeakestLaneCreepsInRange = J.GetAttackableWeakestUnit(false, true, nAttackRange + 30, bot)
+	local nEnemysWeakestLaneCreepsInRange = J.GetAttackableWeakestUnit(bot, nAttackRange + 30, false, true)
 	local nEnemysWeakestLaneCreepsInRangeHealth = 10000
 	if(nEnemysWeakestLaneCreepsInRange ~= nil)
 	then
@@ -492,8 +480,8 @@ function X.ConsiderQ()
 	end
 	
 	local nEnemysHeroesInAttackRange = bot:GetNearbyHeroes(nAttackRange,true,BOT_MODE_NONE);
-	local nInAttackRangeWeakestEnemyHero = J.GetAttackableWeakestUnit(true, true, nAttackRange, bot);
-	local nInViewWeakestEnemyHero = J.GetAttackableWeakestUnit(true, true, 800, bot);
+	local nInAttackRangeWeakestEnemyHero = J.GetAttackableWeakestUnit(bot, nAttackRange, true, true);
+	local nInViewWeakestEnemyHero = J.GetAttackableWeakestUnit(bot, 800, true, true);
 
 	local nAllyLaneCreeps = bot:GetNearbyLaneCreeps(330,false);
 	local npcTarget = J.GetProperTarget(bot)
@@ -677,4 +665,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

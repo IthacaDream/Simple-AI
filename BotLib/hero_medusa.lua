@@ -31,6 +31,8 @@ local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
+local sRandomItem_1 = RandomInt(1,9) > 6 and "item_black_king_bar" or "item_butterfly"
+
 local tOutFitList = {}
 
 tOutFitList['outfit_carry'] = {
@@ -40,10 +42,14 @@ tOutFitList['outfit_carry'] = {
 	"item_manta",
 	"item_maelstrom",
 	"item_skadi",
+	"item_travel_boots",
 	"item_satanic",	
 	"item_mjollnir",
-	"item_black_king_bar",
+	sRandomItem_1,
+	"item_moon_shard",
+	"item_travel_boots_2",
 	"item_ultimate_scepter_2",
+	
 				
 }
 
@@ -54,10 +60,14 @@ tOutFitList['outfit_mid'] = {
 	"item_manta",
 	"item_maelstrom",
 	"item_skadi",
+	"item_travel_boots",
 	"item_satanic",	
 	"item_mjollnir",
-	"item_black_king_bar",
+	sRandomItem_1,
+	"item_moon_shard",
+	"item_travel_boots_2",
 	"item_ultimate_scepter_2",
+	
 				
 }
 
@@ -76,7 +86,7 @@ X['sSellList'] = {
 	"item_mjollnir",
 	"item_magic_wand",
 	
-	"item_satanic",
+	"item_skadi",
 	"item_dragon_lance",
 	
 }
@@ -89,7 +99,7 @@ X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentL
 
 
 X['bDeafaultAbility'] = false
-X['bDeafaultItem'] = true
+X['bDeafaultItem'] = false
 
 
 function X.MinionThink(hMinionUnit)
@@ -153,7 +163,6 @@ function X.SkillsComplement()
 	if J.CanNotUseAbility(bot) or bot:IsInvisible() then return end
 	
 	nKeepMana = 400; 
-	aetherRange = 0
 	nLV = bot:GetLevel();
 	nMP = bot:GetMana()/bot:GetMaxMana();
 	nHP = bot:GetHealth()/bot:GetMaxHealth();
@@ -293,7 +302,7 @@ function X.ConsiderW()
 		local nLaneCreeps = bot:GetNearbyLaneCreeps(1600,true);
 		
 		if nSkillLv == 4 then nShouldAoeCount = 4; end
-		if bot:GetLevel() >= 20 or J.GetMPR(bot) > 0.88 then nShouldAoeCount = 3; end
+		if bot:GetLevel() >= 20 or J.GetMP(bot) > 0.88 then nShouldAoeCount = 3; end
 		
 		if nAoe.count >= nShouldAoeCount
 		then
@@ -376,7 +385,7 @@ function X.ConsiderR()
 		local npcTarget = J.GetProperTarget(bot);		
 		if J.IsValidHero(npcTarget) 
 			and J.CanCastOnNonMagicImmune(npcTarget) 
-			and not J.IsDisabled(true, npcTarget)
+			and not J.IsDisabled( npcTarget)
 			and GetUnitToUnitDistance(npcTarget,bot) <= bot:GetAttackRange()
 			and npcTarget:GetHealth() > 600
 			and npcTarget:GetPrimaryAttribute() ~= ATTRIBUTE_INTELLECT
@@ -463,4 +472,4 @@ function X.IsExistInTable(u, tUnit)
 end 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

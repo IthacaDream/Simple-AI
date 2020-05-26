@@ -39,11 +39,16 @@ tOutFitList['outfit_carry'] = {
 	"item_ranged_carry_outfit",
 	"item_yasha",
 	"item_black_king_bar",
-	"item_manta",
-	"item_skadi",
-	"item_bloodthorn",
-	"item_sphere",
+	"item_yasha_and_kaya",
+	"item_ultimate_scepter",
+	"item_travel_boots",
+	"item_sheepstick",	
+	"item_greater_crit",
+	"item_moon_shard",
+	"item_travel_boots_2",
 	"item_ultimate_scepter_2",
+	"item_sphere",
+	
 				
 }
 
@@ -52,11 +57,16 @@ tOutFitList['outfit_mid'] = {
 	"item_mid_outfit",
 	"item_yasha",
 	"item_black_king_bar",
-	"item_manta",
-	"item_skadi",
-	"item_bloodthorn",
-	"item_sphere",
+	"item_yasha_and_kaya",
+	"item_ultimate_scepter",
+	"item_travel_boots",
+	"item_sheepstick",
+	"item_greater_crit",
+	"item_moon_shard",
+	"item_travel_boots_2",
 	"item_ultimate_scepter_2",
+	"item_sphere",
+	
 				
 }
 
@@ -69,7 +79,7 @@ tOutFitList['outfit_tank'] = tOutFitList['outfit_carry']
 X['sBuyList'] = tOutFitList[sOutfitType]
 
 X['sSellList'] = {
-	"item_skadi",
+	"item_ultimate_scepter",
 	"item_urn_of_shadows",
 	
 	"item_sphere",
@@ -83,7 +93,7 @@ nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroI
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
 X['bDeafaultAbility'] = false
-X['bDeafaultItem'] = true
+X['bDeafaultItem'] = false
 
 function X.MinionThink(hMinionUnit)
 
@@ -164,7 +174,7 @@ function X.SkillsComplement()
 	if castCDesire > 0
 	then
 				
-		J.SetQueuePtToINT(bot, false)
+		J.SetQueuePtToINT(bot, true)
 				
 		bot:ActionQueue_UseAbility( abilityC );
 		return;
@@ -174,7 +184,7 @@ function X.SkillsComplement()
 	if castXDesire > 0
 	then
 			
-		J.SetQueuePtToINT(bot, false)
+		J.SetQueuePtToINT(bot, true)
 				
 		bot:ActionQueue_UseAbility( abilityX );
 		return;
@@ -184,7 +194,7 @@ function X.SkillsComplement()
 	if castZDesire > 0
 	then
 				
-		J.SetQueuePtToINT(bot, false)
+		J.SetQueuePtToINT(bot, true)
 	
 		bot:ActionQueue_UseAbility( abilityZ );
 		return;	
@@ -248,7 +258,7 @@ function X.ConsiderR()
 		local npcTarget = J.GetProperTarget(bot);		
 		if J.IsValidHero(npcTarget) 
 			and J.CanCastOnNonMagicImmune(npcTarget) 
-			and not J.IsDisabled(true, npcTarget)
+			and not J.IsDisabled( npcTarget)
 			and GetUnitToUnitDistance(npcTarget,bot) <= 400
 			and npcTarget:GetHealth() > 800
 			and nHP > 0.38
@@ -430,4 +440,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

@@ -31,16 +31,22 @@ local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
+local sRandomItem_1 = RandomInt(1,9) > 6 and "item_monkey_king_bar" or "item_butterfly"
+
 local tOutFitList = {}
 
 tOutFitList['outfit_carry'] = {
 	
 	"item_melee_carry_outfit",
-	"item_sange_and_yasha",
+	"item_yasha",
 	"item_diffusal_blade",
+	"item_sange_and_yasha",
 	"item_black_king_bar",
+	"item_travel_boots",
 	"item_abyssal_blade", 
-	"item_monkey_king_bar",
+	sRandomItem_1,
+	"item_moon_shard",
+	"item_travel_boots_2",
 				
 }
 
@@ -56,7 +62,7 @@ X['sBuyList'] = tOutFitList[sOutfitType]
 
 X['sSellList'] = {
 
-	"item_diffusal_blade",
+	"item_power_treads",
 	"item_quelling_blade",
 	
 	"item_abyssal_blade",
@@ -71,7 +77,7 @@ nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroI
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
 X['bDeafaultAbility'] = true
-X['bDeafaultItem'] = true
+X['bDeafaultItem'] = false
 
 function X.MinionThink(hMinionUnit)
 
@@ -273,7 +279,7 @@ function X.ConsiderQ()
 				if ( J.IsValid(npcAlly) 
 					 and npcAlly:GetAttackTarget() ~= nil
 				     and J.CanCastOnNonMagicImmune(npcAlly) 
-					 and ( J.GetHPR(npcAlly) > 0.18 or J.GetHPR(npcAlly:GetAttackTarget()) < 0.18 )
+					 and ( J.GetHP(npcAlly) > 0.18 or J.GetHP(npcAlly:GetAttackTarget()) < 0.18 )
 					 and not npcAlly:HasModifier('modifier_bloodseeker_bloodrage')
 					 and AllyAD > highesAD ) 
 				then
@@ -298,8 +304,8 @@ function X.ConsiderQ()
 		   and J.CanCastOnNonMagicImmune(npcTarget) 
 		   and J.IsInRange(npcTarget, bot, nCastRange + 150) 
 		then
-		    if J.IsDisabled(true, npcTarget) 
-			   and J.GetHPR(npcTarget) < 0.62
+		    if J.IsDisabled( npcTarget) 
+			   and J.GetHP(npcTarget) < 0.62
 			   and J.GetProperTarget(npcTarget) == nil
 			   and not npcTarget:HasModifier('modifier_bloodseeker_bloodrage')
 			then
@@ -436,7 +442,7 @@ function X.ConsiderR()
 		for _,npcEnemy in pairs( tableNearbyEnemyHeroes )
 		do
 			if bot:WasRecentlyDamagedByHero( npcEnemy, 1.0 ) 
-			   and J.CanCastOnMagicImmune( npcEnemy )
+			   and J.CanCastOnNonMagicImmune( npcEnemy )
 			   and J.CanCastOnTargetAdvanced(npcEnemy)
 			   and not npcEnemy:HasModifier('modifier_bloodseeker_bloodrage')
 			then
@@ -449,11 +455,11 @@ function X.ConsiderR()
 	then
 		for _,npcEnemy in pairs( tableNearbyEnemyHeroes )
 		do
-			if J.CanCastOnMagicImmune(npcEnemy) 
+			if J.CanCastOnNonMagicImmune(npcEnemy) 
 			   and J.CanCastOnTargetAdvanced(npcEnemy)
 			   and J.Role.IsCarry(npcEnemy:GetUnitName()) 
 			   and not npcEnemy:HasModifier('modifier_bloodseeker_bloodrage')
-			   and not J.IsDisabled(true, npcEnemy) 
+			   and not J.IsDisabled( npcEnemy) 
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcEnemy;
 			end
@@ -465,11 +471,11 @@ function X.ConsiderR()
 	then
 		local npcTarget = J.GetProperTarget(bot);
 		if J.IsValidHero(npcTarget) 
-		   and J.CanCastOnMagicImmune(npcTarget)
+		   and J.CanCastOnNonMagicImmune(npcTarget)
 		   and J.CanCastOnTargetAdvanced(npcTarget)
 		   and J.IsInRange(npcTarget, bot, nCastRange +100)
 		   and not npcTarget:HasModifier('modifier_bloodseeker_bloodrage')
-		   and not J.IsDisabled(true, npcTarget)
+		   and not J.IsDisabled( npcTarget)
 		then
 			local allies = npcTarget:GetNearbyHeroes( 1200, true, BOT_MODE_NONE );
 			if ( allies ~= nil and #allies >= 2 )
@@ -485,4 +491,4 @@ end
 
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

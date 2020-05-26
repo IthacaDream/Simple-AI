@@ -70,7 +70,7 @@ function X.Consider()
 	
 	if #nEnemysHerosInView == 1 --如果敌人只有一个
 	   and J.IsValidHero(nEnemysHerosInView[1]) --是英雄
-	   and J.IsInRange(nEnemysHerosInView[1],bot,nCastRange + 50) --在施法范围+50内
+	   and J.IsInRange(bot,nEnemysHerosInView[1],nCastRange + 50) --在施法范围+50内
 	   and nEnemysHerosInView[1]:IsFacingLocation(bot:GetLocation(),30) --单位面向目标30°范围内
 	   and nEnemysHerosInView[1]:GetAttackRange() > nCastRange --单位的攻击范围在施法范围外
 	   and nEnemysHerosInView[1]:GetAttackRange() < 1250 --且小于1250
@@ -114,7 +114,7 @@ function X.Consider()
 		do
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled(npcEnemy)
 				and not npcEnemy:IsDisarmed()
 			then
 				local npcEnemyDamage = npcEnemy:GetEstimatedDamageToTarget( false, bot, 3.0, DAMAGE_TYPE_PHYSICAL );
@@ -139,8 +139,8 @@ function X.Consider()
 		do
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
-				and not J.IsDisabled(true, npcEnemy)
-				and J.GetAttackTargetEnemyCreepCount(npcEnemy, 600) >= 4
+				and not J.IsDisabled(npcEnemy)
+				and J.GetAttackEnemysAllyCreepCount(npcEnemy, 600) >= 4
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcEnemy;
 			end
@@ -167,11 +167,11 @@ function X.Consider()
 	    local npcTarget = J.GetProperTarget(bot);
 		if J.IsValidHero(npcTarget) 
 			and J.CanCastOnNonMagicImmune(npcTarget) 
-			and J.IsInRange(npcTarget, bot, nCastRange +80) 
-			and not J.IsDisabled(true, npcTarget)
+			and J.IsInRange(bot,npcTarget, nCastRange +80) 
+			and not J.IsDisabled(npcTarget)
 			and not npcTarget:IsDisarmed()
 		then
-			if nSkillLV >= 3 or nMP > 0.68 or J.GetHPR(npcTarget) < 0.38 or nHP < 0.25
+			if nSkillLV >= 3 or nMP > 0.68 or J.GetHP(npcTarget) < 0.38 or nHP < 0.25
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcTarget;
 			end
@@ -210,7 +210,7 @@ function X.Consider()
 		do
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled(npcEnemy)
                 and not npcEnemy:IsDisarmed()				
 				and bot:IsFacingLocation(npcEnemy:GetLocation(),45)
 			then
@@ -229,7 +229,7 @@ function X.Consider()
 		do
 			if  J.IsValid(npcEnemy)
 			    and J.CanCastOnNonMagicImmune(npcEnemy) 
-				and not J.IsDisabled(true, npcEnemy)			
+				and not J.IsDisabled(npcEnemy)			
 			then
 				return BOT_ACTION_DESIRE_HIGH, npcEnemy
 			end

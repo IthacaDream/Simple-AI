@@ -31,17 +31,23 @@ local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
+local sRandomItem_1 = RandomInt(1,9) > 6 and "item_satanic" or "item_butterfly"
+
 local tOutFitList = {}
 
 tOutFitList['outfit_carry'] = {
 
 	"item_melee_carry_outfit",
-	"item_new_bfury",
+	"item_bfury",
 	"item_manta",
 	"item_abyssal_blade",
+	"item_travel_boots",
 	"item_skadi",
-	"item_satanic",
+	sRandomItem_1,
+	"item_moon_shard",
+	"item_travel_boots_2",
 	"item_ultimate_scepter_2",
+	
 				
 }
 
@@ -69,7 +75,7 @@ nAbilityBuildList,nTalentBuildList,X['sBuyList'],X['sSellList'] = J.SetUserHeroI
 X['sSkillList'] = J.Skill.GetSkillList(sAbilityList, nAbilityBuildList, sTalentList, nTalentBuildList)
 
 X['bDeafaultAbility'] = false
-X['bDeafaultItem'] = true
+X['bDeafaultItem'] = false
 
 function X.MinionThink(hMinionUnit)
 
@@ -281,7 +287,7 @@ function X.ConsiderWE()
 			    and J.CanCastOnMagicImmune(npcEnemy) 
 				and not J.IsInRange(npcEnemy, bot, 850) 
 				and J.IsInRange(npcEnemy, bot, nCastRange + 150) 
-				and J.GetAroundTargetAllyHeroCount(npcEnemy, 660, bot) == 0
+				and J.GetAroundTargetAllyHeroCount(npcEnemy, 660) == 0
 			then
 				local npcEnemyHealth = npcEnemy:GetHealth();
 				local tableNearbyAllysHeroes = npcEnemy:GetNearbyHeroes( 1000, true, BOT_MODE_NONE );
@@ -329,7 +335,7 @@ function X.ConsiderWE()
 			and not npcTarget:IsStunned()
 			and not npcTarget:IsSilenced()
 			and J.CanCastOnMagicImmune(npcTarget) 
-			and J.GetAroundTargetAllyHeroCount(npcTarget, 650, bot) == 0
+			and J.GetAroundTargetAllyHeroCount(npcTarget, 650) == 0
 		then
 			local tableNearbyEnemyHeroes = npcTarget:GetNearbyHeroes( 800, false, BOT_MODE_NONE );
 			local tableNearbyAllysHeroes = npcTarget:GetNearbyHeroes( 1000, true, BOT_MODE_NONE );
@@ -778,4 +784,4 @@ function X.ReportDetails(bot,npcTarget,EstDamage)
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

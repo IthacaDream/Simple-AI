@@ -89,7 +89,7 @@ function X.Consider()
 	if J.IsGoingOnSomeone(bot)
 	then
 		if J.IsValidHero(npcTarget) and J.CanCastOnNonMagicImmune(npcTarget) and 
-	       J.IsInRange(npcTarget, bot, nRadius - 100) and not J.IsDisabled(true, npcTarget)
+	       J.IsInRange(npcTarget, bot, nRadius - 100) and not J.IsDisabled(npcTarget)
 		then   
 			return BOT_ACTION_DESIRE_HIGH;
 		end

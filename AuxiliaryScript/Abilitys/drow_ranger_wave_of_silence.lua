@@ -115,7 +115,7 @@ function X.Consider()
 			and J.CanCastOnNonMagicImmune(npcTarget) 
 			and J.IsInRange(npcTarget, bot, nCastRange)
 		    and not npcTarget:IsSilenced()
-			and not J.IsDisabled(true, npcTarget)
+			and not J.IsDisabled(npcTarget)
 			and ( npcTarget:IsFacingLocation(bot:GetLocation(),120) 
 				  or npcTarget:GetAttackTarget() ~= nil )
 		then		

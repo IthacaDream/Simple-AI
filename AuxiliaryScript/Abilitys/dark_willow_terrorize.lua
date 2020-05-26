@@ -80,7 +80,7 @@ function X.Consider()
 		local tableNearbyAllyHeroes = bot:GetNearbyHeroes( nCastRange, false, BOT_MODE_NONE );
 		local nDisabledAllies = 0;
 		for _,unit in pairs(tableNearbyAllyHeroes) do
-			if J.IsDisabled(false, unit) then
+			if J.IsDisabled(unit) then
 				nDisabledAllies = nDisabledAllies + 1;
 			end
 		end

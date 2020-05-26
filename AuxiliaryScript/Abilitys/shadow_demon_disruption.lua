@@ -63,7 +63,7 @@ function X.Consider()
     -- 待补充：
     -- 针对可以安全逃脱的队友，不应该强行留住，需增加判断
     for _,myFriend in pairs(hAllyList) do
-		if ( J.IsRetreating(bot) and myFriend:WasRecentlyDamagedByAnyHero(2.0) and J.CanCastOnNonMagicImmune(myFriend) ) or J.IsDisabled(false, myFriend)
+		if ( J.IsRetreating(bot) and myFriend:WasRecentlyDamagedByAnyHero(2.0) and J.CanCastOnNonMagicImmune(myFriend) ) or J.IsDisabled(myFriend)
 		then
 			return BOT_ACTION_DESIRE_MODERATE, myFriend;
 		end
@@ -99,7 +99,7 @@ function X.Consider()
 
 		for _,npcEnemy in pairs( nInRangeEnemyHeroList )
 		do
-			if ( J.CanCastOnNonMagicImmune(npcEnemy) and not J.IsDisabled(true, npcEnemy) )
+			if ( J.CanCastOnNonMagicImmune(npcEnemy) and not J.IsDisabled(npcEnemy) )
 			then
 				local nDamage = npcEnemy:GetEstimatedDamageToTarget( false, bot, 3.0, DAMAGE_TYPE_ALL );
 				if ( nDamage > nMostDangerousDamage )
@@ -121,7 +121,7 @@ function X.Consider()
 	then
 		local npcTarget = bot:GetTarget();
 		if J.IsValidHero(npcTarget) and J.CanCastOnNonMagicImmune(npcTarget) and J.IsInRange(npcTarget, bot, nCastRange + 200) and
-		   not J.IsDisabled(true, npcTarget)
+		   not J.IsDisabled(npcTarget)
 		then
 			return BOT_ACTION_DESIRE_HIGH, npcTarget;
 		end

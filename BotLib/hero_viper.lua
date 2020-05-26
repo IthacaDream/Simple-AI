@@ -31,6 +31,8 @@ local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
 
 local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
+local sRandomItem_1 = RandomInt(1,9) > 6 and "item_sheepstick" or "item_butterfly"
+
 local tOutFitList = {}
 
 tOutFitList['outfit_carry'] = {
@@ -40,10 +42,14 @@ tOutFitList['outfit_carry'] = {
 	"item_ultimate_scepter",
 	"item_black_king_bar",
 	"item_mjollnir",
-	"item_sheepstick",
+	"item_travel_boots",
+	sRandomItem_1,
 	"item_soul_booster",
+	"item_moon_shard",
+	"item_travel_boots_2",
 	"item_ultimate_scepter_2",
 	"item_octarine_core",
+	
 				
 }
 
@@ -54,8 +60,11 @@ tOutFitList['outfit_mid'] = {
 	"item_ultimate_scepter",
 	"item_black_king_bar",
 	"item_mjollnir",
-	"item_sheepstick",
+	"item_travel_boots",
+	sRandomItem_1,
 	"item_soul_booster",
+	"item_moon_shard",
+	"item_travel_boots_2",
 	"item_ultimate_scepter_2",
 	"item_octarine_core",
 				
@@ -223,7 +232,7 @@ function X.ConsiderRQ()
 	local npcTarget = J.GetProperTarget(bot)
 	
 	local nEnemysHerosInCastRange = bot:GetNearbyHeroes(nCastRange + 80 ,true,BOT_MODE_NONE);
-	local nWeakestEnemyHeroInCastRange = J.GetVulnerableWeakestUnit(true, true, nCastRange + 80, bot);
+	local nWeakestEnemyHeroInCastRange = J.GetVulnerableWeakestUnit(bot, true, true, nCastRange + 80);
 	
 	
 	if J.IsValid(nEnemysHerosInCastRange[1])
@@ -279,81 +288,7 @@ function X.ConsiderQ()
 	
 	local npcTarget = J.GetProperTarget(bot)
 	
-	
-	if  J.IsValidHero(npcTarget) and false
-		and J.IsValidHero(nEnemysHerosInAttackRange[1])
-		and not (#nEnemysHerosInAttackRange == 1 and nEnemysHerosInAttackRange[1] == npcTarget)
-		and (bot:GetActiveMode() ~= BOT_MODE_RETREAT or bot:GetActiveModeDesire( ) < 0.65 )
-		and bot:GetActiveMode() ~= BOT_MODE_TEAM_ROAM
-	then
-	
-		--先对未中毒的敌人使用
-		local newTarget = nil 
-		local newTargetHealthRate = 0.75
-		for _,npcEnemy in pairs(nEnemysHerosInAttackRange)
-		do
-			if npcEnemy:GetHealth()/npcEnemy:GetMaxHealth() < newTargetHealthRate
-			   and not npcEnemy:HasModifier("modifier_viper_poison_attack_slow")
-			   and not npcEnemy:HasModifier('modifier_illusion') 
-			   and not npcEnemy:IsMagicImmune()
-			   and not npcEnemy:IsInvulnerable()
-			   and not npcEnemy:IsAttackImmune()
-			   and not npcEnemy:GetUnitName() == "npc_dota_hero_meepo"
-			then
-		       newTarget = npcEnemy
-			   newTargetHealthRate = npcEnemy:GetHealth()/npcEnemy:GetMaxHealth()
-			end
-		end
-		if(newTarget ~= nil)
-		then
-			return BOT_ACTION_DESIRE_HIGH,newTarget;
-		end
 		
-		--再对已中毒buff快没了的使用
-		local duringTime = 9.0
-		for _,npcEnemy in pairs(nEnemysHerosInAttackRange)
-		do		  
-			if  npcEnemy:HasModifier("modifier_viper_poison_attack_slow")
-				and not npcEnemy:HasModifier('modifier_illusion') 
-				and not npcEnemy:IsMagicImmune()
-				and not npcEnemy:IsInvulnerable()
-				and not npcEnemy:IsAttackImmune() 
-			then
-				local nBuffTime = J.GetModifierTime(npcEnemy, "modifier_viper_poison_attack_slow")
-				if nBuffTime < duringTime
-				then
-					newTarget = npcEnemy
-					duringTime = nBuffTime
-				end
-		    end
-		end
-		if(newTarget ~= nil)
-		then
-			return BOT_ACTION_DESIRE_HIGH,newTarget;
-		end
-		
-		--最后是对血量最少的使用
-		local newTargetHealth = 99999
-		for _,npcEnemy in pairs(nEnemysHerosInAttackRange)
-		do
-			if npcEnemy:GetHealth() < newTargetHealth
-			   and not npcEnemy:HasModifier('modifier_illusion') 
-			   and not npcEnemy:IsMagicImmune()
-			   and not npcEnemy:IsInvulnerable()
-			   and not npcEnemy:IsAttackImmune() 
-			then
-		       newTarget = npcEnemy
-			   newTargetHealth = npcEnemy:GetHealth()
-			end
-		end
-		if(newTarget ~= nil)
-		then
-			return BOT_ACTION_DESIRE_HIGH,newTarget;
-		end
-		
-	end
-	
-	
 	if J.IsRetreating(bot)
 	then
 		local enemys = bot:GetNearbyHeroes(nAttackRange,true,BOT_MODE_NONE)
@@ -526,7 +461,7 @@ function X.ConsiderR()
 	local nDamage = (abilityR:GetLevel() *40 + 20) *5 + talentBonusDamage;
 	
 	local nEnemysHerosInCastRange = bot:GetNearbyHeroes(nCastRange + 80 ,true,BOT_MODE_NONE);
-	local nWeakestEnemyHeroInCastRange = J.GetVulnerableWeakestUnit(true, true, nCastRange + 80, bot);
+	local nWeakestEnemyHeroInCastRange = J.GetVulnerableWeakestUnit(bot, true, true, nCastRange + 80);
 	local npcTarget = J.GetProperTarget(bot)
 	local castRTarget = nil
 	
@@ -545,7 +480,7 @@ function X.ConsiderR()
 			if J.IsValidHero(npcTarget)                        
 			then
 				if J.IsInRange(npcTarget, bot, nCastRange + 80)   
-					and J.CanCastOnMagicImmune(npcTarget)
+					and J.CanCastOnNonMagicImmune(npcTarget)
 					and J.CanCastOnTargetAdvanced(npcTarget)
 				then					
 					castRTarget = npcTarget;
@@ -560,7 +495,7 @@ function X.ConsiderR()
 			end	
 		end
 		
-		if J.CanCastOnMagicImmune(nEnemysHerosInCastRange[1])
+		if J.CanCastOnNonMagicImmune(nEnemysHerosInCastRange[1])
 		   and J.CanCastOnTargetAdvanced(nEnemysHerosInCastRange[1])
 		then
 			castRTarget = nEnemysHerosInCastRange[1];   
@@ -583,4 +518,4 @@ function X.ConsiderR()
 end
 
 return X
--- dota2jmz@163.com QQ:2462331592。
+-- dota2jmz@163.com QQ:2462331592

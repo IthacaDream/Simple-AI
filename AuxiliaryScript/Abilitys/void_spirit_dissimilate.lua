@@ -82,7 +82,7 @@ function X.Consider()
 	then
 		if J.IsValidHero(botTarget)
 		   and J.CanCastOnMagicImmune(botTarget)
-		   and not J.IsDisabled(true, botTarget)
+		   and not J.IsDisabled(botTarget)
 		then
 			--追击目标
 			local vSecondLoc = J.GetUnitTowardDistanceLocation(bot, botTarget, 500);	

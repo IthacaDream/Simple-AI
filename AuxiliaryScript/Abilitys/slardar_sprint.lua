@@ -145,7 +145,7 @@ function X.Consider()
 		for _,npcEnemy in pairs( nEnemysHerosInView )
 		do
 			if  J.IsValid(npcEnemy)
-				and not J.IsDisabled(true, npcEnemy)
+				and not J.IsDisabled(npcEnemy)
                 and not npcEnemy:IsDisarmed()				
 			then
 				return BOT_ACTION_DESIRE_HIGH; 
