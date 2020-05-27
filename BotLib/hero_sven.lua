@@ -492,7 +492,7 @@ function X.ConsiderE()
 	
 	--尝试救队友一命
 	if J.IsRetreating(nWeakestAlly)
-		and nWeakestAlly:GetHealth() < 150
+		and nWeakestAlly:GetHealth() < 200
 	then
 		J.SetReport("尝试救队友一命",nShouldBonusCount);
 		return BOT_ACTION_DESIRE_HIGH;
@@ -503,15 +503,17 @@ function X.ConsiderE()
 	then
 	    local npcTarget = J.GetProperTarget(bot);
 		if J.IsValidHero(npcTarget) 
-		   and not J.IsInRange(npcTarget,bot,300)
 		   and J.IsInRange(npcTarget,bot,600)
 		   and bot:IsFacingLocation(npcTarget:GetLocation(),15)
-		   and npcTarget:IsFacingLocation(J.GetEnemyFountain(),20)
 		then
 --			J.SetReport("套盾打架:",npcTarget:GetUnitName());
 			return BOT_ACTION_DESIRE_HIGH;
 		end
 	end
+	
+	--推线
+	
+	--打野
 	
 	return 0;
 end

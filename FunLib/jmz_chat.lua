@@ -3729,7 +3729,7 @@ function Chat.GetReplyTauntString()
 
 	local sReplyTauntList = {
 			"你是在说你自己吗?",
-			"你就这种程度而已吗?",
+			"你也就只是这种程度而已了.",
 			"我不允许你这么说你自己!",
 			"别这么说你自己,小伙汁.",
 			"其实你不用这么来说你自己的.",

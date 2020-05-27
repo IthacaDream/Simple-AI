@@ -500,7 +500,6 @@ function X.ConsiderQ()
 		return BOT_ACTION_DESIRE_NONE, nil;
 	end
 	
-	-- If we're seriously retreating, see if we can land a stun on someone who's damaged us recently
 	if J.IsRetreating(bot)
 	then
 		local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( 1000, true, BOT_MODE_NONE );
@@ -599,7 +598,6 @@ function X.ConsiderR()
 	local nCastRange = abilityR:GetCastRange();
 	local nRadius = abilityR:GetSpecialValueInt("ghostship_width");
 	
-	-- If we're seriously retreating, see if we can land a stun on someone who's damaged us recently
 	if J.IsRetreating(bot)
 	then
 		local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( 1000, true, BOT_MODE_NONE );

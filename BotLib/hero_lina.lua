@@ -160,7 +160,6 @@ local talent4Damage = 0
 
 function X.SkillsComplement()
 
-
 	
 	if J.CanNotUseAbility(bot) or bot:IsInvisible() then return end
 	

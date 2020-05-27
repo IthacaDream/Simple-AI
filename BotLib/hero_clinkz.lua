@@ -215,10 +215,7 @@ function X.ConsiderQ()
 	if #hEnemyList == 0 then nCastRange = 1600 end
 	
 	local nEnemyCreepList = bot:GetNearbyCreeps(nCastRange,true)
-	-- if #nEnemyCreepList == 0
-	-- then
-		-- nEnemyCreepList = bot:GetNearbyCreeps(900,false)
-	-- end
+
 	local nBestEnemyCreep = nil
 	
 	local targetCreepBountyGoldMax = 1
@@ -396,7 +393,7 @@ function X.ConsiderW()
 		
 	end
 	
-	--farm or push
+
 	if ( J.IsFarming(bot) or J.IsPushing(bot) )
 		and nSkillLV >= 3 
 		and not abilityW:GetAutoCastState()
@@ -421,7 +418,6 @@ function X.ConsiderW()
 	end
 	
 	
-	-- If we're going after someone
 	if J.IsGoingOnSomeone(bot) and not abilityW:GetAutoCastState()
 	then
 		if J.IsValidHero(botTarget)
@@ -468,7 +464,6 @@ function X.ConsiderE()
 	local nDamageType = DAMAGE_TYPE_MAGICAL
 	local nInRangeEnemyList = bot:GetNearbyHeroes(nCastRange, true, BOT_MODE_NONE);
 	
-	--retreat
 	if J.IsRetreating(bot)
 		and bot:GetActiveModeDesire() > BOT_MODE_DESIRE_HIGH
 		and #hEnemyList > 0
@@ -476,14 +471,12 @@ function X.ConsiderE()
 		return BOT_ACTION_DESIRE_HIGH, 'E-撤退了'
 	end
 	
-	--invis
 	if J.GetHP(bot) < 0.166
 	   and (#hEnemyList > 0 or bot:WasRecentlyDamagedByAnyHero(5.0))
 	then
 		return BOT_ACTION_DESIRE_HIGH, 'E-隐身保命'
 	end	
 	
-	--Attack
 	if J.IsGoingOnSomeone(bot)
 	then
 		if J.IsValidHero(botTarget)
@@ -545,7 +538,7 @@ function X.ConsiderR()
 	local nDamageType = DAMAGE_TYPE_MAGICAL
 	local nInRangeEnemyList = bot:GetNearbyHeroes(nCastRange, true, BOT_MODE_NONE);
 	
-	--ForAbilitQ
+	--为Q技能释放
 	if J.IsGoingOnSomeone(bot)
 	then
 		if J.IsValidHero(botTarget)

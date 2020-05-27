@@ -101,5 +101,17 @@ Buff["hero_is_healing"] = {
 }
 
 
+Buff["hero_not_invisible"] = {
+
+"modifier_item_dustofappearance",
+"modifier_sniper_assassinate",
+"modifier_bounty_hunter_track",
+--大鱼大
+--血魔嗜血
+--
+
+}
+
+
 return Buff;
 -- dota2jmz@163.com QQ:2462331592

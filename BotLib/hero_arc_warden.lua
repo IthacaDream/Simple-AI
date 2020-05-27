@@ -33,7 +33,7 @@ local nTalentBuildList = J.Skill.GetTalentBuild(tTalentTreeList)
 
 local sRandomItem_1 = RandomInt(1,9) > 6 and "item_manta" or "item_necronomicon_3"
 
-local sRandomItem_2 = RandomInt(1,9) > 5 and "item_black_king_bar" or "item_sphere"
+local sRandomItem_2 = RandomInt(1,9) > 5 and "item_octarine_core" or "item_sphere"
 
 local tOutFitList = {}
 
@@ -41,11 +41,10 @@ tOutFitList['outfit_carry'] = {
 	
 	"item_ranged_carry_outfit",
 	"item_hand_of_midas",
-	"item_maelstrom",
 	"item_diffusal_blade",
+	"item_kaya_and_sange",
 	sRandomItem_1,
 	"item_sheepstick",
-	"item_mjollnir",
 	"item_travel_boots",
 	"item_bloodthorn",
 	sRandomItem_2,
@@ -69,7 +68,7 @@ X['sSellList'] = {
 	'item_sheepstick',
 	'item_magic_wand',
 	
-	"item_mjollnir",
+	"item_travel_boots",
 	"item_hand_of_midas",
 	
 	"item_bloodthorn",
@@ -209,7 +208,7 @@ function X.ConsiderE()
 	local nDelay = abilityE:GetSpecialValueInt("activation_delay") + 0.1;
 
 	
-	-- If a mode has set a target, and we can kill them, do it
+	--击杀
 	local npcTarget = J.GetProperTarget(bot);
 	if J.IsValidHero(npcTarget) 
 	   and J.CanCastOnNonMagicImmune(npcTarget)
@@ -268,7 +267,6 @@ function X.ConsiderE()
 		
 	end	
 	
-	-- if we're Retreat
 	if J.IsRetreating(bot) 
 	   and bot:GetActiveModeDesire() > BOT_ACTION_DESIRE_HIGH
 	   and not bot:HasModifier("modifier_silencer_curse_of_the_silent")
@@ -283,7 +281,6 @@ function X.ConsiderE()
 		end
 	end
 	
-	-- if we're farming
 	if bot:GetActiveMode() == BOT_MODE_FARM
 	   or J.IsPushing(bot)
 	   or J.IsDefending(bot)
@@ -406,11 +403,9 @@ function X.ConsiderW()
 		return BOT_ACTION_DESIRE_NONE, 0;
 	end
 	
-	-- Get some of its values
 	local nRadius = abilityW:GetSpecialValueInt( "radius" );
 	local nCastRange = abilityW:GetCastRange();
 
-	-- If we're seriously retreating, see if we can land a stun on someone who's damaged us recently
 	if J.IsRetreating(bot) 
 	   and not bot:HasModifier("modifier_arc_warden_magnetic_field") 
 	then
@@ -434,7 +429,6 @@ function X.ConsiderW()
 		end
 	end
 	
-	-- If we're farming and can kill 3+ creeps with LSA
 	if bot:GetActiveMode() == BOT_MODE_FARM 
 	   and not bot:HasModifier("modifier_arc_warden_magnetic_field") 
 	then
@@ -459,7 +453,6 @@ function X.ConsiderW()
 		end
 	end
 
-	-- If we're pushing or defending a lane and can hit 4+ creeps, go for it
 	if J.IsDefending(bot) or J.IsPushing(bot) and not bot:HasModifier("modifier_arc_warden_magnetic_field")
 	then
 		local tableNearbyEnemyCreeps = bot:GetNearbyLaneCreeps( 800, true );
@@ -472,7 +465,6 @@ function X.ConsiderW()
 	end
 	
 	
-	-- If we're going after someone
 	if J.IsGoingOnSomeone(bot)
 	then
 		local npcTarget = bot:GetTarget();
@@ -497,17 +489,14 @@ end
 
 function X.ConsiderQ()
 
-	-- Make sure it's castable
 	if not abilityQ:IsFullyCastable() then return 0	end
 
-	-- Get some of its values
 	local nCastRange = abilityQ:GetCastRange() +60;
 	local nDot = abilityQ:GetSpecialValueInt( "damage_per_second" );
 	local nDuration = abilityQ:GetSpecialValueInt( "duration" );
 	local nDamage = nDot * nDuration;
 	local npcTarget = J.GetProperTarget(bot);
 	
-	-- If a mode has set a target, and we can kill them, do it
 	if J.IsValidHero(npcTarget) 
 	   and J.CanCastOnNonMagicImmune(npcTarget) 
 	   and J.CanCastOnTargetAdvanced(npcTarget)
@@ -518,7 +507,6 @@ function X.ConsiderQ()
 	end
 	
 	
-	-- If we're in a teamfight, use it on the scariest enemy
 	if J.IsInTeamFight(bot, 1200)
 	then
 		local npcMostDangerousEnemy = nil;
@@ -557,7 +545,6 @@ function X.ConsiderQ()
 	end
 	
 	
-	-- If we're going after someone
 	if J.IsGoingOnSomeone(bot)
 	then
 		if J.IsValidHero(npcTarget) 
@@ -594,13 +581,11 @@ function X.ConsiderR()
 
 	X.UpdateDoubleStatus();
 	
-	-- Make sure it's castable
 	if ( not abilityR:IsFullyCastable() ) 
 	then 
 		return BOT_ACTION_DESIRE_NONE;
 	end
 	
-	-- If we're pushing or defending a lane and can hit 4+ creeps, go for it
 	if  J.IsDefending(bot) or J.IsPushing(bot) or J.IsGoingOnSomeone(bot) or bot:GetActiveMode() == BOT_MODE_FARM
 	then
 		local tableNearbyEnemyCreeps = bot:GetNearbyLaneCreeps( 800, true );
@@ -643,7 +628,6 @@ function X.ConsiderR()
 	end
 	
 	
-	-- If we're going after someone
 	if J.IsGoingOnSomeone(bot)
 	then
 		local npcTarget = bot:GetTarget();

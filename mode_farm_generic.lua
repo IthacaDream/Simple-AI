@@ -87,12 +87,12 @@ local sNoticeList = {
 	[6] = "寻找AI玩家一起游戏,千人交流群等着你过来.",
 	[7] = "注意不要通过主界面机器人训练赛开始游戏.",
 	[8] = "跟车队一起玩超疯狂AI,加群体验一下.",
-	[9] = "支持修改AI名字分路出装,加群了解一下.",
+	[9] = "可以设定AI名字分路出装,加群了解一下.",
 	[10]= "每天都有游戏车队,加群感受不一样的车速.",
 	[11]= "我们正处于各种困境之中,请帮我们出谋划策.",
-	[12]= "我们还在学着说话,来群里设计专属语录吧.",
+	[12]= "我们还在学着说话,来群里设计专属对话语录吧.",
 	[13]= "可以和我们公屏聊天互动,武斗文斗同时进行.",
-	[14]= "如果有更好的出装加点或技能使用方式,欢迎赐教.",
+	[14]= "如果有更好的出装加点或技能使用方式,欢迎指教.",
 	[15]= "我们会认真听取你的每一条建议并努力改进.",
 	
 	
@@ -170,7 +170,7 @@ function GetDesire()
 	   and bot == GetTeamMember(5)
 	   and (GetTeam() ~= TEAM_DIRE 
 	         or nPushNoticeTime == nil
-			 or nPushNoticeTime +3 < DotaTime())
+			 or nPushNoticeTime + 2.0 < DotaTime())
 	then
 		local fMessage = "Sirius AI: "..sVersionDate;
 		local sMessage = "This script is adapted from A Beginner AI: "..sABAVersionDate;
@@ -359,7 +359,7 @@ function GetDesire()
 	   or (bot:GetLevel() >= 23 and nAlliesCount >= 3)
 	   or GetRoshanDesire() > BOT_MODE_DESIRE_VERYHIGH
 	then
-		local nNeutrals = bot:GetNearbyNeutralCreeps(bot:GetAttackRange() + 110); --sniper wil bug
+		local nNeutrals = bot:GetNearbyNeutralCreeps(bot:GetAttackRange() + 110); --sniper will bug
 		if #nNeutrals == 0 
 		then 
 		    teamTime = DotaTime();
@@ -518,17 +518,17 @@ function Think()
 		then
 			local botAttackRange = bot:GetAttackRange();
 			if botAttackRange > 1400 then botAttackRange = 1400 end;
-			local runModeAllys = bot:GetNearbyHeroes(900,false,BOT_MODE_NONE);
-			local runModeEnemyHeros = bot:GetNearbyHeroes(botAttackRange +50,true,BOT_MODE_NONE);
+			local runModeAllies = bot:GetNearbyHeroes(900,false,BOT_MODE_NONE);
+			local runModeEnemyHeroes = bot:GetNearbyHeroes(botAttackRange +50,true,BOT_MODE_NONE);
 			local runModeTowers  = bot:GetNearbyTowers(240,true);
 			local runModeBarracks  = bot:GetNearbyBarracks(botAttackRange +150,true);
-			if J.IsValid(runModeEnemyHeros[1])
-				and #runModeAllys >= 2
-				and not runModeEnemyHeros[1]:IsAttackImmune()
+			if J.IsValid(runModeEnemyHeroes[1])
+				and #runModeAllies >= 2
+				and not runModeEnemyHeroes[1]:IsAttackImmune()
 				and botName ~= "npc_dota_hero_bristleback"
 				and J.GetDistanceFromEnemyFountain(bot) > 2200
 			then
-				bot:Action_AttackUnit(runModeEnemyHeros[1], true);
+				bot:Action_AttackUnit(runModeEnemyHeroes[1], true);
 				return;
 			end
 			if J.IsValid(runModeBarracks[1])

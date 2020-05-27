@@ -12,10 +12,10 @@ end
 
 local bot = GetBot();
 local X = {}
-local preferedSS = nil;
+local preferedShop = nil;
 local RAD_SECRET_SHOP = GetShopLocation(GetTeam(), SHOP_SECRET )
 local DIRE_SECRET_SHOP = GetShopLocation(GetTeam(), SHOP_SECRET2 )
-local have = false;
+local hasItemToSell = false;
 
 function GetDesire()
 		
@@ -34,11 +34,11 @@ function GetDesire()
 	
 	if invFull then
 		if bot:GetLevel() > 11 and bot:FindItemSlot("item_aegis") < 0 then
-			have, itemSlot = X.HaveItemToSell();
-			if have then
-				preferedSS = X.GetPreferedSecretShop();
-				if  preferedSS ~= nil then
-					return RemapValClamped(  GetUnitToLocationDistance(bot, preferedSS), 6000, 0, 0.75, 0.95 );
+			hasItemToSell, itemSlot = X.HaveItemToSell();
+			if hasItemToSell then
+				preferedShop = X.GetPreferedSecretShop();
+				if  preferedShop ~= nil then
+					return RemapValClamped(  GetUnitToLocationDistance(bot, preferedShop), 6000, 0, 0.75, 0.95 );
 				end	
 			end
 		end
@@ -49,12 +49,12 @@ function GetDesire()
 	local cState = GetCourierState( npcCourier );
 	
 	if bot.SecretShop and cState ~= COURIER_STATE_MOVING  then
-		preferedSS = X.GetPreferedSecretShop();
-		if  preferedSS ~= nil and cState == COURIER_STATE_DEAD then
-			return RemapValClamped(  GetUnitToLocationDistance(bot, preferedSS), 6000, 0, 0.7, 0.85 );
+		preferedShop = X.GetPreferedSecretShop();
+		if  preferedShop ~= nil and cState == COURIER_STATE_DEAD then
+			return RemapValClamped(  GetUnitToLocationDistance(bot, preferedShop), 6000, 0, 0.7, 0.85 );
 		else
-			if preferedSS ~= nil and GetUnitToLocationDistance(bot, preferedSS) <= 3200 then
-				return RemapValClamped(  GetUnitToLocationDistance(bot, preferedSS), 3200, 0, 0.7, 0.85 );
+			if preferedShop ~= nil and GetUnitToLocationDistance(bot, preferedShop) <= 3200 then
+				return RemapValClamped(  GetUnitToLocationDistance(bot, preferedShop), 3200, 0, 0.7, 0.85 );
 			end
 		end
 	end
@@ -86,13 +86,13 @@ function Think()
 	
 	if bot:DistanceFromSecretShop() == 0
 	then
-		bot:Action_MoveToLocation(preferedSS + RandomVector(200))
+		bot:Action_MoveToLocation(preferedShop + RandomVector(200))
 		return;
 	end
 
 	if bot:DistanceFromSecretShop() > 0
 	then
-		bot:Action_MoveToLocation(preferedSS);
+		bot:Action_MoveToLocation(preferedShop);
 		return;
 	end
 	
@@ -147,9 +147,6 @@ function X.IsSuitableToBuy()
 		or ( mode == BOT_MODE_RETREAT and bot:GetActiveModeDesire() >= BOT_MODE_DESIRE_HIGH )
 		or mode == BOT_MODE_ATTACK
 		or mode == BOT_MODE_DEFEND_ALLY
-		or mode == BOT_MODE_DEFEND_TOWER_TOP
-		or mode == BOT_MODE_DEFEND_TOWER_MID
-		or mode == BOT_MODE_DEFEND_TOWER_BOT
 		or ( Enemies ~= nil and #Enemies >= 2 )
 		or ( Enemies[1] ~= nil and X.IsStronger(bot, Enemies[1]) )
 		or GetUnitToUnitDistance(bot, GetAncient(GetTeam())) < 2300 

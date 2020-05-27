@@ -156,10 +156,10 @@ function X.SetTalkMessage()
 			local chatString = J.Chat.GetReplyString(sHumanString,bAllChat)
 			if chatString ~= nil
 			then			
-			--if nReplyHumanCount == nMaxReplyCount
-			--then chatString = J.Chat.GetStopReplyString() end
-			
-			--bot:ActionImmediate_Chat( chatString, bAllChat );
+				--if nReplyHumanCount == nMaxReplyCount
+				--then chatString = J.Chat.GetStopReplyString() end
+				
+				--bot:ActionImmediate_Chat( chatString, bAllChat );
 				
 				nReplyHumanCount = nReplyHumanCount + 1
 				nTalkDelay = RandomFloat(0.8,3.0)
@@ -442,21 +442,6 @@ local function CourierUsageComplement()
 			return
 		end
 		
-		--RETURN STASH ITEM WHEN DEATH
-		--[[
-		if  not bAliveBot 
-		    and ( cState == COURIER_STATE_AT_BASE 
-			      or (cState == COURIER_STATE_IDLE and npcCourier:DistanceFromFountain() < 800 ) )  
-			and bot:GetCourierValue() > 0 
-			and X.GetNumStashItem(bot) + 4 <= J.Item.GetEmptyInventoryAmount(npcCourier)
-			and currentTime > courierTime + useCourierCD
-		then
-			J.SetReportMotive(bDebugCourier,"RETURN STASH ITEM WHEN DEATH");
-			bot:ActionImmediate_Courier( npcCourier, COURIER_ACTION_RETURN_STASH_ITEMS );
-			courierTime = currentTime;
-			return
-		end
-		--]]
 		
 	end
 	
@@ -1275,6 +1260,7 @@ end
 X.ConsiderItemDesire["item_bottle"] = function(hItem)
 
 	if hItem:GetCurrentCharges() == 0 
+		or bot:HasModifier("modifier_bottle_regeneration")
 	then return BOT_ACTION_DESIRE_NONE end
 
 	local nCastRange = 400 + aetherRange
@@ -1291,9 +1277,6 @@ X.ConsiderItemDesire["item_bottle"] = function(hItem)
 		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "在泉水里喝"
 	end
 
-	if bot:HasModifier("modifier_bottle_regeneration")
-	then return BOT_ACTION_DESIRE_NONE end
-	
 	--自己喝
 	if not bot:WasRecentlyDamagedByAnyHero(3.0)
 	then
@@ -1679,7 +1662,7 @@ X.ConsiderItemDesire["item_faerie_fire"] = function(hItem)
 		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "撤退"
 	end
 	
-	--attack
+	--攻击
 	if J.IsGoingOnSomeone(bot)
 		and J.GetHP(bot) < 0.3
 		and J.IsValidHero(botTarget)
@@ -1689,7 +1672,7 @@ X.ConsiderItemDesire["item_faerie_fire"] = function(hItem)
 		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "进攻"
 	end
 	
-	--self
+	--自己吃
 	if DotaTime() > 10 *60 
 		and hItem:GetName() == "item_faerie_fire"
 		and bot:GetItemInSlot(6) ~= nil
@@ -3007,7 +2990,8 @@ X.ConsiderItemDesire["item_quelling_blade"] = function(hItem)
 	end
 	
 	--开视野
-	if DotaTime() > lastQuellingBladeUseTime + 0.15
+	if DotaTime() > lastQuellingBladeUseTime + 0.8
+		and J.IsGoingOnSomeone(bot)
 	then
 		lastQuellingBladeUseTime = DotaTime()
 	
@@ -3324,7 +3308,7 @@ X.ConsiderItemDesire["item_sphere"] = function(hItem)
 	local nNearAllyList = bot:GetNearbyHeroes(nCastRange,false,BOT_MODE_NONE)
 	
 		
-	--use at ally who be targeted
+	--对可能被作为敌方目标的队友使用
 	for _,npcAlly in pairs(nNearAllyList)
 	do 
 		if  J.IsValidHero(npcAlly)
@@ -3764,6 +3748,7 @@ X.ConsiderItemDesire["item_tpscroll"] = function(hItem)
 	if nMode == BOT_MODE_LANING 
 		and nEnemyCount == 0
 		and bot:GetLevel() <= 10
+		and DotaTime() < 15 * 60
 	then
 		local assignedLane = bot:GetAssignedLane();
 		local botAmount = GetAmountAlongLane(assignedLane, botLocation)
@@ -4120,7 +4105,7 @@ X.ConsiderItemDesire["item_urn_of_shadows"] = function(hItem)
 
 	if hItem:GetCurrentCharges() == 0 then return BOT_ACTION_DESIRE_NONE end
 
-	local nCastRange = 980 + aetherRange
+	local nCastRange = 950 + aetherRange
 	local sCastType = 'unit'	
 	local hEffectTarget = nil 
 	local nInRangeEnmyList = bot:GetNearbyHeroes(nCastRange,true,BOT_MODE_NONE)
@@ -4133,6 +4118,7 @@ X.ConsiderItemDesire["item_urn_of_shadows"] = function(hItem)
 		   and J.IsInRange(bot, botTarget, nCastRange)
 		   and not botTarget:HasModifier("modifier_item_urn_damage") 
 		   and not botTarget:HasModifier("modifier_item_spirit_vessel_damage")
+		   and not botTarget:HasModifier("modifier_arc_warden_tempest_double")
 		   and (botTarget:GetHealth()/botTarget:GetMaxHealth() < 0.95 or GetUnitToUnitDistance(bot, botTarget) <= 700)
 		then
 			hEffectTarget = botTarget
@@ -4550,6 +4536,17 @@ end
 
 --幻术师披风
 X.ConsiderItemDesire["item_illusionsts_cape"] = function(hItem)
+
+	local nCastRange = 800
+	local sCastType = 'none'
+	local hEffectTarget = nil 
+	
+	if J.IsValid(botTarget)
+		and J.IsInRange(bot,botTarget,nCastRange)
+	then
+		EffectTarget = botTarget
+		return BOT_ACTION_DESIRE_HIGH, hEffectTarget, sCastType, "辅助攻击"	
+	end
 
 	return X.ConsiderItemDesire["item_manta"](hItem)
 

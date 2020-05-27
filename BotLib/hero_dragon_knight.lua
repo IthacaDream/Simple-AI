@@ -48,8 +48,7 @@ tOutFitList['outfit_carry'] = {
 	"item_moon_shard",
 	"item_travel_boots_2",
 	"item_ultimate_scepter_2",
-	
-				
+		
 }
 
 tOutFitList['outfit_mid'] = tOutFitList['outfit_carry']
@@ -201,12 +200,10 @@ end
 
 function X.ConsiderQ()
 
-	-- Make sure it's castable
 	if ( not abilityQ:IsFullyCastable() ) then 
 		return BOT_ACTION_DESIRE_NONE, 0;
 	end
 
-	-- Get some of its values
 	local nRadius    = abilityQ:GetSpecialValueInt('end_radius');
 	local nCastRange = abilityQ:GetSpecialValueInt( 'range' );
 	local nCastPoint = abilityQ:GetCastPoint();
@@ -217,7 +214,6 @@ function X.ConsiderQ()
 	local nEnemysHeroesInView = bot:GetNearbyHeroes( 1600, true, BOT_MODE_NONE );
 	
 	
-	--if we can kill any enemies
 	for _,npcEnemy in pairs(tableNearbyEnemyHeroes)
 	do
 		if J.CanCastOnNonMagicImmune(npcEnemy) 
@@ -242,7 +238,7 @@ function X.ConsiderQ()
 		end
 	end	
 	
-	-- If we're seriously retreating, see if we can land a stun on someone who's damaged us recently
+
 	if J.IsRetreating(bot)
 	then
 		local locationAoE = bot:FindAoELocation( true, true, bot:GetLocation(), nCastRange - 100, nRadius, 0, 0 );
@@ -323,7 +319,7 @@ function X.ConsiderQ()
 		end		
 	end
 
-	-- If we're going after someone
+
 	if J.IsGoingOnSomeone(bot)
 	then
 		local npcTarget = J.GetProperTarget(bot);
@@ -358,12 +354,10 @@ end
 
 function X.ConsiderW()
 
-	-- Make sure it's castable
 	if ( not abilityW:IsFullyCastable() ) then 
 		return BOT_ACTION_DESIRE_NONE, 0;
 	end
 
-	-- Get some of its values
 	local nCastRange = abilityW:GetCastRange( );
 	local nCastPoint = abilityW:GetCastPoint( );
 	local nManaCost  = abilityW:GetManaCost( );
@@ -376,7 +370,6 @@ function X.ConsiderW()
 		
 	local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( nCastRange + 240, true, BOT_MODE_NONE );
 	
-	--if we can kill any enemies
 	for _,npcEnemy in pairs(tableNearbyEnemyHeroes)
 	do
 		if J.CanCastOnNonMagicImmune(npcEnemy) 
@@ -387,7 +380,7 @@ function X.ConsiderW()
 		end
 	end
 	
-	--if enemy is channeling
+
 	local nEnemysHeroesInView = bot:GetNearbyHeroes(800,true,BOT_MODE_NONE);
 	if #nEnemysHeroesInView > 0 then
 		for i=1, #nEnemysHeroesInView do
@@ -430,7 +423,6 @@ function X.ConsiderW()
 	end
 	
 	
-	-- If we're seriously retreating, see if we can land a stun on someone who's damaged us recently
 	if J.IsRetreating(bot)
 	then
 		if tableNearbyEnemyHeroes ~= nil 
@@ -453,7 +445,6 @@ function X.ConsiderW()
 		end
 	end
 	
-	-- If we're going after someone
 	if J.IsGoingOnSomeone(bot)
 	then
 		local npcTarget = J.GetProperTarget(bot);
@@ -473,16 +464,15 @@ end
 
 function X.ConsiderR()
 
-	-- Make sure it's castable
+
 	if ( not abilityR:IsFullyCastable() or J.GetHP(bot) < 0.25 ) then 
 		return BOT_ACTION_DESIRE_NONE;
 	end
 
-	-- Get some of its values
+
 	local nCastPoint = abilityR:GetCastPoint( );
 	local nManaCost  = abilityR:GetManaCost( );
 
-	-- If We're pushing or defending
 	if ( J.IsPushing(bot) or J.IsFarming(bot) or J.IsDefending(bot) ) 
 	then
 		local tableNearbyEnemyCreeps = bot:GetNearbyCreeps( 800, true );
@@ -493,7 +483,6 @@ function X.ConsiderR()
 		end
 	end
 	
-	-- If we're going after someone
 	if J.IsGoingOnSomeone(bot)
 	then
 		local npcTarget = J.GetProperTarget(bot);

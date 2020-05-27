@@ -249,7 +249,7 @@ function X.ConsiderQ()
 	local nInRangeEnemyList = bot:GetNearbyHeroes(nCastRange, true, BOT_MODE_NONE);
 	local nInBonusEnemyList = bot:GetNearbyHeroes(nCastRange + 220,true,BOT_MODE_NONE)
 	
-	--kill
+
 	for _,npcEnemy in pairs( nInBonusEnemyList )
 	do
 		if J.IsValid(npcEnemy)
@@ -261,7 +261,7 @@ function X.ConsiderQ()
 		end
 	end
 	
-	--teamfight
+
 	if J.IsInTeamFight(bot, 1200) and nLV >= 5
 	then		
 		local nWeakestEnemy = nil;
@@ -288,7 +288,7 @@ function X.ConsiderQ()
 		end	
 	end
 	
-	--attack
+
 	if J.IsGoingOnSomeone(bot)
 	then
 		if J.IsValidHero(botTarget)
@@ -303,7 +303,7 @@ function X.ConsiderQ()
 		end
 	end
 	
-	--retreat
+
 	if J.IsRetreating(bot) 
 	then
 		for _,npcEnemy in pairs( nInRangeEnemyList )
@@ -321,7 +321,7 @@ function X.ConsiderQ()
 		end
 	end
 	
-	--laning
+
 	if J.IsLaning(bot)
 	then
 		if nMP > 0.5
@@ -362,7 +362,7 @@ function X.ConsiderQ()
 		end
 	end
 	
-	--pushing
+
 	if  (J.IsPushing(bot) or J.IsDefending(bot) or J.IsFarming(bot))
 	    and J.IsAllowedToSpam(bot,30)
 		and nSkillLV >= 3 
@@ -404,7 +404,7 @@ function X.ConsiderQ()
 		
 	end
 	
-	--farming
+
 	if J.IsFarming(bot) and nSkillLV >= 3
 	   and J.IsAllowedToSpam(bot,nManaCost)
 	   and #hEnemyList == 0
@@ -447,7 +447,7 @@ function X.ConsiderW()
 	local nInBonusEnemyList = bot:GetNearbyHeroes(nCastRange + 240, true, BOT_MODE_NONE)
 	
 	
-	--check
+
 	for _,npcEnemy in pairs(nInBonusEnemyList)
 	do
 		if J.IsValidHero(npcEnemy)
@@ -468,7 +468,7 @@ function X.ConsiderW()
 	end
 	
 	
-	--teamfight
+
 	if J.IsInTeamFight(bot,1200)
 		and ( #nInBonusEnemyList >= 2 or #hAllyList >= 3 )
 	then
@@ -502,7 +502,7 @@ function X.ConsiderW()
 	end
 	
 	
-	--attack
+
 	if J.IsGoingOnSomeone(bot)
 	then
 		if J.IsValidHero(botTarget)
@@ -518,7 +518,7 @@ function X.ConsiderW()
 	end
 	
 	
-	--protect	
+
 	if bot:WasRecentlyDamagedByAnyHero(3.0) and nLV >= 10
 		and bot:GetActiveMode() ~= BOT_MODE_RETREAT
 		and #nInRangeEnemyList >= 1
@@ -538,7 +538,7 @@ function X.ConsiderW()
 	end
 	
 	
-	--retreat
+
 	if J.IsRetreating(bot) 
 	then
 		for _,npcEnemy in pairs( nInRangeEnemyList )
@@ -557,7 +557,7 @@ function X.ConsiderW()
 		end
 	end
 	
-	--roshan
+
 	if J.IsDoingRoshan(bot) and nMP > 0.6
 	then
 		if J.IsRoshan(botTarget)
@@ -588,7 +588,7 @@ function X.ConsiderE()
 	local nInRangeEnemyList = bot:GetNearbyHeroes(nCastRange, true, BOT_MODE_NONE);
 	local nInBonusEnemyList = bot:GetNearbyHeroes(nCastRange + 240, true, BOT_MODE_NONE)
 	
-	--check
+
 	for _,npcEnemy in pairs(nInBonusEnemyList)
 	do
 		if J.IsValidHero(npcEnemy)
@@ -610,7 +610,6 @@ function X.ConsiderE()
 	end
 	
 	
-	--teamfight
 	if J.IsInTeamFight(bot,1200) and nLV >= 5
 	then
 		local npcMostDangerousEnemy = nil;
@@ -641,7 +640,6 @@ function X.ConsiderE()
 	end
 	
 	
-	--attack
 	if J.IsGoingOnSomeone(bot)
 	then
 		if J.IsValidHero(botTarget) 
@@ -660,7 +658,6 @@ function X.ConsiderE()
 	end
 	
 	
-	--retreat
 	if J.IsRetreating(bot)
 		and nSkillLV >= 3
 		and #hEnemyList == 1
@@ -680,7 +677,6 @@ function X.ConsiderE()
 	end
 	
 	
-	--roshan
 	if  bot:GetActiveMode() == BOT_MODE_ROSHAN 
 		and bot:GetMana() >= 800
 	then

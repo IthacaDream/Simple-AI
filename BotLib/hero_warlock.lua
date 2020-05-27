@@ -319,7 +319,7 @@ function X.ConsiderR()
 	end
 	
 	
-	-- If we're going after someone
+	--进攻时
 	if J.IsGoingOnSomeone(bot)
 	then
 		local npcTarget = J.GetProperTarget(bot);
@@ -361,7 +361,7 @@ function X.ConsiderRFR()
 	local nRadius    = abilityR:GetSpecialValueInt( "aoe" );
 	local hTrueHeroList = J.GetEnemyList(bot, 1600);
 	
-	-- If we're going after someone
+	--进攻时
 	if J.IsGoingOnSomeone(bot)
 	then
 		local npcTarget = J.GetProperTarget(bot);
@@ -403,7 +403,6 @@ function X.ConsiderE()
 		end
 	end
 
-	-- If we're going after someone
 	if J.IsGoingOnSomeone(bot)
 	then
 		local npcTarget = J.GetProperTarget(bot);

@@ -464,7 +464,7 @@ local tNeutralItemLevelList = {
 
 
 	['item_apex'] = 72, -- 极品
-	['item_ballista'] = 55, -- 弩炮
+	['item_ballista'] = 35, -- 弩炮
 	['item_demonicon'] = 73,
 	['item_desolator_2'] = 75,
 	['item_ex_machina'] = 71,
@@ -966,8 +966,9 @@ function Item.GetInGroundItem(bot)
 			if nAlly ~= nil
 				and nAlly ~= bot
 				and nAlly:IsAlive()
-				and GetUnitToUnitDistance(bot,nAlly) <= 800
+				and GetUnitToUnitDistance(bot,nAlly) <= 1000
 				and ( Item.GetEmptyNeutralBackpackAmount(nAlly) > botEmptyInventoryCount
+					  or not nAlly:IsBot()
 					  or nAlly:GetItemInSlot(16) == nil )
 			then
 				return nil
@@ -1038,7 +1039,7 @@ function Item.GetNeedDropNeutralItem(bot)
 	if hNeedDropItem ~= nil
 	then
 		--基地丢装备
-		if bot:DistanceFromFountain() < 2000
+		if bot:DistanceFromFountain() < 1800
 		then
 			local sNeedDropItemName = hNeedDropItem:GetName()
 			local nNeedDropItemLevel = Item.GetNeutralItemLevel(sNeedDropItemName)

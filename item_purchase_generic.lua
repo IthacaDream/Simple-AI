@@ -297,7 +297,8 @@ function ItemPurchaseThink()
 			  and Item.GetEmptyInventoryAmount(bot) >= 2 
 			  and Item.GetItemCharges(bot, "item_ward_observer") < 1  
 			  and bot:GetCourierValue() == 0
-			  and buyWardTime < currentTime - 3 *60
+			  and currentTime > 5 * 60
+			  and buyWardTime < currentTime - 3 * 60
 		then 
 			buyWardTime = currentTime;
 			bot:ActionImmediate_PurchaseItem("item_ward_observer"); 
@@ -308,8 +309,8 @@ function ItemPurchaseThink()
 	
 	--buy raindrop
 	if buyRD == false
-	   and currentTime >= 3 *60
-	   and currentTime <= 20 *60
+	   and currentTime >= 3 * 60
+	   and currentTime <= 20 * 60
 	   and buyBootsStatus == true
 	   and GetItemStockCount( "item_infused_raindrop" ) >= 1 
 	   and Item.GetItemCharges(bot, 'item_infused_raindrop') <= 0
@@ -340,7 +341,7 @@ function ItemPurchaseThink()
 	   and bot:WasRecentlyDamagedByAnyHero(3.1)
 	   and not Item.HasItem(bot, 'item_travel_boots')
 	   and not Item.HasItem(bot, 'item_travel_boots_2')
-	   and Item.GetItemCharges(bot, 'item_tpscroll') <= 3	   
+	   and Item.GetItemCharges(bot, 'item_tpscroll') <= 2
 	then
 		bot:ActionImmediate_PurchaseItem("item_tpscroll"); 
 		return;
@@ -576,12 +577,12 @@ function ItemPurchaseThink()
 	    and buyTP == false 
 		and bot:GetCourierValue() == 0 
 		and ( bot:FindItemSlot('item_tpscroll') == -1 
-		      or ( botLevel >= 12 and Item.GetItemCharges(bot, 'item_tpscroll') <= 1 )) 
+		      or ( botLevel >= 15 and Item.GetItemCharges(bot, 'item_tpscroll') <= 1 )) 
 		and botGold >= 90
 	then
 		local tCharges = Item.GetItemCharges( bot, 'item_tpscroll' );
 		
-		if botLevel < 12 or (botLevel >= 12 and tCharges == 1)
+		if botLevel < 15 or (botLevel >= 15 and tCharges == 1)
 		then
 			buyTP = true;
 			buyTPtime = currentTime;

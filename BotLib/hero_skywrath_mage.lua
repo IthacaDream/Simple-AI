@@ -159,11 +159,8 @@ local aetherRange = 0
 
 function X.SkillsComplement()
 
-	
-
 	if J.CanNotUseAbility(bot) or bot:IsInvisible() then return end
 	
-
 	nKeepMana = 400
 	nLV = bot:GetLevel();
 	nMP = bot:GetMana()/bot:GetMaxMana();

@@ -274,12 +274,10 @@ end
 
 function X.Consider(nAbility,nDistance)
 	
-	-- Make sure it's castable
 	if  not nAbility:IsFullyCastable() then 
 		return BOT_ACTION_DESIRE_NONE, 0;
 	end
 	
-	-- Get some of its values
 	local nRadius       = 248;
 	local nCastLocation = J.GetFaceTowardDistanceLocation(bot,nDistance);					
 	local nCastPoint    = nAbility:GetCastPoint();			    

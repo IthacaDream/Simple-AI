@@ -25,6 +25,7 @@ local tTalentTreeList = {
 
 local tAllAbilityBuildList = {
 						{1,3,2,2,2,6,2,1,1,1,6,3,3,3,6},
+						{1,3,2,1,1,6,1,3,3,3,6,2,2,2,6},
 						{1,3,2,2,2,6,2,3,3,3,6,1,1,1,6},
 }
 
@@ -60,8 +61,8 @@ tOutFitList['outfit_mage'] = tOutFitList['outfit_carry']
 tOutFitList['outfit_tank'] = {
 
 	"item_tank_outfit",
-	"item_armlet",
 	"item_crimson_guard",
+	"item_armlet",
 	"item_heavens_halberd",
 	"item_manta",
 	"item_travel_boots",
@@ -235,7 +236,7 @@ function X.ConsiderQ()
 			   and J.CanCastOnTargetAdvanced(nEnemysHeroesInView[i])
 			   and nEnemysHeroesInView[i]:IsChanneling()
 			then
-				return BOT_ACTION_DESIRE_HIGH, nEnemysHeroesInCastRange[i];
+				return BOT_ACTION_DESIRE_HIGH, nEnemysHeroesInView[i];
 			end
 		end
 	end
@@ -243,7 +244,7 @@ function X.ConsiderQ()
 	
 	--团战
 	if J.IsInTeamFight(bot, 1200)
-	   and DotaTime() > 6*60
+	   and DotaTime() > 4 * 60
 	then
 		local npcMostDangerousEnemy = nil;
 		local nMostDangerousDamage = 0;
@@ -272,32 +273,7 @@ function X.ConsiderQ()
 		end		
 	end
 	
-	
-	--配合
-	for _,npcEnemy in pairs( nEnemysHeroesInCastRange )
-	do
-		if  J.IsValid(npcEnemy)
-		    and J.CanCastOnNonMagicImmune(npcEnemy) 
-			and J.CanCastOnTargetAdvanced(npcEnemy)
-			and not J.IsDisabled( npcEnemy)
-			and not npcEnemy:IsDisarmed()
-			and npcEnemy:HasModifier("modifier_chaos_knight_reality_rift")
-		then
-		    local npcModifier = npcEnemy:NumModifiers();
-			for i = 0, npcModifier 
-			do
-				if npcEnemy:GetModifierName(i) == "modifier_chaos_knight_reality_rift" 
-				then
-					if ( npcEnemy:GetModifierRemainingDuration(i) <= nCastPoint )
-					then
-						return BOT_ACTION_DESIRE_HIGH, npcEnemy;
-					end
-					break;
-				end
-			end
-		end
-	end
-	
+		
 	--常规
 	if J.IsGoingOnSomeone(bot)
 	then
@@ -313,6 +289,8 @@ function X.ConsiderQ()
 			return BOT_ACTION_DESIRE_HIGH, target;
 		end
 	end
+	
+	--对线期间
 	
 	
 	if J.IsRetreating(bot) 
@@ -345,6 +323,7 @@ function X.ConsiderQ()
 	
 	return BOT_ACTION_DESIRE_NONE;
 end
+
 
 function X.ConsiderW()
 	
@@ -435,7 +414,7 @@ function X.ConsiderR()
 	local nNearbyEnemyTowers = bot:GetNearbyTowers(700,true);
 	local nNearbyEnemyBarracks = bot:GetNearbyBarracks(400,true);
 	local nNearbyAlliedCreeps = bot:GetNearbyLaneCreeps(1000,false);
-	local nCastRange = abilityW:IsFullyCastable() and 9500 or 800;
+	local nCastRange = abilityW:IsFullyCastable() and 950 or 800;
 	
 	-- if #nNearbyAllyHeroes + #nNearbyEnemyHeroes >= 3
 	   -- and  #hEnemyHeroList - #nNearbyAllyHeroes <= 2

@@ -1676,6 +1676,7 @@ function X.IsSpecialCarry(bot)
 	
 	local tSpecialCarryList = {
 		["npc_dota_hero_antimage"] = true,
+		["npc_dota_hero_axe"] = true,
 		["npc_dota_hero_arc_warden"] = true,
 		["npc_dota_hero_bloodseeker"] = true,
 		["npc_dota_hero_bristleback"] = true, 
@@ -1717,6 +1718,7 @@ function X.IsSpecialSupport(bot)
 	local botName = bot:GetUnitName();
 	
 	local tSpecialSupportList = {
+		["npc_dota_hero_bane"] = true, 
 		["npc_dota_hero_crystal_maiden"] = true,
 		["npc_dota_hero_dazzle"] = true,
 		["npc_dota_hero_death_prophet"] = true, 		
@@ -1733,8 +1735,7 @@ function X.IsSpecialSupport(bot)
 		["npc_dota_hero_warlock"] = true,		  
 		["npc_dota_hero_windrunner"] = true,		  
 		["npc_dota_hero_witch_doctor"] = true,		  
-		["npc_dota_hero_zuus"] = true, 
-		
+		["npc_dota_hero_zuus"] = true, 		
 	}
 	
 	return tSpecialSupportList[botName] == true

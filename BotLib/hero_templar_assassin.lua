@@ -293,12 +293,10 @@ end
 
 function X.ConsiderQ()
 
-	-- Make sure it's castable
 	if ( not abilityQ:IsFullyCastable() ) then 
 		return BOT_ACTION_DESIRE_NONE;
 	end
 
-	-- Get some of its values
 	local nRange = bot:GetAttackRange();
 	local nAttackDamage = bot:GetAttackDamage();
 	local nDamage = abilityQ:GetSpecialValueInt( "bonus_damage" );
@@ -307,9 +305,6 @@ function X.ConsiderQ()
 	local nSkillLV = abilityQ:GetLevel();
 	local nManaCost = abilityQ:GetManaCost();
 
-	--------------------------------------
-	-- Mode based usage
-	--------------------------------------
 	local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( 1600, true, BOT_MODE_NONE );
 	if nHP < 0.8 
 	then
@@ -349,7 +344,7 @@ function X.ConsiderQ()
 		end				
 	end
 	
-	-- If we're seriously retreating, see if we can land a stun on someone who's damaged us recently
+	--撤退前
 	if J.IsRetreating(bot)
 	then
 		for _,npcEnemy in pairs( tableNearbyEnemyHeroes )
@@ -404,7 +399,7 @@ function X.ConsiderQ()
 		end
 	end
 	
-	-- If we're going after someone
+
 	if J.IsGoingOnSomeone(bot) and nSkillLV >= 2
 	then
 		local npcTarget = J.GetProperTarget(bot);
@@ -455,7 +450,6 @@ end
 
 function X.ConsiderW()
 
-	-- Make sure it's castable
 	local nEnemyTowers = bot:GetNearbyTowers(888,true);
 	if not abilityW:IsFullyCastable() 
 	   or #nEnemyTowers > 0 
@@ -464,7 +458,6 @@ function X.ConsiderW()
 		return BOT_ACTION_DESIRE_NONE;
 	end
 	
-	-- If we're seriously retreating, see if we can land a stun on someone who's damaged us recently
 	local proDmg = J.GetAttackProjectileDamageByRange(bot, 1600)
 	if proDmg > bot:GetAttackDamage() * ( nLV % 10 + 1 )
 	   or proDmg > bot:GetHealth() * 0.38 
@@ -479,7 +472,6 @@ function X.ConsiderW()
 	
 	if J.IsRunning(bot) then return BOT_ACTION_DESIRE_NONE;	end
 
-	-- Get some of its values
 	local nSkillLV   = abilityW:GetLevel();
 	local nManaCost  = abilityW:GetManaCost();
 	local nCastRange = bot:GetAttackRange();
@@ -488,9 +480,7 @@ function X.ConsiderW()
 	local nDamageType = DAMAGE_TYPE_PHYSICAL;
 	local nTotalDamage = nAttackDamage + nDamage;
 	local nEnemyHeroInView = bot:GetNearbyHeroes(1600,true,BOT_MODE_NONE);
-	--------------------------------------
-	-- Mode based usage
-	--------------------------------------
+
 	
 	if ( bot:GetActiveMode() == BOT_MODE_ROSHAN  ) 
 	then
@@ -501,7 +491,7 @@ function X.ConsiderW()
 		end
 	end
 	
-	-- If we're going after someone
+
 	if J.IsGoingOnSomeone(bot)
 	then
 		local npcTarget = bot:GetAttackTarget();
@@ -590,7 +580,7 @@ end
 
 function X.ConsiderR()
 
-	-- Make sure it's castable
+
 	if ( not abilityR:IsFullyCastable() )
 	then
 		return BOT_ACTION_DESIRE_NONE, 0;
@@ -626,11 +616,8 @@ function X.ConsiderR()
 
 	local creeps = bot:GetNearbyCreeps(1000, true)
 	local enemyHeroes = bot:GetNearbyHeroes(600, true, BOT_MODE_NONE)
-	--------------------------------------
-	-- Mode based usage
-	--------------------------------------
 
-	-- If we're seriously retreating, see if we can land a stun on someone who's damaged us recently
+	
 	if J.IsRetreating(bot)
 	then
 		local tableNearbyEnemyHeroes = bot:GetNearbyHeroes(1600, true, BOT_MODE_NONE );
@@ -645,7 +632,7 @@ function X.ConsiderR()
 		end
 	end
 
-	-- If we're going after someone
+
 	local numPlayer = GetTeamPlayers(GetTeam());
 	for i = 1, #numPlayer
 	do
@@ -687,7 +674,7 @@ function X.ConsiderR()
 		end
 	end
 	
-	-- if near Special Location 
+	--对特殊地点使用
 	local tableNearbyEnemyHeroes = bot:GetNearbyHeroes(1600,true,BOT_MODE_NONE);
 	if runeLocCheckTime < DotaTime() - 1.0
 	   and #tableNearbyEnemyHeroes == 0 
@@ -761,7 +748,6 @@ function X.ConsiderR()
 	end
 	
 	
-	-- if roshan
 	if bot:GetActiveMode() == BOT_MODE_ROSHAN and roshanLoc == nil
 	then
 		local npcTarget = J.GetProperTarget(bot);

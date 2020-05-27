@@ -368,10 +368,10 @@ function X.ConsiderQ()
 		end	
 	end
 	
-	--Laning
+	--对线期间
 	
 	
-	--Pushing
+	--推线时
 	if  (J.IsPushing(bot) or J.IsDefending(bot) or J.IsFarming(bot))
 	    and J.IsAllowedToSpam(bot,30)
 		and nSkillLV >= 2 
@@ -414,7 +414,7 @@ function X.ConsiderQ()
 	end
 	
 	
-	--Farming
+	--打野时
 	if J.IsFarming(bot) and nSkillLV >= 3
 	   and J.IsAllowedToSpam(bot,nManaCost)
 	   and #hEnemyList == 0

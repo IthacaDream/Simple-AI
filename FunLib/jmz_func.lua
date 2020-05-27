@@ -15,7 +15,7 @@ GBotTeam = GetTeam()
 GOppTeam = GetOpposingTeam() 
 
 local sDota2Version= '7.26c'
-local sDebugVersion= '20200513ver1.7b'
+local sDebugVersion= '20200526ver1.7b'
 local nDebugTime = 99999
 local bDebugMode = ( 1 == 10 )
 local bDebugTeam = (GBotTeam == TEAM_RADIANT)
@@ -1880,6 +1880,50 @@ function J.GetTwo(number)
 end
 
 
+function J.SetQueueToInvisible(bot)
+	
+	if bot:IsAlive()
+		and not bot:IsInvisible() 
+		and not bot:HasModifier("modifier_item_dustofappearance")
+	then
+		local nEnemyTowers = bot:GetNearbyTowers(888,true)
+		
+		if nEnemyTowers[1] ~= nil then return end
+	
+		local itemAmulet = J.IsItemAvailable('item_shadow_amulet');
+		if itemAmulet ~= nil 
+			and itemAmulet:IsFullyCastable()
+		then
+			bot:ActionQueue_UseAbilityOnEntity(itemAmulet, bot)
+			return;
+		end					
+     
+		local itemGlimer = J.IsItemAvailable('item_glimmer_cape');
+		if itemGlimer ~= nil and itemGlimer:IsFullyCastable() 
+		then
+			bot:ActionQueue_UseAbilityOnEntity(itemGlimer, bot)
+			return;			
+		end
+		
+		local itemInvisSword = J.IsItemAvailable('item_invis_sword');
+		if itemInvisSword ~= nil and itemInvisSword:IsFullyCastable() 
+		then
+			bot:ActionQueue_UseAbility(itemInvisSword)
+			return;			
+		end
+		
+		local itemSilverEdge = J.IsItemAvailable('item_silver_edge');
+		if itemSilverEdge ~= nil and itemSilverEdge:IsFullyCastable() 
+		then
+			bot:ActionQueue_UseAbility(itemSilverEdge)
+			return;			
+		end
+		
+	end
+
+
+end
+
 function J.SetQueueSwitchPtToINT(bot)
 	
 	local pt = J.IsItemAvailable("item_power_treads");
@@ -3736,6 +3780,7 @@ J.GetCastLocation(bot, npcTarget, nCastRange, nRadius)
 J.GetDelayCastLocation(bot, npcTarget, nCastRange, nRadius, nTime)
 J.GetOne(number)
 J.GetTwo(number)
+J.SetQueueToInvisible(bot)
 J.SetQueueSwitchPtToINT(bot)
 J.SetQueueUseSoulRing(bot)
 J.SetQueuePtToINT(bot, bSoulRingUsed)

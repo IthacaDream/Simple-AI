@@ -228,16 +228,12 @@ end
 
 function X.ConsiderW()
 
-	-- Make sure it's castable
 	if not abilityW:IsFullyCastable() then return 0 end
 	
-	-- Get some of its values
 	local nCastRange = abilityW:GetCastRange() +20
 	local nDamage    = abilityW:GetSpecialValueInt('snake_damage') * 2
 	local nSkillLv   = abilityW:GetLevel()
 	
-	
-	-- If we're seriously retreating, see if we can land a stun on someone who's damaged us recently
 	if J.IsRetreating(bot)
 	then
 		local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( nCastRange, true, BOT_MODE_NONE );
@@ -282,7 +278,6 @@ function X.ConsiderW()
 		
 	end
 	
-	-- If we're going after someone
 	if J.IsGoingOnSomeone(bot)
 	then
 		local npcTarget = J.GetProperTarget(bot);
@@ -337,11 +332,8 @@ end
 
 function X.ConsiderR()
 
-	-- Make sure it's castable
 	if not abilityR:IsFullyCastable() then return 0	end
 
-	
-	-- Get some of its values
 	local nCastRange = abilityR:GetSpecialValueInt("radius");
 	local nAttackRange = bot:GetAttackRange();
 	

@@ -67,8 +67,8 @@ tOutFitList['outfit_mage'] = tOutFitList['outfit_carry']
 tOutFitList['outfit_tank'] = {
 
 	"item_tank_outfit",
-	"item_armlet",
 	"item_crimson_guard",
+	"item_armlet",
 	"item_echo_sabre",
 	"item_heavens_halberd",
 	"item_travel_boots",
@@ -200,14 +200,12 @@ end
 
 function X.ConsiderQ()
 
-	-- Make sure it's castable
 	if not abilityQ:IsFullyCastable() 
 	   or X.ShouldSaveMana(abilityQ)
 	then 
 		return BOT_ACTION_DESIRE_NONE, 0;
 	end
 
-	-- Get some of its values
 	local nCastRange  = abilityQ:GetCastRange();
 	local nCastPoint  = abilityQ:GetCastPoint();
 	local nManaCost   = abilityQ:GetManaCost();

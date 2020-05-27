@@ -146,16 +146,13 @@ function X.SkillsComplement()
 	
 	if J.CanNotUseAbility(bot) or bot:IsInvisible() then return end
 
-	
-	
+
 	nKeepMana = 180
 	nMP = bot:GetMana()/bot:GetMaxMana();
 	nHP = bot:GetHealth()/bot:GetMaxHealth();
 	nLV = bot:GetLevel();
 	hEnemyHeroList = bot:GetNearbyHeroes(1600,true,BOT_MODE_NONE);
-	
-	
-	
+		
 	
 	castQDesire, castQTarget   = X.ConsiderQ();
 	if ( castQDesire > 0 ) 
@@ -188,12 +185,10 @@ end
 
 function X.ConsiderQ()
 
-	-- Make sure it's castable
 	if ( not abilityQ:IsFullyCastable() ) then 
 		return BOT_ACTION_DESIRE_NONE, 0; 
 	end
 
-	-- Get some of its values
 	local nRadius    = abilityQ:GetSpecialValueInt('radius_scepter');
 	local nCastRange = abilityQ:GetCastRange();
 	local nCastPoint = abilityQ:GetCastPoint( );
@@ -202,7 +197,6 @@ function X.ConsiderQ()
 	local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( nRadius, true, BOT_MODE_NONE );
 	local nEnemyHeroes = bot:GetNearbyHeroes( 800, true, BOT_MODE_NONE );
 	
-	-- If we're seriously retreating, see if we can land a stun on someone who's damaged us recently
 	if J.IsRetreating(bot) and nHP > 0.2
 	then
 		local npcEnemy = tableNearbyEnemyHeroes[1];
@@ -236,7 +230,6 @@ function X.ConsiderQ()
 		end
 	end
 	
-	-- If we're going after someone
 	if J.IsGoingOnSomeone(bot)
 	then
 		local npcTarget = J.GetProperTarget(bot);
@@ -272,19 +265,16 @@ end
 
 function X.ConsiderW()
 
-	-- Make sure it's castable
 	if not abilityW:IsFullyCastable()  then 
 		return BOT_ACTION_DESIRE_NONE;
 	end
 
-	-- Get some of its values
 	local nRadius    = abilityW:GetSpecialValueInt( "radius" );
 	local nCastPoint = abilityW:GetCastPoint( );
 	local nManaCost  = abilityW:GetManaCost( );
 	
 	local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( nRadius, true, BOT_MODE_NONE );
 
-	-- If we're seriously retreating, see if we can land a stun on someone who's damaged us recently
 	if J.IsRetreating(bot) and #tableNearbyEnemyHeroes > 0
 	then
 		for _,npcEnemy in pairs( tableNearbyEnemyHeroes )
@@ -297,7 +287,6 @@ function X.ConsiderW()
 		end
 	end
 	
-	-- If We're pushing or defending
 	if J.IsPushing(bot) 
 	   or J.IsDefending(bot) 
 	   or ( J.IsGoingOnSomeone(bot) and nLV >= 6 ) 
@@ -336,7 +325,6 @@ function X.ConsiderW()
 		end
 	end
 	
-	-- If we're going after someone
 	if J.IsGoingOnSomeone(bot)
 	then
 		local npcTarget = J.GetProperTarget(bot);
@@ -360,7 +348,6 @@ function X.ConsiderW()
 		end
 	end
 	
-	-- If Roshan
 	if ( bot:GetActiveMode() == BOT_MODE_ROSHAN  ) 
 	then
 		local npcTarget = bot:GetAttackTarget();
@@ -370,7 +357,6 @@ function X.ConsiderW()
 		end
 	end
 
-	-- If mana is too much
 	if nMP > 0.95
 		and nLV >= 6
 		and bot:DistanceFromFountain() > 2400

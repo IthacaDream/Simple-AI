@@ -185,7 +185,6 @@ function X.ConsiderQ()
 		return BOT_ACTION_DESIRE_NONE;
 	end
 
-	-- Get some of its values
 	local nAttackDamage = bot:GetAttackDamage();
 	local nCastRange  = abilityQ:GetCastRange();
 	if nCastRange < 600 then nCastRange = 600 end;	
@@ -480,7 +479,6 @@ function X.ConsiderW()
 		return BOT_ACTION_DESIRE_NONE, 0;
 	end
 	
-	-- Get some of its values
 	local nAttackDamage = bot:GetAttackDamage();
 	local nCastRange  = abilityW:GetCastRange();
 	local nCastPoint  = abilityW:GetCastPoint();

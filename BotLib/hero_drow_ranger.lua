@@ -236,6 +236,12 @@ function X.ConsiderE()
 		end
 		
 	end
+	
+	
+	--推线
+	
+	
+	--打野
 
 	
 	return BOT_ACTION_DESIRE_NONE
@@ -393,17 +399,13 @@ function X.ConsiderM()
 	
 	if abilityM == nil or not abilityM:IsFullyCastable() then return BOT_ACTION_DESIRE_NONE end;
 
-	-- Get some of its values
 	local nCastRange = bot:GetAttackRange();
 	local nAttackDamage = bot:GetAttackDamage();
 	local nDamage = nAttackDamage;
 	local nDamageType = DAMAGE_TYPE_PHYSICAL;
 	local npcTarget = J.GetProperTarget(bot);
-	--------------------------------------
-	-- Mode based usage
-	--------------------------------------	
+
 	
-	--If we're going after someone
 	if J.IsGoingOnSomeone(bot) 
 	   and #hEnemyHeroList == 1
 	then

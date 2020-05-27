@@ -25,8 +25,8 @@ local tTalentTreeList = {
 
 local tAllAbilityBuildList = {
 						{1,2,3,1,1,6,1,2,2,2,6,3,3,3,6},
-						{1,3,1,2,1,6,1,2,2,2,6,3,3,3,6},
-						-- {2,1,3,2,2,6,2,1,1,1,6,3,3,3,6},
+						{1,2,1,3,1,6,1,2,2,2,6,3,3,3,6},
+						{2,1,1,3,1,6,1,2,2,2,6,3,3,3,6},
 }
 
 local nAbilityBuildList = J.Skill.GetRandomBuild(tAllAbilityBuildList)
@@ -172,6 +172,19 @@ function X.SkillsComplement()
 	if talent3:IsTrained() then talent3Damage = talent3:GetSpecialValueInt("value") end
 	
 	
+		
+	castEDesire, sMotive = X.ConsiderE();
+	if ( castEDesire > 0 ) 
+	then
+		J.SetReportMotive(bDebugMode,sMotive);
+	
+		J.SetQueuePtToINT(bot, false)
+	
+		bot:ActionQueue_UseAbility( abilityE )
+		return;
+	end
+	
+	
 	castRDesire, castRTarget, sMotive = X.ConsiderR();
 	if ( castRDesire > 0 ) 
 	then
@@ -192,19 +205,6 @@ function X.SkillsComplement()
 		J.SetQueuePtToINT(bot, true)
 	
 		bot:ActionQueue_UseAbilityOnEntity( abilityQ, castQTarget )
-		return;
-	end
-	
-	
-	
-	castEDesire, sMotive = X.ConsiderE();
-	if ( castEDesire > 0 ) 
-	then
-		J.SetReportMotive(bDebugMode,sMotive);
-	
-		J.SetQueuePtToINT(bot, false)
-	
-		bot:ActionQueue_UseAbility( abilityE )
 		return;
 	end
 
@@ -363,14 +363,7 @@ function X.ConsiderQ()
 					end
 				end
 			end
-				
-				-- if J.IsInRange(bot, botTarget, nCastRange)
-				   -- and J.CanCastOnTargetAdvanced(botTarget)
-				-- then
-					-- nCastTarget = botTarget
-					-- return BOT_ACTION_DESIRE_HIGH,nCastTarget,"Q-无弹射进攻:"..J.Chat.GetNormName(botTarget)
-				-- end
-				
+								
 			if J.IsInRange(bot, botTarget, nCastRange )
 				and J.CanCastOnTargetAdvanced(botTarget)
 			then

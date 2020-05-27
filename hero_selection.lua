@@ -4,8 +4,9 @@
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ---------------------------------------------------------------------------
---	When the bot is thinking, the creator is laughing.
-------------------------------------------------------2019.11
+-- 有多少人工,才有多少智能
+-- There is as much intelligence as there is manpower
+------------------------------------------------------2017.08.20
 local targetdata = require(GetScriptDirectory() .. "/AuxiliaryScript/RoleTargetsData")
 local otherGameMod = require(GetScriptDirectory() .. "/AuxiliaryScript/OtherGameMod");
 
@@ -619,7 +620,7 @@ else
 end
 				
 --根据用户配置初始列表
---根据人类玩家数量初始化英雄池,英雄表,英雄分路
+--根据玩家数量初始化英雄池,英雄表,英雄分路
 --tSelectPoolList, sSelectList, tLaneAssignList
 function X.SetLineUpInit()
 
@@ -670,12 +671,12 @@ function X.IsExistInTable(sString, sStringList)
 end
 
 
-function X.IsHumanNotReady(team)
+function X.IsHumanNotReady(nTeam)
 		
 	if GameTime() > 20 or bLineupReserve then return false end
 
 	local humanCount,readyCount = 0, 0;
-	local nIDs = GetTeamPlayers(team);
+	local nIDs = GetTeamPlayers(nTeam);
 	for i,id in pairs(nIDs)
 	do
         if not IsPlayerBot(id)
@@ -688,7 +689,7 @@ function X.IsHumanNotReady(team)
 		end
     end
 	
-	if( readyCount >= humanCount)
+	if( readyCount >= humanCount )
 	then
 		return false;
 	end
@@ -887,7 +888,7 @@ local sDiStarsList =
 --"地藏星",
 }
 
-if RandomInt(1,20200) < 11
+if RandomInt(1,20200) <= 10
 then
 sDiStarsList = {
 "冠状细菌",

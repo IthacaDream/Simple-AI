@@ -262,7 +262,6 @@ function X.ConsiderW()
 	local nDamageType = DAMAGE_TYPE_MAGICAL
 	local nInRangeEnemyList = bot:GetNearbyHeroes(nCastRange, true, BOT_MODE_NONE)
 	
-	--battle
 	if J.IsInTeamFight(bot,900) and #hEnemyList >= 3
 	then
 		local npcMostDangerousEnemy = nil;
@@ -295,7 +294,6 @@ function X.ConsiderW()
 	--撤退时缴械攻击自己的(远程)敌人
 	
 	
-	--Attack
 	if J.IsGoingOnSomeone(bot)
 	then
 		if J.IsValidHero(botTarget)

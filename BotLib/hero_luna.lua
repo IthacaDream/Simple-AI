@@ -192,7 +192,6 @@ end
 
 function X.ConsiderQ()
 
-	-- Make sure it's castable
 	if not abilityQ:IsFullyCastable() 
 	   or bot:IsInvisible() 
 	   or ( nLV >= 6 and abilityR:GetCooldownTimeRemaining() <= 2.0 and ( bot:GetMana() - abilityQ:GetManaCost()) < abilityR:GetManaCost())
@@ -200,7 +199,6 @@ function X.ConsiderQ()
 		return BOT_ACTION_DESIRE_NONE, 0;
 	end
 
-	-- Get some of its values
 	local nCastRange  = abilityQ:GetCastRange() + aetherRange
 	local nCastPoint  = abilityQ:GetCastPoint();
 	local nManaCost   = abilityQ:GetManaCost();
@@ -437,13 +435,11 @@ end
 
 function X.ConsiderR()
 
-	-- Make sure it's castable
 	if  not abilityR:IsFullyCastable() 
 	   or ( bot:WasRecentlyDamagedByAnyHero(1.5) and  nHP < 0.38)
 	   or bot:DistanceFromFountain() < 600
 	then return 0; end
 
-	-- Get some of its values
 	local nRadius = 675;                          
 	
 	local nEnemysHerosInSkillRange = bot:GetNearbyHeroes(675,true,BOT_MODE_NONE);

@@ -182,10 +182,8 @@ end
 
 function X.ConsiderQ()
 
-	-- Make sure it's castable
 	if  not abilityQ:IsFullyCastable() then return 0 end
 
-	-- Get some of its values
 	local nCastRange = abilityQ:GetCastRange();
 	local nCastPoint = abilityQ:GetCastPoint();
 	local nManaCost  = abilityQ:GetManaCost();
@@ -296,7 +294,6 @@ function X.ConsiderQ()
 		
 	end
 	
-	-- If we're going after someone
 	if J.IsGoingOnSomeone(bot)
 	then
 		local npcTarget = J.GetProperTarget(bot);
@@ -323,10 +320,8 @@ end
 
 function X.ConsiderW()
 
-	-- Make sure it's castable
 	if not abilityW:IsFullyCastable()  then return 0 end
 
-	-- Get some of its values
 	local nRadius    = 600;
 	local nCastRange = abilityW:GetCastRange();
 	local nCastPoint = abilityW:GetCastPoint();
@@ -337,7 +332,6 @@ function X.ConsiderW()
 	local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( nCastRange, true, BOT_MODE_NONE );
 	local tableNearbyAllyHeroes = bot:GetNearbyHeroes( 800, false, BOT_MODE_NONE );
 	
-	--if we can kill any enemies
 	for _,npcEnemy in pairs(tableNearbyEnemyHeroes)
 	do
 		if  J.IsValid(npcEnemy) and J.CanCastOnNonMagicImmune(npcEnemy) and J.CanKillTarget(npcEnemy, nDamage, DAMAGE_TYPE_PURE)
@@ -373,7 +367,6 @@ function X.ConsiderW()
 		end
 	end	
 	
-	-- If we're seriously retreating, see if we can land a stun on someone who's damaged us recently
 	if J.IsRetreating(bot)
 	then
 		for _,npcEnemy in pairs( tableNearbyEnemyHeroes )
@@ -398,7 +391,6 @@ function X.ConsiderW()
 		end
 	end
 	
-	-- If we're going after someone
 	if J.IsGoingOnSomeone(bot)
 	then
 		local npcTarget = J.GetProperTarget(bot);
@@ -426,17 +418,14 @@ end
 
 function X.ConsiderR()
 
-	-- Make sure it's castable
 	if not abilityR:IsFullyCastable() then 	return 0 end
 
-	-- Get some of its values
 	local nCastRange   = abilityR:GetCastRange();
 	local nCastPoint   = abilityR:GetCastPoint();
 	local nManaCost    = abilityR:GetManaCost();
 	
 	local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( nCastRange +200, true, BOT_MODE_NONE );
 	
-	-- If we're seriously retreating, see if we can land a stun on someone who's damaged us recently
 	if J.IsRetreating(bot) 
 	then
 		for _,npcEnemy in pairs( tableNearbyEnemyHeroes )
@@ -466,7 +455,6 @@ function X.ConsiderR()
 		end
 	end
 	
-	-- If we're going after someone
 	if J.IsGoingOnSomeone(bot)
 	then
 		local npcTarget = J.GetProperTarget(bot);

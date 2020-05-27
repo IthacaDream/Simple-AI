@@ -494,7 +494,7 @@ function X.ConsiderD()
 		end
 	end
 	
-	-- If we're seriously retreating, see if we can land a stun on someone who's damaged us recently
+	--撤退时
 	if J.IsRetreating(bot)
 	then
 		local tableNearbyEnemyHeroes = bot:GetNearbyHeroes(1200,true,BOT_MODE_NONE);

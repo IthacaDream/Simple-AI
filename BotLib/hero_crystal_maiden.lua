@@ -246,12 +246,11 @@ end
 
 function X.ConsiderQ()
 
-	-- Make sure it's castable
+
 	if not abilityQ:IsFullyCastable() then 
 		return BOT_ACTION_DESIRE_NONE, 0;
 	end
 	
-	-- Get some of its values
 	local nRadius    = abilityQ:GetSpecialValueInt('radius');  
 	local nCastRange = abilityQ:GetCastRange() + aetherRange + 32;					
 	local nCastPoint = abilityQ:GetCastPoint( );			    
@@ -540,12 +539,10 @@ end
 
 function X.ConsiderW()
 
-	-- Make sure it's castable
 	if not abilityW:IsFullyCastable() then 
 		return BOT_ACTION_DESIRE_NONE, 0;
 	end
 
-	-- Get some of its values
 	local nCastRange = abilityW:GetCastRange() +30 +aetherRange;
 	local nCastPoint = abilityW:GetCastPoint( );
 	local nManaCost  = abilityW:GetManaCost( );
@@ -804,15 +801,14 @@ function X.ConsiderW()
 end
 
 function X.ConsiderR()
-	-- Make sure it's castable
+
 	if  not abilityR:IsFullyCastable() 
-		or bot:DistanceFromFountain() < 100 
+		or bot:DistanceFromFountain() < 300 
 	then 
 		return BOT_ACTION_DESIRE_NONE;
 	end
 
 
-	-- Get some of its values
 	local nRadius 	 = abilityR:GetAOERadius() * 0.88                          
 	
 	local nAllies =  bot:GetNearbyHeroes(1200,false,BOT_MODE_NONE);

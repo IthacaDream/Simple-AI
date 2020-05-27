@@ -218,12 +218,10 @@ end
 
 function X.ConsiderQ()
 
-	-- Make sure it's castable
 	if ( not abilityQ:IsFullyCastable() ) then 
 		return BOT_ACTION_DESIRE_NONE, 0;
 	end
 	
-	-- Get some of its values
 	local nRadius    = abilityQ:GetSpecialValueInt('radius');  
 	local nCastRange = abilityQ:GetCastRange() + aetherRange;					
 	local nCastPoint = abilityQ:GetCastPoint();			    
@@ -489,7 +487,6 @@ end
 
 function X.ConsiderW()
 
-    -- Make sure it's castable
 	if  not abilityW:IsFullyCastable() or bot:IsDisarmed() then 
 		return BOT_ACTION_DESIRE_NONE, 0;
 	end
@@ -512,7 +509,6 @@ function X.ConsiderW()
 	
 	local npcTarget = J.GetProperTarget(bot);
 	
-	--try to kill enemy hero
 	if(bot:GetActiveMode() ~= BOT_MODE_RETREAT or bot:GetActiveModeDesire( ) < 0.6) 
 	then
 		if J.IsValidHero(nEnemysWeakestHerosInAttackRange)
@@ -659,7 +655,6 @@ function X.ConsiderW()
 		
 	end
 	
-	-- If we're going after someone
 	if J.IsGoingOnSomeone(bot) and not abilityW:GetAutoCastState()
 	then
 		if J.IsValidHero(npcTarget)
@@ -687,12 +682,12 @@ function X.ConsiderW()
 end
 
 function X.ConsiderE()
-	-- Make sure it's castable
+
 	if ( not abilityE:IsFullyCastable() ) then 
 		return BOT_ACTION_DESIRE_NONE, 0;
 	end
 	
-	-- Get some of its values
+
 	local nCastRange = abilityE:GetCastRange()  + aetherRange;
 	local nCastPoint = abilityE:GetCastPoint();
 	local nManaCost  = abilityE:GetManaCost();
@@ -862,7 +857,7 @@ end
 
 function X.ConsiderR()
 
-	-- Make sure it's castable
+
 	if ( not abilityR:IsFullyCastable() ) then 
 		return BOT_ACTION_DESIRE_NONE, 0;
 	end
@@ -870,7 +865,7 @@ function X.ConsiderR()
 	local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( 1400, true, BOT_MODE_NONE );
 	local tableNearbyAllyHeroes = bot:GetNearbyHeroes( 800, false, BOT_MODE_NONE );
 	
-	-- Check for a channeling enemy
+
 	for _,npcEnemy in pairs( tableNearbyEnemyHeroes )
 	do
 		if  J.IsValid(npcEnemy)
@@ -908,7 +903,7 @@ function X.ConsiderR()
 		end
 	end
 			
-	-- If we're going after someone
+
 	if J.IsGoingOnSomeone(bot)
 	then
 		local npcTarget = bot:GetTarget();

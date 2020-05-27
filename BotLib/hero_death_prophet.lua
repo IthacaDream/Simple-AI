@@ -441,7 +441,6 @@ function X.ConsiderW()
 	local nInRangeEnemyList = bot:GetNearbyHeroes(nCastRange, true, BOT_MODE_NONE)
 	local nTargetLocation = nil
 	
-	--check
 	for _,npcEnemy in pairs(hEnemyList)
 	do
 		if npcEnemy:IsChanneling()
@@ -460,7 +459,7 @@ function X.ConsiderW()
 	
 	if J.IsGoingOnSomeone(bot)
 	then
-		--aoe
+		--AOE
 		local nAoeLoc = J.GetAoeEnemyHeroLocation(bot, nCastRange, nRadius, 2);
 		if nAoeLoc ~= nil
 		then
@@ -468,7 +467,7 @@ function X.ConsiderW()
 			return BOT_ACTION_DESIRE_HIGH, nTargetLocation, 'W-Aoe'
 		end
 		
-		--attack
+		--攻击
 		if J.IsValidHero(botTarget)
 			and J.IsInRange(bot,botTarget,nCastRange + nRadius - 200)
 			and J.CanCastOnNonMagicImmune(botTarget)

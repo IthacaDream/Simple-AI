@@ -37,8 +37,9 @@ tOutFitList['outfit_carry'] = {
 	
 	"item_mage_outfit",
 	"item_glimmer_cape",
-	"item_rod_of_atos",
+--	"item_rod_of_atos",
 	"item_cyclone",
+	"item_holy_locket",
 	"item_lotus_orb",
 	"item_sheepstick",
 	"item_moon_shard",
@@ -55,7 +56,8 @@ tOutFitList['outfit_priest'] = {
 	"item_glimmer_cape",
 	"item_guardian_greaves",
 	"item_spirit_vessel",
-	"item_rod_of_atos",
+	"item_holy_locket",
+--	"item_rod_of_atos",
 	"item_shivas_guard",
 	"item_sheepstick",	
 	"item_moon_shard",
@@ -67,8 +69,9 @@ tOutFitList['outfit_mage'] = {
 	"item_mage_outfit",
 	"item_pipe",
 	"item_glimmer_cape",
+	"item_holy_locket",
 	"item_veil_of_discord",
-	"item_cyclone",
+--	"item_cyclone",
 	"item_sheepstick",
 	"item_moon_shard",
 
@@ -149,20 +152,15 @@ local nKeepMana,nMP,nHP,nLV,hEnemyHeroList;
 
 function X.SkillsComplement()
 
-	
-	
+
 	if J.CanNotUseAbility(bot) then return end
-	
-	
+
 	
 	nKeepMana = 400; 
 	nLV = bot:GetLevel();
 	nMP = bot:GetMana()/bot:GetMaxMana();
 	nHP = bot:GetHealth()/bot:GetMaxHealth();
 	hEnemyHeroList = bot:GetNearbyHeroes(1600, true, BOT_MODE_NONE);
-	
-	
-	
 	
 	
 	castRDesire, castRTarget = X.ConsiderR();
@@ -202,7 +200,6 @@ end
 
 function X.ConsiderW()
 
-	-- Make sure it's castable
 	if ( not abilityW:IsFullyCastable() ) then 
 		return BOT_ACTION_DESIRE_NONE;
 	end
@@ -227,7 +224,6 @@ function X.ConsiderW()
 	end
 	
 	
-	-- If we're seriously retreating, see if we can land a stun on someone who's damaged us recently
 	if J.IsRetreating(bot)
 	then
 		local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( nRadius, true, BOT_MODE_NONE );
@@ -238,7 +234,6 @@ function X.ConsiderW()
 	end
 
 	
-	-- If we're going after someone
 	if J.IsGoingOnSomeone(bot)
 	then
 		local npcTarget = bot:GetTarget();
@@ -266,7 +261,6 @@ end
 
 function X.ConsiderQ()
 
-	-- Make sure it's castable
 	if  not abilityQ:IsFullyCastable() 
 		or bot:IsInvisible()
 		or ( J.GetHP(bot) > 0.62 and abilityR:GetCooldownTimeRemaining() < 6 and bot:GetMana() < abilityR:GetManaCost() )
@@ -275,17 +269,11 @@ function X.ConsiderQ()
 	end
 
 
-	-- Get some of its values
 	local nRadius = abilityQ:GetSpecialValueInt( "area_of_effect" );
 	local nCastRange = 0;
 	local nDamage = abilityQ:GetAbilityDamage();
 	local nDamageType = DAMAGE_TYPE_MAGICAL;
 
-	--------------------------------------
-	-- Mode based usage
-	--------------------------------------
-
-	-- If we're seriously retreating, see if we can land a stun on someone who's damaged us recently
 	if J.IsRetreating(bot) or J.GetHP(bot) < 0.5
 	then
 		local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( 2*nRadius, true, BOT_MODE_NONE );
@@ -349,7 +337,6 @@ function X.ConsiderQ()
 		end
 	end
 	
-	-- If we can heal 3+ allyHero
 	local tableNearbyAlliesHeroes = bot:GetNearbyHeroes( nRadius, false, BOT_MODE_NONE );
 	if #tableNearbyAlliesHeroes >= 2
 	then
@@ -381,12 +368,13 @@ function X.ConsiderQ()
 	
 	end
 	
-	-- If we're going after someone
 	if J.IsGoingOnSomeone(bot)
 	then
 		local npcTarget = J.GetProperTarget(bot);
 
-		if J.IsValidHero(npcTarget) and J.CanCastOnNonMagicImmune(npcTarget) and J.IsInRange(npcTarget, bot, nRadius)
+		if J.IsValidHero(npcTarget) 
+			and J.IsInRange(npcTarget, bot, nRadius)
+			and J.CanCastOnNonMagicImmune(npcTarget) 
 		then
 			return BOT_ACTION_DESIRE_MODERATE;
 		end
@@ -400,16 +388,13 @@ end
 
 function X.ConsiderR()
 
-	-- Make sure it's castable
 	if not abilityR:IsFullyCastable() then 
 		return BOT_ACTION_DESIRE_NONE, 0;
 	end
 
-	-- Get some of its values
 	local nCastRange = abilityR:GetCastRange();
 	local nDamagePerHealth = abilityR:GetSpecialValueFloat("damage_per_health");
 
-	-- If we're going after someone
 	if J.IsGoingOnSomeone(bot)
 	then
 		local npcTarget = J.GetProperTarget(bot);
@@ -418,6 +403,7 @@ function X.ConsiderR()
 		   and J.CanCastOnTargetAdvanced(npcTarget)
 		   and not J.IsHaveAegis(npcTarget)
 		   and not npcTarget:HasModifier("modifier_arc_warden_tempest_double")
+		   and npcTarget:GetUnitName() ~= "npc_dota_hero_abaddon"
 		   and J.IsInRange(npcTarget, bot, nCastRange + 200)
 		then
 			local EstDamage = X.GetEstDamage(bot,npcTarget,nDamagePerHealth);
@@ -431,7 +417,6 @@ function X.ConsiderR()
 		end
 	end	
 
-	-- If we're in a teamfight, use it on the scariest enemy
 	if J.IsInTeamFight(bot, 1200)
 	then
 		local npcToKill = nil;
@@ -443,6 +428,7 @@ function X.ConsiderR()
 			   and J.CanCastOnTargetAdvanced(npcEnemy)
 			   and not J.IsHaveAegis(npcEnemy) 
 			   and not npcEnemy:HasModifier("modifier_arc_warden_tempest_double")
+			   and npcEnemy:GetUnitName() ~= "npc_dota_hero_abaddon"
 			then
 				local EstDamage = X.GetEstDamage(bot,npcEnemy,nDamagePerHealth);
 				if J.CanKillTarget(npcEnemy, EstDamage, DAMAGE_TYPE_MAGICAL )
@@ -465,6 +451,7 @@ function X.ConsiderR()
 		if J.IsValidHero(npcEnemy) 
 		   and not J.IsHaveAegis(npcEnemy) 
 		   and J.CanCastOnTargetAdvanced(npcEnemy)
+		   and npcEnemy:GetUnitName() ~= "npc_dota_hero_abaddon"
 		   and not npcEnemy:HasModifier("modifier_arc_warden_tempest_double")
 		then
 			local EstDamage = X.GetEstDamage(bot,npcEnemy,nDamagePerHealth);

@@ -642,7 +642,6 @@ function X.ConsiderR()
 	
 	if not abilityR:IsFullyCastable() then return 0,nil; end
 	
-	-- Get some of its values
 	local nCastRange = abilityR:GetCastRange();
 	local CastPoint = abilityR:GetCastPoint();
 	local nAoeRange  = 500;
@@ -650,7 +649,6 @@ function X.ConsiderR()
 	local nDamagaPerHealth = abilityR:GetSpecialValueFloat("mana_void_damage_per_mana");
 	local nCastTarget = nil;
 
-	-- If we're going after someone
 	if J.IsGoingOnSomeone(bot)
 	then
 		local npcTarget = J.GetProperTarget(bot);
@@ -671,8 +669,6 @@ function X.ConsiderR()
 		end
 	end
 	
-
-	-- If we're in a teamfight, use it on the scariest enemy
 	if J.IsInTeamFight(bot, 1200)
 	then
 		local tableNearbyEnemyHeroes = bot:GetNearbyHeroes( 700, true, BOT_MODE_NONE );

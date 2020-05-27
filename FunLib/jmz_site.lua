@@ -955,9 +955,10 @@ Site.ConsiderIsTimeToFarm["npc_dota_hero_arc_warden"] = function()
 		return true;
 	end
 	
-	local allies = bot:GetNearbyHeroes(1300,false,BOT_MODE_NONE);
-	if Site.IsHaveItem(bot,"item_maelstrom")
-		and #allies <= 2
+	local allies = bot:GetNearbyHeroes(1200,false,BOT_MODE_NONE);
+	if Site.IsHaveItem(bot,"item_hand_of_midas")
+		and #allies <= 3
+		and botNetWorth <= 26000
 	then 
 		return true;
 	end	

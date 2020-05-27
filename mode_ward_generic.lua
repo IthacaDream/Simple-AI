@@ -2,7 +2,7 @@
 --- The Creation Come From: BOT EXPERIMENT Credit:FURIOUSPUPPY
 --- BOT EXPERIMENT Author: Arizona Fauzie 2018.11.21
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=837040016
---- Refactor: 决明子 Email: dota2Sitemz@163.com 微博@Dota2_决明子
+--- Refactor: 决明子 Email: dota2jmz@163.com 微博@Dota2_决明子
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1573671599
 --- Link:http://steamcommunity.com/sharedfiles/filedetails/?id=1627071163
 ----------------------------------------------------------------------------------------------------
@@ -224,6 +224,7 @@ function Think()
 	if GetGameState()~=GAME_STATE_PRE_GAME and GetGameState()~= GAME_STATE_GAME_IN_PROGRESS then
 		return;
 	end
+	
 
 	if blockBreep ~= nil then
 
@@ -422,8 +423,6 @@ function Think()
 			end
 		end
 	end
-	
-
 end
 
 
@@ -582,4 +581,4 @@ function X.IsHumanPlayerInTeam()
 	
 	return false;
 end
--- dota2Sitemz@163.com QQ:2462331592.
+-- dota2jmz@163.com QQ:2462331592
