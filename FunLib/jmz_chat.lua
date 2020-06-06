@@ -3404,12 +3404,13 @@ end
 
 --本地英雄名
 function Chat.GetLocalName(npcBot)
-	
-	local tBotName = Chat['tHeroNameList'][npcBot:GetUnitName()]
-	
-	if tBotName ~= nil
-	then
-		return tBotName[sRawLanguage]
+	if npcBot ~= nil then
+		local tBotName = Chat['tHeroNameList'][npcBot:GetUnitName()]
+		
+		if tBotName ~= nil
+		then
+			return tBotName[sRawLanguage]
+		end
 	end
 	
 end

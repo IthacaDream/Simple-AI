@@ -207,7 +207,7 @@ function X.ConsiderE()
 	if J.IsFarming(bot)
 		and J.IsAllowedToSpam(bot,50)
 	then
-		local nEnemyCreeps = bot:GetNearbyNeutralCreeps(nRadius,true)
+		local nEnemyCreeps = bot:GetNearbyNeutralCreeps(nRadius)
 		if #nEnemyCreeps >= 2 
 		then
 			return BOT_ACTION_DESIRE_HIGH,"E-Farm:"..#nEnemyCreeps

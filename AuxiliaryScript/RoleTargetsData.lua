@@ -89,9 +89,6 @@ X["allows_hero"] = allowsHeroData.hero
 --'npc_dota_hero_clinkz',
 --'npc_dota_hero_shadow_shaman'
 X["test_hero"] = {
-    --'npc_dota_hero_enigma',
-    --'npc_dota_hero_winter_wyvern',
-    --'npc_dota_hero_night_stalker',
 }
 
 X["onlyCM_hero"] = {
@@ -135,6 +132,14 @@ X["onlyCM_hero"] = {
     --'npc_dota_hero_enigma',
     --'npc_dota_hero_winter_wyvern',
     --'npc_dota_hero_night_stalker',
+    'npc_dota_hero_chen',
+    --'npc_dota_hero_dark_seer',
+    'npc_dota_hero_doom_bringer',
+    --'npc_dota_hero_earth_spirit',
+    'npc_dota_hero_elder_titan',
+    --'npc_dota_hero_ember_spirit',
+    --'npc_dota_hero_enchantress',
+    --'npc_dota_hero_furion',
 }
 
 function X.CounterWeightList(hero) --获取推荐阵容列表
